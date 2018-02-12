@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <!--<item name="android:windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <item name="android:background">@color/colorAlmostBlack</item>
+    </style>
+
+    <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <!--<item name="android:windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <item name="android:background">@color/colorAlmostBlack</item>
+        <item name="colorAccent">@color/colorDarkGrey</item>
+    </style>
+
+    <style name="ToolBar">
+        <item name="android:background">@color/colorDarkGrey</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLabelText</item>
+    </style>
+
+</resources>
