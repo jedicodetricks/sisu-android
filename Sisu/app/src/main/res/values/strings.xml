@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sisu</string>
+        <string-array name="timeline_array">
+            <item>Today</item>
+            <item>This Month</item>
+            <item>This Quarter</item>
+            <item>This Year</item>
+        </string-array>
+</resources>
