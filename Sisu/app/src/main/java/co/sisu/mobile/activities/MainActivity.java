@@ -3,10 +3,13 @@ package co.sisu.mobile.activities;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+=======
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+<<<<<<< HEAD
         createAndAnimateProgressBars();
         initializeTimelineSelector();
     }
@@ -76,5 +80,24 @@ public class MainActivity extends AppCompatActivity {
         closedProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         closedProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         closedProgress.setProgressWithAnimation(100, animationDuration); // Default duration = 1500ms
+=======
+        animateProgressBars();
+    }
+
+
+    public void initializeProgressBars(){
+        List<Integer> progressBars = new ArrayList<>();
+            progressBars.add(R.id.appointmentsProgress);
+    }
+
+    public void animateProgressBars(){
+        CircularProgressBar circularProgressBar = (CircularProgressBar)findViewById(R.id.appointmentsProgress);
+        circularProgressBar.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        circularProgressBar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
+        circularProgressBar.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
+        circularProgressBar.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
+        int animationDuration = 2500; // 2500ms = 2,5s
+        circularProgressBar.setProgressWithAnimation(65, animationDuration); // Default duration = 1500ms
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
     }
 }

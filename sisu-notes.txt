@@ -1,0 +1,156 @@
+sisu
+
+add client plus button on every screen
+tab bar for it?
+
+2500 p/month
+
+
+teams to leaderboards
+
+relable circular bars
+dynamic number of these not ALWAYS 6
+calls, discussions, meetings, recruits
+
+
+api call get product info/partner info
+check locally for versions in db
+then set all data locally
+and compare display
+
+
+
+main almostBlack
+toolBar black or darker than almost
+
+
+client list orange box is listing for seller
+grey is buyer
+
+
+
+plus button added to homescreen
+-new client
+
+from record page
+
+
+times
+this month -default
+this year
+last month
+last year
+
+menu-
+
+profile page
+-goal of 300k a year
+--do stuff with this
+-logic to motivate goals
+
+vision board on profile
+picture upload/collage
+
+
+---------------------------------------------------------------
+Brian App Notes:
+
+​
+App Development
+My scoreboard
+UC # at top is what was put UC for the month and yearly = what is currently pending.
+menu in top left corner? (Today, This Week, Last Week, This Month, Last Month, This Year, Last Year) - How about a profile pic there or in the center?
+Buttons across the Bottom
+1. Scoreboard
+2. Reports
+- Current Report
+- Same reports as web if possible.
+3. Record
+- Appointments should go into Pipeline (add a pipeline above Signed so that someone can go directly there.
+4. Leaderboards
+- Scorecard - This is the gamification scorecard
+- # of days recorded
+- Leaderboards displayed will be the ones chosen to be on the scorecard by the admin
+Bottom right + button ideas
+- Add Client (Just this for now)
+- Add Team/accountability buddy (future)
+- Add to Social (future)
+- Add personal challenge (future)
+Menu Logo on right
+-Home (is there a better way to get back?)
+- My Profile (Add a profile pic, move Desired income into setup, pics for vision board (reasons for your goals)
+- Change PW
+-Setup
+-Edit activities - This is where we should have them put in income goals. Also, Signed should be two fields. Signed Buyers / Signed Listings
+-What to record - On the team level, this should be done in admin on the web.
+- Account Settings
+-Manage Alerts / Notifications
+- Push Notifications (In the future, we want to send intelligent notifications.)
+- Daily Reminder Time of Day
+- Teams, Accountability Buddies - This is where incoming and outgoing invites happen. Let’s make it more like the slack process. Also, this is where you choose which team you are viewing and have live (just like slack) The team that is live is the leaderboards you will see. Someone can be on multiple teams.
+- We can ELIMINATE MY BUSINESS
+- Challenges - See Challenge / gamification writeup. People will also be able to elect into a Sisu global challenge.
+- Feedback - I want feedback going directly into a feedback channel in slack that we can all track.
+- Logout
+Future
+Social -We will want to be able to post successes with pics and have people give kudos/fist bumps and comment on them. We will also want to allow them to post to FB, etc.
+Recruiting - Contacts, Appointments, Offers, New Recruit?
+Affiliate Program? - Only for Paying customers/team leads.
+Mortgage
+
+
+-----
+
+Buttons across the Bottom
++ Button at bottom lets you add a client with 1 click
+- Maybe a button at top that takes you straight to Pipeline/clients with one click?
+
+    1. Scoreboard
+
+    2. Reports
+        - Current Report
+        - Same reports as web if possible.
+
+    3. Record
+        - Appointments should go into Pipeline (add a pipeline above Signed so that someone can go directly there.
+
+    4. Leaderboards
+         - Scorecard - This is the gamification scorecard
+       - # of days recorded
+       - Leaderboards displayed will be the ones chosen to be on the scorecard by the admin
+
+Bottom right + button  ideas
+    - Add Client (Just this for now)
+    - Add Team/accountability buddy (future)
+    - Add to Social (future) 
+    - Add personal challenge (future)
+    
+Menu Logo on right
+    -Home (is there a better way to get back?)
+    - My Profile (Add a profile pic, move Desired income (goals) into setup, pics for vision board (reasons for your goals)
+    -Setup
+        - Set Goals
+        -Edit activities - This is where we should have them put in income goals.  Also,  Signed should be two fields.  Signed Buyers / Signed Listings
+        -What to record - On the team level, this should be done in admin on the web.
+        
+    - Settings
+            -Manage Alerts / Notifications
+                - Push Notifications (In the future, we want to send intelligent notifications.)
+                - Daily Reminder Time of Day
+                - Reset PW
+                - Lights on/off
+                - Notifications
+            
+                
+    - Teams, Accountability Buddies - This is where incoming and outgoing invites happen.  Let’s make it more like the slack process.  Also, this is where you choose which             team you are viewing and have live (just like slack)  The team that is live is the leaderboards you will see.  Someone can be on multiple teams.
+    - We can ELIMINATE MY BUSINESS
+    - Challenges - See Challenge / gamification writeup.  People will also be able to elect into a Sisu global challenge.  
+    - Feedback - I want feedback going directly into a feedback channel in slack that we can all track.
+    - Logout
+    
+
+Future
+Social -We will want to be able to post successes with pics and have people give kudos/fist bumps and comment on them.  We will also want to allow them to post to FB, etc.
+Recruiting - Contacts, Appointments, Offers, New Recruit?
+Affiliate Program? - Only for Paying customers/team leads.
+Mortgage

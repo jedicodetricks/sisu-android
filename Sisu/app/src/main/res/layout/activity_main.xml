@@ -22,7 +22,10 @@
 
     <ImageView
         android:id="@+id/teamView"
+<<<<<<< HEAD
         style="@style/ToolBar"
+=======
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -33,11 +36,19 @@
         app:layout_constraintBottom_toTopOf="@+id/teamLabel"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
+<<<<<<< HEAD
         app:srcCompat="@drawable/client_icon" />
 
     <ImageView
         android:id="@+id/recordView"
         style="@style/ToolBar"
+=======
+        app:srcCompat="@drawable/client_icon"
+        style="@style/ToolBar"/>
+
+    <ImageView
+        android:id="@+id/recordView"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -48,11 +59,19 @@
         app:layout_constraintEnd_toStartOf="@+id/teamView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.0"
+<<<<<<< HEAD
         app:srcCompat="@drawable/record_icon" />
 
     <ImageView
         android:id="@+id/reportView"
         style="@style/ToolBar"
+=======
+        app:srcCompat="@drawable/record_icon"
+        style="@style/ToolBar"/>
+
+    <ImageView
+        android:id="@+id/reportView"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
@@ -63,6 +82,7 @@
         app:layout_constraintStart_toEndOf="@+id/scoreboardView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.0"
+<<<<<<< HEAD
         app:srcCompat="@drawable/report_icon" />
 
     <ImageView
@@ -73,16 +93,36 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
+=======
+        app:srcCompat="@drawable/report_icon"
+        style="@style/ToolBar"/>
+
+    <ImageView
+        android:id="@+id/scoreboardView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_marginTop="8dp"
         android:contentDescription="scoreboard"
         app:layout_constraintBottom_toTopOf="@+id/scoreboardLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
+<<<<<<< HEAD
         app:srcCompat="@drawable/dashboard_icon_active" />
 
     <TextView
         android:id="@+id/scoreboardLabel"
         style="@style/ToolBar"
+=======
+        app:srcCompat="@drawable/dashboard_icon_active"
+        style="@style/ToolBar"/>
+
+    <TextView
+        android:id="@+id/scoreboardLabel"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="74dp"
         android:layout_height="21dp"
         android:layout_marginBottom="8dp"
@@ -95,11 +135,19 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/scoreboardView"
+<<<<<<< HEAD
         app:layout_constraintStart_toStartOf="@+id/scoreboardView" />
 
     <TextView
         android:id="@+id/reportLabel"
         style="@style/ToolBar"
+=======
+        app:layout_constraintStart_toStartOf="@+id/scoreboardView"
+        style="@style/ToolBar"/>
+
+    <TextView
+        android:id="@+id/reportLabel"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="59dp"
         android:layout_height="20dp"
         android:layout_marginBottom="8dp"
@@ -111,11 +159,19 @@
         android:textColor="@color/colorLabelText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/reportView"
+<<<<<<< HEAD
         app:layout_constraintStart_toStartOf="@+id/reportView" />
 
     <TextView
         android:id="@+id/recordLabel"
         style="@style/ToolBar"
+=======
+        app:layout_constraintStart_toStartOf="@+id/reportView"
+        style="@style/ToolBar"/>
+
+    <TextView
+        android:id="@+id/recordLabel"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="53dp"
         android:layout_height="21dp"
         android:layout_marginBottom="8dp"
@@ -127,11 +183,19 @@
         android:textColor="@color/colorLabelText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/recordView"
+<<<<<<< HEAD
         app:layout_constraintStart_toStartOf="@+id/recordView" />
 
     <TextView
         android:id="@+id/teamLabel"
         style="@style/ToolBar"
+=======
+        app:layout_constraintStart_toStartOf="@+id/recordView"
+        style="@style/ToolBar"/>
+
+    <TextView
+        android:id="@+id/teamLabel"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="58dp"
         android:layout_height="20dp"
         android:layout_marginBottom="8dp"
@@ -143,20 +207,33 @@
         android:textColor="@color/colorLabelText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/teamView"
+<<<<<<< HEAD
         app:layout_constraintStart_toStartOf="@+id/teamView" />
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/contactsProgress"
+=======
+        app:layout_constraintStart_toStartOf="@+id/teamView"
+        style="@style/ToolBar"/>
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/bbSignedProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+<<<<<<< HEAD
         android:layout_marginBottom="52dp"
+=======
+        android:layout_marginBottom="40dp"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_marginStart="80dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/bbSignedProgress"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -172,6 +249,13 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/bbSignedProgress"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/underContractProgress"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/underContractProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
@@ -182,6 +266,7 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/underContractProgress"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -198,16 +283,28 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/underContractProgress"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/contactsProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+<<<<<<< HEAD
         android:layout_marginBottom="40dp"
+=======
+        android:layout_marginBottom="52dp"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_marginStart="80dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -224,16 +321,28 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/appointmentsProgress"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/listingsTakenProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+<<<<<<< HEAD
         android:layout_marginBottom="52dp"
+=======
+        android:layout_marginBottom="40dp"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_marginEnd="80dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/listingsTakenProgress"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -249,6 +358,13 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/listingsTakenProgress"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/closedProgress"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/closedProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
@@ -259,6 +375,7 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/closedProgress"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -274,16 +391,28 @@
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/closedProgress"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/appointmentsProgress"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/circularBar"
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+<<<<<<< HEAD
         android:layout_marginBottom="40dp"
+=======
+        android:layout_marginBottom="52dp"
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_marginEnd="80dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -300,18 +429,30 @@
 
     <Spinner
         android:id="@+id/timelineSelector"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/listingsTakenProgress"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ExpandableListView
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         android:layout_width="0dp"
         android:layout_height="37dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+<<<<<<< HEAD
         android:textAlignment="center"
+=======
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d01c449e757286905c2bc7058ec6518416495b03
 </android.support.constraint.ConstraintLayout>
 
 
