@@ -1,16 +1,20 @@
 package co.sisu.mobile.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import co.sisu.mobile.R;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Created by bradygroharing on 2/13/18.
+ */
+
+public class TeamsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_teams);
     }
 
 }
