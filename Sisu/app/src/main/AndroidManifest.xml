@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".activities.ReportActivity" />
         <activity android:name=".activities.ScoreboardActivity" />
+        <activity android:name=".activities.RecordActivity" />
+        <activity android:name=".activities.TeamsActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

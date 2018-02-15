@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //This will call to the model and we would have logic there, passing in the email and password
                 attemptLogin();
             }
         });
