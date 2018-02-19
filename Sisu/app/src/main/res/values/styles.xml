@@ -15,6 +15,12 @@
         <item name="colorAccent">@color/colorDarkGrey</item>
     </style>
 
+    <style name="TimelineText">
+        <item name="android:fontFamily">@font/roboto_thin</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
     <style name="ToolBar">
         <item name="android:background">@color/colorDarkGrey</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
