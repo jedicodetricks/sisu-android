@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -35,7 +36,51 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
         initializeButtons();
         createAndAnimateProgressBars();
         initializeTimelineSelector();
+        createToolbarClickHandlers();
+    }
 
+    private void createToolbarClickHandlers() {
+        final Context context = this;
+        ImageView teamIcon = findViewById(R.id.teamView);
+        teamIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toolbarNavigate(TeamsActivity.class);
+                Toast.makeText(context, "Teams", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView reportIcon = findViewById(R.id.reportView);
+        reportIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toolbarNavigate(ReportActivity.class);
+                Toast.makeText(context, "Report", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView recordIcon = findViewById(R.id.recordView);
+        recordIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toolbarNavigate(RecordActivity.class);
+                Toast.makeText(context, "Record", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageView scoreboardIcon = findViewById(R.id.scoreboardView);
+        scoreboardIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toolbarNavigate(ScoreboardActivity.class);
+                Toast.makeText(context, "Scoreboard", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void toolbarNavigate(Class incomingClass) {
+        Intent intent = new Intent(this, incomingClass);
+        startActivity(intent);
     }
 
     @Override
