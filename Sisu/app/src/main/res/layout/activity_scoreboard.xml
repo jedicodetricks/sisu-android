@@ -22,7 +22,7 @@ tools:layout_editor_absoluteY="81dp">
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/leaderboardView"
+        android:id="@+id/leaderBoardView"
         style="@style/ToolBar"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -47,7 +47,7 @@ tools:layout_editor_absoluteY="81dp">
         android:tint="@color/colorCorporateGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/leaderboardView"
+        app:layout_constraintStart_toEndOf="@+id/leaderBoardView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/more_grey" />
 
@@ -119,6 +119,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="Contacts"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/contactsProgress"
         app:layout_constraintHorizontal_bias="0.0"
@@ -146,6 +147,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="BB Signed"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/bbSignedProgress"
         app:layout_constraintHorizontal_bias="0.0"
@@ -172,6 +174,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_width="98dp"
         android:layout_height="wrap_content"
         android:text="Under Contract"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/underContractProgress"
         app:layout_constraintStart_toStartOf="@+id/underContractProgress"
@@ -199,6 +202,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_width="104dp"
         android:layout_height="wrap_content"
         android:text="Appointments"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/appointmentsProgress"
         app:layout_constraintHorizontal_bias="0.47"
@@ -226,6 +230,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="Listings Taken"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/listingsTakenProgress"
         app:layout_constraintHorizontal_bias="0.363"
@@ -253,6 +258,7 @@ tools:layout_editor_absoluteY="81dp">
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="Closed"
+        style="@style/ProgressText"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/closedProgress"
         app:layout_constraintHorizontal_bias="0.125"
@@ -261,7 +267,6 @@ tools:layout_editor_absoluteY="81dp">
 
     <Spinner
         android:id="@+id/timelineSelector"
-        style="@style/TimelineText"
         android:layout_width="0dp"
         android:layout_height="37dp"
         android:layout_marginStart="8dp"
@@ -269,30 +274,8 @@ tools:layout_editor_absoluteY="81dp">
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menuView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageView
-        android:id="@+id/menuView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="10dp"
-        android:tint="@color/colorCorporateGrey"
-        app:layout_constraintEnd_toEndOf="@+id/timelineSelector"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/menu" />
-
-    <ImageView
-        android:id="@+id/homeView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:tint="@color/colorCorporateOrange"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/sisu_mark" />
 
     <ImageView
         android:id="@+id/addView"
@@ -306,10 +289,10 @@ tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/underContractLabel"
+        style="@style/ScoreboardLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_light"
         android:text="Under Contract"
         app:layout_constraintEnd_toEndOf="@+id/contactsProgress"
         app:layout_constraintStart_toStartOf="@+id/contactsProgress"
@@ -343,10 +326,10 @@ tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/closedLabel"
+        style="@style/ScoreboardLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_light"
         android:text="Closed"
         app:layout_constraintEnd_toEndOf="@+id/appointmentsProgress"
         app:layout_constraintStart_toStartOf="@+id/appointmentsProgress"
@@ -354,13 +337,13 @@ tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/underContractAmount"
-        android:layout_width="148dp"
-        android:layout_height="44dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/roboto_regular"
         android:text="$56,085"
         android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
         android:textSize="@dimen/font_largest"
         app:layout_constraintEnd_toEndOf="@+id/underContractLabel"
         app:layout_constraintStart_toStartOf="@+id/underContractLabel"
@@ -368,33 +351,19 @@ tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/closedAmount"
-        android:layout_width="132dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/roboto_regular"
         android:text="$91,862"
         android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
         android:textSize="@dimen/font_largest"
         app:layout_constraintEnd_toEndOf="@+id/closedLabel"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="@+id/closedLabel"
         app:layout_constraintTop_toBottomOf="@+id/closedLabel" />
-
-    <TextView
-        android:id="@+id/HeaderLabel"
-        android:layout_width="99dp"
-        android:layout_height="21dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="My Scoreboard"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/menuView"
-        app:layout_constraintStart_toEndOf="@+id/homeView"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
