@@ -8,19 +8,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat">
-
-        <activity android:name=".activities.MainActivity" android:theme="@style/NoActionBar">
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ReportActivity" />
         <activity android:name=".activities.ScoreboardActivity" />
+        <activity android:name=".activities.ReportActivity" />
         <activity android:name=".activities.RecordActivity" />
-        <activity android:name=".activities.TeamsActivity" />
+        <activity android:name=".activities.LeaderBoardActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
