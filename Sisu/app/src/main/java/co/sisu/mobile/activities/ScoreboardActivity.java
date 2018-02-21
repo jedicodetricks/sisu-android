@@ -36,7 +36,6 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
         initializeButtons();
         createAndAnimateProgressBars();
         initializeTimelineSelector();
-        createToolbarClickHandlers();
     }
 
     @Override
