@@ -18,10 +18,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import co.sisu.mobile.R;
 
-/**
- * Created by bradygroharing on 2/13/18.
- */
-// TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them  
+// TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them
 
 public class ScoreboardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -135,12 +132,13 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void createAndAnimateProgressBars(){
+        int animationDuration = 2500; // 2500ms = 2,5s
+
         CircularProgressBar appointmentsProgress = findViewById(R.id.appointmentsProgress);
         appointmentsProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         appointmentsProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         appointmentsProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         appointmentsProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        int animationDuration = 2500; // 2500ms = 2,5s
         appointmentsProgress.setProgressWithAnimation(10, animationDuration); // Default duration = 1500ms
 
         CircularProgressBar contactsProgress = findViewById(R.id.contactsProgress);
