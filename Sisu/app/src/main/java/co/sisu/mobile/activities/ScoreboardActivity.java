@@ -18,10 +18,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import co.sisu.mobile.R;
 
-/**
- * Created by bradygroharing on 2/13/18.
- */
-// TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them  
+// TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them
 
 public class ScoreboardActivity extends AppCompatActivity implements View.OnClickListener {
 

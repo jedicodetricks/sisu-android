@@ -6,8 +6,7 @@
         <item>This Quarter</item>
         <item>This Year</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
+  
     <string name="contacts">Contacts</string>
     <string name="appointments">Appointments</string>
     <string name="bb_signed">BB Signed</string>
@@ -18,4 +17,7 @@
     <string name="appts">Appts.</string>
     <string name="reports">Reports</string>
 
+    <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
+    <string name="forgot_password_sike">Already know your password?</string>
+    <string name="create_account_sike">Already have an account?</string>
 </resources>

@@ -20,6 +20,8 @@
         <activity android:name=".activities.ReportActivity" />
         <activity android:name=".activities.RecordActivity" />
         <activity android:name=".activities.LeaderBoardActivity" />
+        <activity android:name=".activities.ForgotPasswordActivity" />
+        <activity android:name=".activities.SignUpActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

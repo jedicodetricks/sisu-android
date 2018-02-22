@@ -32,18 +32,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.forgotPassword:
                 //do Stuff
-                showToast("forgot password clicked");
+                Intent intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intent);
+//                showToast("forgot password clicked");
                 break;
             case R.id.signUp:
+            case R.id.needAccount:
                 //do Stuff
-                showToast("sign up clicked");
+                intent = new Intent(this, SignUpActivity.class);
+                startActivity(intent);
+//                showToast("sign up or need account clicked");
                 break;
             case R.id.signInButton:
                 attemptLogin();
                 break;
-            case R.id.needAccount:
-                //do same as sign Up
-                showToast("need account clicked");
             default:
                 showToast("Oops!");
                 break;
