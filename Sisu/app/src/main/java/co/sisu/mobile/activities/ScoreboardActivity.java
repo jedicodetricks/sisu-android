@@ -132,49 +132,49 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void createAndAnimateProgressBars(){
-        int animationDuration = 2500; // 2500ms = 2,5s
+        final int ANIMATION_DURATION = 2500; // 2500ms = 2,5s
 
         CircularProgressBar appointmentsProgress = findViewById(R.id.appointmentsProgress);
         appointmentsProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         appointmentsProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         appointmentsProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         appointmentsProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        appointmentsProgress.setProgressWithAnimation(10, animationDuration); // Default duration = 1500ms
+        appointmentsProgress.setProgressWithAnimation(10, ANIMATION_DURATION); // Default duration = 1500ms
 
         CircularProgressBar contactsProgress = findViewById(R.id.contactsProgress);
         contactsProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         contactsProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         contactsProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         contactsProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        contactsProgress.setProgressWithAnimation(30, animationDuration); // Default duration = 1500ms
+        contactsProgress.setProgressWithAnimation(30, ANIMATION_DURATION); // Default duration = 1500ms
 
         CircularProgressBar bbSignedProgress = findViewById(R.id.bbSignedProgress);
         bbSignedProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         bbSignedProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         bbSignedProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         bbSignedProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        bbSignedProgress.setProgressWithAnimation(50, animationDuration); // Default duration = 1500ms
+        bbSignedProgress.setProgressWithAnimation(50, ANIMATION_DURATION); // Default duration = 1500ms
 
         CircularProgressBar listingsTakenProgress = findViewById(R.id.listingsTakenProgress);
         listingsTakenProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         listingsTakenProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         listingsTakenProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         listingsTakenProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        listingsTakenProgress.setProgressWithAnimation(70, animationDuration); // Default duration = 1500ms
+        listingsTakenProgress.setProgressWithAnimation(70, ANIMATION_DURATION); // Default duration = 1500ms
 
         CircularProgressBar underContractProgress = findViewById(R.id.underContractProgress);
         underContractProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         underContractProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         underContractProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         underContractProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        underContractProgress.setProgressWithAnimation(90, animationDuration); // Default duration = 1500ms
+        underContractProgress.setProgressWithAnimation(90, ANIMATION_DURATION); // Default duration = 1500ms
 
         CircularProgressBar closedProgress = findViewById(R.id.closedProgress);
         closedProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
         closedProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         closedProgress.setProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
         closedProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.default_background_stroke_width));
-        closedProgress.setProgressWithAnimation(100, animationDuration); // Default duration = 1500ms
+        closedProgress.setProgressWithAnimation(100, ANIMATION_DURATION); // Default duration = 1500ms
     }
 
     private void navigatePage(Class c){

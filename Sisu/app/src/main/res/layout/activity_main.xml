@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="180dp"
+    android:id="@+id/logIn"
     tools:context="co.sisu.mobile.activities.MainActivity"
     tools:layout_editor_absoluteY="81dp">
-
 
     <ImageView
         android:id="@+id/sisuLogo"

@@ -14,7 +14,7 @@ import co.sisu.mobile.R;
 
 // TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,4 +76,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showToast(CharSequence msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
+
 }
