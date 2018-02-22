@@ -8,5 +8,14 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contacts">Contacts</string>
+    <string name="appointments">Appointments</string>
+    <string name="bb_signed">BB Signed</string>
+    <string name="listings_taken">Listings Taken</string>
+    <string name="under_contract">Under Contract</string>
+    <string name="closed">Closed</string>
+    <string name="my_scoreboard">My Scoreboard</string>
+    <string name="appts">Appts.</string>
+    <string name="reports">Reports</string>
+
 </resources>
