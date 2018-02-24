@@ -20,4 +20,6 @@
     <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
+
+    <string name="thumbnail">Thumbnail</string>
 </resources>

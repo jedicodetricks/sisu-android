@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_bar_title"
-            android:text="My Scoreboard"
+            android:text=""
             android:gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:fontFamily="@font/roboto_regular"
@@ -31,16 +31,6 @@
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             />
-
-        <android.support.v7.widget.AppCompatImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/menu"
-            android:id="@+id/action_bar_menu"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
 
 
     </TableRow>

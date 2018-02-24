@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
@@ -30,6 +31,8 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
         getSupportActionBar().setElevation(0);
+        TextView pageTitle = findViewById(R.id.action_bar_title);
+        pageTitle.setText("Scoreboard");
         initializeButtons();
         createAndAnimateProgressBars();
         initializeTimelineSelector();
@@ -42,11 +45,6 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
             case R.id.action_bar_home:
                 //do stuff
                 showToast("Home Button is clicked");
-                break;
-            case R.id.action_bar_menu:
-                //do stuff
-                //open floating slide menu from right
-                showToast("Menu Button is clicked");
                 break;
             case R.id.scoreboardView:
                 //do stuff
@@ -93,7 +91,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(
                     AdapterView<?> parent, View view, int position, long id) {
-                showToast("Spinner1: position=" + position + " id=" + id);
+//                showToast("Spinner1: position=" + position + " id=" + id);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -108,9 +106,6 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         ImageButton homeButton= (ImageButton)view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(this);
-
-        ImageButton menuButton= (ImageButton)view.findViewById(R.id.action_bar_menu);
-        menuButton.setOnClickListener(this);
 
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
         scoreBoardButton.setOnClickListener(this);
