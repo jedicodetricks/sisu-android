@@ -48,23 +48,19 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.scoreboardView:
                 //do stuff
-                showToast("Scoreboard Button is clicked");
                 navigatePage(ScoreboardActivity.class);
                 break;
             case R.id.reportView:
                 //do stuff
-                showToast("Report Button is clicked");
                 navigatePage(ReportActivity.class);
                 break;
             case R.id.recordView:
                 //do stuff
-                showToast("Record Button is clicked");
                 navigatePage(RecordActivity.class);
                 break;
             case R.id.leaderBoardView:
                 //do stuff
                 //navigatePage(LeaderBoardActivity.class);
-                showToast("LeaderBoard Button is clicked");
                 navigatePage(LeaderBoardActivity.class);
                 break;
             case R.id.moreView:
