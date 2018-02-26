@@ -60,13 +60,11 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.leaderBoardView:
                 //do stuff
-                //navigatePage(LeaderBoardActivity.class);
                 navigatePage(LeaderBoardActivity.class);
                 break;
             case R.id.moreView:
                 //do stuff
-                //open floating menu
-                showToast("More Button is clicked");
+                navigatePage(MoreActivity.class);
                 break;
             case R.id.addView:
                 //do stuff
