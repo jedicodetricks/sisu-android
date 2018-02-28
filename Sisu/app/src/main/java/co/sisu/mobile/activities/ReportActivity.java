@@ -26,8 +26,10 @@ public class ReportActivity extends AppCompatActivity {
 
     private void initializeListView() {
 
-        mListView = (ListView) findViewById(R.id.recipe_list_view);
-// 1
+        mListView = (ListView) findViewById(R.id.report_list_view);
+        mListView.setDivider(null);
+        mListView.setDividerHeight(30);
+
         final List<Metric> metricList = dataController.getMetrics();
 
         ReportListAdapter adapter = new ReportListAdapter(this, metricList);

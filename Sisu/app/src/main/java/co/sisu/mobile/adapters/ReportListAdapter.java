@@ -41,47 +41,43 @@ public class ReportListAdapter extends BaseAdapter {
         return mDataSource.size();
     }
 
-    //2
     @Override
     public Object getItem(int position) {
         return mDataSource.get(position);
     }
 
-    //3
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    //4
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
         View rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
 
         // Get title element
-        TextView titleTextView =
-                (TextView) rowView.findViewById(R.id.recipe_list_title);
+        TextView titleTextView = rowView.findViewById(R.id.report_list_title);
 
         // Get subtitle element
-        TextView subtitleTextView =
-                (TextView) rowView.findViewById(R.id.recipe_list_subtitle);
+        TextView subtitleTextView = rowView.findViewById(R.id.report_list_subtitle);
+
+        // Get percentage text element
+        TextView percentageTextView = rowView.findViewById(R.id.report_percentage_text);
 
         // Get thumbnail element
-        ImageView thumbnailImageView =
-                (ImageView) rowView.findViewById(R.id.recipe_list_thumbnail);
+        ImageView thumbnailImageView = rowView.findViewById(R.id.report_list_thumbnail);
 
-        ProgressBar progressBar =
-                (ProgressBar) rowView.findViewById(R.id.progressBar);
+        ProgressBar progressBar = rowView.findViewById(R.id.progressBar);
 
         Metric metric = (Metric) getItem(position);
 
         titleTextView.setText(metric.getTitle());
-        subtitleTextView.setText(metric.getCurrentNum() + "/" + metric.getGoalNum());
+
+        subtitleTextView.setText(metric.getCurrentNum() + " of " + metric.getGoalNum());
+        percentageTextView.setText(metric.getPercentComplete() + "% complete");
         progressBar.setProgress(metric.getPercentComplete());
         progressBar.setScaleY(4f);
-
-//        progressBar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
         Picasso.with(mContext).load(metric.getThumbnailId()).into(thumbnailImageView);
 
