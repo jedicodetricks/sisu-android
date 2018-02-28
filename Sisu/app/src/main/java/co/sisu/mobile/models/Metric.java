@@ -3,6 +3,7 @@ package co.sisu.mobile.models;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.widget.Toast;
 
 /**
  * Created by Jeff on 2/21/2018.
@@ -23,7 +24,7 @@ public class Metric {
     }
 
     public int getPercentComplete(){
-        return (currentNum * goalNum) / 100;
+        return (int) (((double)currentNum/(double)goalNum) * 100);
     }
 
     public String getTitle() {
@@ -57,4 +58,5 @@ public class Metric {
     public void setThumbnailId(int iconPath) {
         this.thumbnailId = thumbnailId;
     }
+
 }

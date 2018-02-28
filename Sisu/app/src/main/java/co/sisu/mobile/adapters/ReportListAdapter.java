@@ -1,6 +1,8 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -75,7 +78,11 @@ public class ReportListAdapter extends BaseAdapter {
 
         titleTextView.setText(metric.getTitle());
         subtitleTextView.setText(metric.getCurrentNum() + "/" + metric.getGoalNum());
-        progressBar.setProgress(50);
+        progressBar.setProgress(metric.getPercentComplete());
+        progressBar.setScaleY(4f);
+
+//        progressBar.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+
         Picasso.with(mContext).load(metric.getThumbnailId()).into(thumbnailImageView);
 
 

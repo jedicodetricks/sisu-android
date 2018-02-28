@@ -31,7 +31,7 @@ public class DataController {
         metrics.add(new Metric("Appointments",3, 80,  R.drawable.appointment_icon));
         metrics.add(new Metric("BB Signed",5, 10,  R.drawable.signed_icon));
         metrics.add(new Metric("Listings Taken",70, 70,  R.drawable.signed_icon));
-        metrics.add(new Metric("Under Contract",80, 70,  R.drawable.under_contract_icon));
+        metrics.add(new Metric("Under Contract",27, 70,  R.drawable.under_contract_icon));
         metrics.add(new Metric("Closed",17, 70,  R.drawable.closed_icon));
     }
 
