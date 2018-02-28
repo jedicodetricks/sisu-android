@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.adapters.TeamsListExpandableAdapter;
+import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 
 public class LeaderBoardActivity extends AppCompatActivity {
 
-    TeamsListExpandableAdapter listAdapter;
+    LeaderboardListExpandableAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
@@ -29,7 +29,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
         // preparing list data
         prepareListData();
 
-        listAdapter = new TeamsListExpandableAdapter(this, listDataHeader, listDataChild);
+        listAdapter = new LeaderboardListExpandableAdapter(this, listDataHeader, listDataChild);
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -45,29 +45,30 @@ public class LeaderBoardActivity extends AppCompatActivity {
         listDataHeader.add("Closed");
 
         // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("Linus Torvald");
-        top250.add("Steve Jobs");
-        top250.add("Bill Gates");
-        top250.add("Elon Musk");
-        top250.add("Richard Branson");
 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("Linus Torvald");
-        nowShowing.add("Steve Jobs");
-        nowShowing.add("Bill Gates");
-        nowShowing.add("Elon Musk");
-        nowShowing.add("Richard Branson");
+        List<String> overallLeaderboard = new ArrayList<String>();
+        overallLeaderboard.add("Linus Torvald");
+        overallLeaderboard.add("Steve Jobs");
+        overallLeaderboard.add("Bill Gates");
+        overallLeaderboard.add("Elon Musk");
+        overallLeaderboard.add("Richard Branson");
 
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("Linus Torvald");
-        comingSoon.add("Steve Jobs");
-        comingSoon.add("Bill Gates");
-        comingSoon.add("Elon Musk");
-        comingSoon.add("Richard Branson");
+        List<String> underContract = new ArrayList<String>();
+        underContract.add("Linus Torvald");
+        underContract.add("Steve Jobs");
+        underContract.add("Bill Gates");
+        underContract.add("Elon Musk");
+        underContract.add("Richard Branson");
 
-        listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), nowShowing);
-        listDataChild.put(listDataHeader.get(2), comingSoon);
+        List<String> closed = new ArrayList<String>();
+        closed.add("Linus Torvald");
+        closed.add("Steve Jobs");
+        closed.add("Bill Gates");
+        closed.add("Elon Musk");
+        closed.add("Richard Branson");
+
+        listDataChild.put(listDataHeader.get(0), overallLeaderboard); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), underContract);
+        listDataChild.put(listDataHeader.get(2), closed);
     }
 }

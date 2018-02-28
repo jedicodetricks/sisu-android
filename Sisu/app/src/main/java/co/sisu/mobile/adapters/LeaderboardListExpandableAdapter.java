@@ -17,15 +17,15 @@ import co.sisu.mobile.R;
  * Created by Brady Groharing on 2/25/2018.
  */
 
-public class TeamsListExpandableAdapter extends BaseExpandableListAdapter {
+public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
     private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
 
-    public TeamsListExpandableAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+    public LeaderboardListExpandableAdapter(Context context, List<String> listDataHeader,
+                                            HashMap<String, List<String>> listChildData) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
@@ -51,13 +51,17 @@ public class TeamsListExpandableAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.team_group_items, null);
+            convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
 
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.leaderboardItemTitle);
+        TextView title = (TextView) convertView.findViewById(R.id.leaderboardItemTitle);
+        TextView subtitle = (TextView) convertView.findViewById(R.id.leaderboardItemSubTitle);
+        TextView score = (TextView) convertView.findViewById(R.id.leaderboardScore);
 
-        txtListChild.setText(childText);
+
+        title.setText(childText);
+        subtitle.setText("Testing");
+        score.setText("12,345");
         return convertView;
     }
 
@@ -89,7 +93,7 @@ public class TeamsListExpandableAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.team_group_headers, null);
+            convertView = infalInflater.inflate(R.layout.leaderboard_group_headers, null);
         }
 
         TextView lblListHeader = (TextView) convertView
