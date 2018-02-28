@@ -53,13 +53,10 @@ public class RecordListAdapter extends BaseAdapter {
         View rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
 
         // Get title element
-        TextView titleTextView =
-                (TextView) rowView.findViewById(R.id.record_list_title);
-
+        TextView titleTextView = rowView.findViewById(R.id.record_list_title);
 
         // Get thumbnail element
-        ImageView thumbnailImageView =
-                (ImageView) rowView.findViewById(R.id.record_list_thumbnail);
+        ImageView thumbnailImageView = rowView.findViewById(R.id.record_list_thumbnail);
 
         Metric metric = (Metric) getItem(position);
 

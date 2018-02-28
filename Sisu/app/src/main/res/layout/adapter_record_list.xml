@@ -7,39 +7,45 @@
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:id="@+id/record_list_text_layout" android:layout_toEndOf="@id/record_list_thumbnail">
 
-        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_title" tools:text="Title" android:textSize="22dp" android:layout_marginRight="8dp" android:layout_marginLeft="50dp"/>
-
-
+        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_title" tools:text="Title" android:textSize="22dp" android:layout_marginRight="8dp" android:layout_marginLeft="35dp"/>
 
     </RelativeLayout>
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:id="@+id/record_list_button_layout" android:layout_toEndOf="@id/record_list_text_layout">
-        <ImageView
-            android:id="@+id/addButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="13dp"
-            app:srcCompat="@drawable/add_icon" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/minusButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="113dp"
-            app:srcCompat="@drawable/add_icon" />
+            <ImageView
+                android:id="@+id/minusButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="25dp"
+                app:layout_constraintEnd_toStartOf="@id/rowCounter"
+                app:srcCompat="@drawable/add_icon" />
 
-        <TextView
-            android:id="@+id/rowCounter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/addButton"
-            android:text="0" />
+            <TextView
+                android:id="@+id/rowCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="25dp"
+                android:layout_toStartOf="@id/addButton"
+                android:paddingBottom="2dp"
+                android:textSize="@dimen/font_larger"
+                android:text="0"
+                app:layout_constraintEnd_toStartOf="@id/addButton" />
+
+            <ImageView
+                android:id="@+id/addButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/add_icon" />
+
+        </android.support.constraint.ConstraintLayout>
     </RelativeLayout>
-
-
-
-
 </RelativeLayout>
