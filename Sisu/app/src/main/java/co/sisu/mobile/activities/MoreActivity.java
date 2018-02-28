@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.TestComponentFragment;
 import co.sisu.mobile.TestFragment;
 import co.sisu.mobile.TestFragment2;
 
@@ -77,7 +78,7 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 // Begin the transaction
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment
-                ft.replace(R.id.your_placeholder, new TestFragment2());
+                ft.replace(R.id.your_placeholder, new TestComponentFragment());
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Complete the changes added above
                 ft.commit();
@@ -96,6 +97,12 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.recordView:
                 //do stuff
+                ft = getSupportFragmentManager().beginTransaction();
+                // Replace the contents of the container with the new fragment
+                ft.replace(R.id.your_placeholder, new TestFragment2());
+                // or ft.add(R.id.your_placeholder, new FooFragment());
+                // Complete the changes added above
+                ft.commit();
                 showToast("record Button is clicked");
                 break;
             case R.id.leaderBoardView:
