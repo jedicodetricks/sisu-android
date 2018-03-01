@@ -1,46 +1,66 @@
-package co.sisu.mobile.activities;
+package co.sisu.mobile;
+
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import co.sisu.mobile.R;
+
 import co.sisu.mobile.adapters.RecordListAdapter;
-import java.util.Calendar;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
 
-public class RecordActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class RecordFragment extends Fragment {
+
 
     private ListView mListView;
     DataController dataController = new DataController();
 
+    public RecordFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.activity_record, container, false);
+
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         initializeListView();
         initializeCalendarHandler();
+
     }
 
     private void initializeCalendarHandler() {
-        ImageView calendarLauncher = findViewById(R.id.calender_date_picker);
-        final Context context = this;
+
+        ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
+        final Context context = getContext();
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         String formattedDate = sdf.format(currentTime);
 
-        TextView dateDisplay = findViewById(R.id.record_date);
+        TextView dateDisplay = getView().findViewById(R.id.record_date);
         dateDisplay.setText(formattedDate);
 
         calendarLauncher.setOnClickListener(new View.OnClickListener() {
@@ -63,15 +83,14 @@ public class RecordActivity extends AppCompatActivity {
 
     private void initializeListView() {
 
-        mListView = (ListView) findViewById(R.id.record_list_view);
+        mListView = (ListView) getView().findViewById(R.id.record_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
         final List<Metric> metricList = dataController.getMetrics();
 
-        RecordListAdapter adapter = new RecordListAdapter(this, metricList);
+        RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList);
         mListView.setAdapter(adapter);
     }
-
 
 }

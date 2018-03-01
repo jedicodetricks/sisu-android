@@ -1,5 +1,10 @@
 package co.sisu.mobile.models;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.net.Uri;
+import android.widget.Toast;
+
 /**
  * Created by Jeff on 2/21/2018.
  */
@@ -8,19 +13,18 @@ public class Metric {
     private String title;
     private int currentNum;
     private int goalNum;
+    private int thumbnailId;
 
-    public Metric(){
 
-    }
-
-    public Metric(String title, int currentNum, int goalNum){
+    public Metric(String title, int currentNum, int goalNum, int thumbnailId){
         this.title = title;
         this.currentNum = currentNum;
         this.goalNum = goalNum;
+        this.thumbnailId = thumbnailId;
     }
 
     public int getPercentComplete(){
-        return (currentNum * goalNum) / 100;
+        return (int) (((double)currentNum/(double)goalNum) * 100);
     }
 
     public String getTitle() {
@@ -46,4 +50,13 @@ public class Metric {
     public void setGoalNum(int goalNum) {
         this.goalNum = goalNum;
     }
+
+    public int getThumbnailId() {
+        return thumbnailId;
+    }
+
+    public void setThumbnailId(int iconPath) {
+        this.thumbnailId = thumbnailId;
+    }
+
 }

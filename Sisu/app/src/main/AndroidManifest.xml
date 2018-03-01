@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/sisu_mark"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/sisu_mark"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity">
@@ -22,6 +22,7 @@
         <activity android:name=".activities.LeaderBoardActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
         <activity android:name=".activities.SignUpActivity" />
+        <activity android:name=".activities.MoreActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
