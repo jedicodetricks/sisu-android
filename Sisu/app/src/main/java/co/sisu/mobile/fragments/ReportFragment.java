@@ -1,4 +1,4 @@
-package co.sisu.mobile;
+package co.sisu.mobile.fragments;
 
 
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;

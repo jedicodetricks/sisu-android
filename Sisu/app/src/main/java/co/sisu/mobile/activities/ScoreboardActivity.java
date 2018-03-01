@@ -1,12 +1,10 @@
 package co.sisu.mobile.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,8 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -73,7 +69,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.moreView:
                 //do stuff
-                navigatePage(MoreActivity.class);
+                navigatePage(ParentActivity.class);
                 break;
             case R.id.addView:
                 //do stuff
