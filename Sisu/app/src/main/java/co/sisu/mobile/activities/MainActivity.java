@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void attemptLogin() {
         final EditText emailAddress = findViewById(R.id.emailInput);
         final EditText password = findViewById(R.id.passwordInput);
-        Intent intent = new Intent(this, MoreActivity.class);
+        Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
     }
 

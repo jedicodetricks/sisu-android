@@ -2,36 +2,43 @@ package co.sisu.mobile.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import co.sisu.mobile.LeaderboardFragment;
+import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.R;
-import co.sisu.mobile.ScoreboardFragment;
-import co.sisu.mobile.ReportFragment;
-import co.sisu.mobile.RecordFragment;
+import co.sisu.mobile.fragments.MoreFragment;
+import co.sisu.mobile.fragments.ScoreboardFragment;
+import co.sisu.mobile.fragments.ReportFragment;
+import co.sisu.mobile.fragments.RecordFragment;
 
 /**
  * Created by bradygroharing on 2/26/18.
  */
 
-public class MoreActivity extends AppCompatActivity implements View.OnClickListener {
+public class ParentActivity extends AppCompatActivity implements View.OnClickListener {
 
+    TextView pageTitle;
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_more);
+        setContentView(R.layout.activity_parent);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
         getSupportActionBar().setElevation(0);
-        TextView pageTitle = findViewById(R.id.action_bar_title);
-        pageTitle.setText("More");
+        pageTitle = findViewById(R.id.action_bar_title);
+        pageTitle.setText("Scoreboard");
+        drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
         navigateToScoreboard();
     }
@@ -67,6 +74,9 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
         ImageView moreButton = findViewById(R.id.moreView);
         moreButton.setOnClickListener(this);
 
+        ImageView addButton = findViewById(R.id.addView);
+        addButton.setOnClickListener(this);
+
     }
 
     private void resetToolbarImages(String inputActivity) {
@@ -87,18 +97,23 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (inputActivity) {
             case "scoreboard":
+                pageTitle.setText("Scoreboard");
                 scoreBoardButton.setImageResource(R.drawable.sisu_icon_orange);
                 break;
             case "report":
+                pageTitle.setText("Report");
                 reportButton.setImageResource(R.drawable.sisu_icon_orange);
                 break;
             case "record":
+                pageTitle.setText("Record");
                 recordButton.setImageResource(R.drawable.sisu_icon_orange);
                 break;
             case "leaderboard":
+                pageTitle.setText("Leaderboard");
                 leaderBoardButton.setImageResource(R.drawable.sisu_icon_orange);
                 break;
             case "more":
+                pageTitle.setText("More");
                 moreButton.setImageResource(R.drawable.sisu_icon_orange);
                 break;
             default:
@@ -111,7 +126,12 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.action_bar_home:
-                //do stuff
+                if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(Gravity.LEFT);
+                }
+                else {
+                    drawerLayout.openDrawer(Gravity.LEFT);
+                }
                 break;
             case R.id.scoreboardView:
                 resetToolbarImages("scoreboard");
@@ -143,11 +163,10 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.your_placeholder, new MoreFragment());
+                ft.commit();
                 //do stuff
-                break;
-            case R.id.addView:
-                //do stuff
-                //open floating menu
                 break;
             default:
                 //do stuff

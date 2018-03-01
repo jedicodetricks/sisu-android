@@ -1,4 +1,4 @@
-package co.sisu.mobile;
+package co.sisu.mobile.fragments;
 
 
 import android.content.Context;

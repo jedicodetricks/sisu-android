@@ -8,6 +8,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.MorePageContainer;
 
 /**
  * Created by Jeff on 2/21/2018.
@@ -15,6 +16,7 @@ import co.sisu.mobile.models.Metric;
 
 public class DataController {
     private List<Metric> metrics = new ArrayList<>();
+    private List<MorePageContainer> morePage = new ArrayList<>();
 
     public DataController(){
         initializeData();
@@ -23,6 +25,7 @@ public class DataController {
     public void initializeData(){
         DataStore ds = DataStore.getInstance();
         initializeMetrics();
+        initializeMorePageObject();
         ds.setData(metrics);
     }
     //this is for testing
@@ -35,7 +38,19 @@ public class DataController {
         metrics.add(new Metric("Closed",17, 70,  R.drawable.closed_icon));
     }
 
+    public void initializeMorePageObject() {
+        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.contact_icon_active));
+        morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.sisu_icon_orange));
+        morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.sisu_icon_orange));
+        morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.sisu_icon_orange));
+        morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.sisu_icon_orange));
+        morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.sisu_icon_orange));
+        morePage.add(new MorePageContainer("Setup", "", R.drawable.sisu_icon_orange));
+    }
+
     public List<Metric> getMetrics() {
         return metrics;
     }
+
+    public List<MorePageContainer> getMorePageContainer() { return morePage; }
 }
