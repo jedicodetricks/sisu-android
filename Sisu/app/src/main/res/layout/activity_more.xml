@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -32,8 +31,8 @@
         android:layout_marginStart="42dp"
         android:layout_marginTop="10dp"
         android:contentDescription="leaderboard"
-        app:layout_constraintStart_toEndOf="@+id/recordView"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@id/recordView"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
         app:srcCompat="@drawable/leaderboard_grey" />
 
     <ImageView
@@ -47,9 +46,9 @@
         android:layout_marginTop="20dp"
         android:contentDescription="leaderboard"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/leaderBoardView"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@id/toolbar"
+        app:layout_constraintStart_toEndOf="@id/leaderBoardView"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
         app:srcCompat="@drawable/more_grey" />
 
     <ImageView
@@ -61,10 +60,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:contentDescription="record"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="@id/toolbar"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
         app:srcCompat="@drawable/record_grey" />
 
     <ImageView
@@ -76,9 +75,9 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="10dp"
         android:contentDescription="reports"
-        app:layout_constraintEnd_toStartOf="@+id/recordView"
-        app:layout_constraintStart_toEndOf="@+id/scoreboardView"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@id/recordView"
+        app:layout_constraintStart_toEndOf="@id/scoreboardView"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
         app:srcCompat="@drawable/reports_grey" />
 
     <ImageView
@@ -91,7 +90,7 @@
         android:backgroundTint="@color/colorDarkGrey"
         android:contentDescription="scoreboard"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
         app:srcCompat="@drawable/home_orange" />
 
 </android.support.constraint.ConstraintLayout>
