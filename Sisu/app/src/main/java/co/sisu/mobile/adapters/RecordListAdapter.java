@@ -61,7 +61,7 @@ public class RecordListAdapter extends BaseAdapter {
         Metric metric = (Metric) getItem(position);
 
         titleTextView.setText(metric.getTitle());
-        Picasso.with(mContext).load(metric.getThumbnailId()).into(thumbnailImageView);
+        thumbnailImageView.setImageResource(metric.getThumbnailId());
 
 
         return rowView;

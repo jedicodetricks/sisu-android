@@ -64,7 +64,7 @@ public class MoreListAdapter extends BaseAdapter {
 
         titleTextView.setText(morePageContainer.getTitle());
         subTitleTextView.setText(morePageContainer.getSubTitle());
-        Picasso.with(mContext).load(morePageContainer.getThumbnailId()).into(thumbnailImageView);
+        thumbnailImageView.setImageResource(morePageContainer.getThumbnailId());
 
 
         return rowView;
