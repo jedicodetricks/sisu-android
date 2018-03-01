@@ -10,11 +10,9 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import java.util.Calendar;

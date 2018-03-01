@@ -61,8 +61,6 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
         ImageView moreButton = findViewById(R.id.moreView);
         moreButton.setOnClickListener(this);
 
-//        ImageView addButton = findViewById(R.id.addView);
-//        addButton.setOnClickListener(this);
     }
 
     private void resetToolbarImages(String inputActivity) {
@@ -79,28 +77,23 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
         leaderBoardButton.setImageResource(R.drawable.leaderboard_grey);
 
         ImageView moreButton = findViewById(R.id.moreView);
-        leaderBoardButton.setImageResource(R.drawable.more_grey);
+        moreButton.setImageResource(R.drawable.more_grey);
 
         switch (inputActivity) {
             case "scoreboard":
                 scoreBoardButton.setImageResource(R.drawable.sisu_icon_orange);
-                showToast("scoreboard Button is clicked");
                 break;
             case "report":
                 reportButton.setImageResource(R.drawable.sisu_icon_orange);
-                showToast("report Button is clicked");
                 break;
             case "record":
                 recordButton.setImageResource(R.drawable.sisu_icon_orange);
-                showToast("record Button is clicked");
                 break;
             case "leaderboard":
                 leaderBoardButton.setImageResource(R.drawable.sisu_icon_orange);
-                showToast("leaderboard Button is clicked");
                 break;
             case "more":
                 moreButton.setImageResource(R.drawable.sisu_icon_orange);
-                showToast("more Button is clicked");
                 break;
             default:
                 break;

@@ -50,8 +50,8 @@
             android:layout_marginTop="10dp"
             android:contentDescription="leaderboard"
             android:tint="@color/colorCorporateGrey"
-            app:layout_constraintStart_toEndOf="@+id/recordView"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintStart_toEndOf="@id/recordView"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/leaderboard_grey" />
 
         <ImageView
@@ -66,9 +66,9 @@
             android:contentDescription="leaderboard"
             android:tint="@color/colorCorporateGrey"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/toolbar"
-            app:layout_constraintStart_toEndOf="@+id/leaderBoardView"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
+            app:layout_constraintStart_toEndOf="@id/leaderBoardView"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/more_grey" />
 
         <ImageView
@@ -81,10 +81,10 @@
             android:layout_marginTop="10dp"
             android:contentDescription="record"
             android:tint="@color/colorCorporateGrey"
-            app:layout_constraintEnd_toEndOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="@id/toolbar"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="@+id/toolbar"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="@id/toolbar"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/record_grey" />
 
         <ImageView
@@ -97,9 +97,9 @@
             android:layout_marginTop="10dp"
             android:contentDescription="reports"
             android:tint="@color/colorCorporateGrey"
-            app:layout_constraintEnd_toStartOf="@+id/recordView"
-            app:layout_constraintStart_toEndOf="@+id/scoreboardView"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintEnd_toStartOf="@id/recordView"
+            app:layout_constraintStart_toEndOf="@id/scoreboardView"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/reports_grey" />
 
         <ImageView
@@ -113,7 +113,7 @@
             android:contentDescription="scoreboard"
             android:tint="@color/colorCorporateOrange"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/home_orange" />
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -181,7 +181,7 @@
             android:progress="0"
             android:progressDrawable="@drawable/circular"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contactsProgressText" />
+            app:layout_constraintTop_toBottomOf="@id/contactsProgressText" />
 
         <TextView
             android:id="@+id/bbsignedCurrentNumber"
@@ -456,9 +456,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:text="Under Contract"
-            app:layout_constraintEnd_toEndOf="@+id/contactsProgress"
-            app:layout_constraintStart_toStartOf="@+id/contactsProgress"
-            app:layout_constraintTop_toBottomOf="@+id/timelineSelector" />
+            app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+            app:layout_constraintStart_toStartOf="@id/contactsProgress"
+            app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
 
         <TextView
             android:id="@+id/closedLabel"
@@ -466,9 +466,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Closed"
-            app:layout_constraintEnd_toEndOf="@+id/appointmentsProgress"
-            app:layout_constraintStart_toStartOf="@+id/appointmentsProgress"
-            app:layout_constraintTop_toBottomOf="@+id/timelineSelector" />
+            app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+            app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+            app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
 
         <TextView
             android:id="@+id/underContractAmount"
@@ -492,9 +492,9 @@
             android:textAlignment="center"
             android:textColor="@color/colorLightGrey"
             android:textSize="@dimen/font_larger"
-            app:layout_constraintEnd_toEndOf="@+id/closedLabel"
-            app:layout_constraintStart_toStartOf="@+id/closedLabel"
-            app:layout_constraintTop_toBottomOf="@+id/closedLabel" />
+            app:layout_constraintEnd_toEndOf="@id/closedLabel"
+            app:layout_constraintStart_toStartOf="@id/closedLabel"
+            app:layout_constraintTop_toBottomOf="@id/closedLabel" />
 
     </android.support.constraint.ConstraintLayout>
 
