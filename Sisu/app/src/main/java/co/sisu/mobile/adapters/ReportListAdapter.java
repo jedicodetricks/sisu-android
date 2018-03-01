@@ -82,11 +82,6 @@ public class ReportListAdapter extends BaseAdapter {
         percentageTextView.setText(metric.getPercentComplete() + "% complete");
         progressBar.setProgress(metric.getPercentComplete());
         progressBar.setScaleY(4f);
-//        Uri path = new Uri.Builder()
-//                .scheme("res")
-//                .path(String.valueOf(metric.getThumbnailId()))
-//                .build();
-//        Picasso.with(mContext).load(path).into(thumbnailImageView);
         thumbnailImageView.setImageResource(metric.getThumbnailId());
 
 
