@@ -71,35 +71,35 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
 
     private void resetToolbarImages(String inputActivity) {
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
-        scoreBoardButton.setImageResource(R.drawable.home_orange);
+        scoreBoardButton.setImageResource(R.drawable.home_icon);
 
         ImageView reportButton = findViewById(R.id.reportView);
-        reportButton.setImageResource(R.drawable.reports_grey);
+        reportButton.setImageResource(R.drawable.report_icon);
 
         ImageView recordButton = findViewById(R.id.recordView);
-        recordButton.setImageResource(R.drawable.record_grey);
+        recordButton.setImageResource(R.drawable.record_icon);
 
         ImageView leaderBoardButton = findViewById(R.id.leaderBoardView);
-        leaderBoardButton.setImageResource(R.drawable.leaderboard_grey);
+        leaderBoardButton.setImageResource(R.drawable.leaderboard_icon);
 
         ImageView moreButton = findViewById(R.id.moreView);
-        moreButton.setImageResource(R.drawable.more_grey);
+        moreButton.setImageResource(R.drawable.more_icon);
 
         switch (inputActivity) {
             case "scoreboard":
-                scoreBoardButton.setImageResource(R.drawable.sisu_icon_orange);
+                scoreBoardButton.setImageResource(R.drawable.home_icon_active);
                 break;
             case "report":
-                reportButton.setImageResource(R.drawable.sisu_icon_orange);
+                reportButton.setImageResource(R.drawable.report_icon_active);
                 break;
             case "record":
-                recordButton.setImageResource(R.drawable.sisu_icon_orange);
+                recordButton.setImageResource(R.drawable.record_icon_active);
                 break;
             case "leaderboard":
-                leaderBoardButton.setImageResource(R.drawable.sisu_icon_orange);
+                leaderBoardButton.setImageResource(R.drawable.leaderboard_icon_active);
                 break;
             case "more":
-                moreButton.setImageResource(R.drawable.sisu_icon_orange);
+                moreButton.setImageResource(R.drawable.more_icon_active);
                 break;
             default:
                 break;

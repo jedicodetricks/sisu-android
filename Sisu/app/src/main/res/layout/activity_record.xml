@@ -31,7 +31,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/calendar_icon" />
+            app:srcCompat="@drawable/appointment_icon" />
 
 
     </android.support.constraint.ConstraintLayout>

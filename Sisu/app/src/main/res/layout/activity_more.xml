@@ -33,7 +33,7 @@
         android:contentDescription="leaderboard"
         app:layout_constraintStart_toEndOf="@id/recordView"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:srcCompat="@drawable/leaderboard_grey" />
+        app:srcCompat="@drawable/leaderboard_icon" />
 
     <ImageView
         android:id="@+id/moreView"
@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="@id/toolbar"
         app:layout_constraintStart_toEndOf="@id/leaderBoardView"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:srcCompat="@drawable/more_grey" />
+        app:srcCompat="@drawable/more_icon" />
 
     <ImageView
         android:id="@+id/recordView"
@@ -64,7 +64,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@id/toolbar"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:srcCompat="@drawable/record_grey" />
+        app:srcCompat="@drawable/record_icon" />
 
     <ImageView
         android:id="@+id/reportView"
@@ -78,7 +78,7 @@
         app:layout_constraintEnd_toStartOf="@id/recordView"
         app:layout_constraintStart_toEndOf="@id/scoreboardView"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:srcCompat="@drawable/reports_grey" />
+        app:srcCompat="@drawable/report_icon" />
 
     <ImageView
         android:id="@+id/scoreboardView"
@@ -91,6 +91,6 @@
         android:contentDescription="scoreboard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:srcCompat="@drawable/home_orange" />
+        app:srcCompat="@drawable/home_icon" />
 
 </android.support.constraint.ConstraintLayout>
