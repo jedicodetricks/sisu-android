@@ -65,15 +65,57 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
 //        addButton.setOnClickListener(this);
     }
 
+    private void resetToolbarImages(String inputActivity) {
+        ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
+        scoreBoardButton.setImageResource(R.drawable.home_orange);
+
+        ImageView reportButton = findViewById(R.id.reportView);
+        reportButton.setImageResource(R.drawable.reports_grey);
+
+        ImageView recordButton = findViewById(R.id.recordView);
+        recordButton.setImageResource(R.drawable.record_grey);
+
+        ImageView leaderBoardButton = findViewById(R.id.leaderBoardView);
+        leaderBoardButton.setImageResource(R.drawable.leaderboard_grey);
+
+        ImageView moreButton = findViewById(R.id.moreView);
+        leaderBoardButton.setImageResource(R.drawable.more_grey);
+
+        switch (inputActivity) {
+            case "scoreboard":
+                scoreBoardButton.setImageResource(R.drawable.sisu_icon_orange);
+                showToast("scoreboard Button is clicked");
+                break;
+            case "report":
+                reportButton.setImageResource(R.drawable.sisu_icon_orange);
+                showToast("report Button is clicked");
+                break;
+            case "record":
+                recordButton.setImageResource(R.drawable.sisu_icon_orange);
+                showToast("record Button is clicked");
+                break;
+            case "leaderboard":
+                leaderBoardButton.setImageResource(R.drawable.sisu_icon_orange);
+                showToast("leaderboard Button is clicked");
+                break;
+            case "more":
+                moreButton.setImageResource(R.drawable.sisu_icon_orange);
+                showToast("more Button is clicked");
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
             case R.id.action_bar_home:
                 //do stuff
-                showToast("Home Button is clicked");
                 break;
             case R.id.scoreboardView:
+                resetToolbarImages("scoreboard");
                 //do stuff
                 // Begin the transaction
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -82,9 +124,9 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Complete the changes added above
                 ft.commit();
-                showToast("score Button is clicked");
                 break;
             case R.id.reportView:
+                resetToolbarImages("report");
                 //do stuff
                 // Begin the transaction
                 ft = getSupportFragmentManager().beginTransaction();
@@ -93,9 +135,9 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Complete the changes added above
                 ft.commit();
-                showToast("report Button is clicked");
                 break;
             case R.id.recordView:
+                resetToolbarImages("record");
                 //do stuff
                 ft = getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment
@@ -103,20 +145,18 @@ public class MoreActivity extends AppCompatActivity implements View.OnClickListe
                 // or ft.add(R.id.your_placeholder, new FooFragment());
                 // Complete the changes added above
                 ft.commit();
-                showToast("record Button is clicked");
                 break;
             case R.id.leaderBoardView:
+                resetToolbarImages("leaderboard");
                 //do stuff
-                showToast("leader Button is clicked");
                 break;
             case R.id.moreView:
+                resetToolbarImages("more");
                 //do stuff
-                showToast("more Button is clicked");
                 break;
             case R.id.addView:
                 //do stuff
                 //open floating menu
-                showToast("Add Button is clicked");
                 break;
             default:
                 //do stuff
