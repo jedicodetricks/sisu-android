@@ -85,7 +85,7 @@
             <!--app:layout_constraintHorizontal_bias="0.498"-->
             <!--app:layout_constraintStart_toStartOf="@id/toolbar"-->
             <!--app:layout_constraintTop_toTopOf="@id/toolbar"-->
-            <!--app:srcCompat="@drawable/record_grey" />-->
+            <!--app:srcCompat="@drawarecord_icongrey" />-->
 
         <!--<ImageView-->
             <!--android:id="@+id/reportView"-->
@@ -114,7 +114,7 @@
             <!--android:tint="@color/colorCorporateOrange"-->
             <!--app:layout_constraintStart_toStartOf="parent"-->
             <!--app:layout_constraintTop_toTopOf="@id/toolbar"-->
-            <!--app:srcCompat="@drawable/home_orange" />-->
+            <!--app:srcCompat="@drawahome_iconange" />-->
 
         <com.mikhaellopez.circularprogressbar.CircularProgressBar
             android:id="@+id/contactsProgress"
