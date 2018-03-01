@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.sisu.mobile.TestFragment2">
+    tools:context="co.sisu.mobile.RecordFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

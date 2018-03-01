@@ -1,31 +1,48 @@
-package co.sisu.mobile.activities;
+package co.sisu.mobile;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 
-public class LeaderBoardActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class LeaderboardFragment extends Fragment {
 
     LeaderboardListExpandableAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leaderboard);
+    public LeaderboardFragment() {
+        // Required empty public constructor
+    }
 
-        expListView = (ExpandableListView) findViewById(R.id.teamExpandable);
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_leaderboard, container, false);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        expListView = (ExpandableListView) view.findViewById(R.id.teamExpandable);
         prepareListData();
-        listAdapter = new LeaderboardListExpandableAdapter(this, listDataHeader, listDataChild);
+        listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
     }
 
@@ -65,4 +82,5 @@ public class LeaderBoardActivity extends AppCompatActivity {
         listDataChild.put(listDataHeader.get(1), underContract);
         listDataChild.put(listDataHeader.get(2), closed);
     }
+
 }
