@@ -14,13 +14,15 @@ public class Metric {
     private int currentNum;
     private int goalNum;
     private int thumbnailId;
+    private int color;
 
 
-    public Metric(String title, int currentNum, int goalNum, int thumbnailId){
+    public Metric(String title, int currentNum, int goalNum, int thumbnailId, int color){
         this.title = title;
         this.currentNum = currentNum;
         this.goalNum = goalNum;
         this.thumbnailId = thumbnailId;
+        this.color = color;
     }
 
     public int getPercentComplete(){
@@ -59,4 +61,11 @@ public class Metric {
         this.thumbnailId = thumbnailId;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

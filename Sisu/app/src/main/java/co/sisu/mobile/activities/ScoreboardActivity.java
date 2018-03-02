@@ -133,10 +133,9 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
         final int ANIMATION_DURATION = 2500; // 2500ms = 2,5s
         final List<Metric> metricList = dataController.getMetrics();
 
-
         Metric contactsMetric = metricList.get(0);
         CircularProgressBar contactsProgress = findViewById(R.id.contactsProgress);
-        contactsProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        contactsProgress.setColor(ContextCompat.getColor(this, contactsMetric.getColor()));
         contactsProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         contactsProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         contactsProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
@@ -148,7 +147,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         Metric appointmentsMetric = metricList.get(1);
         CircularProgressBar appointmentsProgress = findViewById(R.id.appointmentsProgress);
-        appointmentsProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        appointmentsProgress.setColor(ContextCompat.getColor(this, appointmentsMetric.getColor()));
         appointmentsProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         appointmentsProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         appointmentsProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
@@ -160,7 +159,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         Metric bbSignedMetric = metricList.get(2);
         CircularProgressBar bbSignedProgress = findViewById(R.id.bbSignedProgress);
-        bbSignedProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        bbSignedProgress.setColor(ContextCompat.getColor(this, bbSignedMetric.getColor()));
         bbSignedProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         bbSignedProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         bbSignedProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
@@ -172,7 +171,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         Metric listingsTakenMetric = metricList.get(3);
         CircularProgressBar listingsTakenProgress = findViewById(R.id.listingsTakenProgress);
-        listingsTakenProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        listingsTakenProgress.setColor(ContextCompat.getColor(this, listingsTakenMetric.getColor()));
         listingsTakenProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         listingsTakenProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         listingsTakenProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
@@ -184,7 +183,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         Metric underContractMetric = metricList.get(4);
         CircularProgressBar underContractProgress = findViewById(R.id.underContractProgress);
-        underContractProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        underContractProgress.setColor(ContextCompat.getColor(this, underContractMetric.getColor()));
         underContractProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         underContractProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         underContractProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
@@ -196,7 +195,7 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
 
         Metric closedMetric = metricList.get(5);
         CircularProgressBar closedProgress = findViewById(R.id.closedProgress);
-        closedProgress.setColor(ContextCompat.getColor(this, R.color.colorMoonBlue));
+        closedProgress.setColor(ContextCompat.getColor(this, closedMetric.getColor()));
         closedProgress.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
         closedProgress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         closedProgress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));

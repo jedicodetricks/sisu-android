@@ -23,7 +23,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="25dp"
                 app:layout_constraintEnd_toStartOf="@id/rowCounter"
-                app:srcCompat="@drawable/add_icon" />
+                app:srcCompat="@drawable/minus_icon" />
 
             <TextView
                 android:id="@+id/rowCounter"
