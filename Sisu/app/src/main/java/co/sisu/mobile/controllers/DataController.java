@@ -45,7 +45,7 @@ public class DataController {
         morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.sisu_mark));
         morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.sisu_mark));
         morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("Setup", "", R.drawable.sisu_mark));
+        morePage.add(new MorePageContainer("Logout", "", R.drawable.sisu_mark));
     }
 
     public List<Metric> getMetrics() {
