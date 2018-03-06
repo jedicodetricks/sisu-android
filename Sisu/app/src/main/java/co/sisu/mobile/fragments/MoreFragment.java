@@ -1,15 +1,19 @@
 package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.MorePageContainer;
@@ -18,7 +22,7 @@ import co.sisu.mobile.models.MorePageContainer;
  * Created by Brady Groharing on 2/28/2018.
  */
 
-public class MoreFragment extends Fragment{
+public class MoreFragment extends Fragment implements AdapterView.OnItemClickListener{
 
     private ListView mListView;
     DataController dataController = new DataController();
@@ -59,9 +63,32 @@ public class MoreFragment extends Fragment{
         mListView.setOnItemClickListener(this);
     }
 
+
     @Override
-    public void onClick(View view) {
-        Toast.makeText(getContext(), String.valueOf(view.getId()), Toast.LENGTH_SHORT);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
+        
+        switch(value.getTitle()) {
+            case "Teams":
+                break;
+            case "Clients":
+                ((ParentActivity) getActivity()).replaceFragment(ClientsFragment.class);
+                break;
+            case "My Profile":
+                ((ParentActivity) getActivity()).replaceFragment(MyProfileFragment.class);
+                break;
+            case "Setup":
+                ((ParentActivity) getActivity()).replaceFragment(SetupFragment.class);
+                break;
+            case "Settings":
+                ((ParentActivity) getActivity()).replaceFragment(SettingsFragment.class);
+                break;
+            case "Feedback":
+                ((ParentActivity) getActivity()).replaceFragment(FeedbackFragment.class);
+                break;
+            case "Logout":
+                break;
+        }
 
     }
 }
