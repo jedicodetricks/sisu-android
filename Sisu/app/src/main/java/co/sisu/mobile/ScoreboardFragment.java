@@ -5,14 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,7 +17,6 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.List;
 
-import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
