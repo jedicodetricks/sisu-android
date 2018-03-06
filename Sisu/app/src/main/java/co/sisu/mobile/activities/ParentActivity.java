@@ -74,8 +74,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         ImageView moreButton = findViewById(R.id.moreView);
         moreButton.setOnClickListener(this);
 
-        ImageView addButton = findViewById(R.id.addView);
-        addButton.setOnClickListener(this);
+//        ImageView addButton = findViewById(R.id.addView);
+//        addButton.setOnClickListener(this);
 
     }
 

@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -10,20 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.List;
 
+import co.sisu.mobile.R;
+import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScoreboardFragment extends Fragment {
+public class ScoreboardFragment extends Fragment implements View.OnClickListener{
 
     DataController dataController = new DataController();
 
@@ -40,14 +45,9 @@ public class ScoreboardFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-//        getSupportActionBar().setElevation(0);
-//        TextView pageTitle = view.findViewById(R.id.action_bar_title);
-//        pageTitle.setText("Scoreboard");
         createAndAnimateProgressBars();
         initializeTimelineSelector();
+        initializeButton();
     }
 
     private void initializeTimelineSelector() {
@@ -66,6 +66,13 @@ public class ScoreboardFragment extends Fragment {
                 //not sure what this does
             }
         });
+    }
+
+    private void initializeButton(){
+
+        ImageView addButton = getView().findViewById(R.id.addView);
+        addButton.setOnClickListener(this);
+
     }
 
     private void createAndAnimateProgressBars(){
@@ -146,6 +153,30 @@ public class ScoreboardFragment extends Fragment {
         closedCurrentNumber.setText(String.valueOf(closedMetric.getCurrentNum()));
         closedGoalNumber.setText(String.valueOf(closedMetric.getGoalNum()));
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addView:
+                //do stuff
+                //open floating menu
+                navigatePage(AddClientActivity.class);
+//                showToast("Add Button is clicked");
+                break;
+            default:
+                //do stuff
+                break;
+        }
+    }
+
+    private void navigatePage(Class c){
+        Intent intent = new Intent(getContext(), c);
+        startActivity(intent);
+    }
+
+    private void showToast(CharSequence msg){
+        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
 }

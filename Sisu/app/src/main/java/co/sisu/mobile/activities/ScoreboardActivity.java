@@ -71,11 +71,11 @@ public class ScoreboardActivity extends AppCompatActivity implements View.OnClic
                 //do stuff
                 navigatePage(ParentActivity.class);
                 break;
-            case R.id.addView:
-                //do stuff
-                //open floating menu
-                showToast("Add Button is clicked");
-                break;
+//            case R.id.addView:
+//                //do stuff
+//                //open floating menu
+//                showToast("Add Button is clicked");
+//                break;
             default:
                 //do stuff
                 break;
