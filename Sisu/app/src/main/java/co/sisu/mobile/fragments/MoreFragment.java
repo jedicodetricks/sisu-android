@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 import co.sisu.mobile.R;
@@ -17,7 +18,7 @@ import co.sisu.mobile.models.MorePageContainer;
  * Created by Brady Groharing on 2/28/2018.
  */
 
-public class MoreFragment extends Fragment {
+public class MoreFragment extends Fragment{
 
     private ListView mListView;
     DataController dataController = new DataController();
@@ -37,6 +38,11 @@ public class MoreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initializeListView();
+        inititializeButtons();
+    }
+
+    private void inititializeButtons() {
+
     }
 
     private void initializeListView() {
@@ -49,5 +55,13 @@ public class MoreFragment extends Fragment {
 
         MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList);
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Toast.makeText(getContext(), String.valueOf(view.getId()), Toast.LENGTH_SHORT);
+
     }
 }
