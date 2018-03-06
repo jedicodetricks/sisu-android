@@ -1,4 +1,4 @@
-package co.sisu.mobile;
+package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;

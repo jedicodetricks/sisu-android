@@ -1,4 +1,4 @@
-package co.sisu.mobile;
+package co.sisu.mobile.fragments;
 
 
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 
 /**

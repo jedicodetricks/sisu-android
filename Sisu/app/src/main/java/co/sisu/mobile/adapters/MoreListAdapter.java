@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,19 +15,20 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.MorePageContainer;
 
 /**
- * Created by Brady Groharing on 2/24/2018.
+ * Created by Brady Groharing on 2/28/2018.
  */
 
-public class RecordListAdapter extends BaseAdapter {
+public class MoreListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<Metric> mDataSource;
+    private ArrayList<MorePageContainer> mDataSource;
 
-    public RecordListAdapter(Context context, List<Metric> items) {
+    public MoreListAdapter(Context context, List<MorePageContainer> items) {
         mContext = context;
-        mDataSource = (ArrayList<Metric>) items;
+        mDataSource = (ArrayList<MorePageContainer>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -50,18 +50,21 @@ public class RecordListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
+        View rowView = mInflater.inflate(R.layout.adapter_more_list, parent, false);
 
         // Get title element
-        TextView titleTextView = rowView.findViewById(R.id.record_list_title);
+        TextView titleTextView = rowView.findViewById(R.id.more_list_title);
+
+        TextView subTitleTextView = rowView.findViewById(R.id.more_list_subtitle);
 
         // Get thumbnail element
-        ImageView thumbnailImageView = rowView.findViewById(R.id.record_list_thumbnail);
+        ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);
 
-        Metric metric = (Metric) getItem(position);
+        MorePageContainer morePageContainer = (MorePageContainer) getItem(position);
 
-        titleTextView.setText(metric.getTitle());
-        thumbnailImageView.setImageResource(metric.getThumbnailId());
+        titleTextView.setText(morePageContainer.getTitle());
+        subTitleTextView.setText(morePageContainer.getSubTitle());
+        thumbnailImageView.setImageResource(morePageContainer.getThumbnailId());
 
 
         return rowView;
