@@ -15,12 +15,13 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="25dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/underContractAmount"
-        tools:layout_editor_absoluteX="70dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/underContractAmount" />
 
     <TextView
         android:id="@+id/contactsCurrentNumber"
@@ -66,12 +67,13 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/contactsProgressText"
-        tools:layout_editor_absoluteX="70dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contactsProgressText" />
 
     <TextView
         android:id="@+id/bbsignedCurrentNumber"
@@ -117,12 +119,13 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/bbSignedProgressText"
-        tools:layout_editor_absoluteX="70dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bbSignedProgressText" />
 
     <TextView
         android:id="@+id/underContractCurrentNumber"
@@ -168,12 +171,15 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="25dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/closedAmount"
-        tools:layout_editor_absoluteX="236dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/closedAmount" />
 
     <TextView
         android:id="@+id/appointmentsCurrentNumber"
@@ -219,12 +225,15 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="10dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/appointmentsProgressText"
-        tools:layout_editor_absoluteX="236dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bbSignedProgress"
+        app:layout_constraintTop_toBottomOf="@id/appointmentsProgressText" />
 
     <TextView
         android:id="@+id/listingsTakenCurrentNumber"
@@ -270,12 +279,15 @@
         android:layout_height="@dimen/circularBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="10dp"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintTop_toBottomOf="@id/listingsTakenProgressText"
-        tools:layout_editor_absoluteX="236dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/underContractProgress"
+        app:layout_constraintTop_toBottomOf="@id/listingsTakenProgressText" />
 
     <TextView
         android:id="@+id/closedCurrentNumber"
@@ -316,11 +328,10 @@
 
     <Spinner
         android:id="@+id/timelineSelector"
-        android:layout_width="0dp"
-        android:layout_height="27dp"
-        android:layout_marginTop="1dp"
+        android:layout_width="327dp"
+        android:layout_height="33dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.786"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -329,12 +340,9 @@
         android:id="@+id/addView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closedProgress"
         app:srcCompat="@drawable/add_icon" />
 
 
@@ -343,7 +351,6 @@
         style="@style/ScoreboardLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:text="Under Contract"
         app:layout_constraintEnd_toEndOf="@id/contactsProgress"
         app:layout_constraintStart_toStartOf="@id/contactsProgress"
