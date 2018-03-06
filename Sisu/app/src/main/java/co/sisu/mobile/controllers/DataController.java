@@ -30,12 +30,12 @@ public class DataController {
     }
     //this is for testing
     public void initializeMetrics(){
-        metrics.add(new Metric("Contacts",5, 7, R.drawable.contact_icon));//add each metric section here
-        metrics.add(new Metric("Appointments",3, 80,  R.drawable.appointment_icon));
-        metrics.add(new Metric("BB Signed",5, 10,  R.drawable.signed_icon));
-        metrics.add(new Metric("Listings Taken",70, 70,  R.drawable.listing_icon));
-        metrics.add(new Metric("Under Contract",27, 70,  R.drawable.contract_icon));
-        metrics.add(new Metric("Closed",17, 70,  R.drawable.closed_icon));
+        metrics.add(new Metric("Contacts",5, 7, R.drawable.contact_icon, R.color.colorYellow));//add each metric section here
+        metrics.add(new Metric("Appointments",3, 80,  R.drawable.appointment_icon, R.color.colorMoonBlue));
+        metrics.add(new Metric("BB Signed",5, 10,  R.drawable.signed_icon, R.color.colorYellow));
+        metrics.add(new Metric("Listings Taken",70, 70,  R.drawable.listing_icon, R.color.colorCorporateOrange));
+        metrics.add(new Metric("Under Contract",27, 70,  R.drawable.contract_icon, R.color.colorMoonBlue));
+        metrics.add(new Metric("Closed",17, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
     }
 
     public void initializeMorePageObject() {

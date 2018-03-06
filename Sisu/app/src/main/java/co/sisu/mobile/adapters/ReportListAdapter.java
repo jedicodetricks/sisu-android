@@ -1,15 +1,20 @@
 package co.sisu.mobile.adapters;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -82,9 +87,19 @@ public class ReportListAdapter extends BaseAdapter {
         percentageTextView.setText(metric.getPercentComplete() + "% complete");
         progressBar.setProgress(metric.getPercentComplete());
         progressBar.setScaleY(4f);
+        int color = ContextCompat.getColor(mContext, metric.getColor());
+        progressBar.setProgressTintList(ColorStateList.valueOf(color));
+        animateBars(progressBar);
         thumbnailImageView.setImageResource(metric.getThumbnailId());
 
-
         return rowView;
+    }
+
+    private void animateBars(ProgressBar progressBar){
+        final int ANIMATION_DURATION = 2500;
+        ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", 0, progressBar.getProgress());
+        animation.setDuration(ANIMATION_DURATION);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
     }
 }

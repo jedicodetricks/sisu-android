@@ -449,6 +449,7 @@
             <!--app:layout_constraintEnd_toEndOf="parent"-->
             <!--app:srcCompat="@drawable/add_icon" />-->
 
+
         <TextView
             android:id="@+id/underContractLabel"
             style="@style/ScoreboardLabelText"
