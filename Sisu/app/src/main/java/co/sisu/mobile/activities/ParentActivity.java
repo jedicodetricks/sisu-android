@@ -1,6 +1,8 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -130,6 +132,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.scoreboardView:
                 resetToolbarImages("scoreboard");
+                pageTitle.setText("Scoreboard");
                 // Begin the transaction
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 // Replace the contents of the container with the new fragment
@@ -140,24 +143,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
+                pageTitle.setText("Report");
                 ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.your_placeholder, new ReportFragment());
                 ft.commit();
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
+                pageTitle.setText("Record");
                 ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.your_placeholder, new RecordFragment());
                 ft.commit();
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
+                pageTitle.setText("Leaderboard");
                 ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.your_placeholder, new LeaderboardFragment());
                 ft.commit();
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
+                pageTitle.setText("More");
                 ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.your_placeholder, new MoreFragment());
                 ft.commit();
@@ -167,6 +174,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 //do stuff
                 break;
         }
+    }
+
+    public void replaceFragment(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment)
+                .commit();
     }
 
     private void showToast(CharSequence msg){
