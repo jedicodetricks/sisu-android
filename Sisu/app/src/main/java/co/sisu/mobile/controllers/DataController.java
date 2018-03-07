@@ -1,7 +1,5 @@
 package co.sisu.mobile.controllers;
 
-import android.media.Image;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,13 +37,13 @@ public class DataController {
     }
 
     public void initializeMorePageObject() {
-        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.contact_icon_active));
-        morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.sisu_mark));
-        morePage.add(new MorePageContainer("Logout", "", R.drawable.sisu_mark));
+        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
+        morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
+        morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
+        morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
+        morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon_active));
+        morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
+        morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
     public List<Metric> getMetrics() {
