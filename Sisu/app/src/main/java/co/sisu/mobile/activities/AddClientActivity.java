@@ -1,8 +1,10 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 
 import co.sisu.mobile.R;
 
@@ -16,59 +18,40 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_client);
+        initializeButtons();
     }
 
     @Override
     public void onClick(View v) {
-
+        Button buyerButton = (Button) findViewById(R.id.buyerButton);
+        Button sellerButton= (Button) findViewById(R.id.sellerButton);
+        switch (v.getId()) {
+            case R.id.buyerButton:
+                buyerButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
+                //buyerButton.setBackgroundColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
+                sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+                break;
+            case R.id.sellerButton:
+                buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+                sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
+            case R.id.importContactButton:
+                Button importContactButton = (Button) findViewById(R.id.importContactButton);
+                //do stuff for import
+                break;
+            default:
+                break;
+        }
     }
 
-//    @Override
-//    public void onFocusChange(View v, boolean hasFocus) {
-//        switch (v.getId()) {
-//            case R.id.editName:
-//                final EditText nameText = (EditText) findViewById(R.id.editName);
-//                if(hasFocus){
-//                    nameText.setHint(R.string.app_name);
-//                } else {
-//                    nameText.setHint("");
-//                }
-//                break;
-//            case R.id.editEmail:
-//                final EditText emailText = (EditText) findViewById(R.id.editEmail);
-//                if(hasFocus){
-//                    emailText.setHint(R.string.app_name);
-//                } else {
-//                    emailText.setHint("");
-//                }
-//                break;
-//            case R.id.editPhone:
-//                final EditText phoneText = (EditText) findViewById(R.id.editPhone);
-//                if(hasFocus){
-//                    phoneText.setHint(R.string.app_name);
-//                } else {
-//                    phoneText.setHint("");
-//                }
-//                break;
-//            case R.id.editTransAmount:
-//                final EditText transAmountText = (EditText) findViewById(R.id.editTransAmount);
-//                if(hasFocus){
-//                    transAmountText.setHint(R.string.app_name);
-//                } else {
-//                    transAmountText.setHint("");
-//                }
-//                break;
-//            case R.id.editCommission:
-//                final EditText commissionText = (EditText) findViewById(R.id.editCommission);
-//                if(hasFocus){
-//                    commissionText.setHint(R.string.app_name);
-//                } else {
-//                    commissionText.setHint("");
-//                    commissionText.setHighlightColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+    private void initializeButtons(){
+
+        Button buyerButton= findViewById(R.id.buyerButton);
+        buyerButton.setOnClickListener(this);
+
+        Button sellerButton= findViewById(R.id.sellerButton);
+        sellerButton.setOnClickListener(this);
+
+        Button importContactButton = findViewById(R.id.importContactButton);
+        importContactButton.setOnClickListener(this);
+    }
 }
