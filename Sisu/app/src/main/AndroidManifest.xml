@@ -16,10 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ScoreboardActivity" />
-        <activity android:name=".activities.ReportActivity" />
-        <activity android:name=".activities.RecordActivity" />
-        <activity android:name=".activities.LeaderBoardActivity" />
         <activity android:name=".activities.ForgotPasswordActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.ParentActivity" />

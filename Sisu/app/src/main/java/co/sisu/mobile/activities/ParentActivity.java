@@ -47,12 +47,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private void navigateToScoreboard() {
         resetToolbarImages("scoreboard");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Replace the contents of the container with the new fragment
-        ft.replace(R.id.your_placeholder, new ScoreboardFragment());
-        // or ft.add(R.id.your_placeholder, new FooFragment());
-        // Complete the changes added above
-        ft.commit();
+        replaceFragment(ScoreboardFragment.class);
     }
 
     private void initializeButtons(){
@@ -75,10 +70,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         ImageView moreButton = findViewById(R.id.moreView);
         moreButton.setOnClickListener(this);
-
-//        ImageView addButton = findViewById(R.id.addView);
-//        addButton.setOnClickListener(this);
-
     }
 
     private void resetToolbarImages(String inputActivity) {
@@ -133,45 +124,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.scoreboardView:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
-                // Begin the transaction
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                // Replace the contents of the container with the new fragment
-                ft.replace(R.id.your_placeholder, new ScoreboardFragment());
-                // or ft.add(R.id.your_placeholder, new FooFragment());
-                // Complete the changes added above
-                ft.commit();
+                replaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.your_placeholder, new ReportFragment());
-                ft.commit();
+                replaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.your_placeholder, new RecordFragment());
-                ft.commit();
+                replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.your_placeholder, new LeaderboardFragment());
-                ft.commit();
+                replaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.your_placeholder, new MoreFragment());
-                ft.commit();
-                //do stuff
+                replaceFragment(MoreFragment.class);
                 break;
             default:
-                //do stuff
                 break;
         }
     }
