@@ -67,9 +67,10 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
-        
+
         switch(value.getTitle()) {
             case "Teams":
+                Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
             case "Clients":
                 ((ParentActivity) getActivity()).replaceFragment(ClientsFragment.class);
@@ -87,6 +88,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 ((ParentActivity) getActivity()).replaceFragment(FeedbackFragment.class);
                 break;
             case "Logout":
+                Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
         }
 
