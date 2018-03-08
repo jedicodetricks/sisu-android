@@ -7,7 +7,9 @@
     android:minHeight="180dp"
     android:id="@+id/logIn"
     tools:context="co.sisu.mobile.activities.MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="81dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <ImageView
         android:id="@+id/sisuLogo"
