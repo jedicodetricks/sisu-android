@@ -25,20 +25,21 @@
                 app:layout_constraintEnd_toStartOf="@id/rowCounter"
                 app:srcCompat="@drawable/minus_icon" />
 
-            <TextView
+            <EditText
                 android:id="@+id/rowCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="25dp"
-                android:layout_toStartOf="@id/addButton"
+                android:layout_toStartOf="@id/plusButton"
+                android:inputType="number"
                 android:paddingBottom="2dp"
-                android:textSize="@dimen/font_larger"
                 android:text="0"
-                app:layout_constraintEnd_toStartOf="@id/addButton" />
+                android:textSize="@dimen/font_larger"
+                app:layout_constraintEnd_toStartOf="@id/plusButton" />
 
             <ImageView
-                android:id="@+id/addButton"
+                android:id="@+id/plusButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"

@@ -6,13 +6,16 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,19 +23,22 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.RecordService;
 import co.sisu.mobile.models.Metric;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment {
+public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener {
 
 
     private ListView mListView;
     DataController dataController = new DataController();
+    RecordService recordService = new RecordService();
 
     public RecordFragment() {
         // Required empty public constructor
@@ -92,6 +98,24 @@ public class RecordFragment extends Fragment {
 
         RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList);
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(this);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        Metric metric = (Metric) adapterView.getItemAtPosition(position);
+//        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
+
+        if(id == 0) {
+            metric.setCurrentNum(metric.getCurrentNum() - 1);
+        }
+        else {
+            metric.setCurrentNum(metric.getCurrentNum() + 1);
+        }
+    }
+}
+
+interface BtnClickListener {
+    void onBtnClick(int position);
 }
