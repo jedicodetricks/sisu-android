@@ -1,12 +1,15 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,10 +57,9 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
 
-        TextView title = (TextView) convertView.findViewById(R.id.leaderboardItemTitle);
-        TextView subtitle = (TextView) convertView.findViewById(R.id.leaderboardItemSubTitle);
-        TextView score = (TextView) convertView.findViewById(R.id.leaderboardScore);
-
+        TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
+        TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
+        TextView score = convertView.findViewById(R.id.leaderboardScore);
 
         title.setText(childText);
         subtitle.setText("Testing");
@@ -96,10 +98,21 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_headers, null);
         }
 
-        TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.record_list_title);
+        TextView lblListHeader = convertView.findViewById(R.id.record_list_title);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
+
+//        switch(headerTitle) {
+//            case "Overall Leaderboard":
+//                convertView.setBackgroundColor(Color.BLUE);
+//                break;
+//            case "Under Contract":
+//                convertView.setBackgroundColor(Color.GREEN);
+//                break;
+//            case "Closed":
+//                convertView.setBackgroundColor(Color.RED);
+//                break;
+//        }
 
         return convertView;
     }

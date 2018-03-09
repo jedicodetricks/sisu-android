@@ -115,7 +115,3 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 }
-
-interface BtnClickListener {
-    void onBtnClick(int position);
-}
