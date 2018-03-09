@@ -160,16 +160,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment)
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment).commit();
     }
 
     private void showToast(CharSequence msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
 }

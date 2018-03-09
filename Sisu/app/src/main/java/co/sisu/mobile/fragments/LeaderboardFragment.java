@@ -41,7 +41,7 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        expListView = (ExpandableListView) view.findViewById(R.id.teamExpandable);
+        expListView = view.findViewById(R.id.teamExpandable);
         prepareListData();
         listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
