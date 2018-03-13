@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,27 +10,38 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import co.sisu.mobile.adapters.MoreListAdapter;
+import co.sisu.mobile.adapters.TeamBarAdapter;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.R;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.RecordFragment;
+import co.sisu.mobile.models.MorePageContainer;
 
 /**
  * Created by bradygroharing on 2/26/18.
  */
 
-public class ParentActivity extends AppCompatActivity implements View.OnClickListener {
+public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     TextView pageTitle;
     DrawerLayout drawerLayout;
+    DataController dataController = new DataController();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +54,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
+        initializeTeamBar();
         navigateToScoreboard();
+    }
+
+    private void initializeTeamBar() {
+//        NavigationView navView = findViewById(R.id.nav_view);
+//
+//        Menu menu = navView.getMenu();
+//
+//        for (int i = 1; i <= 3; i++) {
+//            menu.add("Runtime item "+ i);
+//        }
+
+        ListView mListView = findViewById(R.id.navViewList);
+        mListView.setDivider(null);
+        mListView.setDividerHeight(30);
+
+        final List<String> teamsList = dataController.getTeams();
+
+        TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
+        mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener(this);
+
+
     }
 
     private void navigateToScoreboard() {
@@ -151,6 +187,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
+
+        switch(value.getTitle()) {
+
+        }
+    }
+
     public void replaceFragment(Class fragmentClass) {
         Fragment fragment = null;
         try {
@@ -160,16 +205,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment)
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment).commit();
     }
 
     private void showToast(CharSequence msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
 }

@@ -21,7 +21,7 @@ import co.sisu.mobile.models.MorePageContainer;
  * Created by Brady Groharing on 2/28/2018.
  */
 
-public class MoreFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class MoreFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView mListView;
     DataController dataController = new DataController();
@@ -92,6 +92,5 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
         }
-
     }
 }
