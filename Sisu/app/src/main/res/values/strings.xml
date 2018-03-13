@@ -7,6 +7,10 @@
         <item>This Year</item>
     </string-array>
 
+    <!--Navbar-->
+    <string name="navbarTitle">Current Team</string>
+
+
     <!--Labels-->
     <string name="appointments">Appointments</string>
     <string name="bb_signed">BB Signed</string>

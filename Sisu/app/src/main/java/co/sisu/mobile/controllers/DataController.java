@@ -7,6 +7,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by Jeff on 2/21/2018.
@@ -16,7 +17,7 @@ public class DataController {
     private boolean metricOneCurrent = true;
     private List<Metric> metrics1 = new ArrayList<>();
     private List<Metric> metrics2 = new ArrayList<>();
-    private List<String> teams = new ArrayList<>();
+    private List<TeamObject> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
 
     public DataController(){
@@ -61,17 +62,16 @@ public class DataController {
     }
 
     public void initializeTeamsObject() {
-        teams.add("Team Alpha");
-        teams.add("Team 2");
-        teams.add("Team C");
-        teams.add("Team Quatro");
+        teams.add(new TeamObject("Utah Life", 666));
+        teams.add(new TeamObject("Century 21", 69));
+        teams.add(new TeamObject("Sisu Realtor", 420));
     }
 
     public List<Metric> getMetrics() {
         return metrics1;
     }
 
-    public List<String> getTeams() {
+    public List<TeamObject> getTeams() {
         return teams;
     }
 

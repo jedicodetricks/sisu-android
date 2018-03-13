@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -31,6 +33,7 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -59,19 +62,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initializeTeamBar() {
-//        NavigationView navView = findViewById(R.id.nav_view);
-//
-//        Menu menu = navView.getMenu();
-//
-//        for (int i = 1; i <= 3; i++) {
-//            menu.add("Runtime item "+ i);
-//        }
-
         ListView mListView = findViewById(R.id.navViewList);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<String> teamsList = dataController.getTeams();
+        final List<TeamObject> teamsList = dataController.getTeams();
 
         TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
         mListView.setAdapter(adapter);
@@ -189,11 +184,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
-
-        switch(value.getTitle()) {
-
-        }
+        TeamObject team = (TeamObject) parent.getItemAtPosition(position);
+        showToast(String.valueOf(team.getId()));
+        // Get information based on team id
     }
 
     public void replaceFragment(Class fragmentClass) {
