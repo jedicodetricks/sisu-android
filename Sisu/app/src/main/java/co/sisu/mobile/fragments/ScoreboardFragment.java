@@ -36,6 +36,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         // Required empty public constructor
     }
 
+    public void teamSwap() {
+//        showToast("SCOREBOARD TEAM SWAP");
+        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

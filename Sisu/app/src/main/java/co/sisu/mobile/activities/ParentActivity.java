@@ -44,6 +44,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     TextView pageTitle;
     DrawerLayout drawerLayout;
     DataController dataController = new DataController();
+    private String fragmentTag = "Scoreboard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
-
-
     }
 
     private void navigateToScoreboard() {
@@ -155,26 +154,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.scoreboardView:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
+                fragmentTag = "Scoreboard";
                 replaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
+                fragmentTag = "Report";
                 replaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
+                fragmentTag = "Record";
                 replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
+                fragmentTag = "Leaderboard";
                 replaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
+                fragmentTag = "More";
                 replaceFragment(MoreFragment.class);
                 break;
             default:
@@ -185,7 +189,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-        showToast(String.valueOf(team.getId()));
+//        showToast(String.valueOf(team.getId()));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
+
+//        showToast(String.valueOf(f.getTag()));
+        switch (f.getTag()) {
+            case "Scoreboard":
+                ((ScoreboardFragment) f).teamSwap();
+//                showToast("SCOREBOARD");
+            case "Report":
+            case "Record":
+
+        }
+        drawerLayout.closeDrawer(Gravity.LEFT);
         // Get information based on team id
     }
 
@@ -198,7 +215,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
 
     private void showToast(CharSequence msg){
