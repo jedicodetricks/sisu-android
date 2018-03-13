@@ -16,7 +16,7 @@ public class DataController {
     private boolean metricOneCurrent = true;
     private List<Metric> metrics1 = new ArrayList<>();
     private List<Metric> metrics2 = new ArrayList<>();
-
+    private List<String> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
 
     public DataController(){
@@ -28,6 +28,7 @@ public class DataController {
         initializeMetricsOne();
         initliazeMetricsTwo();
         initializeMorePageObject();
+        initializeTeamsObject();
         ds.setData(metrics1);
     }
     //this is for testing
@@ -59,8 +60,19 @@ public class DataController {
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
+    public void initializeTeamsObject() {
+        teams.add("Team Alpha");
+        teams.add("Team 2");
+        teams.add("Team C");
+        teams.add("Team Quatro");
+    }
+
     public List<Metric> getMetrics() {
         return metrics1;
+    }
+
+    public List<String> getTeams() {
+        return teams;
     }
 
     public List<MorePageContainer> getMorePageContainer() { return morePage; }

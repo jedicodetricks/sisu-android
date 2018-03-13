@@ -31,11 +31,13 @@ import co.sisu.mobile.models.Metric;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
 
     private ListView mListView;
     DataController dataController = new DataController();
+    int selectedYear, selectedMonth, selectedDay;
+    List<Metric> metricList;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -51,49 +53,38 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initializeListView();
+        metricList = dataController.getMetrics();
+        initializeListView(metricList);
         initializeCalendarHandler();
     }
 
     private void initializeCalendarHandler() {
 
         final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-        final Context context = getContext();
-//        Date currentTime = Calendar.getInstance().getTime();
-//        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-//        String formattedDate = sdf.format(currentTime);
-        final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        final int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        final int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+        final TextView dateDisplay = getView().findViewById(R.id.record_date);
 
-        updateDisplayDate(currentYear, currentMonth, currentDay);
+        selectedYear = Calendar.getInstance().get(Calendar.YEAR);
+        selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-        calendarLauncher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final DatePickerDialog dialog = new DatePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    //Todo your work here
-//                    Toast.makeText(getContext(), "hi", Toast.LENGTH_SHORT).show();
-                    updateDisplayDate(year, month, day);
-                    }
-                }, currentYear, currentMonth, currentDay);
+        updateDisplayDate(selectedYear, selectedMonth, selectedDay);
 
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-                dialog.show();
-
-            }
-        });
+        calendarLauncher.setOnClickListener(this);
+        dateDisplay.setOnClickListener(this);
     }
 
     private void updateDisplayDate(int year, int month, int day) {
-        Date d = null;
+
+        selectedYear = year;
+        selectedMonth = month;
+        selectedDay = day;
+
+        Date d;
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         month += 1;
         String formatDate = year + "/" + month + "/" + day;
+
         try {
             d = formatter.parse(formatDate);
             Calendar updatedTime = Calendar.getInstance();
@@ -107,13 +98,10 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
-    private void initializeListView() {
-
+    private void initializeListView(List<Metric> metricList) {
         mListView = getView().findViewById(R.id.record_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
-
-        final List<Metric> metricList = dataController.getMetrics();
 
         RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList);
         mListView.setAdapter(adapter);
@@ -132,5 +120,44 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         else {
             metric.setCurrentNum(metric.getCurrentNum() + 1);
         }
+    }
+
+    private void showDatePickerDialog() {
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                if(year != selectedYear || month != selectedMonth || day != selectedDay) {
+                    updateDisplayDate(year, month, day);
+                    updateRecordInfo();
+                }
+                else {
+                    Toast.makeText(getContext(), "You have selected the same day", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, selectedYear, selectedMonth, selectedDay);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        dialog.show();
+    }
+
+    private void updateRecordInfo() {
+        metricList = dataController.updateScoreboardTimeline();
+        initializeListView(metricList);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.calender_date_picker:
+            case R.id.record_date:
+                showDatePickerDialog();
+                break;
+            default:
+                break;
+        }
+
+
     }
 }

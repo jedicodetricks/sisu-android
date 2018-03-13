@@ -91,6 +91,5 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
         }
-
     }
 }
