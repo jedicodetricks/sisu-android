@@ -26,6 +26,19 @@
         <item name="android:textColor">@color/colorLightGrey</item>
     </style>
 
+    <style name="EditTextLabelStyle">
+        <item name="android:fontFamily">@font/roboto_thin</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat">
+        <item name="android:fontFamily">@font/roboto_thin</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="colorControlNormal">@color/colorLightGrey</item>
+        <item name="colorControlActivated">@color/colorLightGrey</item>
+        <item name="colorControlHighlight">@color/colorCorporateOrange</item>
+    </style>
+
     <style name="ScoreboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
@@ -43,6 +56,10 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
