@@ -45,7 +45,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        createAndAnimateProgressBars();
+        final List<Metric> metricList = dataController.getMetrics();
+        createAndAnimateProgressBars(metricList);
         initializeTimelineSelector();
         initializeButton();
     }
@@ -56,9 +57,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(
-                    AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                showToast("Spinner1: position=" + position + " id=" + id);
+                createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -75,9 +76,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void createAndAnimateProgressBars(){
+    private void createAndAnimateProgressBars(List<Metric> metricList){
         final int ANIMATION_DURATION = 2500; // 2500ms = 2,5s
-        final List<Metric> metricList = dataController.getMetrics();
 
         Context context = getContext();
 

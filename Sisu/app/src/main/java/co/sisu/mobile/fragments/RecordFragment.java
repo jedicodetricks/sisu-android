@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.RecordService;
 import co.sisu.mobile.models.Metric;
 
 
@@ -38,7 +36,6 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
     private ListView mListView;
     DataController dataController = new DataController();
-    RecordService recordService = new RecordService();
 
     public RecordFragment() {
         // Required empty public constructor
@@ -56,29 +53,32 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initializeListView();
         initializeCalendarHandler();
-
     }
 
     private void initializeCalendarHandler() {
 
-        ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
+        final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
         final Context context = getContext();
-        Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-        String formattedDate = sdf.format(currentTime);
+//        Date currentTime = Calendar.getInstance().getTime();
+//        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+//        String formattedDate = sdf.format(currentTime);
+        final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        final int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        final int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
 
-        TextView dateDisplay = getView().findViewById(R.id.record_date);
-        dateDisplay.setText(formattedDate);
+        updateDisplayDate(currentYear, currentMonth, currentDay);
 
         calendarLauncher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog dialog = new DatePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
+                final DatePickerDialog dialog = new DatePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        //Todo your work here
+                    //Todo your work here
+//                    Toast.makeText(getContext(), "hi", Toast.LENGTH_SHORT).show();
+                    updateDisplayDate(year, month, day);
                     }
-                }, 2018, 02, 27);
+                }, currentYear, currentMonth, currentDay);
 
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
@@ -88,9 +88,28 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         });
     }
 
+    private void updateDisplayDate(int year, int month, int day) {
+        Date d = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        month += 1;
+        String formatDate = year + "/" + month + "/" + day;
+        try {
+            d = formatter.parse(formatDate);
+            Calendar updatedTime = Calendar.getInstance();
+            updatedTime.setTime(d);
+
+            TextView dateDisplay = getView().findViewById(R.id.record_date);
+            dateDisplay.setText(sdf.format(updatedTime.getTime()));
+        } catch (ParseException e) {
+            Toast.makeText(getContext(), "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
     private void initializeListView() {
 
-        mListView = (ListView) getView().findViewById(R.id.record_list_view);
+        mListView = getView().findViewById(R.id.record_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
