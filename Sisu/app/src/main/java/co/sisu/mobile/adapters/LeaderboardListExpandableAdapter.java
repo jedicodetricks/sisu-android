@@ -1,15 +1,14 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,9 +96,12 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.leaderboard_group_headers, null);
         }
-
+//        Set the text styling for the list headers of leaderboards
         TextView lblListHeader = convertView.findViewById(R.id.record_list_title);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
+        Typeface mtypeFace = ResourcesCompat.getFont(_context, R.font.roboto_regular);
+        lblListHeader.setTypeface(mtypeFace);
+        lblListHeader.setTextColor( ContextCompat.getColor(_context, R.color.colorLightGrey));
+        lblListHeader.setTextSize(20);
         lblListHeader.setText(headerTitle);
 
 //        switch(headerTitle) {

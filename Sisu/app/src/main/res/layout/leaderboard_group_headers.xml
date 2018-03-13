@@ -5,9 +5,9 @@
 
         <ImageView android:layout_height="70dp" android:layout_width="70dp" android:contentDescription="@string/thumbnail" tools:src="@mipmap/ic_launcher" android:scaleType="centerInside" android:layout_marginTop="6dp" android:layout_marginStart="4dp" android:layout_marginBottom="6dp" android:layout_centerVertical="true" android:layout_alignParentStart="true" android:id="@+id/record_list_thumbnail"/>
 
-        <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:id="@+id/record_list_text_layout" android:layout_toEndOf="@id/record_list_thumbnail">
+        <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" style="@style/ScoreboardLabelText" android:id="@+id/record_list_text_layout" android:layout_toEndOf="@id/record_list_thumbnail">
 
-                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_title" tools:text="Title" android:textSize="22dp" android:layout_marginRight="8dp" android:layout_marginLeft="50dp"/>
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_title" tools:text="Title" style="@style/ScoreboardLabelText" android:layout_marginRight="8dp" android:layout_marginLeft="50dp"/>
 
         </RelativeLayout>
 

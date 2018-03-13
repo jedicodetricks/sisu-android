@@ -47,7 +47,7 @@ public class ReportFragment extends Fragment {
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<Metric> metricList = dataController.getMetrics();
+        final List<Metric> metricList = dataController.getReportMetrics();
 
         ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList);
         mListView.setAdapter(adapter);
