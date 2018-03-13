@@ -1,9 +1,7 @@
 package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
@@ -36,7 +35,9 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_more, container, false);
+
+        View toReturn = inflater.inflate(R.layout.activity_more, container, false);
+        return toReturn;
 
     }
     @Override
