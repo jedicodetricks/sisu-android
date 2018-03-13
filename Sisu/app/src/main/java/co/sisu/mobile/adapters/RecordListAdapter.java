@@ -8,19 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.Metric;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Brady Groharing on 2/24/2018.

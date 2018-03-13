@@ -2,7 +2,6 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +52,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        metricList = dataController.getMetrics();
+        metricList = dataController.getReportMetrics();
         initializeListView(metricList);
         initializeCalendarHandler();
     }

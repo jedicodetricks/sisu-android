@@ -39,6 +39,27 @@
         <item name="colorControlHighlight">@color/colorCorporateOrange</item>
     </style>
 
+    <style name="LeaderboardLabelText">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="LeaderboardItemsText">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RecordLabelText">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_large</item>
+    </style>
+
     <style name="ScoreboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
