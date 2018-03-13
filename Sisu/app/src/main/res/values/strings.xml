@@ -7,7 +7,7 @@
         <item>This Year</item>
     </string-array>
 
-    <string name="contacts">Contacts</string>
+    <!--Labels-->
     <string name="appointments">Appointments</string>
     <string name="bb_signed">BB Signed</string>
     <string name="listings_taken">Listings Taken</string>
@@ -16,11 +16,75 @@
     <string name="my_scoreboard">My Scoreboard</string>
     <string name="appts">Appts.</string>
     <string name="reports">Reports</string>
+    <string name="overall_leaderboard">Overall Leaderboard</string>
+    <string name="teams">Teams</string>
+    <string name="clients">Clients</string>
+    <string name="my_profile">My Profile</string>
+    <string name="setup">Setup</string>
+    <string name="settings">Settings</string>
+    <string name="feedback">Feedback</string>
+    <string name="logout">Logout</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="record">Record</string>
+    <string name="new_client">New Client</string>
+    <string name="goals">Goals</string>
 
-    <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
+    <!--Buttons/Links-->
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="need_account">Need an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="import_contact">Import</string>
+    <string name="buyer">Buyer</string>
+    <string name="seller">Seller</string>
+    <string name="submit">Submit</string>
 
+    <!--Hints-->
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email Address</string>
+    <string name="name_hint">Name</string>
+    <string name="phone_hint">Phone</string>
+    <string name="transaction_amount_hint">Transaction Amount</string>
+    <string name="commission_hint">Commission</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
+    <string name="contacts_hint">Contacts</string>
+    <string name="signed_buyers_hint">Signed Buyers</string>
+    <string name="signed_listings_hint">Signed Listings</string>
+    <string name="under_contract_hint">Under Contract</string>
+    <string name="closed_hint">Closed</string>
+    <string name="desired_income_hint">Desired Income</string>
+    <string name="goals_reason_hint">Your reason for tracking goals</string>
+
+    <!--Helper Text-->
+    <string name="teams_help_text">Configure team settings, invites, challenges</string>
+    <string name="clients_help_text">Modify your pipeline</string>
+    <string name="my_profile_help_text">Setup</string>
+    <string name="setup_help_text">Set goals, edit activities, record settings</string>
+    <string name="settings_help_text">Application settings</string>
+    <string name="feedback_help_text">Provide feedback</string>
+    <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
+    <string name="feedback_help_text_top">We are always looking for ways to improve!</string>
+    <string name="feedback_help_text_bottom">Let us know how by leaving feedback below!</string>
+
+    <!--temp strings-->
+    <string name="record_date">March 23, 2018</string>
+    <string name="contacts_current_num"></string>
+    <string name="contacts_goal_num">7</string>
+    <string name="bb_signed_current_num">5</string>
+    <string name="bb_signed_goal_num">10</string>
+    <string name="under_contract_current_num">27</string>
+    <string name="under_contract_goal_num">70</string>
+    <string name="appointments_current_num">3</string>
+    <string name="appointments_goal_num">80</string>
+    <string name="listings_taken_current_num">70</string>
+    <string name="listings_taken_goal_num">70</string>
+    <string name="closed_current_num">17</string>
+    <string name="closed_goal_num">70</string>
+    <string name="under_contract_amount">$56,085</string>
+    <string name="closed_amount">$91,862</string>
     <string name="thumbnail">Thumbnail</string>
 
 </resources>
