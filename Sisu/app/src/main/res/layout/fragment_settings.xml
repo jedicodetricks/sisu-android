@@ -1,13 +1,13 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="co.sisu.mobile.fragments.SettingsFragment">
 
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/settingsLogo"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_marginStart="70dp"
@@ -19,63 +19,126 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/notificationSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Switch"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@id/settingsLogo"
+        android:scaleX="1.3"
+        android:scaleY="1.3"/>
 
     <Switch
-        android:id="@+id/switch3"
+        android:id="@+id/reminderSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Switch"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        app:layout_constraintTop_toBottomOf="@id/notificationSwitch"
+        android:scaleX="1.3"
+        android:scaleY="1.3"/>
 
     <Switch
-        android:id="@+id/switch4"
+        android:id="@+id/lightsSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Switch"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch5" />
+        app:layout_constraintTop_toBottomOf="@id/imageButton"
+        android:scaleX="1.3"
+        android:scaleY="1.3"/>
 
     <Switch
-        android:id="@+id/switch5"
+        android:id="@+id/idSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Switch"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@id/lightsSwitch"
+        android:scaleX="1.3"
+        android:scaleY="1.3"/>
+
+
 
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:src="@android:drawable/ic_menu_my_calendar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch3" />
+        app:layout_constraintTop_toBottomOf="@id/reminderSwitch" />
 
-    <EditText
-        android:id="@+id/editText22"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/notificationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/pushNotification"
+        app:layout_constraintBottom_toBottomOf="@id/notificationSwitch"
+        app:layout_constraintStart_toEndOf="@id/notificationSwitch"
+        app:layout_constraintTop_toTopOf="@id/notificationSwitch" />
+
+    <TextView
+        android:id="@+id/reminderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/dailyReminder"
+        app:layout_constraintBottom_toBottomOf="@id/reminderSwitch"
+        app:layout_constraintStart_toEndOf="@id/reminderSwitch"
+        app:layout_constraintTop_toTopOf="@id/reminderSwitch" />
+
+    <TextView
+        android:id="@+id/lightsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/lights"
+        app:layout_constraintBottom_toBottomOf="@id/lightsSwitch"
+        app:layout_constraintStart_toEndOf="@id/lightsSwitch"
+        app:layout_constraintTop_toTopOf="@id/lightsSwitch" />
+
+    <TextView
+        android:id="@+id/idLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/touchId"
+        app:layout_constraintBottom_toBottomOf="@id/idSwitch"
+        app:layout_constraintStart_toEndOf="@id/idSwitch"
+        app:layout_constraintTop_toTopOf="@id/idSwitch" />
+
+    <TextView
+        android:id="@+id/timeLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch4" />
+        android:text="@string/reminderTime"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="@+id/imageButton" />
+
+    <TextView
+        android:id="@+id/timeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
+        android:text="12:00 AM"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintTop_toBottomOf="@+id/timeLabel" />
 </android.support.constraint.ConstraintLayout>

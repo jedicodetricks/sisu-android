@@ -41,10 +41,12 @@ import co.sisu.mobile.models.TeamObject;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    TextView pageTitle;
+    TextView pageTitle, teamLetter;
+    View teamBlock;
     DrawerLayout drawerLayout;
-    DataController dataController = new DataController();
+    DataController dataController;
     private String fragmentTag = "Scoreboard";
+    List<TeamObject> teamsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +57,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
         getSupportActionBar().setElevation(0);
         pageTitle = findViewById(R.id.action_bar_title);
+        teamLetter = findViewById(R.id.team_letter);
+        teamBlock = findViewById(R.id.action_bar_home);
         pageTitle.setText("Scoreboard");
         drawerLayout = findViewById(R.id.drawer_layout);
+        dataController = new DataController(this);
         initializeButtons();
         initializeTeamBar();
         navigateToScoreboard();
@@ -67,12 +72,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<TeamObject> teamsList = dataController.getTeams();
+        teamsList = dataController.getTeams();
 
         TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
+
+        teamBlock.setBackgroundColor(teamsList.get(0).getColor());
+        teamLetter.setText(teamsList.get(0).getTeamLetter());
+        teamLetter.setBackgroundColor(teamsList.get(0).getColor());
     }
 
     private void navigateToScoreboard() {
@@ -83,7 +92,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void initializeButtons(){
         View view = getSupportActionBar().getCustomView();
 
-        ImageButton homeButton= view.findViewById(R.id.action_bar_home);
+        View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(this);
 
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
@@ -189,6 +198,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
+        teamBlock.setBackgroundColor(team.getColor());
+        teamLetter.setText(team.getTeamLetter());
+        teamLetter.setBackgroundColor(team.getColor());
 //        showToast(String.valueOf(team.getId()));
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
@@ -197,10 +209,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         switch (f.getTag()) {
             case "Scoreboard":
                 ((ScoreboardFragment) f).teamSwap();
-//                showToast("SCOREBOARD");
-            case "Report":
+                break;
             case "Record":
-
+                ((RecordFragment) f).teamSwap();
+                break;
+            case "Report":
+                ((ReportFragment) f).teamSwap();
+                break;
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
         // Get information based on team id
@@ -215,7 +230,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).commit();
+    }
+
+    public void stackReplaceFragment(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+    }
+
+    public void swapToBacktionBar() {
+        //Get it?! Back action... Backtion!
+
+        getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
     }
 
     private void showToast(CharSequence msg){

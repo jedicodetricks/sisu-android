@@ -8,25 +8,29 @@ public class TeamObject {
 
     private String name;
     private int id;
+    private int color;
+    private String teamLetter;
 
-    public TeamObject(String name, int id) {
+    public TeamObject(String name, int id, int color) {
         this.name = name;
         this.id = id;
+        this.color = color;
+        this.teamLetter = name.charAt(0) + "";
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getColor() {
+        return color;
+    }
+
+    public String getTeamLetter() {
+        return teamLetter;
     }
 }

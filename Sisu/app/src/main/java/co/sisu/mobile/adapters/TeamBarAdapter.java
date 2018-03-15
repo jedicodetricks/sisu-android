@@ -2,6 +2,7 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +57,13 @@ public class TeamBarAdapter extends BaseAdapter {
         TextView textViewHome = v.findViewById(R.id.team_title);
         TextView letter = v.findViewById(R.id.team_letter);
         View block = v.findViewById(R.id.rectangle_at_the_top);
-        String firstLetter = info.getName().charAt(0) + "";
+
+        Log.d("Color", info.getName() + " " + info.getColor() + "");
         textViewHome.setText(info.getName());
-        letter.setText(firstLetter);
+        letter.setText(info.getTeamLetter());
+
+        block.setBackgroundColor(info.getColor());
+        letter.setBackgroundColor(info.getColor());
 
         return v;
     }

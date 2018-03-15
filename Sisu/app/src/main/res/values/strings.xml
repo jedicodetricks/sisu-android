@@ -34,6 +34,13 @@
     <string name="signedDateTitle">Signed Date:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
+    <!--Settings page labels-->
+    <string name="pushNotification">Push Notifications</string>
+    <string name="dailyReminder">Daily Reminder</string>
+    <string name="reminderTime">Reminder Time:</string>
+    <string name="lights">Lights</string>
+    <string name="touchId">Touch/Face Id</string>
+    <string name="monthlyTitle">Monthly Activities</string>
 
     <!--Buttons/Links-->
     <string name="forgot_password_sike">Already know your password?</string>
