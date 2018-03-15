@@ -15,8 +15,9 @@ import co.sisu.mobile.models.TeamObject;
 
 public class DataController {
     private boolean metricOneCurrent = true;
-    private List<Metric> metrics1 = new ArrayList<>();
-    private List<Metric> metrics2 = new ArrayList<>();
+    private List<Metric> scoreboardMetrics = new ArrayList<>();
+    private List<Metric> scoreboardMetricsTwo = new ArrayList<>();
+    private List<Metric> reportMetrics = new ArrayList<>();
     private List<TeamObject> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
 
@@ -26,29 +27,39 @@ public class DataController {
 
     public void initializeData(){
         DataStore ds = DataStore.getInstance();
-        initializeMetricsOne();
-        initliazeMetricsTwo();
+        initializeScoreboardMetrics();
+        initializeScoreboardMetricsTwo();
+        initializeReportMetrics();
         initializeMorePageObject();
         initializeTeamsObject();
-        ds.setData(metrics1);
+        ds.setData(scoreboardMetrics);
     }
     //this is for testing
-    public void initializeMetricsOne(){
-        metrics1.add(new Metric("Contacts",5, 7, R.drawable.contact_icon, R.color.colorYellow));//add each metric section here
-        metrics1.add(new Metric("Appointments",3, 80,  R.drawable.appointment_icon, R.color.colorMoonBlue));
-        metrics1.add(new Metric("BB Signed",5, 10,  R.drawable.signed_icon, R.color.colorYellow));
-        metrics1.add(new Metric("Listings Taken",70, 70,  R.drawable.listing_icon, R.color.colorCorporateOrange));
-        metrics1.add(new Metric("Under Contract",27, 70,  R.drawable.contract_icon, R.color.colorMoonBlue));
-        metrics1.add(new Metric("Closed",17, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
+    public void initializeScoreboardMetrics(){
+        scoreboardMetrics.add(new Metric("Contacts",5, 7, R.drawable.contact_icon, R.color.colorYellow));//add each metric section here
+        scoreboardMetrics.add(new Metric("Appointments",3, 80,  R.drawable.appointment_icon, R.color.colorMoonBlue));
+        scoreboardMetrics.add(new Metric("BB Signed",5, 10,  R.drawable.signed_icon, R.color.colorYellow));
+        scoreboardMetrics.add(new Metric("Listings Taken",70, 70,  R.drawable.listing_icon, R.color.colorCorporateOrange));
+        scoreboardMetrics.add(new Metric("Under Contract",27, 70,  R.drawable.contract_icon, R.color.colorMoonBlue));
+        scoreboardMetrics.add(new Metric("Closed",17, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
     }
 
-    public void initliazeMetricsTwo() {
-        metrics2.add(new Metric("Contacts",7, 7, R.drawable.contact_icon, R.color.colorYellow));//add each metric section here
-        metrics2.add(new Metric("Appointments",80, 80,  R.drawable.appointment_icon, R.color.colorMoonBlue));
-        metrics2.add(new Metric("BB Signed",10, 10,  R.drawable.signed_icon, R.color.colorYellow));
-        metrics2.add(new Metric("Listings Taken",0, 70,  R.drawable.listing_icon, R.color.colorCorporateOrange));
-        metrics2.add(new Metric("Under Contract",70, 70,  R.drawable.contract_icon, R.color.colorMoonBlue));
-        metrics2.add(new Metric("Closed",70, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
+    public void initializeScoreboardMetricsTwo() {
+        scoreboardMetricsTwo.add(new Metric("Contacts",7, 7, R.drawable.contact_icon, R.color.colorYellow));//add each metric section here
+        scoreboardMetricsTwo.add(new Metric("Appointments",80, 80,  R.drawable.appointment_icon, R.color.colorMoonBlue));
+        scoreboardMetricsTwo.add(new Metric("BB Signed",10, 10,  R.drawable.signed_icon, R.color.colorYellow));
+        scoreboardMetricsTwo.add(new Metric("Listings Taken",0, 70,  R.drawable.listing_icon, R.color.colorCorporateOrange));
+        scoreboardMetricsTwo.add(new Metric("Under Contract",70, 70,  R.drawable.contract_icon, R.color.colorMoonBlue));
+        scoreboardMetricsTwo.add(new Metric("Closed",70, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
+    }
+
+    public void initializeReportMetrics(){
+        reportMetrics.add(new Metric("Thank You Cards",1, 80, R.drawable.thankyou_card_icon, R.color.colorMoonBlue));//add each metric section here
+        reportMetrics.add(new Metric("Open Houses",3, 80,  R.drawable.open_house_icon, R.color.colorMoonBlue));
+        reportMetrics.add(new Metric("Referrals Received",5, 10,  R.drawable.referals_icon, R.color.colorYellow));
+        reportMetrics.add(new Metric("Number of Dials",70, 70,  R.drawable.phone_icon, R.color.colorCorporateOrange));
+        reportMetrics.add(new Metric("Added to Database",27, 70,  R.drawable.database_icon, R.color.colorMoonBlue));
+        reportMetrics.add(new Metric("Appointments Set",17, 70,  R.drawable.appointment_icon, R.color.colorYellow));
     }
 
     public void initializeMorePageObject() {
@@ -68,7 +79,11 @@ public class DataController {
     }
 
     public List<Metric> getMetrics() {
-        return metrics1;
+        return scoreboardMetrics;
+    }
+
+    public List<Metric> getReportMetrics() {
+        return reportMetrics;
     }
 
     public List<TeamObject> getTeams() {
@@ -81,11 +96,11 @@ public class DataController {
 
         if(metricOneCurrent) {
             metricOneCurrent = !metricOneCurrent;
-            return metrics2;
+            return scoreboardMetricsTwo;
         }
         else {
             metricOneCurrent = !metricOneCurrent;
-            return metrics1;
+            return scoreboardMetrics;
         }
     }
 }

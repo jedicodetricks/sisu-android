@@ -31,6 +31,9 @@
     <string name="record">Record</string>
     <string name="new_client">New Client</string>
     <string name="goals">Goals</string>
+    <string name="signedDateTitle">Signed Date:</string>
+    <string name="underContractTitle">Under Contract Date:</string>
+    <string name="settlementDateTitle">Settlement Date:</string>
 
     <!--Buttons/Links-->
     <string name="forgot_password_sike">Already know your password?</string>
@@ -43,6 +46,7 @@
     <string name="buyer">Buyer</string>
     <string name="seller">Seller</string>
     <string name="submit">Submit</string>
+    <string name="clear">Clear</string>
 
     <!--Hints-->
     <string name="password_hint">Password</string>
@@ -74,6 +78,7 @@
 
     <!--temp strings-->
     <string name="record_date">March 23, 2018</string>
+    <string name="temp_date">Tap to Select</string>
     <string name="contacts_current_num"></string>
     <string name="contacts_goal_num">7</string>
     <string name="bb_signed_current_num">5</string>
