@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorDarkGrey">
 
     <View
         android:id="@+id/rectangle_at_the_top"
@@ -26,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="23dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorCorporateOrange"
         android:text="U"
@@ -45,6 +46,7 @@
         android:layout_marginTop="8dp"
         android:text="Test team title"
         android:textSize="@dimen/font_large"
+        android:background="@color/colorDarkGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rectangle_at_the_top"
         app:layout_constraintTop_toTopOf="parent" />

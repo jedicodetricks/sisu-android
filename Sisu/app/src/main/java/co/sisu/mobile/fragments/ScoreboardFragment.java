@@ -30,16 +30,20 @@ import co.sisu.mobile.models.Metric;
  */
 public class ScoreboardFragment extends Fragment implements View.OnClickListener{
 
-    DataController dataController = new DataController();
+    DataController dataController;
 
     public ScoreboardFragment() {
         // Required empty public constructor
     }
 
+    public void teamSwap() {
+        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        dataController = new DataController(getContext());
         return inflater.inflate(R.layout.activity_scoreboard, container, false);
     }
 

@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -31,6 +33,7 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -38,9 +41,12 @@ import co.sisu.mobile.models.MorePageContainer;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    TextView pageTitle;
+    TextView pageTitle, teamLetter;
+    View teamBlock;
     DrawerLayout drawerLayout;
-    DataController dataController = new DataController();
+    DataController dataController;
+    private String fragmentTag = "Scoreboard";
+    List<TeamObject> teamsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,34 +57,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
         getSupportActionBar().setElevation(0);
         pageTitle = findViewById(R.id.action_bar_title);
+        teamLetter = findViewById(R.id.team_letter);
+        teamBlock = findViewById(R.id.action_bar_home);
         pageTitle.setText("Scoreboard");
         drawerLayout = findViewById(R.id.drawer_layout);
+        dataController = new DataController(this);
         initializeButtons();
         initializeTeamBar();
         navigateToScoreboard();
     }
 
     private void initializeTeamBar() {
-//        NavigationView navView = findViewById(R.id.nav_view);
-//
-//        Menu menu = navView.getMenu();
-//
-//        for (int i = 1; i <= 3; i++) {
-//            menu.add("Runtime item "+ i);
-//        }
-
         ListView mListView = findViewById(R.id.navViewList);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<String> teamsList = dataController.getTeams();
+        teamsList = dataController.getTeams();
 
         TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
 
-
+        teamBlock.setBackgroundColor(teamsList.get(0).getColor());
+        teamLetter.setText(teamsList.get(0).getTeamLetter());
+        teamLetter.setBackgroundColor(teamsList.get(0).getColor());
     }
 
     private void navigateToScoreboard() {
@@ -89,7 +92,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void initializeButtons(){
         View view = getSupportActionBar().getCustomView();
 
-        ImageButton homeButton= view.findViewById(R.id.action_bar_home);
+        View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(this);
 
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
@@ -160,26 +163,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.scoreboardView:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
+                fragmentTag = "Scoreboard";
                 replaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
+                fragmentTag = "Report";
                 replaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
+                fragmentTag = "Record";
                 replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
+                fragmentTag = "Leaderboard";
                 replaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
+                fragmentTag = "More";
                 replaceFragment(MoreFragment.class);
                 break;
             default:
@@ -189,11 +197,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
+        TeamObject team = (TeamObject) parent.getItemAtPosition(position);
+        teamBlock.setBackgroundColor(team.getColor());
+        teamLetter.setText(team.getTeamLetter());
+        teamLetter.setBackgroundColor(team.getColor());
+//        showToast(String.valueOf(team.getId()));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
 
-        switch(value.getTitle()) {
-
+//        showToast(String.valueOf(f.getTag()));
+        switch (f.getTag()) {
+            case "Scoreboard":
+                ((ScoreboardFragment) f).teamSwap();
+                break;
+            case "Record":
+                ((RecordFragment) f).teamSwap();
+                break;
+            case "Report":
+                ((ReportFragment) f).teamSwap();
+                break;
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
+        // Get information based on team id
     }
 
     public void replaceFragment(Class fragmentClass) {
@@ -205,7 +230,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment).commit();
+        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).commit();
+    }
+
+    public void stackReplaceFragment(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+    }
+
+    public void swapToBacktionBar() {
+        //Get it?! Back action... Backtion!
+
+        getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
     }
 
     private void showToast(CharSequence msg){

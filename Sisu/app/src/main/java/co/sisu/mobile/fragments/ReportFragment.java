@@ -22,10 +22,14 @@ import co.sisu.mobile.models.Metric;
 public class ReportFragment extends Fragment {
 
     private ListView mListView;
-    DataController dataController = new DataController();
+    DataController dataController;
 
     public ReportFragment() {
         // Required empty public constructor
+    }
+
+    public void teamSwap() {
+        initializeListView(dataController.updateRecordMetrics());
     }
 
 
@@ -33,21 +37,21 @@ public class ReportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        dataController = new DataController(getContext());
         return inflater.inflate(R.layout.activity_report, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initializeListView();
+        List<Metric> metricList = dataController.getReportMetrics();
+        initializeListView(metricList);
     }
 
-    private void initializeListView() {
+    private void initializeListView(List<Metric> metricList) {
 
-        mListView = (ListView) getView().findViewById(R.id.report_list_view);
+        mListView = getView().findViewById(R.id.report_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
-
-        final List<Metric> metricList = dataController.getReportMetrics();
 
         ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList);
         mListView.setAdapter(adapter);

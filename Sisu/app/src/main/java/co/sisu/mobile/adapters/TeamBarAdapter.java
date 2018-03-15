@@ -2,6 +2,7 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by Brady Groharing on 3/12/2018.
@@ -23,11 +26,11 @@ public class TeamBarAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<String> mDataSource;
+    private ArrayList<TeamObject> mDataSource;
 
-    public TeamBarAdapter(Context context, List<String> teams) {
+    public TeamBarAdapter(Context context, List<TeamObject> teams) {
         mContext = context;
-        mDataSource = (ArrayList<String>) teams;
+        mDataSource = (ArrayList<TeamObject>) teams;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -49,10 +52,18 @@ public class TeamBarAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View v = mInflater.inflate(R.layout.adapter_record_list, parent, false);
-        TextView textViewHome = (TextView) v.findViewById(R.id.record_list_title);
+        View v = mInflater.inflate(R.layout.adapter_teams_list, parent, false);
+        TeamObject info = (TeamObject) getItem(position);
+        TextView textViewHome = v.findViewById(R.id.team_title);
+        TextView letter = v.findViewById(R.id.team_letter);
+        View block = v.findViewById(R.id.rectangle_at_the_top);
 
-        textViewHome.setText("HELLO");
+        Log.d("Color", info.getName() + " " + info.getColor() + "");
+        textViewHome.setText(info.getName());
+        letter.setText(info.getTeamLetter());
+
+        block.setBackgroundColor(info.getColor());
+        letter.setBackgroundColor(info.getColor());
 
         return v;
     }

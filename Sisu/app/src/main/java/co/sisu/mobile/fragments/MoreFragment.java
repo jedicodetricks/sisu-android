@@ -24,7 +24,7 @@ import co.sisu.mobile.models.MorePageContainer;
 public class MoreFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView mListView;
-    DataController dataController = new DataController();
+    DataController dataController;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -35,7 +35,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        dataController = new DataController(getContext());
         View toReturn = inflater.inflate(R.layout.activity_more, container, false);
         return toReturn;
 
@@ -74,19 +74,21 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
             case "Clients":
-                ((ParentActivity) getActivity()).replaceFragment(ClientsFragment.class);
+                ((ParentActivity) getActivity()).stackReplaceFragment(ClientsFragment.class);
+                ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "My Profile":
-                ((ParentActivity) getActivity()).replaceFragment(MyProfileFragment.class);
+                ((ParentActivity) getActivity()).stackReplaceFragment(MyProfileFragment.class);
+                ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "Setup":
-                ((ParentActivity) getActivity()).replaceFragment(SetupFragment.class);
+                ((ParentActivity) getActivity()).stackReplaceFragment(SetupFragment.class);
                 break;
             case "Settings":
-                ((ParentActivity) getActivity()).replaceFragment(SettingsFragment.class);
+                ((ParentActivity) getActivity()).stackReplaceFragment(SettingsFragment.class);
                 break;
             case "Feedback":
-                ((ParentActivity) getActivity()).replaceFragment(FeedbackFragment.class);
+                ((ParentActivity) getActivity()).stackReplaceFragment(FeedbackFragment.class);
                 break;
             case "Logout":
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();

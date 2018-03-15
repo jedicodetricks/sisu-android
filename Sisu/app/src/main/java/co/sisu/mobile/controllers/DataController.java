@@ -1,26 +1,37 @@
 package co.sisu.mobile.controllers;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by Jeff on 2/21/2018.
  */
 
 public class DataController {
+    private Context context;
     private boolean metricOneCurrent = true;
+    private boolean recordOneCurrent = true;
     private List<Metric> scoreboardMetrics = new ArrayList<>();
     private List<Metric> scoreboardMetricsTwo = new ArrayList<>();
-    private List<Metric> reportMetrics = new ArrayList<>();
-    private List<String> teams = new ArrayList<>();
+    private List<Metric> recordMetricsOne = new ArrayList<>();
+    private List<Metric> recordMetricsTwo = new ArrayList<>();
+    private List<TeamObject> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
+    private List<ClientObject> clientObject = new ArrayList<>();
 
-    public DataController(){
+    public DataController(Context context){
+        this.context = context;
         initializeData();
     }
 
@@ -28,9 +39,11 @@ public class DataController {
         DataStore ds = DataStore.getInstance();
         initializeScoreboardMetrics();
         initializeScoreboardMetricsTwo();
-        initializeReportMetrics();
+        initializeRecordMetricsOne();
+        initializeRecordMetricsTwo();
         initializeMorePageObject();
         initializeTeamsObject();
+        initializeClientsObject();
         ds.setData(scoreboardMetrics);
     }
     //this is for testing
@@ -52,13 +65,22 @@ public class DataController {
         scoreboardMetricsTwo.add(new Metric("Closed",70, 70,  R.drawable.closed_icon, R.color.colorMoonBlue));
     }
 
-    public void initializeReportMetrics(){
-        reportMetrics.add(new Metric("Thank You Cards",1, 80, R.drawable.thankyou_card_icon, R.color.colorMoonBlue));//add each metric section here
-        reportMetrics.add(new Metric("Open Houses",3, 80,  R.drawable.open_house_icon, R.color.colorMoonBlue));
-        reportMetrics.add(new Metric("Referrals Received",5, 10,  R.drawable.referals_icon, R.color.colorYellow));
-        reportMetrics.add(new Metric("Number of Dials",70, 70,  R.drawable.phone_icon, R.color.colorCorporateOrange));
-        reportMetrics.add(new Metric("Added to Database",27, 70,  R.drawable.database_icon, R.color.colorMoonBlue));
-        reportMetrics.add(new Metric("Appointments Set",17, 70,  R.drawable.appointment_icon, R.color.colorYellow));
+    public void initializeRecordMetricsOne(){
+        recordMetricsOne.add(new Metric("Thank You Cards",1, 80, R.drawable.thankyou_card_icon, R.color.colorMoonBlue));//add each metric section here
+        recordMetricsOne.add(new Metric("Open Houses",3, 80,  R.drawable.open_house_icon, R.color.colorMoonBlue));
+        recordMetricsOne.add(new Metric("Referrals Received",5, 10,  R.drawable.referals_icon, R.color.colorYellow));
+        recordMetricsOne.add(new Metric("Number of Dials",70, 70,  R.drawable.phone_icon, R.color.colorCorporateOrange));
+        recordMetricsOne.add(new Metric("Added to Database",27, 70,  R.drawable.database_icon, R.color.colorMoonBlue));
+        recordMetricsOne.add(new Metric("Appointments Set",17, 70,  R.drawable.appointment_icon, R.color.colorYellow));
+    }
+
+    public void initializeRecordMetricsTwo(){
+        recordMetricsTwo.add(new Metric("Thank You Cards",80, 80, R.drawable.thankyou_card_icon, R.color.colorMoonBlue));//add each metric section here
+        recordMetricsTwo.add(new Metric("Open Houses",80, 80,  R.drawable.open_house_icon, R.color.colorMoonBlue));
+        recordMetricsTwo.add(new Metric("Referrals Received",10, 10,  R.drawable.referals_icon, R.color.colorYellow));
+        recordMetricsTwo.add(new Metric("Number of Dials",1, 70,  R.drawable.phone_icon, R.color.colorCorporateOrange));
+        recordMetricsTwo.add(new Metric("Added to Database",70, 70,  R.drawable.database_icon, R.color.colorMoonBlue));
+        recordMetricsTwo.add(new Metric("Appointments Set",70, 70,  R.drawable.appointment_icon, R.color.colorYellow));
     }
 
     public void initializeMorePageObject() {
@@ -72,25 +94,47 @@ public class DataController {
     }
 
     public void initializeTeamsObject() {
-        teams.add("Team Alpha");
-        teams.add("Team 2");
-        teams.add("Team C");
-        teams.add("Team Quatro");
+        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
+        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
+        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
+    }
+
+    public void initializeClientsObject() {
+
+        Random r = new Random();
+        for(int i =0; i < 10; i++) {
+            clientObject.add(new ClientObject("Test Client: " + i, String.valueOf(r.nextInt(50000))));
+        }
+
     }
 
     public List<Metric> getMetrics() {
-        return scoreboardMetrics;
+        if(metricOneCurrent) {
+            return scoreboardMetrics;
+        }
+        else {
+            return scoreboardMetricsTwo;
+        }
     }
 
     public List<Metric> getReportMetrics() {
-        return reportMetrics;
+        if(recordOneCurrent) {
+            return recordMetricsOne;
+        }
+        else {
+            return recordMetricsTwo;
+        }
     }
 
-    public List<String> getTeams() {
+    public List<TeamObject> getTeams() {
         return teams;
     }
 
     public List<MorePageContainer> getMorePageContainer() { return morePage; }
+
+    public List<ClientObject> getClientObject() {
+        return clientObject;
+    }
 
     public List<Metric> updateScoreboardTimeline() {
 
@@ -101,6 +145,18 @@ public class DataController {
         else {
             metricOneCurrent = !metricOneCurrent;
             return scoreboardMetrics;
+        }
+    }
+
+    public List<Metric> updateRecordMetrics() {
+
+        if(recordOneCurrent) {
+            recordOneCurrent = !recordOneCurrent;
+            return recordMetricsTwo;
+        }
+        else {
+            recordOneCurrent = !recordOneCurrent;
+            return recordMetricsOne;
         }
     }
 }
