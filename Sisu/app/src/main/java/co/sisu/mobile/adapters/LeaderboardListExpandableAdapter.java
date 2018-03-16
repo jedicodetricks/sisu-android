@@ -99,6 +99,22 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_headers, null);
         }
 //        Set the text styling for the list headers of leaderboards
+        styleHeaders(convertView, headerTitle, isExpanded);
+
+        return convertView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
+
+    private void styleHeaders(View convertView, String headerTitle, boolean isExpanded){
         TextView lblListHeader = convertView.findViewById(R.id.record_list_title);
         ImageView thumb = convertView.findViewById(R.id.leaderboard_list_thumbnail);
         int imageResourceId = isExpanded ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float;
@@ -128,17 +144,5 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
                 thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
                 break;
         }
-
-        return convertView;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
     }
 }
