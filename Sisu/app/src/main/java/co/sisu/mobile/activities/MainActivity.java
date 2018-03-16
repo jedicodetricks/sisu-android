@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.api.Authenticator;
 
 // TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them
 
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void attemptLogin() {
         final EditText emailAddress = findViewById(R.id.emailInput);
         final EditText password = findViewById(R.id.passwordInput);
+        Authenticator authenticator = new Authenticator();
+        authenticator.test();
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
     }
