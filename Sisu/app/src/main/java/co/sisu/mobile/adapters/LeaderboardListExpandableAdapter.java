@@ -92,6 +92,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
+
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,6 +101,10 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
 //        Set the text styling for the list headers of leaderboards
         TextView lblListHeader = convertView.findViewById(R.id.record_list_title);
         ImageView thumb = convertView.findViewById(R.id.leaderboard_list_thumbnail);
+        int imageResourceId = isExpanded ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float;
+        thumb.setImageResource(imageResourceId);
+        thumb.setVisibility(View.VISIBLE);
+
         Typeface mtypeFace = ResourcesCompat.getFont(_context, R.font.roboto_regular);
         lblListHeader.setTypeface(mtypeFace);
         lblListHeader.setTextColor( ContextCompat.getColor(_context, R.color.colorWhite));
