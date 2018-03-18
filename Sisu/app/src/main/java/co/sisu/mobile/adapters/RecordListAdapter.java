@@ -57,7 +57,7 @@ public class RecordListAdapter extends BaseAdapter {
         TextView titleTextView = rowView.findViewById(R.id.record_list_title);
 
         // Get thumbnail element
-        ImageView thumbnailImageView = rowView.findViewById(R.id.leaderboard_list_thumbnail);
+        ImageView thumbnailImageView = rowView.findViewById(R.id.record_list_thumbnail);
 
         // Get the row counter element
         final EditText rowCounter = rowView.findViewById(R.id.rowCounter);

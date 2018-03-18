@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ public class LeaderboardFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         expListView = view.findViewById(R.id.teamExpandable);
+        expListView.setGroupIndicator(null);
         prepareListData();
         listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);

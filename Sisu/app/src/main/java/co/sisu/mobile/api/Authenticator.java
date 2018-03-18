@@ -70,8 +70,6 @@ public class Authenticator {
                         urlConnection = (HttpURLConnection) url
                                 .openConnection();
                         urlConnection.setRequestMethod("GET");
-                        urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ");
-                        urlConnection.setRequestProperty("Accept", "*/*");
                         urlConnection.setRequestProperty("Authorization", finalAuth);
                         urlConnection.setRequestProperty("Transaction-Id", finalTrans);
                         urlConnection.setRequestProperty("Client-Timestamp", finalTime);
