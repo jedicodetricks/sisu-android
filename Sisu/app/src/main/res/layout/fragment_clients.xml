@@ -1,0 +1,113 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="co.sisu.mobile.fragments.ClientsFragment">
+
+        <TabHost
+            android:id="@+id/tabHost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                        <TabWidget
+                            android:id="@android:id/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></TabWidget>
+
+                        <FrameLayout
+                            android:id="@android:id/tabcontent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                                <LinearLayout
+                                    android:id="@+id/tab1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                        <ListView
+                                            android:id="@+id/pipeline_list"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginBottom="8dp"
+                                            android:layout_marginTop="8dp"
+                                            />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/tab2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                        <ListView
+                                            android:id="@+id/signed_list"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginBottom="8dp"
+                                            android:layout_marginTop="8dp"
+                                            />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/tab3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                        <ListView
+                                            android:id="@+id/contract_list"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginBottom="8dp"
+                                            android:layout_marginTop="8dp"
+                                            />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/tab4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                        <ListView
+                                            android:id="@+id/closed_list"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginBottom="8dp"
+                                            android:layout_marginTop="8dp"
+                                            />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/tab5"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                        <ListView
+                                            android:id="@+id/archived_list"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginBottom="8dp"
+                                            android:layout_marginTop="8dp"
+                                            />
+
+                                </LinearLayout>
+                        </FrameLayout>
+                </LinearLayout>
+        </TabHost>
+
+</android.support.constraint.ConstraintLayout>
+
+

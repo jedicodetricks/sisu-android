@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="180dp"
+    tools:layout_editor_absoluteY="81dp">
+
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/contactsProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="25dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/underContractAmount" />
+
+    <TextView
+        android:id="@+id/contactsCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/contacts_current_num"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toTopOf="@id/contactsProgress" />
+
+    <TextView
+        android:id="@+id/contactsGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/contacts_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/contactsCurrentNumber" />
+
+    <TextView
+        android:id="@+id/contactsProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/contacts_hint"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/contactsProgress" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/bbSignedProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="10dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contactsProgressText" />
+
+    <TextView
+        android:id="@+id/bbsignedCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/bb_signed_current_num"
+        app:layout_constraintEnd_toEndOf="@id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgress"
+        app:layout_constraintTop_toTopOf="@id/bbSignedProgress" />
+
+    <TextView
+        android:id="@+id/bbsignedGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/bb_signed_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgress"
+        app:layout_constraintTop_toBottomOf="@id/bbsignedCurrentNumber" />
+
+    <TextView
+        android:id="@+id/bbSignedProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/bb_signed"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgress"
+        app:layout_constraintTop_toBottomOf="@id/bbSignedProgress" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/underContractProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="10dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bbSignedProgressText" />
+
+    <TextView
+        android:id="@+id/underContractCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/under_contract_current_num"
+        app:layout_constraintEnd_toEndOf="@id/underContractProgress"
+        app:layout_constraintStart_toStartOf="@id/underContractProgress"
+        app:layout_constraintTop_toTopOf="@id/underContractProgress" />
+
+    <TextView
+        android:id="@+id/underContactGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/under_contract_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/underContractProgress"
+        app:layout_constraintStart_toStartOf="@id/underContractProgress"
+        app:layout_constraintTop_toBottomOf="@id/underContractCurrentNumber" />
+
+    <TextView
+        android:id="@+id/underContractProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/under_contract"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/underContractProgress"
+        app:layout_constraintStart_toStartOf="@id/underContractProgress"
+        app:layout_constraintTop_toBottomOf="@id/underContractProgress" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/appointmentsProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="25dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/closedAmount" />
+
+    <TextView
+        android:id="@+id/appointmentsCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/appointments_current_num"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toTopOf="@id/appointmentsProgress" />
+
+    <TextView
+        android:id="@+id/appointmentsGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/appointments_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@id/appointmentsCurrentNumber" />
+
+    <TextView
+        android:id="@+id/appointmentsProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/appointments"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@id/appointmentsProgress" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/listingsTakenProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="10dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bbSignedProgress"
+        app:layout_constraintTop_toBottomOf="@id/appointmentsProgressText" />
+
+    <TextView
+        android:id="@+id/listingsTakenCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/listings_taken_current_num"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toTopOf="@id/listingsTakenProgress" />
+
+    <TextView
+        android:id="@+id/listingsTakenGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/listings_taken_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toBottomOf="@id/listingsTakenCurrentNumber" />
+
+    <TextView
+        android:id="@+id/listingsTakenProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/listings_taken"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toBottomOf="@id/listingsTakenProgress" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/closedProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="@dimen/circularBar"
+        android:layout_height="@dimen/circularBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="10dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/underContractProgress"
+        app:layout_constraintTop_toBottomOf="@id/listingsTakenProgressText" />
+
+    <TextView
+        android:id="@+id/closedCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/font_larger"
+        android:text="@string/closed_current_num"
+        app:layout_constraintEnd_toEndOf="@id/closedProgress"
+        app:layout_constraintStart_toStartOf="@id/closedProgress"
+        app:layout_constraintTop_toTopOf="@id/closedProgress" />
+
+    <TextView
+        android:id="@+id/closedGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/closed_goal_num"
+        app:layout_constraintEnd_toEndOf="@id/closedProgress"
+        app:layout_constraintStart_toStartOf="@id/closedProgress"
+        app:layout_constraintTop_toBottomOf="@id/closedCurrentNumber" />
+
+    <TextView
+        android:id="@+id/closedProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/closed"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/closedProgress"
+        app:layout_constraintStart_toStartOf="@id/closedProgress"
+        app:layout_constraintTop_toBottomOf="@id/closedProgress" />
+
+    <Spinner
+        android:id="@+id/timelineSelector"
+        android:layout_width="327dp"
+        android:layout_height="33dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.786"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/addView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closedProgress"
+        app:srcCompat="@drawable/add_icon" />
+
+
+    <TextView
+        android:id="@+id/underContractLabel"
+        style="@style/ScoreboardLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/under_contract"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
+
+    <TextView
+        android:id="@+id/closedLabel"
+        style="@style/ScoreboardLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/closed"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
+
+    <TextView
+        android:id="@+id/underContractAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/under_contract_amount"
+        android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/underContractLabel"
+        app:layout_constraintStart_toStartOf="@id/underContractLabel"
+        app:layout_constraintTop_toBottomOf="@id/underContractLabel" />
+
+    <TextView
+        android:id="@+id/closedAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/closed_amount"
+        android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/closedLabel"
+        app:layout_constraintStart_toStartOf="@id/closedLabel"
+        app:layout_constraintTop_toBottomOf="@id/closedLabel" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- grey scale -->
+    <color name="colorDarkGrey">#303030</color>
+    <color name="colorAlmostBlack">#404041</color>
+    <color name="colorCorporateGrey">#555559</color>
+    <color name="colorLabelText">#777777</color>
+    <color name="colorClay">#9d948a</color>
+    <color name="colorLightGrey">#b2b3b3</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <!-- basic colors -->
+    <color name="colorCrimson">#79222e</color>
+    <color name="colorCorporateOrange">#ff5000</color>
+    <color name="colorYellow">#f9a21a</color>
+    <color name="colorMoonBlue">#0098ce</color>
+    <color name="colorDarkBlue">#193056</color>
+</resources>
