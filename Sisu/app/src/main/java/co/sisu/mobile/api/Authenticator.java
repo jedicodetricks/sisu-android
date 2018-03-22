@@ -2,14 +2,21 @@ package co.sisu.mobile.api;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.UUID;
 
 import io.jsonwebtoken.Jwts;
@@ -47,7 +54,10 @@ public class Authenticator {
     }
 
     public void authenticateUser(String transID, String compact, String time, String secretKey) throws UnsupportedEncodingException {
-        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
+//        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
+        compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
+        transID = "E958DC02-8F61-4E97-90B7-F266DCC597E9";
+        time = "1520999095";
         getJsonString(compact, transID, time);
     }
 
@@ -65,14 +75,32 @@ public class Authenticator {
                     URL url;
                     HttpURLConnection urlConnection = null;
                     try {
-                        url = new URL("http://staging.sisu.co/api/ping-test");
-
-                        urlConnection = (HttpURLConnection) url
-                                .openConnection();
+//                        url = new URL("http://staging.sisu.co/api/agent/authenticate");
+                        url = new URL("http://staging.sisu.co/api/agent/edit-agent?agent_id=300");
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setReadTimeout(15000 /* milliseconds */);
+                        urlConnection.setConnectTimeout(15000 /* milliseconds */);
                         urlConnection.setRequestMethod("GET");
                         urlConnection.setRequestProperty("Authorization", finalAuth);
                         urlConnection.setRequestProperty("Transaction-Id", finalTrans);
                         urlConnection.setRequestProperty("Client-Timestamp", finalTime);
+//                        urlConnection.setRequestProperty("Content-Type", "application/json");
+//                        urlConnection.setDoInput(true);
+//                        urlConnection.setDoOutput(true);
+
+                        JSONObject postDataParams = new JSONObject();
+                        postDataParams.put("email", "brian@sisu.co");
+                        postDataParams.put("password", "asdf");
+
+
+//                        OutputStream os = urlConnection.getOutputStream();
+//                        BufferedWriter writer = new BufferedWriter(
+//                                new OutputStreamWriter(os, "UTF-8"));
+//                        writer.write(getPostDataString(postDataParams));
+//
+//                        writer.flush();
+//                        writer.close();
+//                        os.close();
 
                         int status = urlConnection.getResponseCode();
                         InputStream in;
@@ -104,5 +132,30 @@ public class Authenticator {
         });
         thread.start();
 
+    }
+
+    public String getPostDataString(JSONObject params) throws Exception {
+
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        Iterator<String> itr = params.keys();
+
+        while(itr.hasNext()){
+
+            String key= itr.next();
+            Object value = params.get(key);
+
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(key, "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
+
+        }
+        return result.toString();
     }
 }
