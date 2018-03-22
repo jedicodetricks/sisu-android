@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final EditText emailAddress = findViewById(R.id.emailInput);
         final EditText password = findViewById(R.id.passwordInput);
         Authenticator authenticator = new Authenticator();
-        authenticator.test();
+        authenticator.test(emailAddress.getText().toString().replaceAll(" ", ""), password.getText().toString().replaceAll(" ", ""));
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
     }

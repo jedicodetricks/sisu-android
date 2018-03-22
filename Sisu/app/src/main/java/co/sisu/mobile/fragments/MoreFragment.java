@@ -64,6 +64,14 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setOnItemClickListener(this);
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("CDA", "onBackPressed Called");
+//        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+//        setIntent.addCategory(Intent.CATEGORY_HOME);
+//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(setIntent);
+//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,12 +91,15 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Setup":
                 ((ParentActivity) getActivity()).stackReplaceFragment(SetupFragment.class);
+                ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "Settings":
                 ((ParentActivity) getActivity()).stackReplaceFragment(SettingsFragment.class);
+                ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "Feedback":
                 ((ParentActivity) getActivity()).stackReplaceFragment(FeedbackFragment.class);
+                ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "Logout":
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
