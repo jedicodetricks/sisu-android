@@ -89,6 +89,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+            pageTitle.setText("More");
         }
     }
 
