@@ -58,7 +58,6 @@ public class TeamBarAdapter extends BaseAdapter {
         TextView letter = v.findViewById(R.id.team_letter);
         View block = v.findViewById(R.id.rectangle_at_the_top);
 
-        Log.d("Color", info.getName() + " " + info.getColor() + "");
         textViewHome.setText(info.getName());
         letter.setText(info.getTeamLetter());
 

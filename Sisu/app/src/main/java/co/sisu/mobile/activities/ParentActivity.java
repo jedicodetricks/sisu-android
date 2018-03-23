@@ -230,7 +230,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
@@ -242,7 +242,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
     public void swapToBacktionBar() {
