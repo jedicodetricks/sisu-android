@@ -95,4 +95,8 @@
         <item name="android:textColor">@color/colorLabelText</item>
     </style>
 
+    <style name="CalendarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
 </resources>
