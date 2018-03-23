@@ -23,7 +23,7 @@
     </View>
 
     <TextView
-        android:id="@+id/team_letter"
+        android:id="@+id/list_team_letter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

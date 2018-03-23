@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,8 +47,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
-    private String fragmentTag = "Scoreboard";
+    private String fragmentTag;
     List<TeamObject> teamsList;
+    boolean activeBacktionBar = false;
+    int selectedTeam = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +58,38 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_parent);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+        initializeActionBar();
         getSupportActionBar().setElevation(0);
-        pageTitle = findViewById(R.id.action_bar_title);
-        teamLetter = findViewById(R.id.team_letter);
-        teamBlock = findViewById(R.id.action_bar_home);
+//        pageTitle = findViewById(R.id.action_bar_title);
+//        teamLetter = findViewById(R.id.team_letter);
+//        teamBlock = findViewById(R.id.action_bar_home);
         pageTitle.setText("Scoreboard");
+        fragmentTag = "Scoreboard";
         drawerLayout = findViewById(R.id.drawer_layout);
         dataController = new DataController(this);
         initializeButtons();
         initializeTeamBar();
+
         navigateToScoreboard();
+    }
+
+    private void initializeActionBar() {
+        getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+
+        pageTitle = findViewById(R.id.action_bar_title);
+        teamLetter = findViewById(R.id.team_letter);
+        teamBlock = findViewById(R.id.action_bar_home);
+
+        View view = getSupportActionBar().getCustomView();
+
+        View homeButton= view.findViewById(R.id.action_bar_home);
+        homeButton.setOnClickListener(this);
+
+        if(teamsList != null) {
+            teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
+            teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+        }
     }
 
     private void initializeTeamBar() {
@@ -90,11 +115,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initializeButtons(){
-        View view = getSupportActionBar().getCustomView();
-
-        View homeButton= view.findViewById(R.id.action_bar_home);
-        homeButton.setOnClickListener(this);
-
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
         scoreBoardButton.setOnClickListener(this);
 
@@ -201,11 +221,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         teamBlock.setBackgroundColor(team.getColor());
         teamLetter.setText(team.getTeamLetter());
         teamLetter.setBackgroundColor(team.getColor());
-//        showToast(String.valueOf(team.getId()));
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
-
-//        showToast(String.valueOf(f.getTag()));
+        selectedTeam = position;
         switch (f.getTag()) {
             case "Scoreboard":
                 ((ScoreboardFragment) f).teamSwap();
@@ -218,7 +236,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
-        // Get information based on team id
     }
 
     public void replaceFragment(Class fragmentClass) {
@@ -240,15 +257,32 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Insert the fragment by replacing any existing fragment
+        // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
     public void swapToBacktionBar() {
         //Get it?! Back action... Backtion!
-
+        activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+    }
+
+    public void logout() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(activeBacktionBar) {
+            activeBacktionBar = false;
+            initializeActionBar();
+        }
+        super.onBackPressed();
     }
 
     private void showToast(CharSequence msg){
