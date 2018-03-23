@@ -29,6 +29,7 @@ import okhttp3.Response;
  */
 
 public class Authenticator {
+    private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
 
     public void test(String email, String password){
 
