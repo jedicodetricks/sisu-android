@@ -14,18 +14,12 @@ import okhttp3.Response;
  */
 
 public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
-    private AsyncPingEventListener callback;
+    private AsyncServerEventListener callback;
 
-    public AsyncServerPing (AsyncPingEventListener cb) {
+    public AsyncServerPing (AsyncServerEventListener cb) {
        callback = cb;
     }
 
-//    @Override
-//    protected void onPostExecute(Integer result) {
-//        if(callback != null) {
-//            callback.onEventCompleted();
-//        }
-//    }
 
     @Override
     protected Void doInBackground(Void... voids) {

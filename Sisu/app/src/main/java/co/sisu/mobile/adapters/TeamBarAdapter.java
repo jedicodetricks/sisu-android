@@ -55,7 +55,7 @@ public class TeamBarAdapter extends BaseAdapter {
         View v = mInflater.inflate(R.layout.adapter_teams_list, parent, false);
         TeamObject info = (TeamObject) getItem(position);
         TextView textViewHome = v.findViewById(R.id.team_title);
-        TextView letter = v.findViewById(R.id.team_letter);
+        TextView letter = v.findViewById(R.id.list_team_letter);
         View block = v.findViewById(R.id.rectangle_at_the_top);
 
         textViewHome.setText(info.getName());

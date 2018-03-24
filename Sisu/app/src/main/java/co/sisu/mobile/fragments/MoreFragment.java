@@ -1,7 +1,9 @@
 package co.sisu.mobile.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +14,12 @@ import android.widget.Toast;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by Brady Groharing on 2/28/2018.
@@ -64,14 +68,6 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setOnItemClickListener(this);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.d("CDA", "onBackPressed Called");
-//        Intent setIntent = new Intent(Intent.ACTION_MAIN);
-//        setIntent.addCategory(Intent.CATEGORY_HOME);
-//        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(setIntent);
-//    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +98,8 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 ((ParentActivity) getActivity()).swapToBacktionBar();
                 break;
             case "Logout":
-                Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
+                ((ParentActivity) getActivity()).logout();
+                SaveSharedPreference.setUserName(getContext(), "");
                 break;
         }
     }
