@@ -2,30 +2,20 @@ package co.sisu.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.List;
-
-import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
@@ -34,7 +24,6 @@ import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.RecordFragment;
-import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.models.TeamObject;
 
 /**
