@@ -7,9 +7,9 @@
 
     <RelativeLayout android:id="@+id/client_list_text_layout" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:layout_toEndOf="@id/client_list_thumbnail">
 
-        <TextView android:id="@+id/client_list_title" android:layout_height="wrap_content" android:layout_width="wrap_content" tools:text="Title" android:textSize="15dp" android:layout_marginRight="8dp" android:layout_marginLeft="12dp"/>
+        <TextView android:id="@+id/client_list_title" android:layout_height="wrap_content" android:layout_width="wrap_content" tools:text="Title" android:textSize="@dimen/font_large" android:layout_marginRight="8dp" android:layout_marginLeft="12dp"/>
 
-        <TextView android:id="@+id/client_list_subtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="2dp" tools:text="Subtitle" android:textSize="16sp" android:maxLines="3" android:layout_marginRight="8dp" android:layout_marginLeft="12dp" android:ellipsize="end" android:layout_below="@id/client_list_title"/>
+        <TextView android:id="@+id/client_list_subtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="2dp" tools:text="Subtitle" android:textSize="@dimen/font_normal" android:maxLines="3" android:layout_marginRight="8dp" android:layout_marginLeft="12dp" android:ellipsize="end" android:layout_below="@id/client_list_title"/>
 
 
     </RelativeLayout>
@@ -30,7 +30,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/centerButton"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/minus_icon" />
+                app:srcCompat="@drawable/text_message_icon_active" />
 
             <ImageView
                 android:id="@+id/centerButton"
@@ -43,7 +43,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/rightButton"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sisu_mark" />
+                app:srcCompat="@drawable/phone_icon_active" />
 
 
             <ImageView
@@ -57,7 +57,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/add_icon" />
+                app:srcCompat="@drawable/email_icon_active" />
 
         </android.support.constraint.ConstraintLayout>
 
