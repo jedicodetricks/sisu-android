@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sellerButton" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/nameInputLayout"
+            android:id="@+id/firstNameInputLayout"
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:layout_marginTop="20dp"
@@ -53,14 +53,41 @@
             app:layout_constraintTop_toBottomOf="@+id/view">
 
             <EditText
-                android:id="@+id/editName"
+                android:id="@+id/editFirstName"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:ems="10"
-                android:hint="@string/name_hint"
+                android:hint="@string/first_name_hint"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="115dp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/lastNameInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/firstNameInputLayout">
+
+            <EditText
+                android:id="@+id/editLastName"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:ems="10"
+                android:hint="@string/last_name_hint"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +104,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/lastNameInputLayout">
 
             <EditText
                 android:id="@+id/editEmail"
@@ -180,6 +207,34 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/gciInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
+
+            <EditText
+                android:id="@+id/editGci"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/gci_hint"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTransAmount" />
+
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/addClientDatePickers"
             android:layout_width="match_parent"
@@ -194,11 +249,72 @@
             app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/signedDateSection"
+                android:id="@+id/appointmentDateSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/appointmentDateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/appointmentDateTitle"
+                    android:textSize="@dimen/font_normal"
+                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/appointmentDateDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/temp_date"
+                    android:textSize="@dimen/font_normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
+                    app:layout_constraintTop_toBottomOf="@id/appointmentDateTitle" />
+
+                <ImageView
+                    android:id="@+id/appointmentDatePicker"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/appointment_icon" />
+
+                <Button
+                    android:id="@+id/appointmentDateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/clear"
+                    style="@style/ButtonStyle"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/signedDateSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">
 
                 <TextView
                     android:id="@+id/signedDateTitle"
