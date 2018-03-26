@@ -47,7 +47,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageButton"
+        app:layout_constraintTop_toBottomOf="@id/timeButton"
         android:scaleX="1.3"
         android:scaleY="1.3"/>
 
@@ -65,7 +65,7 @@
 
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/timeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -129,8 +129,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/reminderTime"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton" />
+        app:layout_constraintStart_toEndOf="@+id/timeButton"
+        app:layout_constraintTop_toTopOf="@+id/timeButton" />
 
     <TextView
         android:id="@+id/timeDisplay"
@@ -139,6 +139,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
         android:text="12:00 AM"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toEndOf="@+id/timeButton"
         app:layout_constraintTop_toBottomOf="@+id/timeLabel" />
 </android.support.constraint.ConstraintLayout>

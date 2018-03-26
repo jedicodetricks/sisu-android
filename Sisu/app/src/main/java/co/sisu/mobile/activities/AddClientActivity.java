@@ -38,12 +38,13 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText nameText, emailText, phoneText;
-    private TextView signedDisplay, contractDisplay, settlementDisplay;
-    Button signedClear, contractClear, settlementClear;
+    private EditText firstNameText, lastNameText, emailText, phoneText;
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
+    Button signedClear, contractClear, settlementClear, appointmentClear;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
+    int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,11 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         settlementDisplay.setOnClickListener(this);
         findViewById(R.id.settlementDateTitle).setOnClickListener(this);
 
+        findViewById(R.id.appointmentDatePicker).setOnClickListener(this);
+        appointmentDisplay = findViewById(R.id.appointmentDateDisplay);
+        appointmentDisplay.setOnClickListener(this);
+        findViewById(R.id.appointmentDateTitle).setOnClickListener(this);
+
         signedSelectedYear = Calendar.getInstance().get(Calendar.YEAR);
         signedSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
         signedSelectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -84,7 +90,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initializeForm() {
-        nameText = findViewById(R.id.editName);
+        firstNameText = findViewById(R.id.editFirstName);
+        lastNameText = findViewById(R.id.editLastName);
         emailText = findViewById(R.id.editEmail);
         phoneText = findViewById(R.id.editPhone);
     }
@@ -152,6 +159,11 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 //                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay, "settlement");
                 break;
+            case R.id.appointmentDatePicker:
+            case R.id.appointmentDateDisplay:
+            case R.id.appointmentDateTitle:
+//                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
+                showDatePickerDialog(settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay, "settlement");
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
                 break;
@@ -203,7 +215,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                     Cursor cursor = null;
                     String email = "";
                     String phone = "";
-                    String name = "";
+                    String firstName = "";
+                    String lastName = "";
                     try {
                         Uri result = data.getData();
                         Log.v("TEST", "Got a contact result: "
@@ -229,9 +242,12 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                         int nameIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 
                         if(cursor.moveToFirst()) {
-                            name = cursor.getString(nameIdx);
+                            String name = cursor.getString(nameIdx);
                             Log.v("TEST", "Got name: " + name);
                             Log.v("TEST", "Got name: " + cursor.getCount());
+                            String[] nameList = name.split(" ");
+                            firstName = nameList[0];
+                            lastName = nameList[1];
                         } else {
                             Log.w("TEST", "No results");
                         }
@@ -255,7 +271,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                         }
 
 
-                        nameText.setText(name);
+                        firstNameText.setText(firstName);
+                        lastNameText.setText(lastName);
                         emailText.setText(email);
                         phoneText.setText(phone);
                     } catch (Exception e) {
@@ -291,8 +308,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         contractClear.setOnClickListener(this);
         settlementClear = findViewById(R.id.settlementDateButton);
         settlementClear.setOnClickListener(this);
-
-
+        appointmentClear = findViewById(R.id.appointmentDateButton);
+        appointmentClear.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
