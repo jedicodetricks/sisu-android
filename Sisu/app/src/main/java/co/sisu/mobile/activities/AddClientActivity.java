@@ -2,7 +2,6 @@ package co.sisu.mobile.activities;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -25,8 +24,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
 
 import co.sisu.mobile.R;
 
@@ -96,11 +93,14 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.buyerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
-                //buyerButton.setBackgroundColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
+                buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+                sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
                 break;
             case R.id.sellerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+                buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
+                sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
                 break;
             case R.id.importContactButton:
