@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,13 @@ import android.widget.Toast;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.Authenticator;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 // TODO: 2/20/2018 remove Toasts with links/buttons when proper functionality replaces them
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    static final String PREF_USER_NAME= "username";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,23 +39,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.forgotPassword:
-                //do Stuff
                 Intent intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
-//                showToast("forgot password clicked");
                 break;
             case R.id.signUp:
             case R.id.needAccount:
-                //do Stuff
                 intent = new Intent(this, SignUpActivity.class);
                 startActivity(intent);
-//                showToast("sign up or need account clicked");
                 break;
             case R.id.signInButton:
                 attemptLogin();
                 break;
             default:
-                showToast("Oops!");
+                showToast("Unrecognized Input");
                 break;
         }
     }
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final EditText password = findViewById(R.id.passwordInput);
         Authenticator authenticator = new Authenticator();
         authenticator.test(emailAddress.getText().toString().replaceAll(" ", ""), password.getText().toString().replaceAll(" ", ""));
+        SaveSharedPreference.setUserName(this, "TEST_USERNAME");
+        showToast("USERNAME: " + SaveSharedPreference.getUserName(this));
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
     }
