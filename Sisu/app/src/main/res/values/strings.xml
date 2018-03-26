@@ -32,6 +32,7 @@
     <string name="new_client">New Client</string>
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
+    <string name="appointmentDateTitle">Initial Appointment Date:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <!--Settings page labels-->
@@ -62,6 +63,7 @@
     <string name="phone_hint">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Commission</string>
+    <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name</string>
     <string name="last_name_hint">Last Name</string>
     <string name="contacts_hint">Contacts</string>
