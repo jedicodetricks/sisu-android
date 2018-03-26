@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Authenticator authenticator = new Authenticator();
         authenticator.test(emailAddress.getText().toString().replaceAll(" ", ""), password.getText().toString().replaceAll(" ", ""));
         SaveSharedPreference.setUserName(this, "TEST_USERNAME");
-        showToast("USERNAME: " + SaveSharedPreference.getUserName(this));
+//        showToast("USERNAME: " + SaveSharedPreference.getUserName(this));
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
     }
