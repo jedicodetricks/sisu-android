@@ -40,11 +40,14 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         if(response.code() == 200) {
+
             callback.onEventCompleted();
         }
         else {
             callback.onEventFailed();
         }
+        Log.d("ASYNC PING IS", "NULL");
+        response.body().close();
         return null;
     }
 }

@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        showToast("USERNAME: " + SaveSharedPreference.getUserName(this));
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void initializeButtons(){

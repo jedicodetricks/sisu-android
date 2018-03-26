@@ -5,6 +5,7 @@
 
     <item android:width="334dp"
         android:height="96dp"
+        android:top="20dp"
         android:gravity="center">
         <bitmap
             android:gravity="fill_horizontal|fill_vertical"

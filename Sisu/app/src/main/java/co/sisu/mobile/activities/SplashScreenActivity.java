@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.Timer;
 
+import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -19,12 +20,15 @@ import co.sisu.mobile.system.SaveSharedPreference;
 public class SplashScreenActivity extends AppCompatActivity implements AsyncServerEventListener {
 
     int WAIT_AMOUNT = 1000;
-    boolean loaded = false;
+    static boolean loaded = false;
+    private CountDownTimer cdt;
+    Intent intent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new CountDownTimer(WAIT_AMOUNT, 1500) {
+        loaded = false;
+        cdt = new CountDownTimer(WAIT_AMOUNT, WAIT_AMOUNT) {
 
             public void onTick(long millisUntilFinished) {
 
@@ -33,7 +37,9 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
             public void onFinish() {
                 loaded = true;
             }
-        }.start();
+        };
+        cdt.start();
+
         pingServer();
 
     }
@@ -44,28 +50,39 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     @Override
     public void onEventCompleted() {
-        Log.d("COMPLETE", "COMPLETE");
-        Intent intent = null;
-        if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0)
-        {
-            Log.d("LOGGED IN", "FALSE");
+
+        if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
             // call Login Activity
             while(!loaded) {
-
+                // We apparently need this log or Android decides to just not work.
+                Log.v("Splash", "loading");
+                if(loaded) {
+                    intent = new Intent(this, MainActivity.class);
+                    launchActivity();
+                    break;
+                }
             }
-            intent = new Intent(this, MainActivity.class);
 
         }
         else
         {
-            Log.d("LOGGED IN", "TRUE");
             // Already logged in. Enter app.
             while(!loaded) {
-
+                // We apparently need this log or Android decides to just not work.
+                Log.v("Splash", "loading");
+                if(loaded) {
+                    intent = new Intent(this, ParentActivity.class);
+                    launchActivity();
+                    break;
+                }
             }
-            intent = new Intent(this, ParentActivity.class);
+
         }
 
+
+    }
+
+    private void launchActivity() {
         startActivity(intent);
         finish();
     }
