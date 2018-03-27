@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +48,10 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_client);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        initializeActionBar();
+        getSupportActionBar().setElevation(0);
         initializeButtons();
         initializeForm();
         initializeCalendar();
@@ -98,6 +103,13 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         Button buyerButton = (Button) findViewById(R.id.buyerButton);
         Button sellerButton= (Button) findViewById(R.id.sellerButton);
         switch (v.getId()) {
+            case R.id.cancelButton:
+                onBackPressed();
+                break;
+            case R.id.saveButton:
+                saveClient();
+                onBackPressed();
+                break;
             case R.id.buyerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
@@ -176,6 +188,19 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             default:
                 break;
         }
+    }
+    //TODO do stuff for this
+    private void saveClient(){
+
+    }
+
+    private void initializeActionBar() {
+        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+
+        TextView cancelButton = findViewById(R.id.cancelButton);
+        TextView saveButton = findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
     }
 
 
