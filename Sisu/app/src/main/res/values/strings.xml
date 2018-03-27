@@ -30,6 +30,7 @@
     <string name="leaderboard">Leaderboard</string>
     <string name="record">Record</string>
     <string name="new_client">New Client</string>
+    <string name="add_client">Add Client</string>
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
     <string name="appointmentDateTitle">Initial Appointment Date:</string>
@@ -55,6 +56,8 @@
     <string name="seller">Seller</string>
     <string name="submit">Submit</string>
     <string name="clear">Clear</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 
     <!--Hints-->
     <string name="password_hint">Password</string>
