@@ -82,6 +82,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:text="@string/pushNotification"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintBottom_toBottomOf="@id/notificationSwitch"
         app:layout_constraintStart_toEndOf="@id/notificationSwitch"
         app:layout_constraintTop_toTopOf="@id/notificationSwitch" />
@@ -94,6 +95,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:text="@string/dailyReminder"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintBottom_toBottomOf="@id/reminderSwitch"
         app:layout_constraintStart_toEndOf="@id/reminderSwitch"
         app:layout_constraintTop_toTopOf="@id/reminderSwitch" />
@@ -106,6 +108,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:text="@string/lights"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintBottom_toBottomOf="@id/lightsSwitch"
         app:layout_constraintStart_toEndOf="@id/lightsSwitch"
         app:layout_constraintTop_toTopOf="@id/lightsSwitch" />
@@ -118,6 +121,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:text="@string/touchId"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintBottom_toBottomOf="@id/idSwitch"
         app:layout_constraintStart_toEndOf="@id/idSwitch"
         app:layout_constraintTop_toTopOf="@id/idSwitch" />
@@ -129,6 +133,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/reminderTime"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toEndOf="@+id/timeButton"
         app:layout_constraintTop_toTopOf="@+id/timeButton" />
 
@@ -139,6 +144,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
         android:text="12:00 AM"
+        android:textSize="@dimen/font_normal"
         app:layout_constraintStart_toEndOf="@+id/timeButton"
         app:layout_constraintTop_toBottomOf="@+id/timeLabel" />
 </android.support.constraint.ConstraintLayout>

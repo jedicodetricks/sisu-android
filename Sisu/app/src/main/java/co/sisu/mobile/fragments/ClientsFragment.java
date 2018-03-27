@@ -1,10 +1,10 @@
 package co.sisu.mobile.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,8 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.ClientListAdapter;
-import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.Metric;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +32,6 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     public ClientsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,7 +96,8 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
         for(int i = 0; i < numOfTabs; i++) {
             TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            x.setTextSize(9);
+            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
+            x.setPadding(-1,0,-1,0);
         }
     }
 

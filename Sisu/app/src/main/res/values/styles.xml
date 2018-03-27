@@ -24,6 +24,7 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
     <style name="EditTextLabelStyle">
@@ -43,14 +44,14 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="LeaderboardItemsText">
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="RecordLabelText">
@@ -60,11 +61,18 @@
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
+    <style name="ScoreboardAmountStyle">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_larger</item>
+    </style>
+
     <style name="ScoreboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLabelText</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="SpinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
@@ -81,6 +89,16 @@
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <style name="TabLayout" parent="Base.Widget.AppCompat.ActionBar.TabView">
+        <item name="tabTextAppearance">@style/MyTabTextAppearance</item>
+    </style>
+
+    <style name="MyTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">8sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="textAllCaps">true</item>
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
