@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -57,7 +60,14 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void initializeTimelineSelector() {
         Spinner spinner = getView().findViewById(R.id.timelineSelector);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.timeline_array, R.layout.spinner_item);
+        List<String> spinnerArray = initSpinnerArray();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.spinner_item,
+                spinnerArray
+        );
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), spinnerArray, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -71,6 +81,35 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 //not sure what this does
             }
         });
+    }
+
+    private List<String> initSpinnerArray() {
+        List<String> spinnerArray = new ArrayList<>();
+        spinnerArray.add("Today");
+        spinnerArray.add("Last Week");
+        spinnerArray.add("This Week");
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+
+        String thisMonth = sdf.format(calendar.getTime());
+
+        calendar.add(Calendar.MONTH, -1);
+        String lastMonth = sdf.format(calendar.getTime());
+        spinnerArray.add(lastMonth);
+        spinnerArray.add(thisMonth);
+
+        calendar = Calendar.getInstance();
+        sdf = new SimpleDateFormat("YYYY");
+        String thisYear = sdf.format(calendar.getTime());
+
+        calendar.add(Calendar.YEAR, -1);
+        String lastYear = sdf.format(calendar.getTime());
+        spinnerArray.add(lastYear);
+        spinnerArray.add(thisYear);
+        spinnerArray.add("All Records");
+
+        return spinnerArray;
     }
 
     private void initializeButton(){
