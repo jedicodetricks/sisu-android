@@ -102,10 +102,15 @@ public class DataController {
     public void initializeClientsObject() {
 
         Random r = new Random();
-        for(int i =0; i < 10; i++) {
-            clientObject.add(new ClientObject("Test Client: " + i, String.valueOf(r.nextInt(50000))));
-        }
 
+        clientObject.add(new ClientObject("Jeremy Renner", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brenden Urie", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brandon Flowers", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Pete Wentz", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brady Groharing", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Jeff Jessop", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Ferb", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Phineas", String.valueOf(r.nextInt(50000))));
     }
 
     public List<Metric> getMetrics() {

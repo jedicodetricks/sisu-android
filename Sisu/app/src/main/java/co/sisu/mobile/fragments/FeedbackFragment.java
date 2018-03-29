@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import co.sisu.mobile.R;
@@ -17,6 +18,7 @@ import co.sisu.mobile.R;
  */
 public class FeedbackFragment extends Fragment implements View.OnClickListener {
 
+    EditText feedback;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -35,13 +37,14 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        Button feedbackButton = view.findViewById(R.id.submitFeedbackButton);
+        feedbackButton.setOnClickListener(this);
+        feedback = view.findViewById(R.id.feedbackEditText);
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.submitFeedbackButton){
-            EditText feedback = (EditText) v.findViewById(R.id.feedbackEditText);
             sendFeedback(feedback.getText().toString());
             //do animation thank you
         }
