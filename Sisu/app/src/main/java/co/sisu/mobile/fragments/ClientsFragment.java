@@ -96,8 +96,8 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
         for(int i = 0; i < numOfTabs; i++) {
             TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+
             x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
-            x.setPadding(-1,0,-1,0);
         }
     }
 
