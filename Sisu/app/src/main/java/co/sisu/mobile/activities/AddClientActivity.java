@@ -175,7 +175,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             case R.id.appointmentDateDisplay:
             case R.id.appointmentDateTitle:
 //                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
-                showDatePickerDialog(settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay, "settlement");
+                showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
                 break;

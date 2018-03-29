@@ -6,12 +6,26 @@
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
         <item name="android:background">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/colorAlmostBlack</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/colorCorporateOrange</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/colorAlmostBlack</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/colorCorporateOrange</item>
     </style>
 
     <style name="TimelineText">
@@ -30,6 +44,24 @@
     <style name="EditTextLabelStyle">
         <item name="android:fontFamily">@font/roboto_thin</item>
         <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
+    <style name="ClientLabelText">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_large</item>
+    </style>
+
+    <style name="ClientAmountText">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+    </style>
+
+    <style name="DividerStyle">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/colorCorporateGrey</item>
+        <item name="android:layout_margin">8dp</item>
     </style>
 
     <style name="EditTextTheme" parent="Theme.AppCompat">
@@ -56,7 +88,7 @@
 
     <style name="RecordLabelText">
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
@@ -85,10 +117,16 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:overlapAnchor">false</item>
+        <item name="android:fillViewport">true</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:width">330dp</item>
+        <item name="android:height">96dp</item>
     </style>
 
     <style name="TabLayout" parent="Base.Widget.AppCompat.ActionBar.TabView">
@@ -113,6 +151,21 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLabelText</item>
+    </style>
+
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/colorAlmostBlack</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/colorCorporateOrange</item>
+
+        <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight, and colorSwitchThumbNormal. -->
+
     </style>
 
     <style name="CalendarStyle" parent="Theme.AppCompat.Light.NoActionBar">
