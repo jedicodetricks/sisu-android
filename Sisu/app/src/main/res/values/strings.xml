@@ -36,6 +36,10 @@
     <string name="appointmentDateTitle">Initial Appointment Date:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
+    <string name="pipeline">Pipeline</string>
+    <string name="signed">Signed</string>
+    <string name="contract">Contract</string>
+    <string name="archived">Archived</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>

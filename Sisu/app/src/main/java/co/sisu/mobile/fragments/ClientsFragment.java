@@ -4,14 +4,11 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         metricList = dataController.getClientObject();
-        initializeTabView();
+        //initializeTabView();
         initializePipelineList(metricList);
         initializeSignedList(metricList);
         initializeContractList(metricList);
@@ -57,49 +54,49 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
-    private void initializeTabView() {
-        int numOfTabs = 5;
-        // create the TabHost that will contain the Tabs
-        TabHost host = getView().findViewById(R.id.tabHost);
-        host.setup();
-
-        //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Pipeline");
-        spec.setContent(R.id.tab1);
-        spec.setIndicator("Pipeline");
-        host.addTab(spec);
-
-
-        //Tab 2
-        spec = host.newTabSpec("Signed");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator("Signed");
-        host.addTab(spec);
-
-        //Tab 3
-        spec = host.newTabSpec("Contract");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator("Contract");
-        host.addTab(spec);
-
-        //Tab 4
-        spec = host.newTabSpec("Closed");
-        spec.setContent(R.id.tab4);
-        spec.setIndicator("Closed");
-        host.addTab(spec);
-
-        //Tab 5
-        spec = host.newTabSpec("Archived");
-        spec.setContent(R.id.tab5);
-        spec.setIndicator("Archived");
-        host.addTab(spec);
-
-        for(int i = 0; i < numOfTabs; i++) {
-            TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-
-            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
-        }
-    }
+//    private void initializeTabView() {
+//        int numOfTabs = 5;
+//        // create the TabHost that will contain the Tabs
+//        TableLayout host = getView().findViewById(R.id.tabHost);
+//        host.setup();
+//
+//        //Tab 1
+//        TabHost.TabSpec spec = host.newTabSpec("Pipeline");
+//        spec.setContent(R.id.tab1);
+//        spec.setIndicator("Pipeline");
+//        host.addTab(spec);
+//
+//
+//        //Tab 2
+//        spec = host.newTabSpec("Signed");
+//        spec.setContent(R.id.tab2);
+//        spec.setIndicator("Signed");
+//        host.addTab(spec);
+//
+//        //Tab 3
+//        spec = host.newTabSpec("Contract");
+//        spec.setContent(R.id.tab3);
+//        spec.setIndicator("Contract");
+//        host.addTab(spec);
+//
+//        //Tab 4
+//        spec = host.newTabSpec("Closed");
+//        spec.setContent(R.id.tab4);
+//        spec.setIndicator("Closed");
+//        host.addTab(spec);
+//
+//        //Tab 5
+//        spec = host.newTabSpec("Archived");
+//        spec.setContent(R.id.tab5);
+//        spec.setIndicator("Archived");
+//        host.addTab(spec);
+//
+//        for(int i = 0; i < numOfTabs; i++) {
+//            TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+//
+//            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
+//        }
+//    }
 
     private void initializePipelineList(List<ClientObject> metricList) {
         mListView = getView().findViewById(R.id.pipeline_list);
