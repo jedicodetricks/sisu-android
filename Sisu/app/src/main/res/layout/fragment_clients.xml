@@ -5,109 +5,140 @@
     android:layout_height="match_parent"
     tools:context="co.sisu.mobile.fragments.ClientsFragment">
 
-        <TabHost
-            android:id="@+id/tabHost"
+        <SearchView
+            android:id="@+id/searchClient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:clickable="true"
+            app:layout_constraintTop_toBottomOf="@id/tabHost">
+
+        </SearchView>
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/searchClient">
 
                 <LinearLayout
+                    android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                        <TabWidget
-                            android:id="@android:id/tabs"
+                        <ListView
+                            android:id="@+id/pipeline_list"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </TabWidget>
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp" />
 
-                        <SearchView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                        </SearchView>
-
-                        <FrameLayout
-                            android:id="@android:id/tabcontent"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:id="@+id/tab1"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical">
-
-                                        <ListView
-                                            android:id="@+id/pipeline_list"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginBottom="8dp"
-                                            android:layout_marginTop="8dp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/tab2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical">
-
-                                        <ListView
-                                            android:id="@+id/signed_list"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginBottom="8dp"
-                                            android:layout_marginTop="8dp" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/tab3"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical">
-
-                                        <ListView
-                                            android:id="@+id/contract_list"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginBottom="8dp"
-                                            android:layout_marginTop="8dp" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/tab4"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical">
-
-                                        <ListView
-                                            android:id="@+id/closed_list"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginBottom="8dp"
-                                            android:layout_marginTop="8dp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/tab5"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical">
-
-                                        <ListView
-                                            android:id="@+id/archived_list"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginBottom="8dp"
-                                            android:layout_marginTop="8dp" />
-
-                                </LinearLayout>
-                        </FrameLayout>
                 </LinearLayout>
-        </TabHost>
+
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/signed_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/contract_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/closed_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                        <ListView
+                            android:id="@+id/archived_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+        </FrameLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@style/MyTabTextAppearance">
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabPipeline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pipeline" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabSigned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signed" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabContract"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contract" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabClosed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/closed" />
+
+                <android.support.design.widget.TabItem
+                    android:id="@+id/tabArchived"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/archived" />
+        </android.support.design.widget.TabLayout>
+
 
 </android.support.constraint.ConstraintLayout>
 

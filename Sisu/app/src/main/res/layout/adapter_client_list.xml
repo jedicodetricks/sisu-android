@@ -7,7 +7,15 @@
 
     <RelativeLayout android:id="@+id/client_list_text_layout" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:layout_toEndOf="@id/client_list_thumbnail">
 
-        <TextView android:id="@+id/client_list_title" android:layout_height="wrap_content" android:layout_width="wrap_content" tools:text="Title" android:textSize="@dimen/font_large" android:layout_marginRight="8dp" android:layout_marginLeft="12dp"/>
+        <TextView
+            android:id="@+id/client_list_title"
+            android:layout_width="170dp"
+            android:width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/client_list_subtitle"
+            android:textSize="@dimen/font_large"
+            tools:text="Title" />
 
         <TextView android:id="@+id/client_list_subtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="2dp" tools:text="Subtitle" android:textSize="@dimen/font_normal" android:maxLines="3" android:layout_marginRight="8dp" android:layout_marginLeft="12dp" android:ellipsize="end" android:layout_below="@id/client_list_title"/>
 
@@ -15,6 +23,7 @@
     </RelativeLayout>
 
     <RelativeLayout android:id="@+id/client_list_progress_layout" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:layout_toEndOf="@id/client_list_text_layout">
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -25,9 +34,11 @@
                 android:layout_height="0dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
+                android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toStartOf="@id/centerButton"
+                app:layout_constraintEnd_toStartOf="@+id/centerButton"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/text_message_icon_active" />
 
