@@ -40,6 +40,7 @@
     <string name="signed">Signed</string>
     <string name="contract">Contract</string>
     <string name="archived">Archived</string>
+    <string name="total">Total: $</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>
@@ -65,14 +66,14 @@
 
     <!--Hints-->
     <string name="password_hint">Password</string>
-    <string name="email_hint">Email Address</string>
+    <string name="email_hint">Email Address*</string>
     <string name="name_hint">Name</string>
-    <string name="phone_hint">Phone</string>
+    <string name="phone_hint">Phone*</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Commission</string>
     <string name="gci_hint">GCI</string>
-    <string name="first_name_hint">First Name</string>
-    <string name="last_name_hint">Last Name</string>
+    <string name="first_name_hint">First Name*</string>
+    <string name="last_name_hint">Last Name*</string>
     <string name="contacts_hint">Contacts</string>
     <string name="signed_buyers_hint">Signed Buyers</string>
     <string name="signed_listings_hint">Signed Listings</string>

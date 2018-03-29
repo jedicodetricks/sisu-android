@@ -14,10 +14,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/client_list_subtitle"
-            android:textSize="@dimen/font_large"
+            style="@style/ClientLabelText"
             tools:text="Title" />
 
-        <TextView android:id="@+id/client_list_subtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="2dp" tools:text="Subtitle" android:textSize="@dimen/font_normal" android:maxLines="3" android:layout_marginRight="8dp" android:layout_marginLeft="12dp" android:ellipsize="end" android:layout_below="@id/client_list_title"/>
+        <TextView android:id="@+id/client_list_subtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="2dp" tools:text="Subtitle" style="@style/ClientAmountText" android:maxLines="3" android:layout_marginRight="8dp" android:layout_marginLeft="12dp" android:ellipsize="end" android:layout_below="@id/client_list_title"/>
 
 
     </RelativeLayout>
