@@ -4,6 +4,7 @@ package co.sisu.mobile.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -86,6 +87,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                         final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                         profileImage.setImageBitmap(selectedImage);
+
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -93,4 +95,5 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 }
         }
     }
+
 }
