@@ -289,10 +289,11 @@
 
                 <ImageView
                     android:id="@+id/appointmentDatePicker"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/appointment_icon" />
@@ -300,7 +301,7 @@
                 <Button
                     android:id="@+id/appointmentDateButton"
                     style="@style/ButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
@@ -349,10 +350,11 @@
 
                 <ImageView
                     android:id="@+id/signedDatePicker"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/appointment_icon" />
@@ -409,10 +411,11 @@
 
                 <ImageView
                     android:id="@+id/underContractDatePicker"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/appointment_icon" />
@@ -468,10 +471,11 @@
 
                 <ImageView
                     android:id="@+id/settlementDatePicker"
-                    android:layout_width="65dp"
-                    android:layout_height="65dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/appointment_icon" />

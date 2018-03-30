@@ -4,9 +4,7 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         metricList = dataController.getClientObject();
-        initializeTabView();
+        //initializeTabView();
         initializePipelineList(metricList);
         initializeSignedList(metricList);
         initializeContractList(metricList);
@@ -118,12 +115,13 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         spec.setIndicator("Archived");
         host.addTab(spec);
 
-        for(int i = 0; i < numOfTabs; i++) {
-            TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-
-            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
-        }
+//        for(int i = 0; i < numOfTabs; i++) {
+//            TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+//
+//            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
+//        }
     }
+
 
     private void initializePipelineList(List<ClientObject> metricList) {
         mListView = getView().findViewById(R.id.pipeline_list);

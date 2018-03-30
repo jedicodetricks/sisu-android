@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/action_bar_title"
             android:text="Scoreboard"
-            android:gravity="center"
+            android:textAlignment="center"
             android:textSize="@dimen/font_large"
             android:fontFamily="@font/roboto_regular"
             android:padding="10dp"

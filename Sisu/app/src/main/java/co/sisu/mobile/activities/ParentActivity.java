@@ -263,7 +263,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void swapToClientBar() {
         activeClientBar = true;
-        bar.setCustomView(R.layout.action_bar_add_client_layout);
+        bar.setCustomView(R.layout.action_bar_clients_layout);
         View view = getSupportActionBar().getCustomView();
 
         TextView cancelButton = view.findViewById(R.id.cancelButton);

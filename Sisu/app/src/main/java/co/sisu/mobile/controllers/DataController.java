@@ -84,7 +84,7 @@ public class DataController {
     }
 
     public void initializeMorePageObject() {
-        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
+//        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
         morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));

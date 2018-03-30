@@ -8,7 +8,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/record_list_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/record_date"
@@ -28,12 +29,11 @@
 
         <ImageView
             android:id="@+id/calender_date_picker"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/appointment_icon" />
@@ -41,7 +41,13 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/record_list_date">
+    <RelativeLayout
+        android:id="@+id/divider"
+        style="@style/DividerStyle"
+        android:layout_width="match_parent"
+        android:layout_below="@id/record_list_date"/>
+
+    <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/divider">
         <ListView
             android:id="@+id/record_list_view"
             android:layout_width="match_parent"

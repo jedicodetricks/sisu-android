@@ -36,10 +36,16 @@
     <string name="appointmentDateTitle">Initial Appointment Date:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
+    <string name="pipeline">Pipeline</string>
+    <string name="signed">Signed</string>
+    <string name="contract">Contract</string>
+    <string name="archived">Archived</string>
+    <string name="total">Total: $</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>
     <string name="reminderTime">Reminder Time:</string>
+    <string name="timezone">Time Zone:</string>
     <string name="lights">Lights</string>
     <string name="touchId">Touch/Face Id</string>
     <string name="monthlyTitle">Monthly Activities</string>
@@ -61,14 +67,14 @@
 
     <!--Hints-->
     <string name="password_hint">Password</string>
-    <string name="email_hint">Email Address</string>
+    <string name="email_hint">Email Address*</string>
     <string name="name_hint">Name</string>
-    <string name="phone_hint">Phone</string>
+    <string name="phone_hint">Phone*</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Commission</string>
     <string name="gci_hint">GCI</string>
-    <string name="first_name_hint">First Name</string>
-    <string name="last_name_hint">Last Name</string>
+    <string name="first_name_hint">First Name*</string>
+    <string name="last_name_hint">Last Name*</string>
     <string name="contacts_hint">Contacts</string>
     <string name="signed_buyers_hint">Signed Buyers</string>
     <string name="signed_listings_hint">Signed Listings</string>
@@ -106,5 +112,6 @@
     <string name="under_contract_amount">$56,085</string>
     <string name="closed_amount">$91,862</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="temp_timezone">America/Denver</string>
 
 </resources>

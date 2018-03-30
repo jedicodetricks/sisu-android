@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -61,6 +62,11 @@ public class MoreListAdapter extends BaseAdapter {
         ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);
 
         MorePageContainer morePageContainer = (MorePageContainer) getItem(position);
+        if(morePageContainer.getSubTitle().equals("")) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rowView.findViewById(R.id.more_list_title).getLayoutParams();
+            layoutParams.setMargins(layoutParams.leftMargin, 60, layoutParams.rightMargin, layoutParams.bottomMargin);
+            titleTextView.setLayoutParams(layoutParams);
+        }
 
         titleTextView.setText(morePageContainer.getTitle());
         subTitleTextView.setText(morePageContainer.getSubTitle());
