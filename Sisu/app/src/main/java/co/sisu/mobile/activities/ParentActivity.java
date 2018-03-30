@@ -255,10 +255,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
-    public void swapToBacktionBar() {
+    public void swapToBacktionBar(String titleString) {
         //Get it?! Back action... Backtion!
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+        pageTitle.setText(titleString);
     }
 
     public void swapToClientBar() {

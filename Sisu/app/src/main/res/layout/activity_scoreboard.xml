@@ -362,14 +362,13 @@
 
     <Spinner
         android:id="@+id/timelineSelector"
-        android:layout_width="327dp"
-        android:layout_height="33dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
         style="@style/SpinnerDropdownItemStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.786"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:elevation="0dp"/>
+        app:layout_constraintHorizontal_bias="0.786"/>
 
 
     <ImageView

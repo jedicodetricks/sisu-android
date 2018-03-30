@@ -76,7 +76,14 @@
     <string name="first_name_hint">First Name*</string>
     <string name="last_name_hint">Last Name*</string>
     <string name="contacts_hint">Contacts</string>
-    <string name="signed_buyers_hint">Signed Buyers</string>
+    <string name="signed_buyers_hint">Buyers Signed</string>
+    <string name="buyer_appt_hint">Buyer Appointments</string>
+    <string name="seller_appt_hint">Seller Appointments</string>
+    <string name="signed_sellers_hint">Sellers Signed</string>
+    <string name="buyers_under_contract_hint">Buyers Under Contract</string>
+    <string name="sellers_under_contract_hint">Sellers Under Contract</string>
+    <string name="buyers_closed_hint">Buyers Closed</string>
+    <string name="sellers_closed_hint">Sellers Closed</string>
     <string name="signed_listings_hint">Signed Listings</string>
     <string name="under_contract_hint">Under Contract</string>
     <string name="closed_hint">Closed</string>
@@ -97,7 +104,7 @@
     <!--temp strings-->
     <string name="record_date">March 23, 2018</string>
     <string name="temp_date">Tap to Select</string>
-    <string name="contacts_current_num"></string>
+    <string name="contacts_current_num">7</string>
     <string name="contacts_goal_num">7</string>
     <string name="bb_signed_current_num">5</string>
     <string name="bb_signed_goal_num">10</string>

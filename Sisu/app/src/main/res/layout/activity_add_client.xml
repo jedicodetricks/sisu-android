@@ -242,6 +242,17 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <include layout="@layout/status_radio_group"
+            android:id="@+id/statusRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/gciInputLayout"/>
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/addClientDatePickers"
             android:layout_width="match_parent"
@@ -253,7 +264,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/statusRadioGroup">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/appointmentDateSection"

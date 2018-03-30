@@ -179,31 +179,31 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void searchClients() {
-        Log.d("Selected", String.valueOf(host.getCurrentTab()));
-        Log.d("Searching", searchText);
-        List<ClientObject> sortedList = new ArrayList<>();
-        switch(host.getCurrentTab()) {
-            case 0:
-//                for (ClientObject co : metricList) {
-//                    if(co.getName().contains(searchText)) {
-//                        sortedList.add(co);
-//                    }
-//                    initializePipelineList(sortedList);
-//                }
-                break;
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-        }
+//        Log.d("Selected", String.valueOf(host.getCurrentTab()));
+//        Log.d("Searching", searchText);
+//        List<ClientObject> sortedList = new ArrayList<>();
+//        switch(host.getCurrentTab()) {
+//            case 0:
+////                for (ClientObject co : metricList) {
+////                    if(co.getName().contains(searchText)) {
+////                        sortedList.add(co);
+////                    }
+////                    initializePipelineList(sortedList);
+////                }
+//                break;
+//            case 1:
+//
+//                break;
+//            case 2:
+//
+//                break;
+//            case 3:
+//
+//                break;
+//            case 4:
+//
+//                break;
+//        }
     }
 
     @Override

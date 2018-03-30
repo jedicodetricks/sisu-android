@@ -67,7 +67,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 R.layout.spinner_item,
                 spinnerArray
         );
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), spinnerArray, R.layout.spinner_item);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
