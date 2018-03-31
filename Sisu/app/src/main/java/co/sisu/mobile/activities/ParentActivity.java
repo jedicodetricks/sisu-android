@@ -32,7 +32,7 @@ import co.sisu.mobile.models.TeamObject;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    TextView pageTitle, teamLetter;
+    TextView pageTitle, teamLetter, backtionTitle;
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
@@ -259,7 +259,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         //Get it?! Back action... Backtion!
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-        pageTitle.setText(titleString);
+        backtionTitle = findViewById(R.id.actionBarTitle);
+        backtionTitle.setText(titleString);
     }
 
     public void swapToClientBar() {

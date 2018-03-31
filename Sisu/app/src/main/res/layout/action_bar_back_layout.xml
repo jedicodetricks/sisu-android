@@ -18,7 +18,7 @@
             android:textSize="@dimen/font_large"/>
 
         <TextView
-            android:id="@+id/actionBarTitle"
+            android:id="@id/actionBarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
