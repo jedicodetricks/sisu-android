@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import co.sisu.mobile.R;
 
@@ -25,8 +26,8 @@ public class SetupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_setup, container, false);
-        ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
+        ScrollView contentView = (ScrollView) inflater.inflate(R.layout.fragment_setup, container, false);
+        ScrollView.LayoutParams viewLayout = new ScrollView.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
         return contentView;
     }

@@ -53,29 +53,29 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
         if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
             // call Login Activity
-            while(!loaded) {
-                // We apparently need this log or Android decides to just not work.
-                Log.v("Splash", "loading");
-                if(loaded) {
+//            while(!loaded) {
+//                // We apparently need this log or Android decides to just not work.
+//                Log.v("Splash", "loading");
+//                if(loaded) {
                     intent = new Intent(this, MainActivity.class);
                     launchActivity();
-                    break;
-                }
-            }
+//                    break;
+//                }
+//            }
 
         }
         else
         {
             // Already logged in. Enter app.
-            while(!loaded) {
-                // We apparently need this log or Android decides to just not work.
-                Log.v("Splash", "loading");
-                if(loaded) {
+//            while(!loaded) {
+//                // We apparently need this log or Android decides to just not work.
+//                Log.v("Splash", "loading");
+//                if(loaded) {
                     intent = new Intent(this, ParentActivity.class);
                     launchActivity();
-                    break;
-                }
-            }
+//                    break;
+//                }
+//            }
 
         }
 

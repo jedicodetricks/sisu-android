@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private ListView mListView;
     DataController dataController;
-
+    ParentActivity activity;
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -43,6 +44,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity = (ParentActivity) getActivity();
         initializeListView();
         inititializeButtons();
     }
@@ -75,27 +77,27 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
             case "Clients":
-                ((ParentActivity) getActivity()).stackReplaceFragment(ClientsFragment.class);
-                ((ParentActivity) getActivity()).swapToBacktionBar();
+                activity.stackReplaceFragment(ClientsFragment.class);
+                activity.swapToClientBar();
                 break;
             case "My Profile":
-                ((ParentActivity) getActivity()).stackReplaceFragment(MyProfileFragment.class);
-                ((ParentActivity) getActivity()).swapToBacktionBar();
+                activity.stackReplaceFragment(MyProfileFragment.class);
+                activity.swapToBacktionBar("My Profile");
                 break;
             case "Setup":
-                ((ParentActivity) getActivity()).stackReplaceFragment(SetupFragment.class);
-                ((ParentActivity) getActivity()).swapToBacktionBar();
+                activity.stackReplaceFragment(SetupFragment.class);
+                activity.swapToBacktionBar("Setup");
                 break;
             case "Settings":
-                ((ParentActivity) getActivity()).stackReplaceFragment(SettingsFragment.class);
-                ((ParentActivity) getActivity()).swapToBacktionBar();
+                activity.stackReplaceFragment(SettingsFragment.class);
+                activity.swapToBacktionBar("Settings");
                 break;
             case "Feedback":
-                ((ParentActivity) getActivity()).stackReplaceFragment(FeedbackFragment.class);
-                ((ParentActivity) getActivity()).swapToBacktionBar();
+                activity.stackReplaceFragment(FeedbackFragment.class);
+                activity.swapToBacktionBar("Feedback");
                 break;
             case "Logout":
-                ((ParentActivity) getActivity()).logout();
+                activity.logout();
                 SaveSharedPreference.setUserName(getContext(), "");
                 break;
         }

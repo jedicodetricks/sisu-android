@@ -33,7 +33,7 @@
     <string name="add_client">Add Client</string>
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
-    <string name="appointmentDateTitle">Initial Appointment Date:</string>
+    <string name="appointmentDateTitle">Initial Appt Date:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
@@ -45,6 +45,7 @@
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>
     <string name="reminderTime">Reminder Time:</string>
+    <string name="timezone">Time Zone:</string>
     <string name="lights">Lights</string>
     <string name="touchId">Touch/Face Id</string>
     <string name="monthlyTitle">Monthly Activities</string>
@@ -65,17 +66,29 @@
     <string name="save">Save</string>
 
     <!--Hints-->
-    <string name="password_hint">Password</string>
+    <string name="password_hint">Password*</string>
+    <string name="password_hint_non_req">Password</string>
     <string name="email_hint">Email Address*</string>
+    <string name="username_email_hint">Username/Email</string>
     <string name="name_hint">Name</string>
     <string name="phone_hint">Phone*</string>
+    <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Commission</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
+    <string name="first_name_hint_non_req">First Name</string>
     <string name="last_name_hint">Last Name*</string>
+    <string name="last_name_hint_non_req">Last Name</string>
     <string name="contacts_hint">Contacts</string>
-    <string name="signed_buyers_hint">Signed Buyers</string>
+    <string name="signed_buyers_hint">Buyers Signed</string>
+    <string name="buyer_appt_hint">Buyer Appointments</string>
+    <string name="seller_appt_hint">Seller Appointments</string>
+    <string name="signed_sellers_hint">Sellers Signed</string>
+    <string name="buyers_under_contract_hint">Buyers Under Contract</string>
+    <string name="sellers_under_contract_hint">Sellers Under Contract</string>
+    <string name="buyers_closed_hint">Buyers Closed</string>
+    <string name="sellers_closed_hint">Sellers Closed</string>
     <string name="signed_listings_hint">Signed Listings</string>
     <string name="under_contract_hint">Under Contract</string>
     <string name="closed_hint">Closed</string>
@@ -96,7 +109,7 @@
     <!--temp strings-->
     <string name="record_date">March 23, 2018</string>
     <string name="temp_date">Tap to Select</string>
-    <string name="contacts_current_num"></string>
+    <string name="contacts_current_num">7</string>
     <string name="contacts_goal_num">7</string>
     <string name="bb_signed_current_num">5</string>
     <string name="bb_signed_goal_num">10</string>
@@ -111,5 +124,6 @@
     <string name="under_contract_amount">$56,085</string>
     <string name="closed_amount">$91,862</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="temp_timezone">America/Denver</string>
 
 </resources>

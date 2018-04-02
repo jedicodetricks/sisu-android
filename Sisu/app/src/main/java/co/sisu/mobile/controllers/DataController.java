@@ -84,7 +84,7 @@ public class DataController {
     }
 
     public void initializeMorePageObject() {
-        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
+//        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
         morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
@@ -102,10 +102,15 @@ public class DataController {
     public void initializeClientsObject() {
 
         Random r = new Random();
-        for(int i =0; i < 10; i++) {
-            clientObject.add(new ClientObject("Test Client: " + i, String.valueOf(r.nextInt(50000))));
-        }
 
+        clientObject.add(new ClientObject("Jeremy Renner", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brenden Urie", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brandon Flowers", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Pete Wentz", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Brady Groharing", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Jeff Jessop", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Ferb", String.valueOf(r.nextInt(50000))));
+        clientObject.add(new ClientObject("Phineas", String.valueOf(r.nextInt(50000))));
     }
 
     public List<Metric> getMetrics() {

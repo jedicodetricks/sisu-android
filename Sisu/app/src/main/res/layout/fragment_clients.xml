@@ -10,48 +10,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabMode="scrollable"
             app:tabTextAppearance="@style/MyTabTextAppearance">
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/tabPipeline"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/pipeline" />
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/tabSigned"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/signed" />
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/tabContract"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/contract" />
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/tabClosed"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/closed" />
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/tabArchived"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/archived" />
         </android.support.design.widget.TabLayout>
 
         <SearchView
-            android:id="@+id/searchClient"
+            android:id="@+id/clientSeachbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -64,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/clientTotalDollarText"
-            app:layout_constraintTop_toBottomOf="@id/searchClient">
+            app:layout_constraintTop_toBottomOf="@id/clientSeachbar">
 
                 <LinearLayout
                     android:id="@+id/tab1"

@@ -34,7 +34,7 @@ import static android.content.Context.ALARM_SERVICE;
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
-    ImageButton timeSelector;
+    ImageView timeSelector;
     TextView reminderTimeTitle, displayTime;
     int currentSelectedHour, currentSelectedMinute;
     int alarmId = 1412;

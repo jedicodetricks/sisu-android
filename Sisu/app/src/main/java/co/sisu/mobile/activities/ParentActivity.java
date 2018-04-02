@@ -32,26 +32,27 @@ import co.sisu.mobile.models.TeamObject;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    TextView pageTitle, teamLetter;
+    TextView pageTitle, teamLetter, backtionTitle;
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
     private String fragmentTag;
     List<TeamObject> teamsList;
     boolean activeBacktionBar = false;
+    boolean activeClientBar = false;
     int selectedTeam = 0;
+    ActionBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
+        bar = getSupportActionBar();
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
-//        pageTitle = findViewById(R.id.action_bar_title);
-//        teamLetter = findViewById(R.id.team_letter);
-//        teamBlock = findViewById(R.id.action_bar_home);
+
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -62,7 +63,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         navigateToScoreboard();
     }
 
-    private void initializeActionBar() {
+    public void initializeActionBar() {
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
 
         pageTitle = findViewById(R.id.action_bar_title);
@@ -200,6 +201,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 fragmentTag = "More";
                 replaceFragment(MoreFragment.class);
                 break;
+            case R.id.cancelButton:
+                showToast("CANCEL BUTTON");
             default:
                 break;
         }
@@ -252,10 +255,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
-    public void swapToBacktionBar() {
+    public void swapToBacktionBar(String titleString) {
         //Get it?! Back action... Backtion!
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+        backtionTitle = findViewById(R.id.actionBarTitle);
+        backtionTitle.setText(titleString);
+    }
+
+    public void swapToClientBar() {
+        activeClientBar = true;
+        bar.setCustomView(R.layout.action_bar_clients_layout);
+        View view = getSupportActionBar().getCustomView();
+
+        TextView cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(this);
     }
 
     public void logout() {
@@ -270,6 +284,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(activeBacktionBar) {
             activeBacktionBar = false;
+            initializeActionBar();
+        }
+        else if(activeClientBar) {
+            activeClientBar = false;
             initializeActionBar();
         }
         super.onBackPressed();

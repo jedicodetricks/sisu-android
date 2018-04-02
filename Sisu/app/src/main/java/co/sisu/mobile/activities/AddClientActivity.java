@@ -78,17 +78,26 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         appointmentDisplay.setOnClickListener(this);
         findViewById(R.id.appointmentDateTitle).setOnClickListener(this);
 
-        signedSelectedYear = Calendar.getInstance().get(Calendar.YEAR);
-        signedSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-        signedSelectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        contractSelectedYear = Calendar.getInstance().get(Calendar.YEAR);
-        contractSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-        contractSelectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        signedSelectedYear = year;
+        signedSelectedMonth = month;
+        signedSelectedDay = day;
 
-        settlementSelectedYear = Calendar.getInstance().get(Calendar.YEAR);
-        settlementSelectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-        settlementSelectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        contractSelectedYear = year;
+        contractSelectedMonth = month;
+        contractSelectedDay = day;
+
+        settlementSelectedYear = year;
+        settlementSelectedMonth = month;
+        settlementSelectedDay = day;
+
+        appointmentSelectedYear = year;
+        appointmentSelectedMonth = month;
+        appointmentSelectedDay = day;
     }
 
     private void initializeForm() {
@@ -185,6 +194,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             case R.id.settlementDateButton:
                 clearDisplayDate("settlement");
                 break;
+            case R.id.appointmentDateButton:
+                clearDisplayDate("appointment");
             default:
                 break;
         }
@@ -351,17 +362,19 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void clearDisplayDate(String calendarCaller) {
-
+        String setText = "Tap To Select";
         switch (calendarCaller) {
             case "signed":
-                signedDisplay.setText("Tap To Select");
+                signedDisplay.setText(setText);
                 break;
             case "contract":
-                contractDisplay.setText("Tap To Select");
+                contractDisplay.setText(setText);
                 break;
             case "settlement":
-                settlementDisplay.setText("Tap To Select");
+                settlementDisplay.setText(setText);
                 break;
+            case "appointment":
+                appointmentDisplay.setText(setText);
         }
     }
     private void updateDisplayDate(int year, int month, int day, String calendarCaller) {
@@ -399,6 +412,12 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 settlementSelectedMonth = month;
                 settlementSelectedDay = day;
                 settlementDisplay.setText(sdf.format(updatedTime.getTime()));
+                break;
+            case "appointment":
+                appointmentSelectedYear = year;
+                appointmentSelectedMonth = month;
+                appointmentSelectedDay = day;
+                appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 break;
         }
 
