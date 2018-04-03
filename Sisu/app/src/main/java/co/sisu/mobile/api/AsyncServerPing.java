@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,7 +24,12 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         Response response = null;
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .build();
+//        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url("http://staging.sisu.co/api/ping")
@@ -38,13 +44,19 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(response.code() == 200) {
+        if(response != null) {
+            if(response.code() == 200) {
 
-            callback.onEventCompleted();
+                callback.onEventCompleted();
+            }
+            else {
+                callback.onEventFailed();
+            }
         }
         else {
             callback.onEventFailed();
         }
+
         Log.d("ASYNC PING IS", "NULL");
         response.body().close();
         return null;
