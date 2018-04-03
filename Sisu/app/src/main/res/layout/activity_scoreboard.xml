@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="180dp"
-    tools:layout_editor_absoluteY="81dp">
+    android:paddingTop="0dp">
 
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
         android:id="@+id/contactsProgress"
@@ -361,13 +360,13 @@
 
     <Spinner
         android:id="@+id/timelineSelector"
+        style="@style/SpinnerDropdownItemStyle"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        style="@style/SpinnerDropdownItemStyle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.786"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.786"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView

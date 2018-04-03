@@ -4,7 +4,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TabHost;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
@@ -72,7 +69,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initSearchBar() {
-        SearchView clientSearch = getView().findViewById(R.id.clientSeachbar);
+        SearchView clientSearch = getView().findViewById(R.id.searchClient);
         clientSearch.setOnQueryTextListener(this);
     }
 
