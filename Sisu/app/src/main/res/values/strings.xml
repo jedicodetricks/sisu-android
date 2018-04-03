@@ -41,6 +41,7 @@
     <string name="contract">Contract</string>
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
+    <string name="status">Status</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>
