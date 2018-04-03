@@ -23,8 +23,10 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import co.sisu.mobile.R;
 
@@ -43,6 +45,8 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    private List<Integer> statusButtons = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +56,18 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
+        initializeStatusButtons();
         initializeButtons();
         initializeForm();
         initializeCalendar();
+    }
+
+    private void initializeStatusButtons(){
+        statusButtons.add(R.id.pipelineButton);
+        statusButtons.add(R.id.signedButton);
+        statusButtons.add(R.id.contractButton);
+        statusButtons.add(R.id.closedButton);
+        statusButtons.add(R.id.archivedButton);
     }
 
     private void initializeCalendar() {
@@ -162,6 +175,21 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                     launchContactPicker();
                 }
                 break;
+            case R.id.pipelineButton:
+                alternateStatusButton(R.id.pipelineButton);
+                break;
+            case R.id.signedButton:
+                alternateStatusButton(R.id.signedButton);
+                break;
+            case R.id.contractButton:
+                alternateStatusButton(R.id.contractButton);
+                break;
+            case R.id.closedButton:
+                alternateStatusButton(R.id.closedButton);
+                break;
+            case R.id.archivedButton:
+                alternateStatusButton(R.id.archivedButton);
+                break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
             case R.id.signedDateTitle:
@@ -203,6 +231,19 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     //TODO do stuff for this
     private void saveClient(){
 
+    }
+
+    private void alternateStatusButton(int activeButton){
+        Button pipelineButton = (Button) findViewById(activeButton);
+        pipelineButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
+        pipelineButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+        for (int i=0; i < statusButtons.size(); i++){
+            if(statusButtons.get(i) != activeButton){
+                Button b = (Button) findViewById(statusButtons.get(i));
+                b.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
+                b.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+            }
+        }
     }
 
     private void initializeActionBar() {
@@ -337,6 +378,21 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
         Button importContactButton = findViewById(R.id.importContactButton);
         importContactButton.setOnClickListener(this);
+
+        Button pipelineButton = findViewById(R.id.pipelineButton);
+        pipelineButton.setOnClickListener(this);
+
+        Button signedButton = findViewById(R.id.signedButton);
+        signedButton.setOnClickListener(this);
+
+        Button contractButton = findViewById(R.id.contractButton);
+        contractButton.setOnClickListener(this);
+
+        Button closedButton = findViewById(R.id.closedButton);
+        closedButton.setOnClickListener(this);
+
+        Button archivedButton = findViewById(R.id.archivedButton);
+        archivedButton.setOnClickListener(this);
 
         signedClear = findViewById(R.id.signedDateButton);
         signedClear.setOnClickListener(this);
