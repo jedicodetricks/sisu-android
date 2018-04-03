@@ -166,7 +166,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/underContractProgress"
         app:layout_constraintEnd_toEndOf="@id/underContractProgress"
         app:layout_constraintStart_toStartOf="@id/underContractProgress"
-        app:layout_constraintTop_toBottomOf="@id/underContractCurrentNumber" />
+        app:layout_constraintTop_toBottomOf="@id/underContractCurrentNumber"
+        app:layout_constraintVertical_bias="0.88" />
 
     <TextView
         android:id="@+id/underContractProgressText"
