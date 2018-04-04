@@ -40,11 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.signUp:
-            case R.id.needAccount:
-                intent = new Intent(this, SignUpActivity.class);
-                startActivity(intent);
-                break;
             case R.id.signInButton:
                 attemptLogin();
                 break;
@@ -58,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final EditText emailAddress = findViewById(R.id.emailInput);
         final EditText password = findViewById(R.id.passwordInput);
         Authenticator authenticator = new Authenticator();
-        authenticator.test(emailAddress.getText().toString().replaceAll(" ", ""), password.getText().toString().replaceAll(" ", ""));
-        SaveSharedPreference.setUserName(this, "TEST_USERNAME");
+        String agentId = authenticator.test(emailAddress.getText().toString().replaceAll(" ", ""), password.getText().toString().replaceAll(" ", ""));
+        SaveSharedPreference.setUserName(this, agentId);
 //        showToast("USERNAME: " + SaveSharedPreference.getUserName(this));
         Intent intent = new Intent(this, ParentActivity.class);
         startActivity(intent);
@@ -70,14 +65,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView forgotButton = findViewById(R.id.forgotPassword);
         forgotButton.setOnClickListener(this);
 
-        TextView signUpButton = findViewById(R.id.signUp);
-        signUpButton.setOnClickListener(this);
-
         Button signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
 
-        TextView needAccountButton = findViewById(R.id.needAccount);
-        needAccountButton.setOnClickListener(this);
     }
 
     private void showToast(CharSequence msg){

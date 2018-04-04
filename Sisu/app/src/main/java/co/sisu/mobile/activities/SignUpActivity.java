@@ -57,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventCompleted() {
+    public void onEventCompleted(Object returnObject) {
 
     }
 

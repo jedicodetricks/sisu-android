@@ -47,7 +47,7 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
         if(response != null) {
             if(response.code() == 200) {
 
-                callback.onEventCompleted();
+                callback.onEventCompleted(null);
             }
             else {
                 callback.onEventFailed();
