@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,15 +16,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.List;
+
+import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
-import co.sisu.mobile.R;
 import co.sisu.mobile.fragments.MoreFragment;
-import co.sisu.mobile.fragments.ScoreboardFragment;
-import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.RecordFragment;
+import co.sisu.mobile.fragments.ReportFragment;
+import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.TeamObject;
 
 /**
@@ -50,6 +53,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         bar = getSupportActionBar();
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
+        View customView = getLayoutInflater().inflate(R.layout.action_bar_layout, null);
+        bar.setCustomView(customView);
+        Toolbar parent =(Toolbar) customView.getParent();
+        parent.setContentInsetsAbsolute(0,0);
+        parent.setPaddingRelative(0,0,0,0);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
 
@@ -65,7 +73,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void initializeActionBar() {
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-
         pageTitle = findViewById(R.id.action_bar_title);
         teamLetter = findViewById(R.id.team_letter);
         teamBlock = findViewById(R.id.action_bar_home);

@@ -12,6 +12,7 @@
 
     <!--Labels-->
     <string name="appointments">Appointments</string>
+    <string name="contacts">Contacts</string>
     <string name="bb_signed">BB Signed</string>
     <string name="listings_taken">Listings Taken</string>
     <string name="under_contract">Under Contract</string>
@@ -41,6 +42,7 @@
     <string name="contract">Contract</string>
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
+    <string name="status">Status</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>

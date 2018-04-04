@@ -1,6 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
+    <style name="ActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:contentInsetStart">0dp</item>
+        <item name="android:contentInsetEnd">0dp</item>
+    </style>
     <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
@@ -77,6 +81,13 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
+    </style>
+
+    <style name="LeaderboardPosition">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textSize">@dimen/font_largest</item>
     </style>
 
     <style name="LeaderboardItemsText">
