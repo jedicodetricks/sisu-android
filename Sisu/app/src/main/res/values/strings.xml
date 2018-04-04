@@ -12,6 +12,7 @@
 
     <!--Labels-->
     <string name="appointments">Appointments</string>
+    <string name="contacts">Contacts</string>
     <string name="bb_signed">BB Signed</string>
     <string name="listings_taken">Listings Taken</string>
     <string name="under_contract">Under Contract</string>
