@@ -87,6 +87,11 @@ public class RecordListAdapter extends BaseAdapter {
         titleTextView.setText(metric.getTitle());
         thumbnailImageView.setImageResource(metric.getThumbnailId());
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
+        if(metric.getTitle().equals(mContext.getResources().getString(R.string.signed)) ||
+                metric.getTitle().equals(mContext.getResources().getString(R.string.under_contract)) ||
+                metric.getTitle().equals(mContext.getResources().getString(R.string.closed))){
+            minusButton.setVisibility(View.INVISIBLE);
+        }
 
 
         return rowView;

@@ -29,6 +29,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     List<ClientObject> metricList;
     TabHost host;
     String searchText = "";
+    SearchView clientSearch;
 
     public ClientsFragment() {
         // Required empty public constructor
@@ -56,6 +57,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         initializeArchivedList(metricList);
         initSearchBar();
         initActionBar();
+        view.clearFocus();
     }
 
 
@@ -69,8 +71,9 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initSearchBar() {
-        SearchView clientSearch = getView().findViewById(R.id.searchClient);
+        clientSearch = getView().findViewById(R.id.searchClient);
         clientSearch.setOnQueryTextListener(this);
+        clientSearch.onActionViewExpanded();
     }
 
 
@@ -231,6 +234,8 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         switch (v.getId()) {
             case R.id.cancelButton:
                 getActivity().onBackPressed();
+                break;
+            case R.id.searchClient:
                 break;
         }
     }
