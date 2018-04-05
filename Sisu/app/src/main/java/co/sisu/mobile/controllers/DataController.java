@@ -45,7 +45,7 @@ public class DataController {
         initializeRecordMetricsOne();
         initializeRecordMetricsTwo();
         initializeMorePageObject();
-        initializeTeamsObject();
+//        initializeTeamsObject();
         initializeClientsObject();
         initializeMetrics();
         ds.setData(scoreboardMetrics);
@@ -104,11 +104,11 @@ public class DataController {
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
-    public void initializeTeamsObject() {
-        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
-        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
-        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
-    }
+//    public void initializeTeamsObject() {
+//        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
+//        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
+//        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
+//    }
 
     public void initializeClientsObject() {
 

@@ -18,6 +18,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     int WAIT_AMOUNT = 1000;
     static boolean loaded = false;
+    private boolean pingRetry = false;
     private CountDownTimer cdt;
     Intent intent = null;
 
@@ -87,5 +88,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     @Override
     public void onEventFailed() {
         Log.d("FAILED", "FAILED");
+        if(!pingRetry) {
+            pingServer();
+        }
     }
 }
