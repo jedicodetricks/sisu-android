@@ -57,7 +57,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        metricList = dataController.getReportMetrics();
+        metricList = dataController.getMasterMetrics();
         initializeListView(metricList);
         initializeCalendarHandler();
     }
@@ -147,7 +147,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateRecordInfo() {
-        metricList = dataController.updateScoreboardTimeline();
+        metricList = dataController.updateMasterMetrics();
         initializeListView(metricList);
     }
 
