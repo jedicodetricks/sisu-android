@@ -2,13 +2,16 @@ package co.sisu.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,23 +20,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
+import co.sisu.mobile.models.AsyncTeamsJsonObject;
+import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
  */
 
-public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener {
 
     TextView pageTitle, teamLetter, backtionTitle;
     View teamBlock;
@@ -45,6 +54,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientBar = false;
     int selectedTeam = 0;
     ActionBar bar;
+
+    private String agentId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +76,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         fragmentTag = "Scoreboard";
         drawerLayout = findViewById(R.id.drawer_layout);
         dataController = new DataController(this);
+        initAgentInfo();
         initializeButtons();
-        initializeTeamBar();
+        new AsyncTeams(this, agentId).execute();
+//        initializeTeamBar();
 
         navigateToScoreboard();
+    }
+
+    private void initAgentInfo() {
+        agentId = SaveSharedPreference.getUserName(ParentActivity.this);
     }
 
     public void initializeActionBar() {
@@ -90,12 +107,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void initializeTeamBar() {
+    private void initializeTeamBar(List<TeamObject> teamsList) {
         ListView mListView = findViewById(R.id.navViewList);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        teamsList = dataController.getTeams();
+//        teamsList = dataController.getTeams();
 
         TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
         mListView.setAdapter(adapter);
@@ -304,4 +321,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onEventCompleted(Object returnObject) {
+        Looper.prepare();
+        AsyncTeamsJsonObject teamsObject = (AsyncTeamsJsonObject) returnObject;
+        TeamJsonObject[] teams = teamsObject.getTeams();
+        Log.e("TEAMS", teams[0].getName());
+
+        List<TeamObject> formattedTeams = new ArrayList<>();
+        for(int i = 0; i < teams.length; i++) {
+            formattedTeams.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(ParentActivity.this, R.color.colorCorporateOrange)));
+        }
+        initializeTeamBar(formattedTeams);
+    }
+
+    @Override
+    public void onEventFailed() {
+
+    }
 }

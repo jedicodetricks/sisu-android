@@ -5,6 +5,6 @@ package co.sisu.mobile.api;
  */
 
 public interface AsyncServerEventListener {
-    void onEventCompleted();
+    void onEventCompleted(Object returnObject);
     void onEventFailed();
 }

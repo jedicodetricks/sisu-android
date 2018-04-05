@@ -6,9 +6,6 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.Timer;
-
-import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -49,7 +46,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     }
 
     @Override
-    public void onEventCompleted() {
+    public void onEventCompleted(Object returnObject) {
 
         if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
             // call Login Activity

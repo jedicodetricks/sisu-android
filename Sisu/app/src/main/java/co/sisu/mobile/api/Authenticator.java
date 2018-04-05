@@ -31,7 +31,7 @@ import okhttp3.Response;
 public class Authenticator {
     private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
 
-    public void test(String email, String password){
+    public String test(String email, String password){
 
         byte[] secretArray = new byte[0];
         String secretKey = "33SnhbgJaXFp6fYYd1Ru";
@@ -64,22 +64,23 @@ public class Authenticator {
                     .setExpiration(expDate.getTime())
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
-            authenticateUser(transactionID, compact, time, secretKey, email, password);
+            return authenticateUser(transactionID, compact, time, secretKey, email, password);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public void authenticateUser(String transID, String compact, String time, String secretKey, String email, String password) throws UnsupportedEncodingException {
+    public String authenticateUser(String transID, String compact, String time, String secretKey, String email, String password) throws UnsupportedEncodingException {
 //        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
 
         compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
         transID = "E958DC02-8F61-4E97-90B7-F266DCC597E9";
         time = "1520999095";
-        getJsonString(compact, transID, time, email, password);
+        return getJsonString(compact, transID, time, email, password);
     }
 
-    public void getJsonString(String auth, String transID, String timeStamp, String email, String password){
+    public String getJsonString(String auth, String transID, String timeStamp, String email, String password){
 //        System.out.println("AUTH: " + auth);
 //        System.out.println("TRANS ID: " + transID);
 //        System.out.println("TIMESTAMP: " + timeStamp);
@@ -132,7 +133,9 @@ public class Authenticator {
                         OkHttpClient client = new OkHttpClient();
 
                         MediaType mediaType = MediaType.parse("application/json");
-                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
+                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brian@sisu.co\",\"password\":\"hellosisu\"}");
+
+//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
 
                         Request request = new Request.Builder()
                                 .url("http://staging.sisu.co/api/agent/authenticate")
@@ -177,6 +180,7 @@ public class Authenticator {
                         if (urlConnection != null) {
                             urlConnection.disconnect();
                         }
+
                     }
 //                    //Your code goes here
                 } catch (Exception e) {
@@ -185,6 +189,8 @@ public class Authenticator {
             }
         });
         thread.start();
+
+        return "1570";
     }
 
     public String getPostDataString(JSONObject params) throws Exception {
