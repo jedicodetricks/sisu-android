@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.controllers.NotificationReceiver;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -84,8 +82,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void initSwitches() {
-        notificationSwitch = getView().findViewById(R.id.notificationSwitch);
-        notificationSwitch.setOnCheckedChangeListener(this);
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
         reminderSwitch.setOnCheckedChangeListener(this);
         lightsSwitch = getView().findViewById(R.id.lightsSwitch);
@@ -98,9 +94,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
         switch (buttonView.getId()) {
-            case R.id.notificationSwitch:
-                Log.d("CHECK LISTENER", "Notify");
-                break;
             case R.id.reminderSwitch:
                 if(!reminderSwitch.isChecked()) {
                     AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);

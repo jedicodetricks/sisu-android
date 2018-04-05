@@ -22,10 +22,13 @@ public class DataController {
     private Context context;
     private boolean metricOneCurrent = true;
     private boolean recordOneCurrent = true;
+    private boolean masterOneCurrent = true;
     private List<Metric> scoreboardMetrics = new ArrayList<>();
     private List<Metric> scoreboardMetricsTwo = new ArrayList<>();
     private List<Metric> recordMetricsOne = new ArrayList<>();
     private List<Metric> recordMetricsTwo = new ArrayList<>();
+    private List<Metric> masterMetricsOne = new ArrayList<>();
+    private List<Metric> masterMetricsTwo = new ArrayList<>();
     private List<TeamObject> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
     private List<ClientObject> clientObject = new ArrayList<>();
@@ -44,6 +47,7 @@ public class DataController {
         initializeMorePageObject();
         initializeTeamsObject();
         initializeClientsObject();
+        initializeMetrics();
         ds.setData(scoreboardMetrics);
     }
     //this is for testing
@@ -81,6 +85,13 @@ public class DataController {
         recordMetricsTwo.add(new Metric("Number of Dials",1, 70,  R.drawable.phone_icon, R.color.colorCorporateOrange));
         recordMetricsTwo.add(new Metric("Added to Database",70, 70,  R.drawable.database_icon, R.color.colorMoonBlue));
         recordMetricsTwo.add(new Metric("Appointments Set",70, 70,  R.drawable.appointment_icon, R.color.colorYellow));
+    }
+
+    private void initializeMetrics() {
+        masterMetricsOne.addAll(scoreboardMetrics);
+        masterMetricsOne.addAll(recordMetricsOne);
+        masterMetricsTwo.addAll(scoreboardMetricsTwo);
+        masterMetricsTwo.addAll(recordMetricsTwo);
     }
 
     public void initializeMorePageObject() {
@@ -131,6 +142,15 @@ public class DataController {
         }
     }
 
+    public List<Metric> getMasterMetrics() {
+        if(masterOneCurrent) {
+            return masterMetricsOne;
+        }
+        else {
+            return masterMetricsTwo;
+        }
+    }
+
     public List<TeamObject> getTeams() {
         return teams;
     }
@@ -164,4 +184,17 @@ public class DataController {
             return recordMetricsOne;
         }
     }
+
+    public List<Metric> updateMasterMetrics() {
+
+        if(masterOneCurrent) {
+            masterOneCurrent = !masterOneCurrent;
+            return masterMetricsTwo;
+        }
+        else {
+            masterOneCurrent = !masterOneCurrent;
+            return masterMetricsOne;
+        }
+    }
+
 }

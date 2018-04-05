@@ -16,8 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +25,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.utils.CircularProgressBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -134,6 +133,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView contactsGoalNumber = getView().findViewById(R.id.contactsGoalNumber);
         contactsCurrentNumber.setText(String.valueOf(contactsMetric.getCurrentNum()));
         contactsGoalNumber.setText(String.valueOf(contactsMetric.getGoalNum()));
+        CircularProgressBar contactsProgressMark = getView().findViewById(R.id.contactsProgressMark);
+        contactsProgressMark.setStartAngle(contactsMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        contactsProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        contactsProgressMark.getBackground().setAlpha(0);
+        contactsProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        contactsProgressMark.setProgressWithAnimation(1, 0);
 
         Metric appointmentsMetric = metricList.get(1);
         CircularProgressBar appointmentsProgress = getView().findViewById(R.id.appointmentsProgress);
@@ -146,6 +151,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView appointmentsGoalNumber = getView().findViewById(R.id.appointmentsGoalNumber);
         appointmentsCurrentNumber.setText(String.valueOf(appointmentsMetric.getCurrentNum()));
         appointmentsGoalNumber.setText(String.valueOf(appointmentsMetric.getGoalNum()));
+        CircularProgressBar appointmentsProgressMark = getView().findViewById(R.id.appointmentsProgressMark);
+        appointmentsProgressMark.setStartAngle(appointmentsMetric.getPercentComplete());
+        appointmentsProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        appointmentsProgressMark.getBackground().setAlpha(0);
+        appointmentsProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        appointmentsProgressMark.setProgressWithAnimation(1, 0);
 
         Metric bbSignedMetric = metricList.get(2);
         CircularProgressBar bbSignedProgress = getView().findViewById(R.id.bbSignedProgress);
@@ -158,6 +169,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView bbSignedGoalNumber = getView().findViewById(R.id.bbsignedGoalNumber);
         bbSignedCurrentNumber.setText(String.valueOf(bbSignedMetric.getCurrentNum()));
         bbSignedGoalNumber.setText(String.valueOf(bbSignedMetric.getGoalNum()));
+        CircularProgressBar bbSignedProgressMark = getView().findViewById(R.id.bbSignedProgressMark);
+        bbSignedProgressMark.setStartAngle(bbSignedMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        bbSignedProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        bbSignedProgressMark.getBackground().setAlpha(0);
+        bbSignedProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        bbSignedProgressMark.setProgressWithAnimation(1, 0);
 
         Metric listingsTakenMetric = metricList.get(3);
         CircularProgressBar listingsTakenProgress = getView().findViewById(R.id.listingsTakenProgress);
@@ -170,6 +187,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView listingsTakenGoalNumber = getView().findViewById(R.id.listingsTakenGoalNumber);
         listingsTakenCurrentNumber.setText(String.valueOf(listingsTakenMetric.getCurrentNum()));
         listingsTakenGoalNumber.setText(String.valueOf(listingsTakenMetric.getGoalNum()));
+        CircularProgressBar listingsTakenProgressMark = getView().findViewById(R.id.listingsTakenProgressMark);
+        listingsTakenProgressMark.setStartAngle(listingsTakenMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        listingsTakenProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        listingsTakenProgressMark.getBackground().setAlpha(0);
+        listingsTakenProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        listingsTakenProgressMark.setProgressWithAnimation(1, 0);
 
         Metric underContractMetric = metricList.get(4);
         CircularProgressBar underContractProgress = getView().findViewById(R.id.underContractProgress);
@@ -182,6 +205,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
         underContractCurrentNumber.setText(String.valueOf(underContractMetric.getCurrentNum()));
         underContractGoalNumber.setText(String.valueOf(underContractMetric.getGoalNum()));
+        CircularProgressBar underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
+        underContractProgressMark.setStartAngle(underContractMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        underContractProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        underContractProgressMark.getBackground().setAlpha(0);
+        underContractProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        underContractProgressMark.setProgressWithAnimation(1, 0);
 
         Metric closedMetric = metricList.get(5);
         CircularProgressBar closedProgress = getView().findViewById(R.id.closedProgress);
@@ -194,6 +223,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         TextView closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
         closedCurrentNumber.setText(String.valueOf(closedMetric.getCurrentNum()));
         closedGoalNumber.setText(String.valueOf(closedMetric.getGoalNum()));
+        CircularProgressBar closedProgressMark = getView().findViewById(R.id.closedProgressMark);
+        closedProgressMark.setStartAngle(closedMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        closedProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+        closedProgressMark.getBackground().setAlpha(0);
+        closedProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        closedProgressMark.setProgressWithAnimation(1, 0);
 
     }
 

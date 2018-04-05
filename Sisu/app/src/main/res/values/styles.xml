@@ -91,7 +91,7 @@
     </style>
 
     <style name="LeaderboardItemsText">
-        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>

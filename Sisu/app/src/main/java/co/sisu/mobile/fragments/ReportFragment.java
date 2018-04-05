@@ -49,8 +49,8 @@ public class ReportFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        List<Metric> metricList = dataController.getReportMetrics();
-        initializeListView(metricList);
+        initializeListView(initializeMetrics());
+
         initializeTimelineSelector();
     }
 
@@ -67,7 +67,7 @@ public class ReportFragment extends Fragment {
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                initializeListView(dataController.updateRecordMetrics());
+                initializeListView(dataController.updateMasterMetrics());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -75,6 +75,10 @@ public class ReportFragment extends Fragment {
                 //not sure what this does
             }
         });
+    }
+
+    private List<Metric> initializeMetrics() {
+        return dataController.getMasterMetrics();
     }
 
     private List<String> initSpinnerArray() {
