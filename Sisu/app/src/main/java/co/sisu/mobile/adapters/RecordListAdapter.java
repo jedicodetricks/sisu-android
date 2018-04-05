@@ -89,6 +89,7 @@ public class RecordListAdapter extends BaseAdapter {
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
         if(metric.getTitle().equals(mContext.getResources().getString(R.string.signed)) ||
                 metric.getTitle().equals(mContext.getResources().getString(R.string.under_contract)) ||
+                metric.getTitle().equals(mContext.getResources().getString(R.string.appointments)) ||
                 metric.getTitle().equals(mContext.getResources().getString(R.string.closed))){
             minusButton.setVisibility(View.INVISIBLE);
         }
