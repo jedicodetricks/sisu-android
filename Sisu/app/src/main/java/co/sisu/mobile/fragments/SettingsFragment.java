@@ -82,7 +82,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void initSwitches() {
-        notificationSwitch.setOnCheckedChangeListener(this);
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
         reminderSwitch.setOnCheckedChangeListener(this);
         lightsSwitch = getView().findViewById(R.id.lightsSwitch);
