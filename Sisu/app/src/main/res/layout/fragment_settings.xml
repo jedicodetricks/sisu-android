@@ -15,7 +15,8 @@
         android:layout_marginEnd="70dp"
         android:layout_marginStart="70dp"
         android:layout_marginTop="-24dp"
-        android:src="@drawable/sisu_logo_lg"
+        android:scaleType="center"
+        android:src="@drawable/sisu_full_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -136,7 +136,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar contactsProgressMark = getView().findViewById(R.id.contactsProgressMark);
         contactsProgressMark.setStartAngle(contactsMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
         contactsProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        contactsProgressMark.getBackground().setAlpha(0);
         contactsProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         contactsProgressMark.setProgressWithAnimation(1, 0);
 
@@ -154,7 +153,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar appointmentsProgressMark = getView().findViewById(R.id.appointmentsProgressMark);
         appointmentsProgressMark.setStartAngle(appointmentsMetric.getPercentComplete());
         appointmentsProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        appointmentsProgressMark.getBackground().setAlpha(0);
         appointmentsProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         appointmentsProgressMark.setProgressWithAnimation(1, 0);
 
@@ -172,7 +170,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar bbSignedProgressMark = getView().findViewById(R.id.bbSignedProgressMark);
         bbSignedProgressMark.setStartAngle(bbSignedMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
         bbSignedProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        bbSignedProgressMark.getBackground().setAlpha(0);
         bbSignedProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         bbSignedProgressMark.setProgressWithAnimation(1, 0);
 
@@ -190,7 +187,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar listingsTakenProgressMark = getView().findViewById(R.id.listingsTakenProgressMark);
         listingsTakenProgressMark.setStartAngle(listingsTakenMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
         listingsTakenProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        listingsTakenProgressMark.getBackground().setAlpha(0);
         listingsTakenProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         listingsTakenProgressMark.setProgressWithAnimation(1, 0);
 
@@ -208,7 +204,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
         underContractProgressMark.setStartAngle(underContractMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
         underContractProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        underContractProgressMark.getBackground().setAlpha(0);
         underContractProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         underContractProgressMark.setProgressWithAnimation(1, 0);
 
@@ -226,7 +221,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         CircularProgressBar closedProgressMark = getView().findViewById(R.id.closedProgressMark);
         closedProgressMark.setStartAngle(closedMetric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
         closedProgressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        closedProgressMark.getBackground().setAlpha(0);
         closedProgressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         closedProgressMark.setProgressWithAnimation(1, 0);
 
