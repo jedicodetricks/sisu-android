@@ -54,7 +54,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientBar = false;
     int selectedTeam = 0;
     ActionBar bar;
-
+    int[] teamColors = {R.color.colorCorporateOrange, R.color.};
     private String agentId = "";
 
     @Override
@@ -62,8 +62,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
         bar = getSupportActionBar();
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        bar.setDisplayShowCustomEnabled(true);
         View customView = getLayoutInflater().inflate(R.layout.action_bar_layout, null);
         bar.setCustomView(customView);
         Toolbar parent =(Toolbar) customView.getParent();
@@ -89,7 +89,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void initializeActionBar() {
-        getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+        bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = findViewById(R.id.action_bar_title);
         teamLetter = findViewById(R.id.team_letter);
         teamBlock = findViewById(R.id.action_bar_home);

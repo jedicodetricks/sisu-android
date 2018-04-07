@@ -19,9 +19,6 @@ import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, TabHost.OnTabChangeListener, View.OnClickListener {
 
     private ListView mListView;
@@ -49,25 +46,13 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         metricList = dataController.getClientObject();
-        //initializeTabView();
         initializePipelineList(metricList);
-        initializeSignedList(metricList);
-        initializeContractList(metricList);
-        initializeClosedList(metricList);
-        initializeArchivedList(metricList);
+//        initializeSignedList(metricList);
+//        initializeContractList(metricList);
+//        initializeClosedList(metricList);
+//        initializeArchivedList(metricList);
         initSearchBar();
-        initActionBar();
         view.clearFocus();
-    }
-
-
-    private void initActionBar() {
-//        AppCompatActivity activity = (AppCompatActivity) getActivity();
-//        activity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-//        View view = activity.getSupportActionBar().getCustomView();
-//
-//        TextView cancelButton = view.findViewById(R.id.cancelButton);
-//        cancelButton.setOnClickListener(this);
     }
 
     private void initSearchBar() {
@@ -78,48 +63,42 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
 
     private void initializeTabView() {
-        int numOfTabs = 5;
         // create the TabHost that will contain the Tabs
-        host = getView().findViewById(R.id.tabHost);
-        host.setOnTabChangedListener(this);
-        host.setup();
-
-        //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Pipeline");
-        spec.setContent(R.id.tab1);
-        spec.setIndicator("Pipeline");
-        host.addTab(spec);
-
-
-        //Tab 2
-        spec = host.newTabSpec("Signed");
-        spec.setContent(R.id.tab2);
-        spec.setIndicator("Signed");
-        host.addTab(spec);
-
-        //Tab 3
-        spec = host.newTabSpec("Contract");
-        spec.setContent(R.id.tab3);
-        spec.setIndicator("Contract");
-        host.addTab(spec);
-
-        //Tab 4
-        spec = host.newTabSpec("Closed");
-        spec.setContent(R.id.tab4);
-        spec.setIndicator("Closed");
-        host.addTab(spec);
-
-        //Tab 5
-        spec = host.newTabSpec("Archived");
-        spec.setContent(R.id.tab5);
-        spec.setIndicator("Archived");
-        host.addTab(spec);
-
-//        for(int i = 0; i < numOfTabs; i++) {
-//            TextView x = host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+//        host = getView().findViewById(R.id.tabHost);
+//        host.setOnTabChangedListener(this);
+//        host.setup();
 //
-//            x.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.font_smaller));
-//        }
+//        //Tab 1
+//        TabHost.TabSpec spec = host.newTabSpec("Pipeline");
+//        spec.setContent(R.id.tab1);
+//        spec.setIndicator("Pipeline");
+//        host.addTab(spec);
+//
+//
+//        //Tab 2
+//        spec = host.newTabSpec("Signed");
+//        spec.setContent(R.id.tab2);
+//        spec.setIndicator("Signed");
+//        host.addTab(spec);
+//
+//        //Tab 3
+//        spec = host.newTabSpec("Contract");
+//        spec.setContent(R.id.tab3);
+//        spec.setIndicator("Contract");
+//        host.addTab(spec);
+//
+//        //Tab 4
+//        spec = host.newTabSpec("Closed");
+//        spec.setContent(R.id.tab4);
+//        spec.setIndicator("Closed");
+//        host.addTab(spec);
+//
+//        //Tab 5
+//        spec = host.newTabSpec("Archived");
+//        spec.setContent(R.id.tab5);
+//        spec.setIndicator("Archived");
+//        host.addTab(spec);
+
     }
 
 
@@ -135,7 +114,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initializeSignedList(List<ClientObject> metricList) {
-        mListView = getView().findViewById(R.id.signed_list);
+//        mListView = getView().findViewById(R.id.signed_list);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
@@ -146,7 +125,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initializeContractList(List<ClientObject> metricList) {
-        mListView = getView().findViewById(R.id.contract_list);
+//        mListView = getView().findViewById(R.id.contract_list);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
@@ -157,7 +136,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initializeClosedList(List<ClientObject> metricList) {
-        mListView = getView().findViewById(R.id.closed_list);
+//        mListView = getView().findViewById(R.id.closed_list);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
@@ -168,7 +147,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void initializeArchivedList(List<ClientObject> metricList) {
-        mListView = getView().findViewById(R.id.archived_list);
+//        mListView = getView().findViewById(R.id.archived_list);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
