@@ -4,6 +4,7 @@
     <style name="ActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:contentInsetStart">0dp</item>
         <item name="android:contentInsetEnd">0dp</item>
+        <item name="android:background">@color/colorAlmostBlack</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
