@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,16 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
+import co.sisu.mobile.api.AsyncLeaderboardStats;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
+import co.sisu.mobile.models.LeaderboardItemsObject;
+import co.sisu.mobile.models.LeaderboardObject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LeaderboardFragment extends Fragment {
+public class LeaderboardFragment extends Fragment implements AsyncServerEventListener {
 
     LeaderboardListExpandableAdapter listAdapter;
     ExpandableListView expListView;
@@ -51,6 +57,7 @@ public class LeaderboardFragment extends Fragment {
         listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
         initializeTimelineSelector();
+        new AsyncLeaderboardStats(this, "429", "2018", "04").execute();
     }
 
     private void initializeTimelineSelector() {
@@ -78,9 +85,9 @@ public class LeaderboardFragment extends Fragment {
 
     private List<String> initSpinnerArray() {
         List<String> spinnerArray = new ArrayList<>();
-        spinnerArray.add("Today");
-        spinnerArray.add("Last Week");
-        spinnerArray.add("This Week");
+//        spinnerArray.add("Today");
+//        spinnerArray.add("Last Week");
+//        spinnerArray.add("This Week");
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
@@ -100,7 +107,7 @@ public class LeaderboardFragment extends Fragment {
         String lastYear = sdf.format(calendar.getTime());
         spinnerArray.add(lastYear);
         spinnerArray.add(thisYear);
-        spinnerArray.add("All Records");
+//        spinnerArray.add("All Records");
 
         return spinnerArray;
     }
@@ -142,4 +149,21 @@ public class LeaderboardFragment extends Fragment {
         listDataChild.put(listDataHeader.get(2), closed);
     }
 
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
+        LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
+        Log.e("Leaderboard Section", leaderBoardSections[0].getActivity_type());
+
+        for(int i = 0; i < leaderBoardSections.length; i++) {
+            LeaderboardItemsObject[] leaderboardItem = leaderBoardSections[i].getLeaderboardItemsObject();
+
+            Log.e("Leaderboard Item", leaderboardItem[i].getLabel());
+        }
+    }
+
+    @Override
+    public void onEventFailed() {
+
+    }
 }

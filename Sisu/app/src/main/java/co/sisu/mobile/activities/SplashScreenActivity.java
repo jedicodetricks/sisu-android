@@ -26,17 +26,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loaded = false;
-        cdt = new CountDownTimer(WAIT_AMOUNT, WAIT_AMOUNT) {
-
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-                loaded = true;
-            }
-        };
-        cdt.start();
 
         pingServer();
 
@@ -47,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     }
 
     @Override
-    public void onEventCompleted(Object returnObject) {
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
 
         if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
             // call Login Activity
@@ -69,6 +58,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 //                // We apparently need this log or Android decides to just not work.
 //                Log.v("Splash", "loading");
 //                if(loaded) {
+                    //TODO: We're going to need to authenticate somehow if we go straight into the ParentActivity
                     intent = new Intent(this, ParentActivity.class);
                     launchActivity();
 //                    break;
