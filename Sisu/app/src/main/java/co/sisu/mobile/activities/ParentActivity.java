@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,14 +20,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncActivities;
+import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.controllers.DataController;
@@ -62,6 +72,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private String agentId = "";
     AgentModel agent;
+    byte[] key = "SisuRocks".getBytes();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -314,6 +325,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         cancelButton.setOnClickListener(this);
     }
 
+    public AgentModel getAgentInfo() {
+        return agent;
+    }
+
     public void logout() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -370,5 +385,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onEventFailed() {
 
+    }
+
+
+    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        byte[] decrypted = cipher.doFinal(encrypted);
+        return decrypted;
     }
 }

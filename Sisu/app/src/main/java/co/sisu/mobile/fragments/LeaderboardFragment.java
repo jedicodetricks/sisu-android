@@ -45,7 +45,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_leaderboard, container, false);
-
     }
 
     @Override

@@ -1,9 +1,11 @@
 package co.sisu.mobile.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +17,21 @@ import android.widget.TabHost;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
+import co.sisu.mobile.api.AsyncActivities;
+import co.sisu.mobile.api.AsyncClients;
+import co.sisu.mobile.api.AsyncLeaderboardStats;
+import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, TabHost.OnTabChangeListener, View.OnClickListener {
+public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, TabHost.OnTabChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     private ListView mListView;
     DataController dataController;
     List<ClientObject> metricList;
-    TabHost host;
     String searchText = "";
     SearchView clientSearch;
 
@@ -52,6 +59,10 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 //        initializeClosedList(metricList);
 //        initializeArchivedList(metricList);
         initSearchBar();
+        ParentActivity activity = (ParentActivity) getActivity();
+        AgentModel agent = activity.getAgentInfo();
+        Log.e("AGENT", agent.getAgent_id());
+        new AsyncClients(this, agent.getAgent_id()).execute();
         view.clearFocus();
     }
 
@@ -217,5 +228,15 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
             case R.id.searchClient:
                 break;
         }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed() {
+
     }
 }

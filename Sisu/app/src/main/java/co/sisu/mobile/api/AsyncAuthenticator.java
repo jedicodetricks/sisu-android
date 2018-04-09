@@ -1,6 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -155,7 +156,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
             Gson gson = new Gson();
 
             MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brian@sisu.co\",\"password\":\"hellosisu\"}");
+            RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
 
 //                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
 
@@ -170,6 +171,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
+                Log.e("AUTH AWAY", "GO GO GO");
             } catch (IOException e) {
                 e.printStackTrace();
             }

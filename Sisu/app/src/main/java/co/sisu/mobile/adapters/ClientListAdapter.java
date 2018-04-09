@@ -87,8 +87,8 @@ public class ClientListAdapter extends BaseAdapter {
 
 
 
-        titleTextView.setText(clientObject.getName());
-        subtitleTextView.setText("$" + clientObject.getPrice());
+//        titleTextView.setText(clientObject.getName());
+//        subtitleTextView.setText("$" + clientObject.getPrice());
 
 
         return rowView;
