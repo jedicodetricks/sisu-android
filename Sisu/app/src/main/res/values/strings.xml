@@ -46,6 +46,7 @@
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
     <string name="status">Status</string>
+    <string name="legal">\u00A9 2018 sisu.co All rights reserved</string>
     <!--Settings page labels-->
     <string name="pushNotification">Push Notifications</string>
     <string name="dailyReminder">Daily Reminder</string>
@@ -79,7 +80,7 @@
     <string name="phone_hint">Phone</string>
     <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount*</string>
-    <string name="commission_hint">Commission*</string>
+    <string name="commission_hint">Paid Income*</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
     <string name="first_name_hint_non_req">First Name</string>

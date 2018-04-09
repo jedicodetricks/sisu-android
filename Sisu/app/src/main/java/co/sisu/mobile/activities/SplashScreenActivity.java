@@ -6,8 +6,11 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
+import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
@@ -18,6 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     int WAIT_AMOUNT = 1000;
     static boolean loaded = false;
+    private boolean pingRetry = false;
     private CountDownTimer cdt;
     Intent intent = null;
 
@@ -25,17 +29,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loaded = false;
-        cdt = new CountDownTimer(WAIT_AMOUNT, WAIT_AMOUNT) {
-
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-                loaded = true;
-            }
-        };
-        cdt.start();
 
         pingServer();
 
@@ -46,35 +39,25 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     }
 
     @Override
-    public void onEventCompleted(Object returnObject) {
-
-        if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
-            // call Login Activity
-//            while(!loaded) {
-//                // We apparently need this log or Android decides to just not work.
-//                Log.v("Splash", "loading");
-//                if(loaded) {
-                    intent = new Intent(this, MainActivity.class);
-                    launchActivity();
-//                    break;
-//                }
-//            }
-
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Server Ping")) {
+            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
+                intent = new Intent(this, MainActivity.class);
+                launchActivity();
+            }
+            else {
+                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
+                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
+                new AsyncAuthenticator(this, userName, userPassword).execute();
+            }
+        } else if(asyncReturnType.equals("Authenticator")) {
+            AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
+            AgentModel agent = agentObject.getAgent();
+            intent = new Intent(this, ParentActivity.class);
+            intent.putExtra("Agent", agent);
+            launchActivity();
         }
-        else
-        {
-            // Already logged in. Enter app.
-//            while(!loaded) {
-//                // We apparently need this log or Android decides to just not work.
-//                Log.v("Splash", "loading");
-//                if(loaded) {
-                    intent = new Intent(this, ParentActivity.class);
-                    launchActivity();
-//                    break;
-//                }
-//            }
 
-        }
 
 
     }
@@ -87,5 +70,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     @Override
     public void onEventFailed() {
         Log.d("FAILED", "FAILED");
+        if(!pingRetry) {
+            pingServer();
+        }
     }
 }

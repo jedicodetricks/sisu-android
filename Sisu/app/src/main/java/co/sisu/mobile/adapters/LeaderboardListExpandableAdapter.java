@@ -60,10 +60,12 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
         TextView score = convertView.findViewById(R.id.leaderboardScore);
+        TextView position = convertView.findViewById(R.id.leaderboardPosition);
 
         title.setText(childText);
         subtitle.setText("Testing");
         score.setText("12,345");
+        position.setText(String.valueOf(childPosition + 1));
         return convertView;
     }
 

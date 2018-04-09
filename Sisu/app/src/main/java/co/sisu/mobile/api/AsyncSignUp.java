@@ -53,7 +53,7 @@ public class AsyncSignUp extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         if(response.code() == 200) {
-            callback.onEventCompleted(null);
+            callback.onEventCompleted(null, "Sign Up");
         }
         else {
             callback.onEventFailed();

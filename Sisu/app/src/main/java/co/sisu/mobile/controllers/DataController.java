@@ -45,7 +45,7 @@ public class DataController {
         initializeRecordMetricsOne();
         initializeRecordMetricsTwo();
         initializeMorePageObject();
-        initializeTeamsObject();
+//        initializeTeamsObject();
         initializeClientsObject();
         initializeMetrics();
         ds.setData(scoreboardMetrics);
@@ -104,24 +104,24 @@ public class DataController {
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
-    public void initializeTeamsObject() {
-        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
-        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
-        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
-    }
+//    public void initializeTeamsObject() {
+//        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
+//        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
+//        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
+//    }
 
     public void initializeClientsObject() {
 
-        Random r = new Random();
-
-        clientObject.add(new ClientObject("Jeremy Renner", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Brenden Urie", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Brandon Flowers", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Pete Wentz", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Brady Groharing", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Jeff Jessop", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Ferb", String.valueOf(r.nextInt(50000))));
-        clientObject.add(new ClientObject("Phineas", String.valueOf(r.nextInt(50000))));
+//        Random r = new Random();
+//
+//        clientObject.add(new ClientObject("Jeremy Renner", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Brenden Urie", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Brandon Flowers", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Pete Wentz", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Brady Groharing", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Jeff Jessop", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Ferb", String.valueOf(r.nextInt(50000))));
+//        clientObject.add(new ClientObject("Phineas", String.valueOf(r.nextInt(50000))));
     }
 
     public List<Metric> getMetrics() {
