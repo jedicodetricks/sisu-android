@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -33,8 +35,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     LeaderboardListExpandableAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    List<LeaderboardObject> listDataHeader;
+    HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
+    ProgressBar loader;
+    Calendar calendar = Calendar.getInstance();
+    ParentActivity parentActivity;
+    int selectedYear = 0;
+    int selectedMonth = 0;
+    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
+    private int colorCounter = 0;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -50,21 +59,25 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        parentActivity = (ParentActivity) getActivity();
+        loader = view.findViewById(R.id.leaderboardLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
-        prepareListData();
-        listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
-        expListView.setAdapter(listAdapter);
+//        prepareListData();
+//        listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
+//        expListView.setAdapter(listAdapter);
         initializeTimelineSelector();
-        new AsyncLeaderboardStats(this, "429", "2018", "04").execute();
+        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+//        new AsyncLeaderboardStats(this, "429", "2018", "04").execute();
+        loader.setVisibility(View.VISIBLE);
     }
 
-    private void initializeTimelineSelector() {
+     private void initializeTimelineSelector() {
         Spinner spinner = getView().findViewById(R.id.reportsTimelineSelector);
         List<String> spinnerArray = initSpinnerArray();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(),
+                parentActivity,
                 R.layout.spinner_item,
                 spinnerArray
         );
@@ -73,6 +86,34 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                initializeListView(dataController.updateRecordMetrics());
+                calendar = Calendar.getInstance();
+
+                switch (position) {
+                    case 0:
+                        //Last month
+                        selectedYear = calendar.get(Calendar.YEAR);
+                        calendar.add(Calendar.MONTH, -1);
+                        selectedMonth = calendar.get(Calendar.MONTH) + 1;
+                        break;
+                    case 1:
+                        //This month
+                        selectedYear = calendar.get(Calendar.YEAR);
+                        selectedMonth = calendar.get(Calendar.MONTH) + 1;
+                        break;
+                    case 2:
+                        //Last year
+                        calendar.add(Calendar.YEAR, -1);
+                        selectedYear = calendar.get(Calendar.YEAR);
+                        break;
+                    case 3:
+                        //This year
+                        selectedYear = calendar.get(Calendar.YEAR);
+                        break;
+                }
+                getLeaderboard(selectedYear, selectedMonth);
+                listAdapter = null;
+                expListView.setAdapter(listAdapter);
+                loader.setVisibility(View.VISIBLE);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -80,6 +121,23 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 //not sure what this does
             }
         });
+    }
+
+    private void getLeaderboard(int year, int month) {
+        String formattedYear = String.valueOf(year);
+        String formattedMonth =  "";
+        String formattedTeamId = String.valueOf(parentActivity.getSelectedTeamId());
+        if(month != 0) {
+            formattedMonth = String.valueOf(month);
+        }
+        new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth).execute();
+    }
+
+    public void teamSwap() {
+        listAdapter = null;
+        expListView.setAdapter(listAdapter);
+        loader.setVisibility(View.VISIBLE);
+        getLeaderboard(selectedYear, selectedMonth);
     }
 
     private List<String> initSpinnerArray() {
@@ -111,54 +169,48 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         return spinnerArray;
     }
 
-    private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+    private void prepareListData(LeaderboardObject[] leaderBoardSections) {
+        listDataHeader = new ArrayList<LeaderboardObject>();
+        listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
+        colorCounter = 0;
 
-        // Adding child data
-        listDataHeader.add("Overall Leaderboard");
-        listDataHeader.add("Under Contract");
-        listDataHeader.add("Closed");
-
-        // Adding child data
-
-        List<String> overallLeaderboard = new ArrayList<String>();
-        overallLeaderboard.add("Linus Torvald");
-        overallLeaderboard.add("Steve Jobs");
-        overallLeaderboard.add("Bill Gates");
-        overallLeaderboard.add("Elon Musk");
-        overallLeaderboard.add("Richard Branson");
-
-        List<String> underContract = new ArrayList<String>();
-        underContract.add("Linus Torvald");
-        underContract.add("Steve Jobs");
-        underContract.add("Bill Gates");
-        underContract.add("Elon Musk");
-        underContract.add("Richard Branson");
-
-        List<String> closed = new ArrayList<String>();
-        closed.add("Linus Torvald");
-        closed.add("Steve Jobs");
-        closed.add("Bill Gates");
-        closed.add("Elon Musk");
-        closed.add("Richard Branson");
-
-        listDataChild.put(listDataHeader.get(0), overallLeaderboard); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), underContract);
-        listDataChild.put(listDataHeader.get(2), closed);
+        for(int i = 0; i < leaderBoardSections.length; i++) {
+            leaderBoardSections[i].setColor(teamColors[colorCounter]);
+            listDataHeader.add(leaderBoardSections[i]);
+            List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
+            for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
+                leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
+            }
+            listDataChild.put(listDataHeader.get(i), leaderboardItems);
+            if(colorCounter == teamColors.length - 1) {
+                colorCounter = 0;
+            }
+            else {
+                colorCounter++;
+            }
+        }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild);
+                expListView.setAdapter(listAdapter);
+            }
+        });
     }
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
         LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
-        Log.e("Leaderboard Section", leaderBoardSections[0].getActivity_type());
+        prepareListData(leaderBoardSections);
 
-        for(int i = 0; i < leaderBoardSections.length; i++) {
-            LeaderboardItemsObject[] leaderboardItem = leaderBoardSections[i].getLeaderboardItemsObject();
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loader.setVisibility(View.GONE);
+            }
+        });
 
-            Log.e("Leaderboard Item", leaderboardItem[i].getLabel());
-        }
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.models.LeaderboardItemsObject;
+import co.sisu.mobile.models.LeaderboardObject;
 
 /**
  * Created by Brady Groharing on 2/25/2018.
@@ -23,15 +25,18 @@ import co.sisu.mobile.R;
 public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
-    private List<String> _listDataHeader; // header titles
+    private List<LeaderboardObject> _listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<String>> _listDataChild;
+    private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
+    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
+    private int colorCounter = 0;
 
-    public LeaderboardListExpandableAdapter(Context context, List<String> listDataHeader,
-                                            HashMap<String, List<String>> listChildData) {
+    public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
+                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
+        colorCounter = 0;
     }
 
     @Override
@@ -49,7 +54,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final String childText = (String) getChild(groupPosition, childPosition);
+        final LeaderboardItemsObject childText = (LeaderboardItemsObject) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -62,10 +67,10 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         TextView score = convertView.findViewById(R.id.leaderboardScore);
         TextView position = convertView.findViewById(R.id.leaderboardPosition);
 
-        title.setText(childText);
-        subtitle.setText("Testing");
-        score.setText("12,345");
-        position.setText(String.valueOf(childPosition + 1));
+        title.setText(childText.getLabel());
+        subtitle.setText(childText.getLabel());
+        score.setText(childText.getValue());
+        position.setText(childText.getPlace());
         return convertView;
     }
 
@@ -93,7 +98,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        LeaderboardObject leaderboardObject = (LeaderboardObject) getGroup(groupPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -101,7 +106,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_headers, null);
         }
 //        Set the text styling for the list headers of leaderboards
-        styleHeaders(convertView, headerTitle, isExpanded);
+        styleHeaders(convertView, leaderboardObject.getName(), isExpanded, leaderboardObject.getColor());
 
         return convertView;
     }
@@ -116,7 +121,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         return true;
     }
 
-    private void styleHeaders(View convertView, String headerTitle, boolean isExpanded){
+    private void styleHeaders(View convertView, String headerTitle, boolean isExpanded, int headerColor){
         TextView lblListHeader = convertView.findViewById(R.id.record_list_title);
         ImageView thumb = convertView.findViewById(R.id.leaderboard_list_thumbnail);
         int imageResourceId = isExpanded ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float;
@@ -129,22 +134,28 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         lblListHeader.setTextSize(20);
         lblListHeader.setText(headerTitle);
 
-        switch(headerTitle) {
-            case "Overall Leaderboard":
-                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-                break;
-            case "Under Contract":
-                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-                break;
-            case "Closed":
-                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-                break;
-        }
+
+        convertView.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
+        lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
+        thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
+
+
+//        switch(headerTitle) {
+//            case "Overall Leaderboard":
+//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
+//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
+//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
+//                break;
+//            case "Under Contract":
+//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
+//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
+//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
+//                break;
+//            case "Closed":
+//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
+//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
+//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
+//                break;
+//        }
     }
 }

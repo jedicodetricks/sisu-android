@@ -7,6 +7,8 @@ package co.sisu.mobile.models;
 public class LeaderboardObject {
     String activity_type;
     LeaderboardItemsObject[] items;
+    String name;
+    int color;
 
     public String getActivity_type() {
         return activity_type;
@@ -22,5 +24,21 @@ public class LeaderboardObject {
 
     public void setLeaderboardItemsObject(LeaderboardItemsObject[] leaderboardItemsObject) {
         this.items = leaderboardItemsObject;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
