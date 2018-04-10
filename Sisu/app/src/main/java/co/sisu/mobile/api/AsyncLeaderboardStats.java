@@ -2,19 +2,11 @@ package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.google.gson.Gson;
-
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -37,18 +29,16 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
 
-//            MediaType mediaType = MediaType.parse("application/json");
-//            RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":1}");
             String url = "http://staging.sisu.co/api/team/leaderboards/" + teamId + "/" + searchYear;
-            if(searchMonth != null) {
+            if(!searchMonth.equals("")) {
                 url = "http://staging.sisu.co/api/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
             }
+
             Request request = new Request.Builder()
                     .url(url)
                     .get()
@@ -60,7 +50,6 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-//                Log.e("LEADERBOARD", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
