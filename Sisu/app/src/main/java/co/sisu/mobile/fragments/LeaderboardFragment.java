@@ -42,7 +42,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     ParentActivity parentActivity;
     int selectedYear = 0;
     int selectedMonth = 0;
-    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
+    int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
     private int colorCounter = 0;
 
     public LeaderboardFragment() {

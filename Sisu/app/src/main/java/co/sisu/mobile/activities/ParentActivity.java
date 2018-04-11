@@ -207,6 +207,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        activeBacktionBar = false;
+        activeClientBar = false;
+        initializeActionBar();
 
         switch (v.getId()) {
             case R.id.action_bar_home:
@@ -357,7 +360,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(asyncReturnType.equals("Teams")) {
             AsyncTeamsJsonObject teamsObject = (AsyncTeamsJsonObject) returnObject;
             TeamJsonObject[] teams = teamsObject.getTeams();
-            Log.v("TEAM SETUP", "Completed");
+//            Log.v("TEAM SETUP", "Completed");
             List<TeamObject> formattedTeams = new ArrayList<>();
             int colorCounter = 0;
             for(int i = 0; i < teams.length; i++) {
@@ -369,11 +372,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     colorCounter++;
                 }
             }
+            //Set the data controller's team object
             initializeTeamBar(formattedTeams);
         }
         else if(asyncReturnType.equals("Activities")) {
             AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
             ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+
             for(int i = 0; i < counters.length; i++) {
                 Log.e("ASYNC", counters[i].getActivity_type());
             }

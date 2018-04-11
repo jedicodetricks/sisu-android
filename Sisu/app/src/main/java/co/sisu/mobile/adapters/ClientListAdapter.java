@@ -59,36 +59,24 @@ public class ClientListAdapter extends BaseAdapter {
         // Get subtitle element
         TextView subtitleTextView = rowView.findViewById(R.id.client_list_subtitle);
 
-        // Get thumbnail element
-//        ImageView thumbnailImageView = rowView.findViewById(R.id.client_list_thumbnail);
+        //Get the images
+        ImageView textImage = rowView.findViewById(R.id.leftButton);
+        ImageView phoneImage = rowView.findViewById(R.id.centerButton);
+        ImageView emailImage = rowView.findViewById(R.id.rightButton);
 
-        // Get the row counter element
-//        final EditText rowCounter = rowView.findViewById(R.id.rowCounter);
-//
-//        ImageView minusButton = rowView.findViewById(R.id.minusButton);
-//        ImageView plusButton = rowView.findViewById(R.id.plusButton);
-//
-//        minusButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((ListView) parent).performItemClick(convertView, position, 0);
-//                rowCounter.setText(String.valueOf(metric.getCurrentNum()));
-//            }
-//        });
-//
-//        plusButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((ListView) parent).performItemClick(convertView, position, 1);
-//                rowCounter.setText(String.valueOf(metric.getCurrentNum()));
-//
-//            }
-//        });
+        if(clientObject.getHome_phone() == null && clientObject.getMobile_phone() == null) {
+            phoneImage.setVisibility(View.INVISIBLE);
+        }
 
+        if(clientObject.getMobile_phone() == null) {
+            textImage.setVisibility(View.INVISIBLE);
+        }
 
-
-//        titleTextView.setText(clientObject.getName());
-//        subtitleTextView.setText("$" + clientObject.getPrice());
+        if(clientObject.getEmail() == null) {
+            emailImage.setVisibility(View.INVISIBLE);
+        }
+        titleTextView.setText(clientObject.getFirst_name() + " " + clientObject.getLast_name());
+        subtitleTextView.setText("$" + clientObject.getGross_commission_amt());
 
 
         return rowView;
