@@ -13,7 +13,7 @@
             android:width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/client_list_subtitle"
+            android:layout_alignStart="@id/client_list_subtitle"
             style="@style/ClientLabelText"
             tools:text="Title" />
 

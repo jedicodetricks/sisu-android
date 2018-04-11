@@ -1,9 +1,9 @@
 package co.sisu.mobile.fragments;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,29 +11,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.TabHost;
-
+import java.util.ArrayList;
 import java.util.List;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncClients;
-import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, TabHost.OnTabChangeListener, View.OnClickListener, AsyncServerEventListener {
+public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener {
 
     private ListView mListView;
-    DataController dataController;
-    List<ClientObject> metricList;
+//    DataController dataController;
+    List<ClientObject> pipelineList, signedList, contractList, closedList, archivedList;
     String searchText = "";
     SearchView clientSearch;
+    ParentActivity parentActivity;
+    ProgressBar loader;
 
     public ClientsFragment() {
         // Required empty public constructor
@@ -43,7 +42,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController(getContext());
+//        dataController = new DataController(getContext());
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_clients, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -52,18 +51,20 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        metricList = dataController.getClientObject();
-        initializePipelineList(metricList);
-//        initializeSignedList(metricList);
-//        initializeContractList(metricList);
-//        initializeClosedList(metricList);
-//        initializeArchivedList(metricList);
+        pipelineList = new ArrayList<>();
+        signedList = new ArrayList<>();
+        contractList = new ArrayList<>();
+        closedList = new ArrayList<>();
+        archivedList = new ArrayList<>();
+        loader = view.findViewById(R.id.clientLoader);
         initSearchBar();
-        ParentActivity activity = (ParentActivity) getActivity();
-        AgentModel agent = activity.getAgentInfo();
+        parentActivity = (ParentActivity) getActivity();
+        AgentModel agent = parentActivity.getAgentInfo();
         Log.e("AGENT", agent.getAgent_id());
+        initializeTabView();
         new AsyncClients(this, agent.getAgent_id()).execute();
         view.clearFocus();
+        loader.setVisibility(View.VISIBLE);
     }
 
     private void initSearchBar() {
@@ -74,47 +75,13 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
 
     private void initializeTabView() {
-        // create the TabHost that will contain the Tabs
-//        host = getView().findViewById(R.id.tabHost);
-//        host.setOnTabChangedListener(this);
-//        host.setup();
-//
-//        //Tab 1
-//        TabHost.TabSpec spec = host.newTabSpec("Pipeline");
-//        spec.setContent(R.id.tab1);
-//        spec.setIndicator("Pipeline");
-//        host.addTab(spec);
-//
-//
-//        //Tab 2
-//        spec = host.newTabSpec("Signed");
-//        spec.setContent(R.id.tab2);
-//        spec.setIndicator("Signed");
-//        host.addTab(spec);
-//
-//        //Tab 3
-//        spec = host.newTabSpec("Contract");
-//        spec.setContent(R.id.tab3);
-//        spec.setIndicator("Contract");
-//        host.addTab(spec);
-//
-//        //Tab 4
-//        spec = host.newTabSpec("Closed");
-//        spec.setContent(R.id.tab4);
-//        spec.setIndicator("Closed");
-//        host.addTab(spec);
-//
-//        //Tab 5
-//        spec = host.newTabSpec("Archived");
-//        spec.setContent(R.id.tab5);
-//        spec.setIndicator("Archived");
-//        host.addTab(spec);
-
+        TabLayout tabLayout = getView().findViewById(R.id.tabHost);
+        tabLayout.addOnTabSelectedListener(this);
     }
 
 
-    private void initializePipelineList(List<ClientObject> metricList) {
-        mListView = getView().findViewById(R.id.pipeline_list);
+    private void initListView(List<ClientObject> metricList) {
+        mListView = getView().findViewById(R.id.clientListView);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
@@ -124,49 +91,6 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         mListView.setOnItemClickListener(this);
     }
 
-    private void initializeSignedList(List<ClientObject> metricList) {
-//        mListView = getView().findViewById(R.id.signed_list);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
-
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(this);
-    }
-
-    private void initializeContractList(List<ClientObject> metricList) {
-//        mListView = getView().findViewById(R.id.contract_list);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
-
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(this);
-    }
-
-    private void initializeClosedList(List<ClientObject> metricList) {
-//        mListView = getView().findViewById(R.id.closed_list);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
-
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(this);
-    }
-
-    private void initializeArchivedList(List<ClientObject> metricList) {
-//        mListView = getView().findViewById(R.id.archived_list);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
-
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList);
-        mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(this);
-    }
 
     private void searchClients() {
 //        Log.d("Selected", String.valueOf(host.getCurrentTab()));
@@ -213,11 +137,6 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         return false;
     }
 
-    @Override
-    public void onTabChanged(String tabId) {
-        searchClients();
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -232,11 +151,103 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
+        ClientObject[] clientObject = clientParentObject.getClients();
 
+        for(int i = 0; i < clientObject.length; i++) {
+            ClientObject co = clientObject[i];
+//            Log.e("CLIENT " + i, "First name: " + clientObject[i].getFirst_name());
+            if(co.getStatus().equalsIgnoreCase("D")) {
+                //Archived List
+                archivedList.add(co);
+            }
+            else if(co.getClosed_dt() != null) {
+                //Closed List
+                closedList.add(co);
+            }
+            else if(co.getPaid_dt() != null) {
+                //Contract List
+                contractList.add(co);
+            }
+            else if(co.getSigned_dt() != null) {
+                //Signed List
+                signedList.add(co);
+            }
+            else {
+                //Pipeline List
+                pipelineList.add(co);
+            }
+        }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loader.setVisibility(View.GONE);
+                initListView(pipelineList);
+            }
+        });
     }
 
     @Override
     public void onEventFailed() {
 
     }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        switch ((String) tab.getText()) {
+            case "Pipeline":
+                initListView(pipelineList);
+                break;
+            case "Signed":
+                initListView(signedList);
+                break;
+            case "Contract":
+                initListView(contractList);
+                break;
+            case "Closed":
+                initListView(closedList);
+                break;
+            case "Archived":
+                initListView(archivedList);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {}
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {}
 }
+
+
+//if underlineSegment.selectedSegmentIndex == PipelineType.pipeline.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.signed_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.signed.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.signed_dt != nil) }
+//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.contract.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.uc_dt != nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.closed.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.closed_dt != nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.archive.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "D") }
+//        }

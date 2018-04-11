@@ -46,7 +46,7 @@ public class AsyncClients extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-                Log.e("CLIENTS", response.body().string());
+//                Log.e("CLIENTS", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
