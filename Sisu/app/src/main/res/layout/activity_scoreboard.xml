@@ -25,10 +25,8 @@
         app:layout_constraintTop_toBottomOf="@id/underContractAmount" />
 
     <co.sisu.mobile.utils.CircularProgressBar
-        android:background="#00000000"
         android:id="@+id/contactsProgressMark"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -36,14 +34,15 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginTop="25dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="50"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/underContractAmount" />
-
 
 
     <TextView
@@ -105,10 +104,8 @@
         app:layout_constraintTop_toBottomOf="@id/contactsProgressText" />
 
     <co.sisu.mobile.utils.CircularProgressBar
-        android:background="#00000000"
         android:id="@+id/bbSignedProgressMark"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -116,9 +113,11 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -184,9 +183,7 @@
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/underContractProgressMark"
-        android:background="#00000000"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -194,9 +191,11 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -264,9 +263,7 @@
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/appointmentsProgressMark"
-        android:background="#00000000"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -274,9 +271,11 @@
         android:layout_marginEnd="70dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="25dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -342,9 +341,7 @@
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/listingsTakenProgressMark"
-        android:background="#00000000"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -352,9 +349,11 @@
         android:layout_marginEnd="70dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -420,9 +419,7 @@
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/closedProgressMark"
-        android:background="#00000000"
         style="?android:attr/progressBarStyleHorizontal"
-        app:cpb_background_progressbar_color="#00000000"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
@@ -430,9 +427,11 @@
         android:layout_marginEnd="70dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
+        android:background="#00000000"
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -483,12 +482,18 @@
     <Spinner
         android:id="@+id/timelineSelector"
         style="@style/SpinnerDropdownItemStyle"
-        android:layout_width="match_parent"
+        android:layout_width="330dp"
         android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.786"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/timeLineGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.10" />
 
 
     <ImageView
