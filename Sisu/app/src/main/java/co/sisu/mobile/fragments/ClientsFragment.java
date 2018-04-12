@@ -27,12 +27,11 @@ import co.sisu.mobile.models.ClientObject;
 public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener {
 
     private ListView mListView;
-//    DataController dataController;
-    List<ClientObject> pipelineList, signedList, contractList, closedList, archivedList;
     String searchText = "";
     SearchView clientSearch;
     ParentActivity parentActivity;
     ProgressBar loader;
+    List<ClientObject> currentList = new ArrayList<>();
 
     public ClientsFragment() {
         // Required empty public constructor
@@ -42,7 +41,6 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        dataController = new DataController(getContext());
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_clients, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -51,11 +49,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        pipelineList = new ArrayList<>();
-        signedList = new ArrayList<>();
-        contractList = new ArrayList<>();
-        closedList = new ArrayList<>();
-        archivedList = new ArrayList<>();
+
         loader = view.findViewById(R.id.clientLoader);
         initSearchBar();
         parentActivity = (ParentActivity) getActivity();
@@ -93,31 +87,14 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
 
     private void searchClients() {
-//        Log.d("Selected", String.valueOf(host.getCurrentTab()));
-//        Log.d("Searching", searchText);
-//        List<ClientObject> sortedList = new ArrayList<>();
-//        switch(host.getCurrentTab()) {
-//            case 0:
-////                for (ClientObject co : metricList) {
-////                    if(co.getName().contains(searchText)) {
-////                        sortedList.add(co);
-////                    }
-////                    initializePipelineList(sortedList);
-////                }
-//                break;
-//            case 1:
-//
-//                break;
-//            case 2:
-//
-//                break;
-//            case 3:
-//
-//                break;
-//            case 4:
-//
-//                break;
-//        }
+        List<ClientObject> sortedList = new ArrayList<>();
+        for (ClientObject co : currentList) {
+            String name = (co.getFirst_name() + " " + co.getLast_name()).toLowerCase();
+            if(name.contains(searchText.toLowerCase())) {
+                sortedList.add(co);
+            }
+            initListView(sortedList);
+        }
     }
 
     @Override
@@ -151,38 +128,14 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
-        ClientObject[] clientObject = clientParentObject.getClients();
+        parentActivity.setClientsObject(returnObject);
 
-        for(int i = 0; i < clientObject.length; i++) {
-            ClientObject co = clientObject[i];
-//            Log.e("CLIENT " + i, "First name: " + clientObject[i].getFirst_name());
-            if(co.getStatus().equalsIgnoreCase("D")) {
-                //Archived List
-                archivedList.add(co);
-            }
-            else if(co.getClosed_dt() != null) {
-                //Closed List
-                closedList.add(co);
-            }
-            else if(co.getPaid_dt() != null) {
-                //Contract List
-                contractList.add(co);
-            }
-            else if(co.getSigned_dt() != null) {
-                //Signed List
-                signedList.add(co);
-            }
-            else {
-                //Pipeline List
-                pipelineList.add(co);
-            }
-        }
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loader.setVisibility(View.GONE);
-                initListView(pipelineList);
+                currentList = parentActivity.getPipelineList();
+                initListView(currentList);
             }
         });
     }
@@ -196,22 +149,23 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     public void onTabSelected(TabLayout.Tab tab) {
         switch ((String) tab.getText()) {
             case "Pipeline":
-                initListView(pipelineList);
+                currentList = parentActivity.getPipelineList();
                 break;
             case "Signed":
-                initListView(signedList);
+                currentList = parentActivity.getSignedList();
                 break;
             case "Contract":
-                initListView(contractList);
+                currentList = parentActivity.getContractList();
                 break;
             case "Closed":
-                initListView(closedList);
+                currentList = parentActivity.getClosedList();
                 break;
             case "Archived":
-                initListView(archivedList);
+                currentList = parentActivity.getArchivedList();
                 break;
         }
-
+        initListView(currentList);
+        searchClients();
     }
 
     @Override
@@ -220,34 +174,3 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onTabReselected(TabLayout.Tab tab) {}
 }
-
-
-//if underlineSegment.selectedSegmentIndex == PipelineType.pipeline.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.signed_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.signed.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.signed_dt != nil) }
-//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.contract.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.uc_dt != nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.closed.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.closed_dt != nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.archive.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "D") }
-//        }

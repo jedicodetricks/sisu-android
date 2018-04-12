@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -19,9 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.crypto.Cipher;
@@ -29,7 +25,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.controllers.DataController;
@@ -38,11 +33,9 @@ import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
-import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncTeamsJsonObject;
-import co.sisu.mobile.models.TeamJsonObject;
+import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -62,7 +55,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientBar = false;
     int selectedTeam = 0;
     ActionBar bar;
-    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private String agentId = "";
     AgentModel agent;
     byte[] key = "SisuRocks".getBytes();
@@ -95,10 +87,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initAgentInfo();
         initializeButtons();
         new AsyncTeams(this, agentId).execute();
-        Calendar c = Calendar.getInstance();
-        Date d = c.getTime();
-        new AsyncActivities(this, agentId, d, d).execute();
-//        initializeTeamBar();
 
         navigateToScoreboard();
     }
@@ -358,36 +346,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Teams")) {
-            AsyncTeamsJsonObject teamsObject = (AsyncTeamsJsonObject) returnObject;
-            TeamJsonObject[] teams = teamsObject.getTeams();
-//            Log.v("TEAM SETUP", "Completed");
-            List<TeamObject> formattedTeams = new ArrayList<>();
-            int colorCounter = 0;
-            for(int i = 0; i < teams.length; i++) {
-                formattedTeams.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(ParentActivity.this, teamColors[i])));
-                if(colorCounter == teamColors.length - 1) {
-                    colorCounter = 0;
+            dataController.setTeamsObject(ParentActivity.this, returnObject);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeTeamBar(dataController.getTeamsObject());
                 }
-                else {
-                    colorCounter++;
-                }
-            }
-            //Set the data controller's team object
-            initializeTeamBar(formattedTeams);
-        }
-        else if(asyncReturnType.equals("Activities")) {
-            AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
-            ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-
-            for(int i = 0; i < counters.length; i++) {
-                Log.e("ASYNC", counters[i].getActivity_type());
-            }
+            });
         }
     }
 
     @Override
     public void onEventFailed() {
 
+    }
+
+    public void setActivitiesObject(Object returnObject) {
+        dataController.setActivitiesObject(returnObject);
+    }
+
+    public List<Metric> getActivitiesObject() {
+        return dataController.getActivitiesObject();
     }
 
 
@@ -397,5 +376,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] decrypted = cipher.doFinal(encrypted);
         return decrypted;
+    }
+
+    public void setClientsObject(Object returnObject) {
+        dataController.setClientObject(returnObject);
+    }
+
+    public List<ClientObject> getPipelineList() {
+        return dataController.getPipelineList();
+    }
+
+    public List<ClientObject> getSignedList() {
+        return dataController.getSignedList();
+    }
+
+    public List<ClientObject> getContractList() {
+        return dataController.getContractList();
+    }
+
+    public List<ClientObject> getClosedList() {
+        return dataController.getClosedList();
+    }
+
+    public List<ClientObject> getArchivedList() {
+        return dataController.getArchivedList();
     }
 }

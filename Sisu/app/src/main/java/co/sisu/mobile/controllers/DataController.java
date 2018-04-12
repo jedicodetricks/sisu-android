@@ -2,16 +2,23 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.models.ActivitiesCounterModel;
+import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncClientJsonObject;
+import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
 
 /**
@@ -29,12 +36,29 @@ public class DataController {
     private List<Metric> recordMetricsTwo = new ArrayList<>();
     private List<Metric> masterMetricsOne = new ArrayList<>();
     private List<Metric> masterMetricsTwo = new ArrayList<>();
-    private List<TeamObject> teams = new ArrayList<>();
     private List<MorePageContainer> morePage = new ArrayList<>();
-    private List<ClientObject> clientObject = new ArrayList<>();
+
+    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
+    List<TeamObject> teamsObject;
+    List<Metric> activitiesObject;
+
+    List<ClientObject> pipelineList;
+    List<ClientObject> signedList;
+    List<ClientObject> contractList;
+    List<ClientObject> closedList;
+    List<ClientObject> archivedList;
+
 
     public DataController(Context context){
         this.context = context;
+        teamsObject = new ArrayList<>();
+        activitiesObject = new ArrayList<>();
+        pipelineList = new ArrayList<>();
+        signedList = new ArrayList<>();
+        contractList = new ArrayList<>();
+        closedList = new ArrayList<>();
+        archivedList = new ArrayList<>();
+
         initializeData();
     }
 
@@ -45,8 +69,6 @@ public class DataController {
         initializeRecordMetricsOne();
         initializeRecordMetricsTwo();
         initializeMorePageObject();
-//        initializeTeamsObject();
-        initializeClientsObject();
         initializeMetrics();
         ds.setData(scoreboardMetrics);
     }
@@ -104,25 +126,6 @@ public class DataController {
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
-//    public void initializeTeamsObject() {
-//        teams.add(new TeamObject("Utah Life", 666, ContextCompat.getColor(context, R.color.colorCorporateOrange)));
-//        teams.add(new TeamObject("Century 21", 69, ContextCompat.getColor(context, R.color.colorLightGrey)));
-//        teams.add(new TeamObject("Sisu Realtor", 420, ContextCompat.getColor(context, R.color.colorMoonBlue)));
-//    }
-
-    public void initializeClientsObject() {
-
-//        Random r = new Random();
-//
-//        clientObject.add(new ClientObject("Jeremy Renner", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Brenden Urie", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Brandon Flowers", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Pete Wentz", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Brady Groharing", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Jeff Jessop", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Ferb", String.valueOf(r.nextInt(50000))));
-//        clientObject.add(new ClientObject("Phineas", String.valueOf(r.nextInt(50000))));
-    }
 
     public List<Metric> getMetrics() {
         if(metricOneCurrent) {
@@ -151,15 +154,7 @@ public class DataController {
         }
     }
 
-    public List<TeamObject> getTeams() {
-        return teams;
-    }
-
     public List<MorePageContainer> getMorePageContainer() { return morePage; }
-
-    public List<ClientObject> getClientObject() {
-        return clientObject;
-    }
 
     public List<Metric> updateScoreboardTimeline() {
 
@@ -197,4 +192,129 @@ public class DataController {
         }
     }
 
+    public void setTeamsObject(Context context, Object returnObject) {
+        teamsObject = new ArrayList<>();
+        AsyncTeamsJsonObject teamsObjects = (AsyncTeamsJsonObject) returnObject;
+        TeamJsonObject[] teams = teamsObjects.getTeams();
+        int colorCounter = 0;
+        for(int i = 0; i < teams.length; i++) {
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[i])));
+            if(colorCounter == teamColors.length - 1) {
+                colorCounter = 0;
+            }
+            else {
+                colorCounter++;
+            }
+        }
+    }
+
+    public List<TeamObject> getTeamsObject() {
+        return teamsObject;
+    }
+
+    public List<Metric> getActivitiesObject() {
+        return activitiesObject;
+    }
+
+    public void setActivitiesObject(Object returnObject) {
+        activitiesObject = new ArrayList<>();
+        AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
+        ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+
+        for(int i = 0; i < counters.length; i++) {
+            switch(counters[i].getName()) {
+                case "Contacts":
+                case "Appointments":
+                case "Buyer Signed":
+                case "Open Houses":
+                case "Buyer Under Contract":
+                case "Buyer Closed":
+                    Metric metric = new Metric(counters[i].getName(), Double.valueOf(counters[i].getCount()).intValue(), 9000, 0, R.color.colorCorporateOrange);
+                    activitiesObject.add(metric);
+                    Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
+            }
+        }
+        Log.e("SCOREBOARD TEST", String.valueOf(activitiesObject.size()));
+    }
+
+    public void setClientObject(Object returnObject) {
+        AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
+        ClientObject[] clientObject = clientParentObject.getClients();
+
+        for(int i = 0; i < clientObject.length; i++) {
+            ClientObject co = clientObject[i];
+            if(co.getStatus().equalsIgnoreCase("D")) {
+                //Archived List
+                archivedList.add(co);
+            }
+            else if(co.getClosed_dt() != null) {
+                //Closed List
+                closedList.add(co);
+            }
+            else if(co.getPaid_dt() != null) {
+                //Contract List
+                contractList.add(co);
+            }
+            else if(co.getSigned_dt() != null) {
+                //Signed List
+                signedList.add(co);
+            }
+            else {
+                //Pipeline List
+                pipelineList.add(co);
+            }
+        }
+    }
+
+    public List<ClientObject> getPipelineList() {
+        return pipelineList;
+    }
+
+    public List<ClientObject> getSignedList() {
+        return signedList;
+    }
+
+    public List<ClientObject> getContractList() {
+        return contractList;
+    }
+
+    public List<ClientObject> getClosedList() {
+        return closedList;
+    }
+
+    public List<ClientObject> getArchivedList() {
+        return archivedList;
+    }
 }
+
+
+//RICK'S METHOD FOR CREATING CLIENTS LISTS
+//if underlineSegment.selectedSegmentIndex == PipelineType.pipeline.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.signed_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.signed.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.signed_dt != nil) }
+//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.contract.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.uc_dt != nil) }
+//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.closed.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "N") }
+//        clientArray  = clientArray.filter { ($0.closed_dt != nil) }
+//        }
+//        if underlineSegment.selectedSegmentIndex == PipelineType.archive.rawValue{
+//        clientArray = ClientController.shared.clients
+//        clientArray  = clientArray.filter { ($0.status == "D") }
+//        }
