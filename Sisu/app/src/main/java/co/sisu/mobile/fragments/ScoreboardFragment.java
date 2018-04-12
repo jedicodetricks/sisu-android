@@ -23,6 +23,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.AddClientActivity;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
@@ -33,26 +34,38 @@ import co.sisu.mobile.utils.CircularProgressBar;
 public class ScoreboardFragment extends Fragment implements View.OnClickListener{
 
     DataController dataController;
+    ParentActivity parentActivity;
 
     public ScoreboardFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+//        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+    }
+
+    public void scoreboardTest() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                createAndAnimateProgressBars(parentActivity.getScoreboardMetrics());
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        dataController = new DataController(getContext());
+//        dataController = new DataController(getContext());
         return inflater.inflate(R.layout.activity_scoreboard, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        final List<Metric> metricList = dataController.getMetrics();
-        createAndAnimateProgressBars(metricList);
+//        final List<Metric> metricList = dataController.getMetrics();
+        parentActivity = (ParentActivity) getActivity();
+
+//        createAndAnimateProgressBars(parentActivity.getScoreboardMetrics());
         initializeTimelineSelector();
         initializeButton();
     }
@@ -71,7 +84,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                showToast("Spinner1: position=" + position + " id=" + id);
-                createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+//                createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override

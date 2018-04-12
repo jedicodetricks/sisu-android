@@ -42,6 +42,7 @@ import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
+import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -66,6 +67,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String agentId = "";
     AgentModel agent;
     byte[] key = "SisuRocks".getBytes();
+    List<Metric> scoreboardTest = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -330,6 +332,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public int getSelectedTeamId() { return teamsList.get(selectedTeam).getId(); }
 
+    public List<Metric> getScoreboardMetrics() { return scoreboardTest; }
+
     public void logout() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -380,8 +384,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
             for(int i = 0; i < counters.length; i++) {
-                Log.e("ASYNC", counters[i].getActivity_type());
+
+                switch(counters[i].getName()) {
+                    case "Contacts":
+                    case "Appointments":
+                    case "Buyer Signed":
+                    case "Open Houses":
+                    case "Buyer Under Contract":
+                    case "Buyer Closed":
+                        Metric metric = new Metric(counters[i].getName(), Double.valueOf(counters[i].getCount()).intValue(), 9000, 0, R.color.colorCorporateOrange);
+                        scoreboardTest.add(metric);
+                        Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
+                }
             }
+            Log.e("SCOREBOARD TEST", String.valueOf(scoreboardTest.size()));
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
+            ((ScoreboardFragment) f).scoreboardTest();
         }
     }
 

@@ -7,7 +7,7 @@ package co.sisu.mobile.models;
 public class ActivitiesCounterModel {
     String activity_type;
     String count;
-    String records;
+    String name;
 
     public String getActivity_type() {
         return activity_type;
@@ -25,11 +25,11 @@ public class ActivitiesCounterModel {
         this.count = count;
     }
 
-    public String getRecords() {
-        return records;
+    public String getName() {
+        return name;
     }
 
-    public void setRecords(String records) {
-        this.records = records;
+    public void setName(String name) {
+        this.name = name;
     }
 }
