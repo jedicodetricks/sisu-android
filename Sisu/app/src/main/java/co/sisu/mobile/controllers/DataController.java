@@ -11,6 +11,8 @@ import java.util.Random;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.ActivitiesCounterModel;
+import co.sisu.mobile.models.AgentGoalsObject;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
@@ -41,6 +43,7 @@ public class DataController {
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     List<TeamObject> teamsObject;
     List<Metric> activitiesObject;
+    AgentModel agent;
 
     List<ClientObject> pipelineList;
     List<ClientObject> signedList;
@@ -284,6 +287,18 @@ public class DataController {
 
     public List<ClientObject> getArchivedList() {
         return archivedList;
+    }
+
+    public AgentModel getAgent() {
+        return agent;
+    }
+
+    public void setAgent(AgentModel agent) {
+        this.agent = agent;
+    }
+
+    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
+        this.agent.setAgentGoalsObject(agentGoalsObject);
     }
 }
 

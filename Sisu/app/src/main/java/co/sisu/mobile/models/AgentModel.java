@@ -16,6 +16,15 @@ public class AgentModel implements Parcelable{
     String mobile_phone;
     String profile;
     String vision_statement;
+    AgentGoalsObject[] agentGoalsObject;
+
+    public AgentGoalsObject[] getAgentGoalsObject() {
+        return agentGoalsObject;
+    }
+
+    public void setAgentGoalsObject(AgentGoalsObject[] agentGoalsObject) {
+        this.agentGoalsObject = agentGoalsObject;
+    }
 
     public String getAgent_id() {
         return agent_id;
