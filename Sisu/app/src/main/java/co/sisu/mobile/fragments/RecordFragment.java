@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
@@ -37,6 +38,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     DataController dataController;
     int selectedYear, selectedMonth, selectedDay;
     List<Metric> metricList;
+    ParentActivity activity;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -57,6 +59,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        activity = (ParentActivity) getActivity();
         metricList = dataController.getMasterMetrics();
         initializeListView(metricList);
         initializeCalendarHandler();
@@ -118,12 +121,26 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         Metric metric = (Metric) adapterView.getItemAtPosition(position);
 //        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
 
-        if(id == 0) {
-            metric.setCurrentNum(metric.getCurrentNum() - 1);
+        if(id == 0 && metric.getCurrentNum() > 0) {
+            if(recordMetric(metric)){
+                metric.setCurrentNum(metric.getCurrentNum() - 1);
+            }
         }
-        else {
-            metric.setCurrentNum(metric.getCurrentNum() + 1);
+        else if(id > 0){
+            if(recordMetric(metric)){
+                metric.setCurrentNum(metric.getCurrentNum() + 1);
+            }
         }
+    }
+
+    private boolean recordMetric(Metric metric) {
+        boolean recordSaved = true;
+        //open clients view to select contact to add this metric
+        //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
+        activity.stackReplaceFragment(ClientsFragment.class);
+        activity.swapToClientBar();
+
+        return recordSaved;
     }
 
     private void showDatePickerDialog() {
