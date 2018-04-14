@@ -193,21 +193,23 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
         final int ANIMATION_DURATION = 1500; // Time in millis
+        final int PROGRESS_MARK = calculateProgressMarkPosition(metric);
+        calculateProgressColor(metric, PROGRESS_MARK);
         Context context = getContext();
-        progress.setColor(ContextCompat.getColor(context, metric.getColor()));
+        progress.setColor(metric.getColor());
         progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
         currentNumber.setText(String.valueOf(metric.getCurrentNum()));
         goalNumber.setText(String.valueOf(metric.getGoalNum()));
-        progressMark.setStartAngle(calculateProgressMarkPosition());//this will need to change to be the start point of the progress tick math shit
+        progressMark.setStartAngle(PROGRESS_MARK);
         progressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
         progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progressMark.setProgressWithAnimation(1, 0);
     }
 
-    private int calculateProgressMarkPosition() {
+    private int calculateProgressMarkPosition(Metric metric) {
         Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int position = -90;
@@ -220,7 +222,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         return position;
     }
 
-
+    private void calculateProgressColor(Metric metric, int position) {
+        position = position%360;
+        Context context = getContext();
+        if (metric.getPercentComplete() < position) {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
+        } else if (metric.getPercentComplete() == position) {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
+        } else {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
