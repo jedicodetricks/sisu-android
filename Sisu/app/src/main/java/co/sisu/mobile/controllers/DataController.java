@@ -232,7 +232,7 @@ public class DataController {
                 case "Open Houses":
                 case "Buyer Under Contract":
                 case "Buyer Closed":
-                    Metric metric = new Metric(counters[i].getName(), Double.valueOf(counters[i].getCount()).intValue(), 9000, 0, R.color.colorCorporateOrange);
+                    Metric metric = new Metric(counters[i].getName(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
                     activitiesObject.add(metric);
                     Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
             }
