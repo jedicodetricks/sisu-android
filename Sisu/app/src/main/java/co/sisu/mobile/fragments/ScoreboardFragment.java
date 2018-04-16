@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +27,6 @@ import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.models.ActivitiesCounterModel;
-import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
@@ -198,22 +193,46 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
         final int ANIMATION_DURATION = 1500; // Time in millis
+        final int PROGRESS_MARK = calculateProgressMarkPosition(metric);
+        calculateProgressColor(metric, PROGRESS_MARK);
         Context context = getContext();
-
-        progress.setColor(ContextCompat.getColor(context, metric.getColor()));
+        progress.setColor(metric.getColor());
         progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
         currentNumber.setText(String.valueOf(metric.getCurrentNum()));
         goalNumber.setText(String.valueOf(metric.getGoalNum()));
-        progressMark.setStartAngle(metric.getPercentComplete());//this will need to change to be the start point of the progress tick math shit
+        progressMark.setStartAngle(PROGRESS_MARK);
         progressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
         progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progressMark.setProgressWithAnimation(1, 0);
     }
 
+    private int calculateProgressMarkPosition(Metric metric) {
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int position = -90;
+        for(int i = 1; i <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+            position += 12;
+            if(i == currentDay) {
+                break;
+            }
+        }
+        return position;
+    }
 
+    private void calculateProgressColor(Metric metric, int position) {
+        position = position%360;
+        Context context = getContext();
+        if (metric.getPercentComplete() < position) {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
+        } else if (metric.getPercentComplete() == position) {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
+        } else {
+            metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
