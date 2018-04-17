@@ -27,6 +27,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
@@ -37,9 +38,11 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -367,6 +370,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
                     new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });
         }
@@ -374,6 +378,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject teams = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = teams.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
+        }
+        else if(asyncReturnType.equals("Settings")) {
+            AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
+            SettingsObject[] settings = settingsJson.getParameters();
+            dataController.setSettings(settings);
         }
     }
 
@@ -425,5 +434,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setRecordUpdated(Metric metric) {
         dataController.setRecordUpdated(metric);
+    }
+
+    public List<SettingsObject> getSettings() {
+        return dataController.getSettings();
     }
 }

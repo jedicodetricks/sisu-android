@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import java.io.InputStream;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.models.AgentModel;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -44,6 +46,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     ImageView profileImage;
     ParentActivity parentActivity;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
+    AgentModel agent;
+
+    EditText username, firstName, lastName, phone, password;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -63,7 +68,29 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        agent = parentActivity.getAgentInfo();
         initButtons();
+        initFields();
+        if(agent != null) {
+            fillInAgentInfo();
+        }
+    }
+
+    private void initFields() {
+        username = getView().findViewById(R.id.profileUsername);
+        firstName = getView().findViewById(R.id.profileFirstName);
+        lastName = getView().findViewById(R.id.profileLastName);
+        phone = getView().findViewById(R.id.profilePhone);
+        password = getView().findViewById(R.id.profilePassword);
+
+    }
+
+    private void fillInAgentInfo() {
+        username.setText(agent.getEmail());
+        firstName.setText(agent.getFirst_name());
+        lastName.setText(agent.getLast_name());
+        phone.setText(agent.getMobile_phone());
+        password.setText("***********");
     }
 
     private void initButtons() {

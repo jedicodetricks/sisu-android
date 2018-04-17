@@ -20,9 +20,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.SettingsObject;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -32,11 +35,13 @@ import static android.content.Context.ALARM_SERVICE;
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
+    TextView timeZoneDisplay;
     ImageView timeSelector;
     TextView reminderTimeTitle, displayTime;
     int currentSelectedHour, currentSelectedMinute;
     int alarmId = 1412;
     String selectedPeriod;
+    ParentActivity parentActivity;
 
     private PendingIntent pendingIntent;
 
@@ -50,6 +55,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        parentActivity = (ParentActivity) getActivity();
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_settings, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -61,6 +67,43 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initSwitches();
         initTimeSelector();
         initNotificationAlarm();
+        initAdditionalFields();
+        fillFieldsWithData();
+    }
+
+    private void initAdditionalFields() {
+        timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
+    }
+
+    private void fillFieldsWithData() {
+        List<SettingsObject> settings = parentActivity.getSettings();
+
+        for (SettingsObject s : settings) {
+            switch (s.getName()) {
+                case "local_timezone":
+                    timeZoneDisplay.setText(s.getValue());
+                    break;
+                case "daily_reminder_time":
+                    displayTime.setText(s.getValue());
+                    break;
+                case "lights":
+                    lightsSwitch.setChecked(isChecked(s));
+                    break;
+                case "biometrics":
+                    idSwitch.setChecked(isChecked(s));
+                    break;
+                case "daily_reminder":
+                    reminderSwitch.setChecked(isChecked(s));
+                    break;
+            }
+        }
+    }
+
+    private boolean isChecked(SettingsObject s) {
+        if(s.getValue().equals("0")) {
+            return false;
+        }
+        return true;
     }
 
     private void initNotificationAlarm() {

@@ -2,15 +2,12 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
@@ -18,9 +15,9 @@ import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
 
@@ -43,6 +40,7 @@ public class DataController {
     List<ClientObject> closedList;
     List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
+    private List<SettingsObject> settings;
 
 
     public DataController(){
@@ -197,6 +195,27 @@ public class DataController {
 
     public List<Metric> getUpdatedRecords() {
         return updatedRecords;
+    }
+
+    public void setSettings(SettingsObject[] settings) {
+
+        List<SettingsObject> relevantSettings = new ArrayList<>();
+
+        for(SettingsObject s : settings) {
+            switch(s.getName()) {
+                case "local_timezone":
+                case "daily_reminder_time":
+                case "lights":
+                case "biometrics":
+                case "daily_reminder":
+                    relevantSettings.add(s);
+            }
+        }
+        this.settings = relevantSettings;
+    }
+
+    public List<SettingsObject> getSettings() {
+        return settings;
     }
 }
 
