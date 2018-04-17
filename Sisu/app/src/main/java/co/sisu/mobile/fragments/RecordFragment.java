@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,21 +25,20 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
-import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, RecordEventHandler {
 
 
     private ListView mListView;
-//    DataController dataController;
     int selectedYear, selectedMonth, selectedDay;
     List<Metric> metricList;
-    ParentActivity activity;
+    ParentActivity parentActivity;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -54,12 +54,12 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.activity_record, container, false);
-
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        activity = (ParentActivity) getActivity();
-        metricList = activity.getActivitiesObject();
+        parentActivity = (ParentActivity) getActivity();
+        metricList = parentActivity.getActivitiesObject();
         initializeListView(metricList);
         initializeCalendarHandler();
     }
@@ -109,7 +109,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList);
+        RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
@@ -119,16 +119,17 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Metric metric = (Metric) adapterView.getItemAtPosition(position);
 //        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
-
+        Log.e("INCOMING NUMBER", String.valueOf(id));
+        metric.setCurrentNum((int) id);
         if(id == 0 && metric.getCurrentNum() > 0) {
-            if(recordMetric(metric)){
+//            if(recordMetric(metric)){
                 metric.setCurrentNum(metric.getCurrentNum() - 1);
-            }
+//            }
         }
-        else if(id > 0){
-            if(recordMetric(metric)){
+        else if(id == 1){
+//            if(recordMetric(metric)){
                 metric.setCurrentNum(metric.getCurrentNum() + 1);
-            }
+//            }
         }
     }
 
@@ -136,8 +137,8 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         boolean recordSaved = true;
         //open clients view to select contact to add this metric
         //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
-        activity.stackReplaceFragment(ClientsFragment.class);
-        activity.swapToClientBar();
+        parentActivity.stackReplaceFragment(ClientsFragment.class);
+        parentActivity.swapToClientBar();
 
         return recordSaved;
     }
@@ -163,7 +164,6 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateRecordInfo() {
-//        metricList = dataController.updateMasterMetrics();
         initializeListView(metricList);
     }
 
@@ -179,5 +179,12 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         }
 
 
+    }
+
+    @Override
+    public void onNumberChanged(Metric metric, int newNum) {
+        metric.setCurrentNum(newNum);
+        parentActivity.setRecordUpdated(metric);
+//        Log.e("NUMBER CHANGED", metric.getTitle() + " " + String.valueOf(newNum));
     }
 }

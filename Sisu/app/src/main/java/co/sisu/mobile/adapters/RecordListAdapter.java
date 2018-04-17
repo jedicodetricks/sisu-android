@@ -1,9 +1,14 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -24,11 +30,13 @@ public class RecordListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<Metric> mDataSource;
+    private RecordEventHandler mRecordEventHandler;
 
-    public RecordListAdapter(Context context, List<Metric> items) {
+    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRecordEventHandler = recordEventHandler;
     }
 
     @Override
@@ -65,23 +73,46 @@ public class RecordListAdapter extends BaseAdapter {
         ImageView minusButton = rowView.findViewById(R.id.minusButton);
         ImageView plusButton = rowView.findViewById(R.id.plusButton);
 
+
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(convertView, position, 0);
-                rowCounter.setText(String.valueOf(metric.getCurrentNum()));
+                int minusOne = metric.getCurrentNum();
+                if(minusOne > 0) {
+                    minusOne -= 1;
+                }
+                rowCounter.setText(String.valueOf(minusOne));
             }
         });
 
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ListView) parent).performItemClick(convertView, position, 1);
-                rowCounter.setText(String.valueOf(metric.getCurrentNum()));
+                int plusOne = metric.getCurrentNum() + 1;
+                rowCounter.setText(String.valueOf(plusOne));
 
             }
         });
+//
+//
+        rowCounter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!rowCounter.getText().toString().equals("")) {
+                    mRecordEventHandler.onNumberChanged(metric, Integer.valueOf(rowCounter.getText().toString()));
+                }
+            }
+        });
 
 
         titleTextView.setText(metric.getTitle());
@@ -93,7 +124,6 @@ public class RecordListAdapter extends BaseAdapter {
                 metric.getTitle().equals(mContext.getResources().getString(R.string.closed))){
             minusButton.setVisibility(View.INVISIBLE);
         }
-
 
         return rowView;
     }

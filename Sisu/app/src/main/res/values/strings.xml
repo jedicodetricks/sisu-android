@@ -41,8 +41,8 @@
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
-    <string name="signed">Signed</string>
-    <string name="contract">Contract</string>
+    <string name="signed">Buyer Signed</string>
+    <string name="contract">Buyer Under Contract</string>
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
     <string name="status">Status</string>

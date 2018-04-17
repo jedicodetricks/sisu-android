@@ -28,6 +28,7 @@ import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncTeams;
+import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -65,7 +66,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataController = new DataController(this);
+        dataController = new DataController();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
 //        if (agent != null) {
@@ -202,6 +203,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeBacktionBar = false;
         activeClientBar = false;
         initializeActionBar();
+        updateRecordedActivities();
 
         switch (v.getId()) {
             case R.id.action_bar_home:
@@ -247,6 +249,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    private void updateRecordedActivities() {
+        List<Metric> updatedRecords = dataController.getUpdatedRecords();
+        for(Metric m : updatedRecords) {
+            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
+        }
+
+//        new AsyncUpdateActivities(this, agent.getAgent_id()).execute();
     }
 
     @Override
@@ -380,13 +391,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
     public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        byte[] decrypted = cipher.doFinal(encrypted);
-        return decrypted;
-    }
+//    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+//        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+//        Cipher cipher = Cipher.getInstance("AES");
+//        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+//        byte[] decrypted = cipher.doFinal(encrypted);
+//        return decrypted;
+//    }
 
     public void setClientsObject(Object returnObject) {
         dataController.setClientObject(returnObject);
@@ -410,5 +421,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<ClientObject> getArchivedList() {
         return dataController.getArchivedList();
+    }
+
+    public void setRecordUpdated(Metric metric) {
+        dataController.setRecordUpdated(metric);
     }
 }

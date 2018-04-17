@@ -11,14 +11,16 @@ import android.widget.Toast;
 
 public class Metric {
     private String title;
+    private String type;
     private int currentNum;
     private int goalNum;
     private int thumbnailId;
     private int color;
 
 
-    public Metric(String title, int currentNum, int goalNum, int thumbnailId, int color){
+    public Metric(String title, String type, int currentNum, int goalNum, int thumbnailId, int color){
         this.title = title;
+        this.type = type;
         this.currentNum = currentNum;
         this.goalNum = goalNum;
         this.thumbnailId = thumbnailId;
@@ -68,4 +70,13 @@ public class Metric {
     public void setColor(int color) {
         this.color = color;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

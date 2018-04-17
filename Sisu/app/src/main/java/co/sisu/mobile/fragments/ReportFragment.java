@@ -83,9 +83,9 @@ public class ReportFragment extends Fragment {
     private List<Metric> initializeMetrics() {
         List<Metric> activities = parentActivity.getActivitiesObject();
 
-        for(Metric m : activities) {
-            Log.e("ACTIVITY", m.getTitle());
-        }
+//        for(Metric m : activities) {
+//            Log.e("ACTIVITY", m.getTitle());
+//        }
         return activities;
     }
 

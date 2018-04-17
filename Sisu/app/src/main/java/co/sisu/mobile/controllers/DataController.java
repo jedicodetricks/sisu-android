@@ -42,9 +42,10 @@ public class DataController {
     List<ClientObject> contractList;
     List<ClientObject> closedList;
     List<ClientObject> archivedList;
+    private List<Metric> updatedRecords;
 
 
-    public DataController(Context context){
+    public DataController(){
         teamsObject = new ArrayList<>();
         activitiesObject = new ArrayList<>();
         scoreboardObject = new ArrayList<>();
@@ -53,6 +54,7 @@ public class DataController {
         contractList = new ArrayList<>();
         closedList = new ArrayList<>();
         archivedList = new ArrayList<>();
+        updatedRecords = new ArrayList<>();
         initializeMorePageObject();
     }
 
@@ -109,7 +111,7 @@ public class DataController {
         Arrays.sort(counters);
 
         for(int i = 0; i < counters.length; i++) {
-            Metric metric = new Metric(counters[i].getName(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
+            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
             activitiesObject.add(metric);
             switch(counters[i].getName()) {
                 case "Contacts":
@@ -119,11 +121,11 @@ public class DataController {
                 case "Buyer Under Contract":
                 case "Buyer Closed":
                     scoreboardObject.add(metric);
-                    Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
+//                    Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
             }
         }
 
-        Log.e("SCOREBOARD TEST", String.valueOf(scoreboardObject.size()));
+//        Log.e("SCOREBOARD TEST", String.valueOf(scoreboardObject.size()));
     }
 
     public void setClientObject(Object returnObject) {
@@ -185,6 +187,16 @@ public class DataController {
 
     public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
         this.agent.setAgentGoalsObject(agentGoalsObject);
+    }
+
+    public void setRecordUpdated(Metric recordUpdated) {
+        if(!updatedRecords.contains(recordUpdated)) {
+            updatedRecords.add(recordUpdated);
+        }
+    }
+
+    public List<Metric> getUpdatedRecords() {
+        return updatedRecords;
     }
 }
 
