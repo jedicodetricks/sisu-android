@@ -137,7 +137,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         boolean recordSaved = true;
         //open clients view to select contact to add this metric
         //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
-        activity.stackReplaceFragment(ClientsFragment.class);
+        activity.stackReplaceFragment(ClientListFragment.class);
         activity.swapToClientBar();
 
         return recordSaved;

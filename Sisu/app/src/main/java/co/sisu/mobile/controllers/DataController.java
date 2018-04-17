@@ -6,10 +6,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
@@ -237,7 +235,7 @@ public class DataController {
         Log.e("SCOREBOARD TEST", String.valueOf(activitiesObject.size()));
     }
 
-    public void setClientObject(Object returnObject) {
+    public void setClientListObject(Object returnObject) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
 
@@ -264,6 +262,11 @@ public class DataController {
                 pipelineList.add(co);
             }
         }
+    }
+
+    public void setSelectedClientObject(Object returnObject) {
+        AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
+        //do some type of client update api call here and possibly add to a list like above
     }
 
     public List<ClientObject> getPipelineList() {

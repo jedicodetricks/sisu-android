@@ -49,6 +49,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
+    ClientObject selectedClient;
     private String fragmentTag;
     List<TeamObject> teamsList;
     boolean activeBacktionBar = false;
@@ -379,7 +380,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setClientsObject(Object returnObject) {
-        dataController.setClientObject(returnObject);
+        dataController.setClientListObject(returnObject);
+    }
+
+    public void setSelectedClientObject(Object returnObject) {
+        dataController.setSelectedClientObject(returnObject);
+    }
+
+    public void setSelectedClient(ClientObject client) {
+        selectedClient = client;
+    }
+
+    public ClientObject getSelectedClient() {
+        return selectedClient;
     }
 
     public List<ClientObject> getPipelineList() {
