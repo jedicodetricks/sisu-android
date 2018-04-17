@@ -25,8 +25,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
+import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncTeams;
+import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -34,7 +36,9 @@ import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -56,18 +60,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientBar = false;
     int selectedTeam = 0;
     ActionBar bar;
-    private String agentId = "";
+//    private String agentId = "";
     AgentModel agent;
-    byte[] key = "SisuRocks".getBytes();
+//    byte[] key = "SisuRocks".getBytes();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dataController = new DataController();
         agent = getIntent().getParcelableExtra("Agent");
-        if (agent != null) {
-            Log.e("AGENT PASSED", agent.getFirst_name());
-            agentId = agent.getAgent_id();
-        }
+        dataController.setAgent(agent);
+//        if (agent != null) {
+//            Log.e("AGENT PASSED", agent.getFirst_name());
+//            agentId = agent.getAgent_id();
+//        }
 
         setContentView(R.layout.activity_parent);
         bar = getSupportActionBar();
@@ -84,19 +90,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         drawerLayout = findViewById(R.id.drawer_layout);
-        dataController = new DataController(this);
-        initAgentInfo();
+//        initAgentInfo();
         initializeButtons();
-        new AsyncTeams(this, agentId).execute();
+        new AsyncTeams(this, agent.getAgent_id()).execute();
 
         navigateToScoreboard();
     }
 
     //TODO: We'll be able to get rid of this once we're passing the auth object in every time
     private void initAgentInfo() {
-        if(agentId.equals("")) {
-            agentId = SaveSharedPreference.getUserName(ParentActivity.this);
-        }
+//        if(agentId.equals("")) {
+//            agentId = SaveSharedPreference.getUserName(ParentActivity.this);
+//        }
     }
 
     public void initializeActionBar() {
@@ -199,6 +204,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeBacktionBar = false;
         activeClientBar = false;
         initializeActionBar();
+        updateRecordedActivities();
 
         switch (v.getId()) {
             case R.id.action_bar_home:
@@ -244,6 +250,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    private void updateRecordedActivities() {
+        List<Metric> updatedRecords = dataController.getUpdatedRecords();
+        for(Metric m : updatedRecords) {
+            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
+        }
+
+//        new AsyncUpdateActivities(this, agent.getAgent_id()).execute();
     }
 
     @Override
@@ -352,8 +367,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
                 }
             });
+        }
+        else if(asyncReturnType.equals("Goals")) {
+            AsyncGoalsJsonObject teams = (AsyncGoalsJsonObject) returnObject;
+            AgentGoalsObject[] agentGoalsObject = teams.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
         }
     }
 
@@ -369,15 +390,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public List<Metric> getActivitiesObject() {
         return dataController.getActivitiesObject();
     }
+    public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
-
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        byte[] decrypted = cipher.doFinal(encrypted);
-        return decrypted;
-    }
+//    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
+//        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+//        Cipher cipher = Cipher.getInstance("AES");
+//        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+//        byte[] decrypted = cipher.doFinal(encrypted);
+//        return decrypted;
+//    }
 
     public void setClientsObject(Object returnObject) {
         dataController.setClientListObject(returnObject);
@@ -413,5 +434,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<ClientObject> getArchivedList() {
         return dataController.getArchivedList();
+    }
+
+    public void setRecordUpdated(Metric metric) {
+        dataController.setRecordUpdated(metric);
     }
 }

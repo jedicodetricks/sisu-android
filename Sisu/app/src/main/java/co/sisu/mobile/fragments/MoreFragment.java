@@ -36,7 +36,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController(getContext());
+        dataController = new DataController();
         View toReturn = inflater.inflate(R.layout.activity_more, container, false);
         return toReturn;
 
