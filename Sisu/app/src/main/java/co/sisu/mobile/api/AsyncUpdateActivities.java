@@ -1,7 +1,6 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncAgentJsonObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,22 +16,17 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Brady Groharing on 4/8/2018.
+ * Created by bradygroharing on 4/17/18.
  */
 
-public class AsyncActivities extends AsyncTask<Void, Void, Void> {
+public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
     private String agentId;
     private String startDate;
     private String endDate;
 
-    public AsyncActivities (AsyncServerEventListener cb, String agentId) {
-        callback = cb;
-        this.agentId = agentId;
-    }
-
-    public AsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public AsyncUpdateActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
         callback = cb;
         this.agentId = agentId;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -72,7 +65,7 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             if (response != null) {
                 if (response.code() == 200) {
                     AsyncActivitiesJsonObject activities = gson.fromJson(response.body().charStream(), AsyncActivitiesJsonObject.class);
-                    callback.onEventCompleted(activities, "Activities");
+                    callback.onEventCompleted(activities, "Update Activities");
                 } else {
                     callback.onEventFailed();
                 }

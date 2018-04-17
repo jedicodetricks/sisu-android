@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -223,16 +224,18 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void calculateProgressColor(Metric metric, int position) {
-        position = position%360;
+        position += 90;
+        int positionPercent = (int) (((double)position/(double)360) * 100);
         Context context = getContext();
-        if (metric.getPercentComplete() < position) {
+        if (metric.getPercentComplete() < positionPercent) {
             metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-        } else if (metric.getPercentComplete() == position) {
+        } else if (metric.getPercentComplete() == positionPercent) {
             metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
         } else {
             metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
         }
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -260,7 +263,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    createAndAnimateProgressBars(parentActivity.getActivitiesObject());
+                    createAndAnimateProgressBars(parentActivity.getScoreboardObject());
                 }
             });
         }

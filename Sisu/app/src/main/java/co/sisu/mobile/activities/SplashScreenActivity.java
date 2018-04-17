@@ -19,10 +19,8 @@ import co.sisu.mobile.system.SaveSharedPreference;
 
 public class SplashScreenActivity extends AppCompatActivity implements AsyncServerEventListener {
 
-    int WAIT_AMOUNT = 1000;
     static boolean loaded = false;
     private boolean pingRetry = false;
-    private CountDownTimer cdt;
     Intent intent = null;
 
     @Override
@@ -50,15 +48,14 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                 String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
                 new AsyncAuthenticator(this, userName, userPassword).execute();
             }
-        } else if(asyncReturnType.equals("Authenticator")) {
+        }
+        else if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             AgentModel agent = agentObject.getAgent();
             intent = new Intent(this, ParentActivity.class);
             intent.putExtra("Agent", agent);
             launchActivity();
         }
-
-
 
     }
 
@@ -71,6 +68,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     public void onEventFailed() {
         Log.d("FAILED", "FAILED");
         if(!pingRetry) {
+            pingRetry = true;
             pingServer();
         }
     }
