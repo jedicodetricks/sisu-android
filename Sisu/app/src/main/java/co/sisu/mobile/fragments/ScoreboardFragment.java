@@ -263,7 +263,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    createAndAnimateProgressBars(parentActivity.getActivitiesObject());
+                    createAndAnimateProgressBars(parentActivity.getScoreboardObject());
                 }
             });
         }

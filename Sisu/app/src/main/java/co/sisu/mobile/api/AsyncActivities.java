@@ -52,7 +52,7 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             MediaType mediaType = MediaType.parse("application/json");
 //            startDate = "2017-02-01";
 //            endDate = "2018-10-05";
-            RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":1}");
+            RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":0}");
 
             Request request = new Request.Builder()
                     .url("http://staging.sisu.co/api/agent/activity/" + agentId)

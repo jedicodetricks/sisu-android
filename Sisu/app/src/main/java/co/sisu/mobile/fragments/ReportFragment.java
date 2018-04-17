@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
@@ -28,14 +30,14 @@ import co.sisu.mobile.models.Metric;
 public class ReportFragment extends Fragment {
 
     private ListView mListView;
-    DataController dataController;
+    ParentActivity parentActivity;
 
     public ReportFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-        initializeListView(dataController.updateRecordMetrics());
+//        initializeListView(dataController.updateRecordMetrics());
     }
 
 
@@ -43,7 +45,8 @@ public class ReportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController(getContext());
+//        dataController = new DataController(getContext());
+        parentActivity = (ParentActivity) getActivity();
         return inflater.inflate(R.layout.activity_report, container, false);
     }
 
@@ -67,7 +70,7 @@ public class ReportFragment extends Fragment {
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                initializeListView(dataController.updateMasterMetrics());
+//                initializeListView(dataController.updateMasterMetrics());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -78,7 +81,12 @@ public class ReportFragment extends Fragment {
     }
 
     private List<Metric> initializeMetrics() {
-        return dataController.getMasterMetrics();
+        List<Metric> activities = parentActivity.getActivitiesObject();
+
+        for(Metric m : activities) {
+            Log.e("ACTIVITY", m.getTitle());
+        }
+        return activities;
     }
 
     private List<String> initSpinnerArray() {

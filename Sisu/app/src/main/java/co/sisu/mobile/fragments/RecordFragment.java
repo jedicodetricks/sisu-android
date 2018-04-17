@@ -35,7 +35,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
 
     private ListView mListView;
-    DataController dataController;
+//    DataController dataController;
     int selectedYear, selectedMonth, selectedDay;
     List<Metric> metricList;
     ParentActivity activity;
@@ -45,7 +45,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     public void teamSwap() {
-        initializeListView(dataController.updateRecordMetrics());
+//        initializeListView(dataController.updateRecordMetrics());
     }
 
 
@@ -53,14 +53,13 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController(getContext());
         return inflater.inflate(R.layout.activity_record, container, false);
 
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         activity = (ParentActivity) getActivity();
-        metricList = dataController.getMasterMetrics();
+        metricList = activity.getActivitiesObject();
         initializeListView(metricList);
         initializeCalendarHandler();
     }
@@ -164,7 +163,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateRecordInfo() {
-        metricList = dataController.updateMasterMetrics();
+//        metricList = dataController.updateMasterMetrics();
         initializeListView(metricList);
     }
 

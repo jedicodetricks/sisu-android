@@ -363,10 +363,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject teams = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = teams.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
-
-//            for(AgentGoalsObject go : agentGoalsObject) {
-//                Log.e("Goals", go.getName() + " " + go.getValue());
-//            }
         }
     }
 
@@ -382,7 +378,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public List<Metric> getActivitiesObject() {
         return dataController.getActivitiesObject();
     }
-
+    public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
     private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
