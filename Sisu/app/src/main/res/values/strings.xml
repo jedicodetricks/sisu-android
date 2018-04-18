@@ -19,8 +19,10 @@
     <string name="bb_signed">BB Signed</string>
     <string name="listings_taken">Listings Taken</string>
     <string name="under_contract">Under Contract</string>
+    <string name="pending_volume">Pending Volume</string>
     <string name="closed">Closed</string>
-    <string name="my_scoreboard">My Scoreboard</string>
+    <string name="closed_volume">Closed Volume</string>
+    <string name="scoreboard">Scoreboard</string>
     <string name="appts">Appts.</string>
     <string name="reports">Reports</string>
     <string name="overall_leaderboard">Overall Leaderboard</string>

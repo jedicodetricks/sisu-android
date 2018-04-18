@@ -195,7 +195,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.saveButton://notify of success update api
                 parentActivity.setRecordSaved(saveClient());
                 parentActivity.stackReplaceFragment(ScoreboardFragment.class);
-                parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.my_scoreboard));
+                parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.scoreboard));
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:

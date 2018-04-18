@@ -58,7 +58,8 @@ public class DataController {
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
-        morePage.add(new MorePageContainer("Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
+        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
+        morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
         morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon_active));
         morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
@@ -117,11 +118,8 @@ public class DataController {
                 case "Buyer Under Contract":
                 case "Buyer Closed":
                     scoreboardObject.add(metric);
-//                    Log.e("Counter " + counters[i].getName(), String.valueOf(metric.getCurrentNum()));
             }
         }
-
-//        Log.e("SCOREBOARD TEST", String.valueOf(scoreboardObject.size()));
     }
 
     public void setClientListObject(Object returnObject) {

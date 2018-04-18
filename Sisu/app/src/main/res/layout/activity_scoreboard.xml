@@ -508,21 +508,21 @@
 
 
     <TextView
-        android:id="@+id/underContractLabel"
+        android:id="@+id/pendingVolumeLabel"
         style="@style/ScoreboardLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/under_contract"
+        android:text="@string/pending_volume"
         app:layout_constraintEnd_toEndOf="@id/contactsProgress"
         app:layout_constraintStart_toStartOf="@id/contactsProgress"
         app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
 
     <TextView
-        android:id="@+id/closedLabel"
+        android:id="@+id/closedVolumeLabel"
         style="@style/ScoreboardLabelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/closed"
+        android:text="@string/closed_volume"
         app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
         app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
         app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
@@ -533,9 +533,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/under_contract_amount"
-        app:layout_constraintEnd_toEndOf="@id/underContractLabel"
-        app:layout_constraintStart_toStartOf="@id/underContractLabel"
-        app:layout_constraintTop_toBottomOf="@id/underContractLabel" />
+        app:layout_constraintEnd_toEndOf="@id/pendingVolumeLabel"
+        app:layout_constraintStart_toStartOf="@id/pendingVolumeLabel"
+        app:layout_constraintTop_toBottomOf="@id/pendingVolumeLabel" />
 
     <TextView
         android:id="@+id/closedAmount"
@@ -543,9 +543,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/closed_amount"
-        app:layout_constraintEnd_toEndOf="@id/closedLabel"
-        app:layout_constraintStart_toStartOf="@id/closedLabel"
-        app:layout_constraintTop_toBottomOf="@id/closedLabel" />
+        app:layout_constraintEnd_toEndOf="@id/closedVolumeLabel"
+        app:layout_constraintStart_toStartOf="@id/closedVolumeLabel"
+        app:layout_constraintTop_toBottomOf="@id/closedVolumeLabel" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
