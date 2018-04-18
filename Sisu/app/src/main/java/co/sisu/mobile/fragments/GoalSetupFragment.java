@@ -2,7 +2,6 @@ package co.sisu.mobile.fragments;
 
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +18,12 @@ import co.sisu.mobile.models.AgentModel;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SetupFragment extends Fragment {
+public class GoalSetupFragment extends Fragment {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
 
-    public SetupFragment() {
+    public GoalSetupFragment() {
         // Required empty public constructor
     }
 
