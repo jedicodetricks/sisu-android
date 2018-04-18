@@ -124,7 +124,7 @@
             app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
 
             <EditText
-                android:id="@+id/editCommission"
+                android:id="@+id/editPaidIncome"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -498,7 +498,7 @@
         </android.support.constraint.ConstraintLayout>
 
 
-        <Button
+        <TextView
             android:id="@+id/buyerButton"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
@@ -511,7 +511,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
 
-        <Button
+        <TextView
             android:id="@+id/sellerButton"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
@@ -523,6 +523,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
+
+        <ProgressBar
+            android:id="@+id/clientLoader"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -77,7 +77,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Clients":
                 activity.stackReplaceFragment(ClientListFragment.class);
-                activity.swapToClientBar();
+                activity.swapToClientListBar();
                 break;
             case "My Profile":
                 activity.stackReplaceFragment(MyProfileFragment.class);

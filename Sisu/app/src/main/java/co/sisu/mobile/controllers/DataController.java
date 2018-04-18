@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.DataStore;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.models.TeamJsonObject;
@@ -156,7 +154,7 @@ public class DataController {
     }
 
     public void setSelectedClientObject(Object returnObject) {
-        AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
+        //AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
         //do some type of client update api call here and possibly add to a list like above
     }
 

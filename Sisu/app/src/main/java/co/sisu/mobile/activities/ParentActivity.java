@@ -20,28 +20,23 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncTeams;
-import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
+import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.TeamObject;
-import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -57,7 +52,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String fragmentTag;
     List<TeamObject> teamsList;
     boolean activeBacktionBar = false;
+    boolean activeClientListBar = false;
     boolean activeClientBar = false;
+
+    public boolean isFirstRun() {
+        return isFirstRun;
+    }
+
+    public void setFirstRun(boolean firstRun) {
+        isFirstRun = firstRun;
+    }
+
+    boolean isFirstRun = true;
+
+    public boolean isRecordSaved() {
+        return recordSaved;
+    }
+
+    public void setRecordSaved(boolean recordSaved) {
+        this.recordSaved = recordSaved;
+    }
+
+    boolean recordSaved = false;
     int selectedTeam = 0;
     ActionBar bar;
 //    private String agentId = "";
@@ -202,6 +218,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         activeBacktionBar = false;
+        activeClientListBar = false;
         activeClientBar = false;
         initializeActionBar();
         updateRecordedActivities();
@@ -246,7 +263,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 replaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
-                showToast("CANCEL BUTTON");
+                resetToolbarImages("scoreboard");
+                pageTitle.setText("Scoreboard");
+                fragmentTag = "Scoreboard";
+                replaceFragment(ScoreboardFragment.class);
+            case R.id.saveButton:
+                resetToolbarImages("scoreboard");
+                pageTitle.setText("Scoreboard");
+                fragmentTag = "Scoreboard";
+                replaceFragment(ScoreboardFragment.class);
             default:
                 break;
         }
@@ -319,13 +344,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         backtionTitle.setText(titleString);
     }
 
-    public void swapToClientBar() {
-        activeClientBar = true;
+    public void swapToClientListBar() {
+        activeClientListBar = true;
         bar.setCustomView(R.layout.action_bar_clients_layout);
         View view = getSupportActionBar().getCustomView();
 
         TextView cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(this);
+    }
+
+    public void swapToClientBar() {
+        activeClientListBar = true;
+        bar.setCustomView(R.layout.action_bar_client_layout);
+        TextView title = findViewById(R.id.clientTitle);
+        title.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
+        View view = getSupportActionBar().getCustomView();
+
+        TextView cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(this);
+
+        TextView saveButton = view.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
     }
 
     public AgentModel getAgentInfo() {
@@ -346,6 +385,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(activeBacktionBar) {
             activeBacktionBar = false;
+            initializeActionBar();
+        }
+        else if(activeClientListBar) {
+            activeClientListBar = false;
             initializeActionBar();
         }
         else if(activeClientBar) {
