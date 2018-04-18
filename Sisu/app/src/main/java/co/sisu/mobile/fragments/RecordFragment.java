@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,30 +116,29 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Metric metric = (Metric) adapterView.getItemAtPosition(position);
-//        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
-        Log.e("INCOMING NUMBER", String.valueOf(id));
-        metric.setCurrentNum((int) id);
-        if(id == 0 && metric.getCurrentNum() > 0) {
+//        Metric metric = (Metric) adapterView.getItemAtPosition(position);
+////        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
+//        Log.e("INCOMING NUMBER", String.valueOf(id));
+//        metric.setCurrentNum((int) id);
+//        if(id == 0 && metric.getCurrentNum() > 0) {
 //            if(recordMetric(metric)){
-                metric.setCurrentNum(metric.getCurrentNum() - 1);
+//                metric.setCurrentNum(metric.getCurrentNum() - 1);
 //            }
-        }
-        else if(id == 1){
+//        }
+//        else if(id == 1){
 //            if(recordMetric(metric)){
-                metric.setCurrentNum(metric.getCurrentNum() + 1);
+//                metric.setCurrentNum(metric.getCurrentNum() + 1);
 //            }
-        }
+//        }
     }
 
-    private boolean recordMetric(Metric metric) {
-        boolean recordSaved = true;
+    private boolean recordMetric() {
         //open clients view to select contact to add this metric
         //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
-        parentActivity.stackReplaceFragment(ClientsFragment.class);
-        parentActivity.swapToClientBar();
+        parentActivity.stackReplaceFragment(ClientListFragment.class);
+        parentActivity.swapToClientListBar();
 
-        return recordSaved;
+        return parentActivity.isRecordSaved();//returns the value set by saveButton within Client
     }
 
     private void showDatePickerDialog() {
@@ -177,14 +175,16 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
             default:
                 break;
         }
-
-
     }
 
     @Override
     public void onNumberChanged(Metric metric, int newNum) {
-        metric.setCurrentNum(newNum);
-        parentActivity.setRecordUpdated(metric);
-//        Log.e("NUMBER CHANGED", metric.getTitle() + " " + String.valueOf(newNum));
+        if(!parentActivity.isFirstRun()) {
+            parentActivity.setFirstRun(false);
+            if(recordMetric()) {
+                metric.setCurrentNum(newNum);
+                parentActivity.setRecordUpdated(metric);
+            }
+        }
     }
 }

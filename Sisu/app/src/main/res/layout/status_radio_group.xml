@@ -11,50 +11,50 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:id="@+id/pipelineButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/pipeline"
             android:textSize="@dimen/font_smaller"
             style="@style/ButtonStyle"/>
-        <Button
+        <TextView
             android:id="@+id/signedButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/signed"
             android:textSize="@dimen/font_smaller"
             style="@style/ButtonStyle"/>
-        <Button
+        <TextView
             android:id="@+id/contractButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/contract"
             android:textSize="@dimen/font_smaller"
             style="@style/ButtonStyle"/>
-        <Button
+        <TextView
             android:id="@+id/closedButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/closed"
             android:textSize="@dimen/font_smaller"
             style="@style/ButtonStyle"/>
-        <Button
+        <TextView
             android:id="@+id/archivedButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="1"

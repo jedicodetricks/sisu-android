@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +12,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientsFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener {
+public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener {
 
     private ListView mListView;
     String searchText = "";
@@ -33,7 +33,7 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     ProgressBar loader;
     List<ClientObject> currentList = new ArrayList<>();
 
-    public ClientsFragment() {
+    public ClientListFragment() {
         // Required empty public constructor
     }
 
@@ -54,7 +54,6 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
         initSearchBar();
         parentActivity = (ParentActivity) getActivity();
         AgentModel agent = parentActivity.getAgentInfo();
-        Log.e("AGENT", agent.getAgent_id());
         initializeTabView();
         new AsyncClients(this, agent.getAgent_id()).execute();
         view.clearFocus();
@@ -100,6 +99,10 @@ public class ClientsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
+        parentActivity.setSelectedClient(selectedClient);
+        parentActivity.stackReplaceFragment(ClientFragment.class);
+        parentActivity.swapToClientBar();
     }
 
     @Override
