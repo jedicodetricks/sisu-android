@@ -51,12 +51,12 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void initializeListView() {
-
+        ParentActivity parentActivity = (ParentActivity) getActivity();
         mListView = getView().findViewById(R.id.activity_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<Metric> activitiesContainerList = dataController.getActivitiesObject();
+        final List<Metric> activitiesContainerList = parentActivity.getActivitiesObject();
 
         ActivityListAdapter adapter = new ActivityListAdapter(getContext(), activitiesContainerList);
         mListView.setAdapter(adapter);

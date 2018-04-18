@@ -90,6 +90,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
             case "Activity Settings":
                 activity.stackReplaceFragment(ActivitySettingsFragment.class);
                 activity.swapToBacktionBar("Activity Settings");
+                break;
             case "Settings":
                 activity.stackReplaceFragment(SettingsFragment.class);
                 activity.swapToBacktionBar("Settings");
