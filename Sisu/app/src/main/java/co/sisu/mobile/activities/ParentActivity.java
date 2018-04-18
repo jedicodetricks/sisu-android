@@ -18,6 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.Cipher;
@@ -39,11 +43,13 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
+import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
@@ -256,11 +262,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
+        List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        Date d = c.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
         for(Metric m : updatedRecords) {
-            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
+            updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
+//            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
         }
+        UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
+        updateActivitiesModels.toArray(array);
 
-//        new AsyncUpdateActivities(this, agent.getAgent_id()).execute();
+        activitiesJsonObject.setActivities(array);
+
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject).execute();
     }
 
     @Override

@@ -1,14 +1,18 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
+import co.sisu.mobile.models.UpdateActivitiesModel;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,13 +29,12 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
     private String agentId;
     private String startDate;
     private String endDate;
+    AsyncUpdateActivitiesJsonObject updateActivitiesModels;
 
-    public AsyncUpdateActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public AsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
         callback = cb;
         this.agentId = agentId;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        this.startDate = formatter.format(startDate);
-        this.endDate = formatter.format(endDate);
+        this.updateActivitiesModels = updateActivitiesModels;
     }
 
     @Override
@@ -41,6 +44,8 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
+            String jsonInString = gson.toJson(updateActivitiesModels);
+            Log.e("POST ACTIVITY", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
 //            startDate = "2017-02-01";
