@@ -30,11 +30,13 @@
 
             <ImageView
                 android:id="@+id/leftButton"
+                android:clickable="true"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="8dp"
+                android:elevation=".1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/centerButton"
@@ -44,10 +46,12 @@
 
             <ImageView
                 android:id="@+id/centerButton"
+                android:clickable="true"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
+                android:elevation=".1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@id/rightButton"
@@ -57,10 +61,12 @@
 
             <ImageView
                 android:id="@+id/rightButton"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
+                android:elevation=".1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintEnd_toEndOf="parent"

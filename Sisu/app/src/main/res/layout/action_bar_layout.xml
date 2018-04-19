@@ -42,7 +42,7 @@
         android:layout_alignParentTop="true"
         android:fontFamily="@font/roboto_regular"
         android:padding="10dp"
-        android:text="@string/my_scoreboard"
+        android:text="@string/scoreboard"
         android:textAlignment="center"
         android:textSize="@dimen/font_large"
         app:layout_constraintEnd_toEndOf="parent"

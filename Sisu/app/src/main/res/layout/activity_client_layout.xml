@@ -12,22 +12,6 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <Button
-            android:id="@+id/importContactButton"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/import_contacts_icon_active"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/import_contact"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <android.support.constraint.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
@@ -53,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:layout_marginTop="20dp"
-            android:theme="@style/RequiredTextTheme"
+            android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:layout_marginTop="20dp"
-            android:theme="@style/RequiredTextTheme"
+            android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -514,7 +498,7 @@
         </android.support.constraint.ConstraintLayout>
 
 
-        <Button
+        <TextView
             android:id="@+id/buyerButton"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
@@ -527,7 +511,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
 
-        <Button
+        <TextView
             android:id="@+id/sellerButton"
             style="@style/ButtonStyle"
             android:layout_width="0dp"
@@ -539,6 +523,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
+
+        <ProgressBar
+            android:id="@+id/clientLoader"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

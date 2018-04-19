@@ -2,7 +2,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,16 +76,20 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
                 break;
             case "Clients":
-                activity.stackReplaceFragment(ClientsFragment.class);
-                activity.swapToClientBar();
+                activity.stackReplaceFragment(ClientListFragment.class);
+                activity.swapToClientListBar();
                 break;
             case "My Profile":
                 activity.stackReplaceFragment(MyProfileFragment.class);
                 activity.swapToBacktionBar("My Profile");
                 break;
-            case "Setup":
-                activity.stackReplaceFragment(SetupFragment.class);
-                activity.swapToBacktionBar("Setup");
+            case "Goal Setup":
+                activity.stackReplaceFragment(GoalSetupFragment.class);
+                activity.swapToBacktionBar("Goal Setup");
+                break;
+            case "Activity Settings":
+                activity.stackReplaceFragment(ActivitySettingsFragment.class);
+                activity.swapToBacktionBar("Activity Settings");
                 break;
             case "Settings":
                 activity.stackReplaceFragment(SettingsFragment.class);

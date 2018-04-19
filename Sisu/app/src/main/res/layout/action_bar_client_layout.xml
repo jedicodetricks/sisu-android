@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/actionBarTitle"
+        android:id="@+id/clientTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -37,15 +37,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/addButton"
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:drawable/ic_input_add"
-        android:backgroundTint="@color/colorLightGrey"
+        android:elevation=".1dp"
+        android:fontFamily="@font/roboto_regular"
         android:gravity="center"
+        android:padding="10dp"
         android:paddingEnd="10dp"
+        android:text="@string/save"
         android:textSize="@dimen/font_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
