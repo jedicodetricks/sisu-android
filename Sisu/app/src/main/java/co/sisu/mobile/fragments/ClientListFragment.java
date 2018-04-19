@@ -84,6 +84,16 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         mListView.setOnItemClickListener(this);
     }
 
+//    private void initializeClickables() {
+//        ImageView text = (ImageView) getView().findViewById(R.id.leftButton);
+//        text.setOnClickListener(this);
+//
+//        ImageView call = (ImageView) getView().findViewById(R.id.centerButton);
+//        call.setOnClickListener(this);
+//
+//        ImageView email = (ImageView) getView().findViewById(R.id.rightButton);
+//        email.setOnClickListener(this);
+//    }
 
     private void searchClients() {
         List<ClientObject> sortedList = new ArrayList<>();
@@ -98,7 +108,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
         parentActivity.stackReplaceFragment(ClientFragment.class);
@@ -123,6 +132,9 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         switch (v.getId()) {
             case R.id.cancelButton:
                 getActivity().onBackPressed();
+                break;
+            case R.id.addButton:
+                //navigate to addClient
                 break;
             case R.id.searchClient:
                 break;

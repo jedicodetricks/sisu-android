@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,9 +47,15 @@ public class ClientListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.adapter_client_list, parent, false);
+        final View rowView = mInflater.inflate(R.layout.adapter_client_list, parent, false);
+        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
 
         final ClientObject clientObject = (ClientObject) getItem(position);
+        if(clientObject.getType_id().equalsIgnoreCase("b")) {
+            thumbnail.setImageResource(R.drawable.buyer_icon);
+        } else {
+            thumbnail.setImageResource(R.drawable.seller_icon_active);
+        }
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.client_list_title);
@@ -66,17 +70,40 @@ public class ClientListAdapter extends BaseAdapter {
 
         if(clientObject.getHome_phone() == null && clientObject.getMobile_phone() == null) {
             phoneImage.setVisibility(View.INVISIBLE);
+        } else {
+            phoneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
         if(clientObject.getMobile_phone() == null) {
             textImage.setVisibility(View.INVISIBLE);
+        } else {
+            textImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    ContextCompat.startActivity(parentActiviy, new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
+//                            + clientObject.getMobile_phone())));
+                }
+            });
         }
 
         if(clientObject.getEmail() == null) {
             emailImage.setVisibility(View.INVISIBLE);
+        } else {
+            emailImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
         titleTextView.setText(clientObject.getFirst_name() + " " + clientObject.getLast_name());
-        subtitleTextView.setText("$" + clientObject.getGross_commission_amt());
+        String splitString = clientObject.getGross_commission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
+        subtitleTextView.setText("$" + splitString);
 
 
         return rowView;
