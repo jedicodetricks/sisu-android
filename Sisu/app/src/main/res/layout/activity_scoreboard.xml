@@ -315,7 +315,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/appointments"
+        android:text="@string/first_time_appts"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
         app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
