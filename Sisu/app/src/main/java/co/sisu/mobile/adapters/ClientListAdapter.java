@@ -85,6 +85,7 @@ public class ClientListAdapter extends BaseAdapter {
 //                            Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 //                        return;
 //                    }
+                    
 //                    ContextCompat.startActivity(callIntent);
                 }
             });
