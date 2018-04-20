@@ -8,4 +8,5 @@ import co.sisu.mobile.models.Metric;
 
 public interface RecordEventHandler {
     void onNumberChanged(Metric metric, int newNum);
+    void onClientDirectorClicked(Metric metric);
 }

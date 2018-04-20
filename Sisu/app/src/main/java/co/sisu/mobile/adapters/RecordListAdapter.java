@@ -109,12 +109,23 @@ public class RecordListAdapter extends BaseAdapter {
             public void afterTextChanged(Editable editable) {
                 if(!rowCounter.getText().toString().equals("")) {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
-                        mRecordEventHandler.onNumberChanged(metric, Integer.valueOf(rowCounter.getText().toString()));
+                        switch(metric.getTitle()) {
+                            case "1st Time Appts":
+                            case "Buyer Signed":
+                            case "Seller Signed":
+                            case "Buyer Under Contract":
+                            case "Seller Under Contract":
+                            case "Closed":
+                                mRecordEventHandler.onClientDirectorClicked(metric);
+                                break;
+                            default:
+                                mRecordEventHandler.onNumberChanged(metric, Integer.valueOf(rowCounter.getText().toString()));
+                                break;
+                        }
                     }
                 }
             }
         });
-
 
         titleTextView.setText(metric.getTitle());
         thumbnailImageView.setImageResource(metric.getThumbnailId());

@@ -184,13 +184,28 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onNumberChanged(Metric metric, int newNum) {
-//        if(!parentActivity.isFirstRun()) {
-//            parentActivity.setFirstRun(false);
-//            if(recordMetric()) {
                 metric.setCurrentNum(newNum);
                 parentActivity.setRecordUpdated(metric);
-//            }
-//        }
+    }
+
+    @Override
+    public void onClientDirectorClicked(Metric metric) {
+        switch(metric.getTitle()) {
+            case "1st Time Appts":
+                break;
+            case "Buyer Signed":
+                recordMetric();
+                break;
+            case "Seller Signed":
+                recordMetric();
+                break;
+            case "Buyer Under Contract":
+                break;
+            case "Seller Under Contract":
+                break;
+            case "Closed":
+                break;
+        }
     }
 
     @Override
