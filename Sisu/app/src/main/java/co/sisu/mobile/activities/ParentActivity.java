@@ -231,7 +231,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeClientListBar = false;
         activeClientBar = false;
         initializeActionBar();
-        updateRecordedActivities();
+        if(dataController.getUpdatedRecords().size() > 0) {
+            updateRecordedActivities();
+        }
 
         switch (v.getId()) {
             case R.id.action_bar_home:
@@ -445,6 +447,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             SettingsObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
         }
+        else if(asyncReturnType.equals("Update Activities")) {
+            clearUpdatedRecords();
+        }
     }
 
     @Override
@@ -511,5 +516,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<SettingsObject> getSettings() {
         return dataController.getSettings();
+    }
+
+    public void clearUpdatedRecords() {
+        dataController.clearUpdatedRecords();
     }
 }

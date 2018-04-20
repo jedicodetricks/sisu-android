@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,17 +29,17 @@ import co.sisu.mobile.models.TeamObject;
 public class DataController {
     private List<MorePageContainer> morePage = new ArrayList<>();
 
-    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
-    List<TeamObject> teamsObject;
-    List<Metric> activitiesObject;
-    List<Metric> scoreboardObject;
-    AgentModel agent;
+    private int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
+    private List<TeamObject> teamsObject;
+    private List<Metric> activitiesObject;
+    private List<Metric> scoreboardObject;
+    private AgentModel agent;
 
-    List<ClientObject> pipelineList;
-    List<ClientObject> signedList;
-    List<ClientObject> contractList;
-    List<ClientObject> closedList;
-    List<ClientObject> archivedList;
+    private List<ClientObject> pipelineList;
+    private List<ClientObject> signedList;
+    private List<ClientObject> contractList;
+    private List<ClientObject> closedList;
+    private List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
     private List<SettingsObject> settings;
 
@@ -108,20 +109,30 @@ public class DataController {
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
         Arrays.sort(counters);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, 0, R.color.colorCorporateOrange);
 
         for(int i = 0; i < counters.length; i++) {
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
+//            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             activitiesObject.add(metric);
             switch(counters[i].getName()) {
                 case "Contacts":
-                case "Appointments":
+//                case "Appointments":
                 case "Buyer Signed":
                 case "Open Houses":
                 case "Buyer Under Contract":
                 case "Buyer Closed":
                     scoreboardObject.add(metric);
+                    break;
+                case "Buyer Initial Appointments":
+                case "Seller Initial Appointments":
+                    Log.e("1st Time", metric.getTitle() + ": " + metric.getCurrentNum());
+                    firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
+                    firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
+                    break;
             }
         }
+        scoreboardObject.add(firstAppointment);
     }
 
     public void setClientListObject(Object returnObject) {
@@ -219,6 +230,10 @@ public class DataController {
 
     public List<SettingsObject> getSettings() {
         return settings;
+    }
+
+    public void clearUpdatedRecords() {
+        updatedRecords = new ArrayList<>();
     }
 }
 

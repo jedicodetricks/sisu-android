@@ -2,6 +2,7 @@ package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.AdapterView;
 
 import com.google.gson.Gson;
 
@@ -41,6 +42,13 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
         this.endDate = formatter.format(endDate);
     }
 
+    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String formattedEndTime) {
+        callback = cb;
+        this.agentId = agent_id;
+        this.startDate = formattedStartTime;
+        this.endDate = formattedEndTime;
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
 
@@ -52,6 +60,7 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             MediaType mediaType = MediaType.parse("application/json");
 //            startDate = "2017-02-01";
 //            endDate = "2018-10-05";
+            Log.e("SENDING GET ACTIVITY", startDate + " ||| " + endDate);
             RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":0}");
 
             Request request = new Request.Builder()
