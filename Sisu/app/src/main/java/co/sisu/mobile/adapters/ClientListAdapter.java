@@ -74,7 +74,18 @@ public class ClientListAdapter extends BaseAdapter {
             phoneImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Intent callIntent = new Intent(Intent.ACTION_CALL).addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);//may not need the flag, but it may be helpful when relaunching app after call
+//                    if(clientObject.getMobile_phone() != null) {
+//                        callIntent.setData(Uri.parse("tel:" + clientObject.getMobile_phone()));
+//                    } else {
+//                        callIntent.setData(Uri.parse("tel:" + clientObject.getHome_phone()));
+//                    }
+//
+//                    if (ContextCompat.checkSelfPermission(parentActivity,
+//                            Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    ContextCompat.startActivity(callIntent);
                 }
             });
         }
@@ -97,7 +108,13 @@ public class ClientListAdapter extends BaseAdapter {
             emailImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+//                    Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+//
+//                    emailIntent.setType("plain/text");
+//                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{clientObject.getEmail()});
+//                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject");
+//                    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
+//                    ContextCompat.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
                 }
             });
         }

@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.models.ClientObject;
 
 /**
  * Created by Brady Groharing on 3/5/2018.
@@ -36,9 +37,10 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText firstNameText, lastNameText, emailText, phoneText;
-    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, phone, email;
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
     Button signedClear, contractClear, settlementClear, appointmentClear;
+    boolean typeSelected;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -106,6 +108,13 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         lastNameText = findViewById(R.id.editLastName);
         emailText = findViewById(R.id.editEmail);
         phoneText = findViewById(R.id.editPhone);
+        transAmount = findViewById(R.id.editTransAmount);
+        paidIncome = findViewById(R.id.editPaidIncome);
+        gci = findViewById(R.id.editGci);
+        pipelineStatus = findViewById(R.id.pipelineButton);
+        signedStatus = findViewById(R.id.signedButton);
+        underContractStatus = findViewById(R.id.contractButton);
+        closedStatus = findViewById(R.id.closedButton);
     }
 
     @Override
@@ -117,20 +126,25 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 onBackPressed();
                 break;
             case R.id.saveButton:
-                saveClient();
-                onBackPressed();
+                if(saveClient()){
+                    //do save in api call to add new client
+                    //animation of confirmation
+                    onBackPressed();
+                }
                 break;
             case R.id.buyerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+                typeSelected = true;
                 break;
             case R.id.sellerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
+                typeSelected = true;
                 break;
             case R.id.importContactButton:
                 //do stuff for import
@@ -163,21 +177,6 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                     launchContactPicker();
                 }
                 break;
-            case R.id.pipelineButton:
-                alternateStatusButton(R.id.pipelineButton);
-                break;
-            case R.id.signedButton:
-                alternateStatusButton(R.id.signedButton);
-                break;
-            case R.id.contractButton:
-                alternateStatusButton(R.id.contractButton);
-                break;
-            case R.id.closedButton:
-                alternateStatusButton(R.id.closedButton);
-                break;
-            case R.id.archivedButton:
-                alternateStatusButton(R.id.archivedButton);
-                break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
             case R.id.signedDateTitle:
@@ -203,35 +202,100 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
+                removeStatusColor(signedStatus);
                 break;
             case R.id.underContractDateButton:
                 clearDisplayDate("contract");
+                removeStatusColor(underContractStatus);
                 break;
             case R.id.settlementDateButton:
                 clearDisplayDate("settlement");
+                removeStatusColor(closedStatus);
                 break;
             case R.id.appointmentDateButton:
                 clearDisplayDate("appointment");
+                removeStatusColor(pipelineStatus);
             default:
                 break;
         }
     }
     //TODO do stuff for this
-    private void saveClient(){
-
+    private boolean saveClient(){
+        boolean isSaved;
+        ClientObject newClient = new ClientObject();
+        if(verifyInputFields()) {
+            initializeNewClient(newClient);
+            isSaved = true;
+        } else {
+            //don't save
+            isSaved = false;
+        }
+        //check for dates to select status, perhaps this should be done within the select dates...
+        return isSaved;
     }
 
-    private void alternateStatusButton(int activeButton){
-        TextView pipelineButton = (TextView) findViewById(activeButton);
-        pipelineButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
-        pipelineButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
-//        for (int i=0; i < statusButtons.size(); i++){
-//            if(statusButtons.get(i) != activeButton){
-//                Button b = (Button) findViewById(statusButtons.get(i));
-//                b.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
-//                b.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
-//            }
-//        }
+    private boolean verifyInputFields() {
+        boolean isVerified = true;
+        if(!typeSelected) {
+            Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
+            isVerified = false;
+        }
+        if(firstNameText.getText() == null) {
+            Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show();
+            isVerified = false;
+        }
+        if(lastNameText.getText() == null) {
+            Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show();
+            isVerified = false;
+        }
+        if(transAmount.getText() == null) {
+            Toast.makeText(this, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
+            isVerified = false;
+        }
+        if(paidIncome.getText() == null) {
+            Toast.makeText(this, "Paid Income is required", Toast.LENGTH_SHORT).show();
+            isVerified = false;
+        }
+        return isVerified;
+    }
+
+    private void initializeNewClient(ClientObject newClient) {
+        newClient.setFirst_name(firstNameText.getText().toString());
+        newClient.setLast_name(lastNameText.getText().toString());
+        newClient.setTrans_amt(transAmount.getText().toString());
+        newClient.setCommission_amt(paidIncome.getText().toString());
+        newClient.setGross_commission_amt(gci.getText().toString());
+        newClient.setMobile_phone(phone.getText().toString());
+        newClient.setEmail(email.getText().toString());
+        //newClient.setAppt_dt(appointmentDisplay.toString());
+       // newClient.setSigned_dt();
+        //newClient.setUc_dt();
+        //newClient.setClosed_dt();
+    }
+
+    private void updateStatus() {
+        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(closedStatus);
+            removeStatusColor(underContractStatus);
+        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(underContractStatus);
+            removeStatusColor(signedStatus);
+        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(signedStatus);
+            removeStatusColor(pipelineStatus);
+        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
+            activateStatusColor(pipelineStatus);
+        }
+    }
+
+    private void activateStatusColor(TextView status) {
+        status.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
+        status.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+    }
+
+    private void removeStatusColor(TextView status) {
+        status.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
+        status.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
     }
 
     private void initializeActionBar() {
@@ -394,17 +458,23 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         String setText = "Tap To Select";
         switch (calendarCaller) {
             case "signed":
-                signedDisplay.setText(setText);
+                signedDisplay.setText("");
+                signedDisplay.setHint(setText);
                 break;
             case "contract":
-                contractDisplay.setText(setText);
+                contractDisplay.setText("");
+                contractDisplay.setHint(setText);
                 break;
             case "settlement":
-                settlementDisplay.setText(setText);
+                settlementDisplay.setText("");
+                settlementDisplay.setHint(setText);
                 break;
             case "appointment":
-                appointmentDisplay.setText(setText);
+                appointmentDisplay.setText("");
+                appointmentDisplay.setHint(setText);
+                break;
         }
+        updateStatus();
     }
     private void updateDisplayDate(int year, int month, int day, String calendarCaller) {
 
@@ -429,28 +499,30 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 signedSelectedMonth = month;
                 signedSelectedDay = day;
                 signedDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "contract":
                 contractSelectedYear = year;
                 contractSelectedMonth = month;
                 contractSelectedDay = day;
                 contractDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "settlement":
                 settlementSelectedYear = year;
                 settlementSelectedMonth = month;
                 settlementSelectedDay = day;
                 settlementDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "appointment":
                 appointmentSelectedYear = year;
                 appointmentSelectedMonth = month;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
         }
-
-
     }
 }
 

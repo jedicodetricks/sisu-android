@@ -20,10 +20,12 @@
         style="@style/ToolBar"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="42dp"
         android:layout_marginTop="10dp"
         android:contentDescription="leaderboard"
         android:tint="@color/colorCorporateGrey"
+        app:layout_constraintEnd_toStartOf="@+id/moreView"
         app:layout_constraintStart_toEndOf="@+id/recordView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/leaderboard_icon" />
@@ -35,13 +37,11 @@
         android:layout_height="35dp"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginStart="36dp"
         android:layout_marginTop="20dp"
         android:contentDescription="leaderboard"
         android:tint="@color/colorCorporateGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/leaderBoardView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/more_icon" />
 
