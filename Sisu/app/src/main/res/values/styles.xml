@@ -78,14 +78,11 @@
         <item name="colorControlHighlight">@color/colorCorporateOrange</item>
     </style>
 
-    <style name="RequiredTextTheme" parent="Theme.AppCompat">
+    <style name="RequiredTextTheme" parent="ThemeOverlay.AppCompat">
         <item name="android:fontFamily">@font/roboto_thin</item>
-        <item name="android:textColor">@color/colorCorporateOrange</item>
         <item name="colorControlNormal">@color/colorLightGrey</item>
         <item name="colorControlActivated">@color/colorLightGrey</item>
-        <item name="colorControlHighlight">@color/colorCorporateOrange</item>
         <item name="android:textColorHint">@color/colorCorporateOrange</item>
-        <item name="android:tint">@color/colorCorporateOrange</item>
     </style>
 
     <style name="LeaderboardLabelText">
