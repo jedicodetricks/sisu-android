@@ -27,6 +27,10 @@ public class Metric {
         this.color = color;
     }
 
+    public Metric() {
+
+    }
+
     public int getPercentComplete(){
         return (int) (((double)currentNum/(double)goalNum) * 100);
     }

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
+import co.sisu.mobile.api.AsyncActivities;
+import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
 
@@ -31,13 +34,15 @@ import co.sisu.mobile.models.Metric;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, RecordEventHandler {
+public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, RecordEventHandler, AsyncServerEventListener {
 
 
     private ListView mListView;
     int selectedYear, selectedMonth, selectedDay;
     List<Metric> metricList;
     ParentActivity parentActivity;
+    Calendar calendar = Calendar.getInstance();
+
 
     public RecordFragment() {
         // Required empty public constructor
@@ -58,8 +63,9 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
-        metricList = parentActivity.getActivitiesObject();
-        initializeListView(metricList);
+        calendar = Calendar.getInstance();
+        Date d = calendar.getTime();
+        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
         initializeCalendarHandler();
     }
 
@@ -79,7 +85,6 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateDisplayDate(int year, int month, int day) {
-
         selectedYear = year;
         selectedMonth = month;
         selectedDay = day;
@@ -179,12 +184,33 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onNumberChanged(Metric metric, int newNum) {
-        if(!parentActivity.isFirstRun()) {
-            parentActivity.setFirstRun(false);
-            if(recordMetric()) {
+//        if(!parentActivity.isFirstRun()) {
+//            parentActivity.setFirstRun(false);
+//            if(recordMetric()) {
                 metric.setCurrentNum(newNum);
                 parentActivity.setRecordUpdated(metric);
-            }
+//            }
+//        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Activities")) {
+            parentActivity.setActivitiesObject(returnObject);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+//                    loader.setVisibility(View.GONE);
+                    metricList = parentActivity.getActivitiesObject();
+                    initializeListView(metricList);
+                }
+            });
         }
+
+    }
+
+    @Override
+    public void onEventFailed() {
+
     }
 }
