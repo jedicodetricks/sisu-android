@@ -130,10 +130,12 @@ public class RecordListAdapter extends BaseAdapter {
         titleTextView.setText(metric.getTitle());
         thumbnailImageView.setImageResource(metric.getThumbnailId());
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
-        if(metric.getTitle().equals(mContext.getResources().getString(R.string.signed)) ||
-                metric.getTitle().equals(mContext.getResources().getString(R.string.under_contract)) ||
-                metric.getTitle().equals(mContext.getResources().getString(R.string.appointments)) ||
-                metric.getTitle().equals(mContext.getResources().getString(R.string.closed))){
+        if(metric.getTitle().equals("1st Time Appts") ||
+                metric.getTitle().equals("Buyer Signed") ||
+                metric.getTitle().equals("Seller Signed") ||
+                metric.getTitle().equals("Buyer Under Contract") ||
+                metric.getTitle().equals("Seller Under Contract") ||
+                metric.getTitle().equals("Closed")){
             minusButton.setVisibility(View.INVISIBLE);
         }
 
