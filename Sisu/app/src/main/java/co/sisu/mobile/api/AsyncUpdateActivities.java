@@ -1,14 +1,18 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
+import co.sisu.mobile.models.UpdateActivitiesModel;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,13 +29,12 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
     private String agentId;
     private String startDate;
     private String endDate;
+    AsyncUpdateActivitiesJsonObject updateActivitiesModels;
 
-    public AsyncUpdateActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public AsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
         callback = cb;
         this.agentId = agentId;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        this.startDate = formatter.format(startDate);
-        this.endDate = formatter.format(endDate);
+        this.updateActivitiesModels = updateActivitiesModels;
     }
 
     @Override
@@ -41,15 +44,17 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
+            String jsonInString = gson.toJson(updateActivitiesModels);
+            Log.e("POST ACTIVITY", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
 //            startDate = "2017-02-01";
 //            endDate = "2018-10-05";
-            RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":0}");
+            RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
                     .url("http://staging.sisu.co/api/agent/activity/" + agentId)
-                    .post(body)
+                    .put(body)
                     .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                     .addHeader("Client-Timestamp", "1520999095")
                     .addHeader("Content-Type", "application/json")
@@ -58,14 +63,13 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-//                Log.e("ACTIVITIES", response.body().string());
+//                Log.e("UPDATE ACTIVITIES", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    AsyncActivitiesJsonObject activities = gson.fromJson(response.body().charStream(), AsyncActivitiesJsonObject.class);
-                    callback.onEventCompleted(activities, "Update Activities");
+                    callback.onEventCompleted(null, "Update Activities");
                 } else {
                     callback.onEventFailed();
                 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,19 @@ import co.sisu.mobile.utils.CircularProgressBar;
 public class ScoreboardFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     ParentActivity parentActivity;
+    int selectedStartYear = 0;
+    int selectedStartMonth = 0;
+    int selectedStartDay = 0;
+    int selectedEndYear = 0;
+    int selectedEndMonth = 0;
+    int selectedEndDay = 0;
+    Calendar calendar = Calendar.getInstance();
+    ProgressBar loader;
+
+    private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
+            listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
+    private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
+            listingsTakenCurrentNumber, listingsTakenGoalNumber, underContractCurrentNumber, underContractGoalNumber, closedCurrentNumber, closedGoalNumber;
 
     public ScoreboardFragment() {
         // Required empty public constructor
@@ -56,13 +70,15 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        loader = view.findViewById(R.id.scoreboardLoader);
 
         initializeTimelineSelector();
         initializeButton();
-        Calendar c = Calendar.getInstance();
-        Date d = c.getTime();
-        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
-
+        initProgressBars();
+//        calendar = Calendar.getInstance();
+//        Date d = calendar.getTime();
+//        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
+//        loader.setVisibility(View.VISIBLE);
     }
 
     private void initializeTimelineSelector() {
@@ -78,8 +94,103 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                showToast("Spinner1: position=" + position + " id=" + id);
-//                createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+                calendar = Calendar.getInstance();
+                loader.setVisibility(View.VISIBLE);
+
+                switch (position) {
+                    case 0:
+                        //Today
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        break;
+                    case 1:
+                        //Last Week
+                        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                        calendar.add(Calendar.DAY_OF_WEEK, 7);
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        break;
+                    case 2:
+                        //This Week
+                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        calendar.add(Calendar.DAY_OF_WEEK, 7);
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        break;
+                    case 3:
+                        //Last Month
+                        calendar.add(Calendar.MONTH, -1);
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = 1;
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        break;
+                    case 4:
+                        //This Month
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = 1;
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        break;
+                    case 5:
+                        //Last year
+                        calendar.add(Calendar.YEAR, -1);
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = 1;
+                        selectedStartDay = 1;
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = 12;
+                        selectedEndDay = 31;
+                        break;
+                    case 6:
+                        //This year
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = 1;
+                        selectedStartDay = 1;
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = 12;
+                        selectedEndDay = 31;
+                        break;
+                }
+
+                String formattedStartMonth = String.valueOf(selectedStartMonth);
+                String formattedEndMonth = String.valueOf(selectedEndMonth);
+                if(selectedStartMonth < 10) {
+                    formattedStartMonth = "0" + selectedStartMonth;
+                }
+
+                if(selectedEndMonth < 10) {
+                    formattedEndMonth = "0" + selectedEndMonth;
+                }
+
+                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + selectedStartDay;
+                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + selectedEndDay;
+                new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime).execute();
+
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -113,7 +224,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         String lastYear = sdf.format(calendar.getTime());
         spinnerArray.add(lastYear);
         spinnerArray.add(thisYear);
-        spinnerArray.add("All Records");
+//        spinnerArray.add("All Records");
 
         return spinnerArray;
     }
@@ -123,69 +234,71 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         addButton.setOnClickListener(this);
     }
 
-    private void createAndAnimateProgressBars(List<Metric> metricList){
+    private void initProgressBars() {
+        contactsProgress = getView().findViewById(R.id.contactsProgress);
+        contactsProgressMark = getView().findViewById(R.id.contactsProgressMark);
+        contactsCurrentNumber = getView().findViewById(R.id.contactsCurrentNumber);
+        contactsGoalNumber = getView().findViewById(R.id.contactsGoalNumber);
+
+        appointmentsProgress = getView().findViewById(R.id.appointmentsProgress);
+        appointmentsProgressMark = getView().findViewById(R.id.appointmentsProgressMark);
+        appointmentsCurrentNumber = getView().findViewById(R.id.appointmentsCurrentNumber);
+        appointmentsGoalNumber = getView().findViewById(R.id.appointmentsGoalNumber);
+
+        bbSignedProgress = getView().findViewById(R.id.bbSignedProgress);
+        bbSignedProgressMark = getView().findViewById(R.id.bbSignedProgressMark);
+        bbSignedCurrentNumber = getView().findViewById(R.id.bbsignedCurrentNumber);
+        bbSignedGoalNumber = getView().findViewById(R.id.bbsignedGoalNumber);
+
+        listingsTakenProgress = getView().findViewById(R.id.listingsTakenProgress);
+        listingsTakenProgressMark = getView().findViewById(R.id.listingsTakenProgressMark);
+        listingsTakenCurrentNumber = getView().findViewById(R.id.listingsTakenCurrentNumber);
+        listingsTakenGoalNumber = getView().findViewById(R.id.listingsTakenGoalNumber);
+
+        underContractProgress = getView().findViewById(R.id.underContractProgress);
+        underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
+        underContractCurrentNumber = getView().findViewById(R.id.underContractCurrentNumber);
+        underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
+
+        closedProgress = getView().findViewById(R.id.closedProgress);
+        closedProgressMark = getView().findViewById(R.id.closedProgressMark);
+        closedCurrentNumber = getView().findViewById(R.id.closedCurrentNumber);
+        closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
+    }
+
+    private void animateProgressBars(List<Metric> metricList){
 
         for(int i = 0; i < metricList.size(); i++) {
 
             switch(metricList.get(i).getTitle()) {
                 case "Contacts":
                     Metric contactsMetric = metricList.get(i);
-                    CircularProgressBar contactsProgress = getView().findViewById(R.id.contactsProgress);
-                    CircularProgressBar contactsProgressMark = getView().findViewById(R.id.contactsProgressMark);
-                    TextView contactsCurrentNumber = getView().findViewById(R.id.contactsCurrentNumber);
-                    TextView contactsGoalNumber = getView().findViewById(R.id.contactsGoalNumber);
                     setupProgressBar(contactsMetric, contactsProgress, contactsProgressMark, contactsCurrentNumber, contactsGoalNumber);
-
                     break;
 
-                case "Appointments":
+                case "1st Time Appts":
                     Metric appointmentsMetric = metricList.get(i);
-                    CircularProgressBar appointmentsProgress = getView().findViewById(R.id.appointmentsProgress);
-                    CircularProgressBar appointmentsProgressMark = getView().findViewById(R.id.appointmentsProgressMark);
-                    TextView appointmentsCurrentNumber = getView().findViewById(R.id.appointmentsCurrentNumber);
-                    TextView appointmentsGoalNumber = getView().findViewById(R.id.appointmentsGoalNumber);
                     setupProgressBar(appointmentsMetric, appointmentsProgress, appointmentsProgressMark, appointmentsCurrentNumber, appointmentsGoalNumber);
-
                     break;
 
                 case "Buyer Signed":
                     Metric bbSignedMetric = metricList.get(i);
-                    CircularProgressBar bbSignedProgress = getView().findViewById(R.id.bbSignedProgress);
-                    CircularProgressBar bbSignedProgressMark = getView().findViewById(R.id.bbSignedProgressMark);
-                    TextView bbSignedCurrentNumber = getView().findViewById(R.id.bbsignedCurrentNumber);
-                    TextView bbSignedGoalNumber = getView().findViewById(R.id.bbsignedGoalNumber);
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
-
                     break;
 
                 case "Open Houses":
                     Metric listingsTakenMetric = metricList.get(i);
-                    CircularProgressBar listingsTakenProgress = getView().findViewById(R.id.listingsTakenProgress);
-                    CircularProgressBar listingsTakenProgressMark = getView().findViewById(R.id.listingsTakenProgressMark);
-                    TextView listingsTakenCurrentNumber = getView().findViewById(R.id.listingsTakenCurrentNumber);
-                    TextView listingsTakenGoalNumber = getView().findViewById(R.id.listingsTakenGoalNumber);
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
-
                     break;
 
                 case "Buyer Under Contract":
                     Metric underContractMetric = metricList.get(i);
-                    CircularProgressBar underContractProgress = getView().findViewById(R.id.underContractProgress);
-                    CircularProgressBar underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
-                    TextView underContractCurrentNumber = getView().findViewById(R.id.underContractCurrentNumber);
-                    TextView underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
                     setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
-
                     break;
 
                 case "Buyer Closed":
                     Metric closedMetric = metricList.get(i);
-                    CircularProgressBar closedProgress = getView().findViewById(R.id.closedProgress);
-                    CircularProgressBar closedProgressMark = getView().findViewById(R.id.closedProgressMark);
-                    TextView closedCurrentNumber = getView().findViewById(R.id.closedCurrentNumber);
-                    TextView closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
                     setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
-
                     break;
             }
         }
@@ -253,7 +366,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void showToast(CharSequence msg){
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        if(getContext() != null) {
+            Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -263,7 +378,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    createAndAnimateProgressBars(parentActivity.getScoreboardObject());
+                    loader.setVisibility(View.GONE);
+                    animateProgressBars(parentActivity.getScoreboardObject());
                 }
             });
         }

@@ -90,7 +90,6 @@ public class RecordListAdapter extends BaseAdapter {
             public void onClick(View view) {
                 int plusOne = metric.getCurrentNum() + 1;
                 rowCounter.setText(String.valueOf(plusOne));
-
             }
         });
 //
@@ -109,7 +108,9 @@ public class RecordListAdapter extends BaseAdapter {
             @Override
             public void afterTextChanged(Editable editable) {
                 if(!rowCounter.getText().toString().equals("")) {
-                    mRecordEventHandler.onNumberChanged(metric, Integer.valueOf(rowCounter.getText().toString()));
+                    if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
+                        mRecordEventHandler.onNumberChanged(metric, Integer.valueOf(rowCounter.getText().toString()));
+                    }
                 }
             }
         });

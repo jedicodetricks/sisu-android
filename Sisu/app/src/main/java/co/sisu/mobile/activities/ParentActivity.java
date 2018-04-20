@@ -18,13 +18,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeams;
+import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -34,9 +40,13 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
+import co.sisu.mobile.models.UpdateActivitiesModel;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -221,7 +231,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeClientListBar = false;
         activeClientBar = false;
         initializeActionBar();
-        updateRecordedActivities();
+        if(dataController.getUpdatedRecords().size() > 0) {
+            updateRecordedActivities();
+        }
 
         switch (v.getId()) {
             case R.id.action_bar_home:
@@ -279,11 +291,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
+        List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        Date d = c.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
         for(Metric m : updatedRecords) {
-            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
+            updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
+//            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
         }
+        UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
+        updateActivitiesModels.toArray(array);
 
-//        new AsyncUpdateActivities(this, agent.getAgent_id()).execute();
+        activitiesJsonObject.setActivities(array);
+
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject).execute();
     }
 
     @Override
@@ -411,6 +433,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
                     new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });
         }
@@ -418,6 +441,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject teams = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = teams.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
+        }
+        else if(asyncReturnType.equals("Settings")) {
+            AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
+            SettingsObject[] settings = settingsJson.getParameters();
+            dataController.setSettings(settings);
+        }
+        else if(asyncReturnType.equals("Update Activities")) {
+            clearUpdatedRecords();
         }
     }
 
@@ -481,5 +512,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setRecordUpdated(Metric metric) {
         dataController.setRecordUpdated(metric);
+    }
+
+    public List<SettingsObject> getSettings() {
+        return dataController.getSettings();
+    }
+
+    public void clearUpdatedRecords() {
+        dataController.clearUpdatedRecords();
     }
 }
