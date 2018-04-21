@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -370,9 +369,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeClientListBar = true;
         bar.setCustomView(R.layout.action_bar_clients_layout);
         View view = getSupportActionBar().getCustomView();
-
-        TextView cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(this);
     }
 
     public void swapToClientBar() {

@@ -6,21 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/roboto_regular"
-        android:elevation=".1dp"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/cancel"
-        android:textSize="@dimen/font_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/actionBarTitle"
         android:layout_width="0dp"

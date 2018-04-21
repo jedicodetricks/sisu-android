@@ -24,7 +24,7 @@
                     android:id="@+id/clientListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="112dp"
                     android:layout_marginTop="8dp"
                     android:clickable="true"/>
 
@@ -79,6 +79,7 @@
             android:id="@+id/clientLoader"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:background="#00000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
