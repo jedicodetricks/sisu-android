@@ -117,15 +117,22 @@ public class DataController {
             activitiesObject.add(metric);
             switch(counters[i].getName()) {
                 case "Contacts":
+                    metric.setThumbnailId(R.drawable.contact_icon);
 //                case "Appointments":
                 case "Buyer Signed":
+                    metric.setThumbnailId(R.drawable.signed_icon);
                 case "Open Houses":
+                    metric.setThumbnailId(R.drawable.open_house_icon);
                 case "Buyer Under Contract":
+                    metric.setThumbnailId(R.drawable.contract_icon);
                 case "Buyer Closed":
+                    metric.setThumbnailId(R.drawable.closed_icon);
                     scoreboardObject.add(metric);
                     break;
                 case "Buyer Initial Appointments":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
                 case "Seller Initial Appointments":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
                     Log.e("1st Time", metric.getTitle() + ": " + metric.getCurrentNum());
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
