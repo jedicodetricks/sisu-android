@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     List<Metric> metricList;
     ParentActivity parentActivity;
     Calendar calendar = Calendar.getInstance();
-
+    ProgressBar loader;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -66,6 +67,9 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
+        loader = view.findViewById(R.id.scoreboardLoader);
+        loader.setVisibility(View.VISIBLE);
+
         initializeCalendarHandler();
     }
 
@@ -184,13 +188,28 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
     @Override
     public void onNumberChanged(Metric metric, int newNum) {
-//        if(!parentActivity.isFirstRun()) {
-//            parentActivity.setFirstRun(false);
-//            if(recordMetric()) {
                 metric.setCurrentNum(newNum);
                 parentActivity.setRecordUpdated(metric);
-//            }
-//        }
+    }
+
+    @Override
+    public void onClientDirectorClicked(Metric metric) {
+        switch(metric.getTitle()) {
+            case "1st Time Appts":
+                break;
+            case "Buyer Signed":
+                recordMetric();
+                break;
+            case "Seller Signed":
+                recordMetric();
+                break;
+            case "Buyer Under Contract":
+                break;
+            case "Seller Under Contract":
+                break;
+            case "Closed":
+                break;
+        }
     }
 
     @Override
@@ -200,7 +219,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    loader.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                     metricList = parentActivity.getActivitiesObject();
                     initializeListView(metricList);
                 }
