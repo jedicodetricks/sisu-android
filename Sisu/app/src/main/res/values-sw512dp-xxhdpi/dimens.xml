@@ -21,7 +21,7 @@
     <dimen name="button_height_short">64dp</dimen>
 
     <!-- sizes for progress bars -->
-    <dimen name="circularBar">246dp</dimen>
+    <dimen name="circularBar">90dp</dimen>
     <dimen name="circularBarWidth">9dp</dimen>
     <dimen name="circularBarLabel">100dp</dimen>
     <dimen name="circularBarLongLabel">100dp</dimen>
