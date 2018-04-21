@@ -1,7 +1,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,12 +21,10 @@
         style="@style/ToolBar"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="42dp"
         android:layout_marginTop="10dp"
         android:contentDescription="leaderboard"
         android:tint="@color/colorCorporateGrey"
-        app:layout_constraintEnd_toStartOf="@+id/moreView"
         app:layout_constraintStart_toEndOf="@+id/recordView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/leaderboard_icon" />
@@ -36,12 +35,12 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="20dp"
         android:contentDescription="leaderboard"
         android:tint="@color/colorCorporateGrey"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@+id/leaderBoardView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/more_icon" />
 
@@ -51,13 +50,12 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:contentDescription="record"
         android:tint="@color/colorCorporateGrey"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/record_icon" />
 
@@ -67,12 +65,10 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginEnd="36dp"
-        android:layout_marginStart="36dp"
         android:layout_marginTop="10dp"
         android:contentDescription="reports"
         android:tint="@color/colorCorporateGrey"
         app:layout_constraintEnd_toStartOf="@+id/recordView"
-        app:layout_constraintStart_toEndOf="@+id/scoreboardView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/report_icon" />
 
@@ -81,13 +77,20 @@
         style="@style/ToolBar"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/colorDarkGrey"
         android:contentDescription="scoreboard"
         android:tint="@color/colorCorporateOrange"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/reportView"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:srcCompat="@drawable/home_icon" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.49878347" />
 
 </android.support.constraint.ConstraintLayout>
