@@ -17,7 +17,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/contactsProgressMark"
@@ -37,7 +36,6 @@
         android:progress="50"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
@@ -77,12 +75,11 @@
         style="@style/ProgressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/contacts_hint"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/contactsProgress"
         app:layout_constraintStart_toStartOf="@id/contactsProgress"
-        app:layout_constraintTop_toTopOf="@+id/guideline11" />
+        app:layout_constraintTop_toBottomOf="@+id/contactsProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/bbSignedProgress"
@@ -95,7 +92,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/bbSignedProgressMark"
@@ -115,7 +111,6 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
@@ -156,12 +151,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/bb_signed"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/bbSignedProgressMark"
         app:layout_constraintStart_toStartOf="@+id/bbSignedProgressMark"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        app:layout_constraintTop_toBottomOf="@+id/bbSignedProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/underContractProgress"
@@ -174,7 +168,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/underContractProgressMark"
@@ -194,7 +187,6 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="@+id/guideline13"
@@ -217,13 +209,11 @@
         android:id="@+id/underContactGoalNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:text="@string/under_contract_goal_num"
         android:textSize="@dimen/font_normal"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="@id/underContractProgress"
         app:layout_constraintStart_toStartOf="@id/underContractProgress"
         app:layout_constraintTop_toBottomOf="@id/underContractCurrentNumber" />
@@ -234,13 +224,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/under_contract"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/underContractProgressMark"
         app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="@+id/underContractProgressMark"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        app:layout_constraintTop_toBottomOf="@+id/underContractProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/appointmentsProgress"
@@ -253,7 +242,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/appointmentsProgressMark"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -273,7 +261,6 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -312,12 +299,11 @@
         style="@style/ProgressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/first_time_appts"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
         app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
-        app:layout_constraintTop_toTopOf="@+id/guideline11" />
+        app:layout_constraintTop_toBottomOf="@+id/appointmentsProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/listingsTakenProgress"
@@ -329,7 +315,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toBottomOf="@+id/listingsTakenProgressMark"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/listingsTakenProgressMark"
         app:layout_constraintStart_toStartOf="@+id/listingsTakenProgressMark"
@@ -349,7 +334,6 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -372,13 +356,11 @@
         android:id="@+id/listingsTakenGoalNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:text="@string/listings_taken_goal_num"
         android:textSize="@dimen/font_normal"
-        app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
         app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
         app:layout_constraintTop_toBottomOf="@id/listingsTakenCurrentNumber" />
@@ -388,12 +370,11 @@
         style="@style/ProgressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/listings_taken"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
         app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        app:layout_constraintTop_toBottomOf="@+id/listingsTakenProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/closedProgress"
@@ -405,7 +386,6 @@
         android:max="500"
         android:progress="0"
         android:progressDrawable="@drawable/circular"
-        app:layout_constraintBottom_toBottomOf="@+id/closedProgressMark"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/closedProgressMark"
         app:layout_constraintStart_toStartOf="@+id/closedProgressMark"
@@ -425,7 +405,6 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/guideline12"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -448,13 +427,11 @@
         android:id="@+id/closedGoalNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:text="@string/closed_goal_num"
         android:textSize="@dimen/font_normal"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="@id/closedProgress"
         app:layout_constraintStart_toStartOf="@id/closedProgress"
         app:layout_constraintTop_toBottomOf="@id/closedCurrentNumber" />
@@ -464,12 +441,11 @@
         style="@style/ProgressText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/closed"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@id/closedProgress"
         app:layout_constraintStart_toStartOf="@id/closedProgress"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        app:layout_constraintTop_toBottomOf="@+id/closedProgressMark" />
 
     <Spinner
         android:id="@+id/timelineSelector"
@@ -477,15 +453,8 @@
         android:layout_width="330dp"
         android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/timeLineGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.10" />
 
 
     <ImageView
@@ -499,7 +468,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
-        app:layout_constraintTop_toTopOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/closedProgressText"
         app:srcCompat="@drawable/add_icon" />
 
 
@@ -561,13 +530,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.84" />
-
-    <android.support.constraint.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -601,19 +563,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.14841849" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6036484" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36484244" />
 
 </android.support.constraint.ConstraintLayout>
