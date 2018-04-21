@@ -65,16 +65,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientListBar = false;
     boolean activeClientBar = false;
 
-    public boolean isFirstRun() {
-        return isFirstRun;
-    }
-
-    public void setFirstRun(boolean firstRun) {
-        isFirstRun = firstRun;
-    }
-
-    boolean isFirstRun = true;
-
     public boolean isRecordSaved() {
         return recordSaved;
     }
@@ -341,6 +331,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.e("REPLACE", "HI");
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
