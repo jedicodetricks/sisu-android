@@ -44,8 +44,8 @@
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
-    <string name="signed">Buyer Signed</string>
-    <string name="contract">Buyer Under Contract</string>
+    <string name="signed">Signed</string>
+    <string name="contract">Under Contract</string>
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
     <string name="status">Status</string>
@@ -82,8 +82,8 @@
     <string name="name_hint">Name</string>
     <string name="phone_hint">Phone</string>
     <string name="phone_hint_non_req">Phone</string>
-    <string name="transaction_amount_hint">Transaction Amount*</string>
-    <string name="commission_hint">Paid Income*</string>
+    <string name="transaction_amount_hint">Transaction Amount</string>
+    <string name="commission_hint">Paid Income</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
     <string name="first_name_hint_non_req">First Name</string>
