@@ -43,7 +43,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
     Button signedClear, contractClear, settlementClear, appointmentClear;
-    boolean typeSelected;
+    String typeSelected;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -108,6 +108,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initializeForm() {
+        typeSelected = "";
         firstNameText = findViewById(R.id.editFirstName);
         lastNameText = findViewById(R.id.addClientEditLastName);
         emailText = findViewById(R.id.editEmail);
@@ -141,14 +142,14 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
-                typeSelected = true;
+                typeSelected = "b";
                 break;
             case R.id.sellerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
-                typeSelected = true;
+                typeSelected = "s";
                 break;
             case R.id.importContactButton:
                 //do stuff for import
@@ -241,7 +242,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     private boolean verifyInputFields() {
         boolean isVerified = true;
-        if(!typeSelected) {
+        if(typeSelected.equals("")) {
             Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
@@ -279,6 +280,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         newClient.setSigned_dt(null);
         newClient.setUc_dt(null);
         newClient.setClosed_dt(null);
+        newClient.setType_id(typeSelected);
 
         if(!appointmentDisplay.getText().equals("")) {
             newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));

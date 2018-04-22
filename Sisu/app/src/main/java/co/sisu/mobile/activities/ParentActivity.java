@@ -2,6 +2,7 @@ package co.sisu.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -64,6 +65,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeBacktionBar = false;
     boolean activeClientListBar = false;
     boolean activeClientBar = false;
+    String currentSelectedRecordDate = "";
 
     public boolean isRecordSaved() {
         return recordSaved;
@@ -76,7 +78,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean recordSaved = false;
     int selectedTeam = 0;
     ActionBar bar;
-//    private String agentId = "";
     AgentModel agent;
 //    byte[] key = "SisuRocks".getBytes();
 
@@ -86,10 +87,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController = new DataController();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
-//        if (agent != null) {
-//            Log.e("AGENT PASSED", agent.getFirst_name());
-//            agentId = agent.getAgent_id();
-//        }
 
         setContentView(R.layout.activity_parent);
         bar = getSupportActionBar();
@@ -106,19 +103,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         drawerLayout = findViewById(R.id.drawer_layout);
-//        initAgentInfo();
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
 
         navigateToScoreboard();
     }
 
-    //TODO: We'll be able to get rid of this once we're passing the auth object in every time
-    private void initAgentInfo() {
-//        if(agentId.equals("")) {
-//            agentId = SaveSharedPreference.getUserName(ParentActivity.this);
-//        }
-    }
+
 
     public void initializeActionBar() {
         bar.setCustomView(R.layout.action_bar_layout);
@@ -282,13 +273,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
+
         Calendar c = Calendar.getInstance();
         Date d = c.getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
         for(Metric m : updatedRecords) {
-            updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
-//            Log.e("Updated", m.getTitle() + " " + m.getCurrentNum());
+            if(currentSelectedRecordDate.equals("")) {
+                updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
+            }
+            else {
+                updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedRecordDate, m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
+            }
         }
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
@@ -331,7 +327,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e("REPLACE", "HI");
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
@@ -411,7 +406,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         super.onBackPressed();
     }
 
-    private void showToast(CharSequence msg){
+    public void showToast(CharSequence msg){
+        Looper.prepare();
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 
@@ -511,5 +507,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void clearUpdatedRecords() {
         dataController.clearUpdatedRecords();
+    }
+
+    public void updateSelectedRecordDate(String formattedDate) {
+        this.currentSelectedRecordDate = formattedDate;
     }
 }

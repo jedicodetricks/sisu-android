@@ -65,7 +65,7 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
                 response = client.newCall(request).execute();
 //                Log.e("UPDATE ACTIVITIES", response.body().string());
             } catch (IOException e) {
-                e.printStackTrac e();
+                e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
