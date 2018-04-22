@@ -13,6 +13,44 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context="co.sisu.mobile.fragments.GoalSetupFragment">
 
+        <TextView
+            android:id="@+id/textView5"
+            style="@style/SpinnerDropdownItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/month"
+            app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Switch
+            android:id="@+id/reportsTimelineSelector"
+            style="@style/SpinnerDropdownItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/yearToggleText"
+            style="@style/SpinnerDropdownItemStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/year"
+            app:layout_constraintStart_toEndOf="@+id/reportsTimelineSelector"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/timeLineGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.45" />
+
 
         <TextView
             android:id="@+id/goalsLabel"
@@ -26,7 +64,7 @@
             android:text="@string/goals"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/reportsTimelineSelector" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/desiredIncomeLayout"

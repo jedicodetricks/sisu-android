@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +62,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         loader = view.findViewById(R.id.leaderboardLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
-        initializeTimelineSelector();
+        //initializeTimelineSelector();
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         loader.setVisibility(View.VISIBLE);
     }

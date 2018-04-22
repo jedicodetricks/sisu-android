@@ -25,6 +25,8 @@
     <string name="closed_volume">Closed Volume</string>
     <string name="scoreboard">Scoreboard</string>
     <string name="appts">Appts.</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
     <string name="reports">Reports</string>
     <string name="overall_leaderboard">Overall Leaderboard</string>
     <string name="teams">Teams</string>
@@ -67,6 +69,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
     <string name="import_contact">Import</string>
+    <string name="export_contact">Export</string>
     <string name="buyer">Buyer</string>
     <string name="seller">Seller</string>
     <string name="submit">Submit</string>
