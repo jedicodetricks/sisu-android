@@ -7,21 +7,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
+import co.sisu.mobile.models.UpdateAgentGoalsObject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
+    Switch timelineSwitch;
+    TextView activityTitle;
+    AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
 
     public GoalSetupFragment() {
         // Required empty public constructor
@@ -42,42 +50,60 @@ public class GoalSetupFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         initFields();
-        setupFieldsWithGoalData();
+        initSwitch();
+        setupFieldsWithGoalData(true);
     }
 
-    private void setupFieldsWithGoalData() {
+    private void initSwitch() {
+        timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
+        timelineSwitch.setChecked(true);
+        timelineSwitch.setOnCheckedChangeListener(this);
+    }
+
+    private void setupFieldsWithGoalData(boolean isAnnual) {
+        if(isAnnual) {
+            activityTitle.setText(R.string.yearlyTitle);
+        }
+        else {
+            activityTitle.setText(R.string.monthlyTitle);
+        }
+
         AgentModel agent = parentActivity.getAgentInfo();
         desiredIncome.setText(agent.getDesired_income());
         trackingReasons.setText(agent.getVision_statement());
         for(AgentGoalsObject go : agent.getAgentGoalsObject()) {
-            Log.e("Goals Setup", go.getName() + " " + go.getValue());
+//            Log.e("Goals Setup", go.getName() + " " + go.getValue());
+            String value = go.getValue();
+            if(!isAnnual) {
+                value = String.valueOf(Integer.valueOf(go.getValue()) / 12);
+            }
             switch (go.getName()) {
                 case "Contacts":
-                    contacts.setText(go.getValue());
+                    contacts.setText(value);
                     break;
                 case "Sellers Closed":
-                    sClosed.setText(go.getValue());
+                    sClosed.setText(value);
                     break;
                 case "Sellers Under Contract":
-                    sContract.setText(go.getValue());
+                    sContract.setText(value);
                     break;
                 case "Seller Appointments":
-                    sAppointments.setText(go.getValue());
+                    sAppointments.setText(value);
                     break;
                 case "Sellers Signed":
-                    sSigned.setText(go.getValue());
+                    sSigned.setText(value);
                     break;
                 case "Buyers Signed":
-                    bSigned.setText(go.getValue());
+                    bSigned.setText(value);
                     break;
                 case "Buyer Appointments":
-                    bAppointments.setText(go.getValue());
+                    bAppointments.setText(value);
                     break;
                 case "Buyers Under Contract":
-                    bContract.setText(go.getValue());
+                    bContract.setText(value);
                     break;
                 case "Buyers Closed":
-                    bClosed.setText(go.getValue());
+                    bClosed.setText(value);
                     break;
             }
         }
@@ -96,8 +122,13 @@ public class GoalSetupFragment extends Fragment {
         sContract = getView().findViewById(R.id.sellersUnderContract);
         bClosed = getView().findViewById(R.id.buyersClosed);
         sClosed = getView().findViewById(R.id.sellersClosed);
+        activityTitle = getView().findViewById(R.id.monthlyTitle);
     }
 
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        setupFieldsWithGoalData(isChecked);
 
+    }
 }
