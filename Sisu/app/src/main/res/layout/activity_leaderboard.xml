@@ -7,23 +7,48 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/leaderboard_date"
+        style="@style/RecordLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/record_date"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        app:layout_constraintEnd_toStartOf="@+id/timeLineGuideLine"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/calender_date_picker"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboard_date"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/appointment_icon" />
+
+    <TextView
+        android:id="@+id/monthToggleText"
         style="@style/SpinnerDropdownItemStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
         android:text="@string/month"
-        app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboardToggle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
-        android:id="@+id/reportsTimelineSelector"
+        android:id="@+id/leaderboardToggle"
         style="@style/SpinnerDropdownItemStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/yearToggleText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -31,10 +56,10 @@
         style="@style/SpinnerDropdownItemStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
         android:text="@string/year"
-        app:layout_constraintStart_toEndOf="@+id/reportsTimelineSelector"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
@@ -55,7 +80,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reportsTimelineSelector">
+        app:layout_constraintTop_toBottomOf="@+id/calender_date_picker">
 
         <ExpandableListView
             android:id="@+id/teamExpandable"
