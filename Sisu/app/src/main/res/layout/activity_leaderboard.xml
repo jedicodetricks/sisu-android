@@ -6,13 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
+    <TextView
+        android:id="@+id/textView5"
+        style="@style/SpinnerDropdownItemStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/month"
+        app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
         android:id="@+id/reportsTimelineSelector"
         style="@style/SpinnerDropdownItemStyle"
-        android:layout_width="330dp"
-        android:layout_height="35dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/yearToggleText"
+        style="@style/SpinnerDropdownItemStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/year"
+        app:layout_constraintStart_toEndOf="@+id/reportsTimelineSelector"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
@@ -20,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.10" />
+        app:layout_constraintGuide_percent="0.45" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/linearLayout"
@@ -50,6 +72,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 
 </android.support.constraint.ConstraintLayout>
 

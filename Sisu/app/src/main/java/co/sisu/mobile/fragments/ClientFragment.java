@@ -2,8 +2,10 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -40,7 +42,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller;
-    Button signedClear, contractClear, settlementClear, appointmentClear;
+    Button signedClear, contractClear, settlementClear, appointmentClear, exportContact;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -179,6 +181,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         archivedStatus = getView().findViewById(R.id.archivedButton);
         buyer = getView().findViewById(R.id.buyerButton);
         seller = getView().findViewById(R.id.sellerButton);
+        exportContact = getView().findViewById(R.id.exportContactButton);
     }
 
     @Override
@@ -222,6 +225,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.appointmentDateTitle:
 //                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
+                break;
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
                 break;
@@ -233,6 +237,22 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 break;
             case R.id.appointmentDateButton:
                 clearDisplayDate("appointment");
+                break;
+            case R.id.exportContactButton:
+                Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+                contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+
+                contactIntent
+                        .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
+                        .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
+                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, "m")
+                        .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getMobile_phone())
+                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, "h")
+                        .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getHome_phone());
+
+                startActivityForResult(contactIntent, 1);
+                //add contact to phone
+                break;
             default:
                 break;
         }
