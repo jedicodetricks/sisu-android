@@ -87,7 +87,7 @@
             app:layout_constraintTop_toBottomOf="@id/firstNameInputLayout">
 
             <EditText
-                android:id="@+id/editLastName"
+                android:id="@+id/addClientEditLastName"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

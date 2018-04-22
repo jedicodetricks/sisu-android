@@ -1,6 +1,8 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.models.ClientObject;
 
 /**
@@ -22,11 +25,13 @@ public class ClientListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<ClientObject> mDataSource;
+    private ClientMessagingEvent mClientMessagingEvent;
 
-    public ClientListAdapter(Context context, List<ClientObject> items) {
+    public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent) {
         mContext = context;
         mDataSource = (ArrayList<ClientObject>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mClientMessagingEvent = clientMessagingEvent;
     }
 
     @Override
@@ -74,47 +79,29 @@ public class ClientListAdapter extends BaseAdapter {
             phoneImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent callIntent = new Intent(Intent.ACTION_CALL).addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);//may not need the flag, but it may be helpful when relaunching app after call
-//                    if(clientObject.getMobile_phone() != null) {
-//                        callIntent.setData(Uri.parse("tel:" + clientObject.getMobile_phone()));
-//                    } else {
-//                        callIntent.setData(Uri.parse("tel:" + clientObject.getHome_phone()));
-//                    }
-//
-//                    if (ContextCompat.checkSelfPermission(parentActivity,
-//                            Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-//                        return;
-//                    }
-//                    ContextCompat.startActivity(callIntent);
+                    mClientMessagingEvent.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone());
                 }
             });
         }
 
-        if(clientObject.getMobile_phone() == null) {
+        if(clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("")) {
             textImage.setVisibility(View.INVISIBLE);
         } else {
             textImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    ContextCompat.startActivity(parentActiviy, new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
-//                            + clientObject.getMobile_phone())));
+                    mClientMessagingEvent.onTextClicked(clientObject.getMobile_phone());
                 }
             });
         }
 
-        if(clientObject.getEmail() == null) {
+        if(clientObject.getEmail() == null || clientObject.getEmail().equals("")) {
             emailImage.setVisibility(View.INVISIBLE);
         } else {
             emailImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-//
-//                    emailIntent.setType("plain/text");
-//                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{clientObject.getEmail()});
-//                    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject");
-//                    emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Text");
-//                    ContextCompat.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    mClientMessagingEvent.onEmailClicked(clientObject.getEmail());
                 }
             });
         }

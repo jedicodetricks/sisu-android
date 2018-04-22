@@ -67,7 +67,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
-        loader = view.findViewById(R.id.scoreboardLoader);
+        loader = view.findViewById(R.id.recordLoader);
         loader.setVisibility(View.VISIBLE);
 
         initializeCalendarHandler();
@@ -171,7 +171,19 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void updateRecordInfo() {
-        initializeListView(metricList);
+        String formattedMonth = String.valueOf(selectedMonth + 1);
+        if(selectedMonth < 10) {
+            formattedMonth = "0" + formattedMonth;
+        }
+        String formattedDay = String.valueOf(selectedDay);
+        if(selectedDay < 10) {
+            formattedDay = "0" + formattedDay;
+        }
+
+        String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
+        parentActivity.updateSelectedRecordDate(formattedDate);
+        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), formattedDate, formattedDate).execute();
+        loader.setVisibility(View.VISIBLE);
     }
 
     @Override
