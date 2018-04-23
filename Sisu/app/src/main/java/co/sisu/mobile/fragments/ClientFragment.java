@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
@@ -228,15 +226,19 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 break;
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
+                removeStatusColor(signedStatus);
                 break;
             case R.id.underContractDateButton:
                 clearDisplayDate("contract");
+                removeStatusColor(underContractStatus);
                 break;
             case R.id.settlementDateButton:
                 clearDisplayDate("settlement");
+                removeStatusColor(closedStatus);
                 break;
             case R.id.appointmentDateButton:
                 clearDisplayDate("appointment");
+                removeStatusColor(pipelineStatus);
                 break;
             case R.id.exportContactButton:
                 Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
@@ -302,6 +304,32 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 appointmentDisplay.setText(setText);
         }
     }
+
+    private void updateStatus() {
+        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(closedStatus);
+            removeStatusColor(underContractStatus);
+        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(underContractStatus);
+            removeStatusColor(signedStatus);
+        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
+            activateStatusColor(signedStatus);
+            removeStatusColor(pipelineStatus);
+        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
+            activateStatusColor(pipelineStatus);
+        }
+    }
+
+    private void activateStatusColor(TextView status) {
+        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+    }
+
+    private void removeStatusColor(TextView status) {
+        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+    }
+
     private void updateDisplayDate(int year, int month, int day, String calendarCaller) {
 
         Date d;
@@ -325,24 +353,28 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 signedSelectedMonth = month;
                 signedSelectedDay = day;
                 signedDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "contract":
                 contractSelectedYear = year;
                 contractSelectedMonth = month;
                 contractSelectedDay = day;
                 contractDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "settlement":
                 settlementSelectedYear = year;
                 settlementSelectedMonth = month;
                 settlementSelectedDay = day;
                 settlementDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
             case "appointment":
                 appointmentSelectedYear = year;
                 appointmentSelectedMonth = month;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
         }
 
