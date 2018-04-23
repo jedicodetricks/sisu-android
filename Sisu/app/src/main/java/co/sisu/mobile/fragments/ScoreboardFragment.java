@@ -49,6 +49,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
+
     private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
             listingsTakenCurrentNumber, listingsTakenGoalNumber, underContractCurrentNumber, underContractGoalNumber, closedCurrentNumber, closedGoalNumber;
 
@@ -75,10 +76,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeTimelineSelector();
         initializeButton();
         initProgressBars();
-//        calendar = Calendar.getInstance();
-//        Date d = calendar.getTime();
-//        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
-//        loader.setVisibility(View.VISIBLE);
+
     }
 
     private void initializeTimelineSelector() {
@@ -353,7 +351,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addView:
-                navigatePage(AddClientActivity.class);
+                launchAddClient();
                 break;
             default:
                 break;
@@ -362,6 +360,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void navigatePage(Class c){
         Intent intent = new Intent(getContext(), c);
+
+        startActivity(intent);
+    }
+
+    private void launchAddClient() {
+        Intent intent = new Intent(getContext(), AddClientActivity.class);
+        intent.putExtra("Agent", parentActivity.getAgentInfo());
         startActivity(intent);
     }
 

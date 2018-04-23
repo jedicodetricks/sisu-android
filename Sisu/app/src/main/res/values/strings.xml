@@ -61,6 +61,7 @@
     <string name="lights">Lights</string>
     <string name="touchId">Touch/Face Id</string>
     <string name="monthlyTitle">Monthly Activities</string>
+    <string name="yearlyTitle">Yearly Activities</string>
 
     <!--Buttons/Links-->
     <string name="forgot_password_sike">Already know your password?</string>

@@ -10,15 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncServerEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedbackFragment extends Fragment implements View.OnClickListener {
+public class FeedbackFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     EditText feedback;
+    ParentActivity parentActivity;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -37,6 +42,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        parentActivity = (ParentActivity) getActivity();
         Button feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
@@ -51,7 +57,27 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener {
     }
 
     private void sendFeedback(String feedback){
-        //send it somewhere
-        Log.d("FEEDBACK", feedback);
+        new AsyncFeedback(this, parentActivity.getAgentInfo().getAgent_id(), feedback).execute();
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), "Thank you for your feedback", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onEventFailed() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), "We had an issue recording your feedback. Please try again later.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

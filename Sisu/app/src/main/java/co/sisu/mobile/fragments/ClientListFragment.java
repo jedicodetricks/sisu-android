@@ -1,10 +1,13 @@
 package co.sisu.mobile.fragments;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +24,11 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener {
+public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent {
 
     private ListView mListView;
     String searchText = "";
@@ -78,7 +82,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList);
+        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
@@ -188,4 +192,30 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {}
+
+    @Override
+    public void onPhoneClicked(String number) {
+//        Log.e("NUMBER", number);
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + number));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTextClicked(String number) {
+//        Log.e("NUMBER", number);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("smsto:" + number));
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onEmailClicked(String email) {
+//        Log.e("EMAIL", email);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, email);
+        startActivity(intent);
+    }
 }

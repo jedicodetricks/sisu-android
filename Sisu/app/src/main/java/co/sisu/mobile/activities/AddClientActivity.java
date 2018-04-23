@@ -27,25 +27,28 @@ import java.util.Calendar;
 import java.util.Date;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.api.AsyncAddClient;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
 /**
  * Created by Brady Groharing on 3/5/2018.
  */
 
-public class AddClientActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddClientActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, phone, email;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
     Button signedClear, contractClear, settlementClear, appointmentClear;
-    boolean typeSelected;
+    String typeSelected;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-
+    AgentModel agent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
+        agent = getIntent().getParcelableExtra("Agent");
         initializeButtons();
         initializeForm();
         initializeCalendar();
@@ -104,8 +108,9 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initializeForm() {
+        typeSelected = "";
         firstNameText = findViewById(R.id.editFirstName);
-        lastNameText = findViewById(R.id.editLastName);
+        lastNameText = findViewById(R.id.addClientEditLastName);
         emailText = findViewById(R.id.editEmail);
         phoneText = findViewById(R.id.editPhone);
         transAmount = findViewById(R.id.editTransAmount);
@@ -137,14 +142,14 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
-                typeSelected = true;
+                typeSelected = "b";
                 break;
             case R.id.sellerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
                 buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
                 sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
                 sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
-                typeSelected = true;
+                typeSelected = "s";
                 break;
             case R.id.importContactButton:
                 //do stuff for import
@@ -219,6 +224,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
+
     //TODO do stuff for this
     private boolean saveClient(){
         boolean isSaved;
@@ -236,23 +242,23 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     private boolean verifyInputFields() {
         boolean isVerified = true;
-        if(!typeSelected) {
+        if(typeSelected.equals("")) {
             Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
-        if(firstNameText.getText() == null) {
+        else if(firstNameText.getText().toString().equals("")) {
             Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
-        if(lastNameText.getText() == null) {
+        else if(lastNameText.getText().toString().equals("")) {
             Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
-        if(transAmount.getText() == null) {
+        else if(transAmount.getText().toString().equals("")) {
             Toast.makeText(this, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
-        if(paidIncome.getText() == null) {
+        else if(paidIncome.getText().toString().equals("")) {
             Toast.makeText(this, "Paid Income is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
@@ -260,17 +266,58 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initializeNewClient(ClientObject newClient) {
+        //These can never be null
         newClient.setFirst_name(firstNameText.getText().toString());
         newClient.setLast_name(lastNameText.getText().toString());
         newClient.setTrans_amt(transAmount.getText().toString());
         newClient.setCommission_amt(paidIncome.getText().toString());
-        newClient.setGross_commission_amt(gci.getText().toString());
-        newClient.setMobile_phone(phone.getText().toString());
-        newClient.setEmail(email.getText().toString());
-        //newClient.setAppt_dt(appointmentDisplay.toString());
-       // newClient.setSigned_dt();
-        //newClient.setUc_dt();
-        //newClient.setClosed_dt();
+
+        //These need to be checked for null
+        newClient.setGross_commission_amt(gci.getText().toString().equals("") ? null : gci.getText().toString());
+        newClient.setMobile_phone(phoneText.getText().toString().equals("") ? null : phoneText.getText().toString());
+        newClient.setEmail(emailText.getText().toString().equals("") ? null : emailText.getText().toString());
+        newClient.setAppt_dt(null);
+        newClient.setSigned_dt(null);
+        newClient.setUc_dt(null);
+        newClient.setClosed_dt(null);
+        newClient.setType_id(typeSelected);
+
+        if(!appointmentDisplay.getText().equals("")) {
+            newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
+        }
+        if(!signedDisplay.getText().equals("")) {
+            newClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
+        }
+        if(!contractDisplay.getText().equals("")) {
+            newClient.setUc_dt(getFormattedDate(contractDisplay.getText().toString()));
+        }
+        if(!settlementDisplay.getText().equals("")) {
+            newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
+        }
+
+        new AsyncAddClient(this, agent.getAgent_id(), newClient).execute();
+    }
+
+    private String getFormattedDate(String incomingDate) {
+        String returnString = "";
+        Date d;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+
+        Calendar calendar = Calendar.getInstance();
+        try {
+            d = sdf.parse(incomingDate);
+            calendar.setTime(d);
+
+            SimpleDateFormat format1 = new SimpleDateFormat("EEE, dd MMM yyyy");
+
+            returnString = format1.format(calendar.getTime()) + " 00:00:00 GMT";
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return  returnString;
     }
 
     private void updateStatus() {
@@ -523,6 +570,16 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                 updateStatus();
                 break;
         }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed() {
+
     }
 }
 

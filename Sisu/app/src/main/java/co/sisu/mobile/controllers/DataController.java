@@ -133,7 +133,6 @@ public class DataController {
                     metric.setThumbnailId(R.drawable.appointment_icon);
                 case "Seller Initial Appointments":
                     metric.setThumbnailId(R.drawable.appointment_icon);
-                    Log.e("1st Time", metric.getTitle() + ": " + metric.getCurrentNum());
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
