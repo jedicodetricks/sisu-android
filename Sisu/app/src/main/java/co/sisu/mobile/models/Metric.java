@@ -1,10 +1,5 @@
 package co.sisu.mobile.models;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
-import android.widget.Toast;
-
 /**
  * Created by Jeff on 2/21/2018.
  */
@@ -63,7 +58,7 @@ public class Metric {
         return thumbnailId;
     }
 
-    public void setThumbnailId(int iconPath) {
+    public void setThumbnailId(int thumbnailId) {
         this.thumbnailId = thumbnailId;
     }
 

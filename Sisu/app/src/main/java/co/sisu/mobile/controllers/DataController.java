@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,36 +108,103 @@ public class DataController {
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
         Arrays.sort(counters);
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, 0, R.color.colorCorporateOrange);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
 
         for(int i = 0; i < counters.length; i++) {
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
+            setMetricThumbnail(metric);
             activitiesObject.add(metric);
             switch(counters[i].getName()) {
                 case "Contacts":
-                    metric.setThumbnailId(R.drawable.contact_icon);
 //                case "Appointments":
                 case "Buyer Signed":
-                    metric.setThumbnailId(R.drawable.signed_icon);
                 case "Open Houses":
-                    metric.setThumbnailId(R.drawable.open_house_icon);
                 case "Buyer Under Contract":
-                    metric.setThumbnailId(R.drawable.contract_icon);
                 case "Buyer Closed":
-                    metric.setThumbnailId(R.drawable.closed_icon);
                     scoreboardObject.add(metric);
                     break;
                 case "Buyer Initial Appointments":
-                    metric.setThumbnailId(R.drawable.appointment_icon);
                 case "Seller Initial Appointments":
-                    metric.setThumbnailId(R.drawable.appointment_icon);
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
             }
         }
         scoreboardObject.add(firstAppointment);
+    }
+
+    private void setMetricThumbnail(Metric metric) {
+        switch (metric.getTitle()) {
+            case "Buyer Showings":
+                metric.setThumbnailId(R.drawable.buyer_icon);
+                break;
+            case "Contacts":
+                metric.setThumbnailId(R.drawable.contact_icon);
+                break;
+            case "Listing Showings":
+                metric.setThumbnailId(R.drawable.listing_icon);
+                break;
+            case "Other Appointments":
+                metric.setThumbnailId(R.drawable.appointment_icon);
+                break;
+            case "Number of Dials":
+                metric.setThumbnailId(R.drawable.phone_icon);
+                break;
+            case "Thank You Cards":
+                metric.setThumbnailId(R.drawable.thankyou_card_icon);
+                break;
+            case "Open Houses":
+                metric.setThumbnailId(R.drawable.open_house_icon);
+                break;
+            case "Added to Database":
+                metric.setThumbnailId(R.drawable.database_icon);
+                break;
+            case "Referrals Requested":
+                metric.setThumbnailId(R.drawable.referals_icon);
+                break;
+            case "Referrals Received":
+                metric.setThumbnailId(R.drawable.referals_icon);
+                break;
+            case "Appointments Set":
+                metric.setThumbnailId(R.drawable.appointment_icon);
+                break;
+            case "Prepared CMA":
+                metric.setThumbnailId(R.drawable.contract_icon);
+                break;
+            case "Exercise":
+                metric.setThumbnailId(R.drawable.leaderboard_icon);
+                break;
+            case "Hours Prospected":
+                metric.setThumbnailId(R.drawable.clock_icon);
+            case "Buyer Closed":
+                metric.setThumbnailId(R.drawable.closed_icon);
+                break;
+            case "Buyer Signed":
+                metric.setThumbnailId(R.drawable.signed_icon);
+                break;
+            case "Buyer Under Contract":
+                metric.setThumbnailId(R.drawable.contract_icon);
+                break;
+            case "Buyer Initial Appointments":
+                metric.setThumbnailId(R.drawable.appointment_icon);
+                break;
+            case "Seller Closed":
+                metric.setThumbnailId(R.drawable.closed_icon);
+                break;
+            case "Seller Signed":
+                metric.setThumbnailId(R.drawable.signed_icon);
+                break;
+            case "Seller Under Contract":
+                metric.setThumbnailId(R.drawable.contract_icon);
+                break;
+            case "Seller Initial Appointments":
+                metric.setThumbnailId(R.drawable.appointment_icon);
+                break;
+            default:
+                metric.setThumbnailId(R.drawable.leaderboard_icon);
+                break;
+        }
     }
 
     public void setClientListObject(Object returnObject) {
