@@ -21,6 +21,7 @@
     <string name="listings_taken">Listings Taken</string>
     <string name="under_contract">Under Contract</string>
     <string name="pending_volume">Pending Volume</string>
+    <string name="activity_title">Activities</string>
     <string name="closed">Closed</string>
     <string name="closed_volume">Closed Volume</string>
     <string name="scoreboard">Scoreboard</string>

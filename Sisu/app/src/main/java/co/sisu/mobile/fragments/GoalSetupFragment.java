@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
-import co.sisu.mobile.models.UpdateAgentGoalsObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -122,7 +120,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sContract = getView().findViewById(R.id.sellersUnderContract);
         bClosed = getView().findViewById(R.id.buyersClosed);
         sClosed = getView().findViewById(R.id.sellersClosed);
-        activityTitle = getView().findViewById(R.id.monthlyTitle);
+        activityTitle = getView().findViewById(R.id.activityTitle);
     }
 
 

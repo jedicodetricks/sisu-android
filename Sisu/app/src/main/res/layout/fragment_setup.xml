@@ -14,14 +14,14 @@
         tools:context="co.sisu.mobile.fragments.GoalSetupFragment">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/monthToggleText"
             style="@style/SpinnerDropdownItemStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="2dp"
             android:text="@string/month"
-            app:layout_constraintStart_toStartOf="@+id/timeLineGuideLine"
+            app:layout_constraintEnd_toStartOf="@+id/goalsTimelineSelector"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Switch
@@ -29,8 +29,8 @@
             style="@style/SpinnerDropdownItemStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/yearToggleText"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -38,18 +38,11 @@
             style="@style/SpinnerDropdownItemStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="2dp"
             android:text="@string/year"
-            app:layout_constraintStart_toEndOf="@+id/goalsTimelineSelector"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/timeLineGuideLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.45" />
 
 
         <TextView
@@ -125,7 +118,7 @@
 
 
         <TextView
-            android:id="@+id/monthlyTitle"
+            android:id="@+id/activityTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -149,7 +142,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/monthlyTitle">
+            app:layout_constraintTop_toBottomOf="@+id/activityTitle">
 
             <EditText
                 android:id="@+id/contacts"
@@ -163,7 +156,7 @@
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/monthlyTitle" />
+                app:layout_constraintTop_toBottomOf="@id/activityTitle" />
 
         </android.support.design.widget.TextInputLayout>
 
