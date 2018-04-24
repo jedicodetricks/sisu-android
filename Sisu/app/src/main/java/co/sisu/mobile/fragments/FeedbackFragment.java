@@ -4,7 +4,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_feedback, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
+
         return contentView;
     }
 

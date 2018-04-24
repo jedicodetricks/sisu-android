@@ -54,7 +54,7 @@ import co.sisu.mobile.models.UpdateActivitiesModel;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener {
 
-    TextView pageTitle, teamLetter, backtionTitle;
+    TextView pageTitle, teamLetter, backtionTitle, title;
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
@@ -63,7 +63,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     List<TeamObject> teamsList;
     boolean activeBacktionBar = false;
     boolean activeClientListBar = false;
-    boolean activeClientBar = false;
+    boolean activeTitleBar = false;
     String currentSelectedRecordDate = "";
 
     public boolean isRecordSaved() {
@@ -209,7 +209,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         activeBacktionBar = false;
         activeClientListBar = false;
-        activeClientBar = false;
+        activeTitleBar = false;
         initializeActionBar();
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
@@ -348,27 +348,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
         backtionTitle = findViewById(R.id.actionBarTitle);
-        backtionTitle.setText(titleString);
+        if(titleString == null) {
+            backtionTitle.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
+            View view = getSupportActionBar().getCustomView();
+            TextView saveButton = view.findViewById(R.id.saveButton);
+            saveButton.setOnClickListener(this);
+        } else {
+            backtionTitle.setText(titleString);
+        }
+    }
+
+    public void swapToTitleBar(String titleString) {
+        activeTitleBar = true;
+        getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
+        title = findViewById(R.id.title);
+        title.setText(titleString);
     }
 
     public void swapToClientListBar() {
         activeClientListBar = true;
         bar.setCustomView(R.layout.action_bar_clients_layout);
         View view = getSupportActionBar().getCustomView();
-    }
-
-    public void swapToClientBar() {
-        activeClientListBar = true;
-        bar.setCustomView(R.layout.action_bar_client_layout);
-        TextView title = findViewById(R.id.clientTitle);
-        title.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
-        View view = getSupportActionBar().getCustomView();
-
-        TextView cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(this);
-
-        TextView saveButton = view.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
     }
 
     public AgentModel getAgentInfo() {
@@ -395,8 +395,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             activeClientListBar = false;
             initializeActionBar();
         }
-        else if(activeClientBar) {
-            activeClientBar = false;
+        else if(activeTitleBar) {
+            activeTitleBar = false;
             initializeActionBar();
         }
         super.onBackPressed();
