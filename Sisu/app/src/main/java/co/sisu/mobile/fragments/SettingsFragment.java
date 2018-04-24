@@ -75,7 +75,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initTimeSelector();
         initNotificationAlarm();
         initSwitches();
-        Button b = view.findViewById(R.id.settingsSaveButton);
+        Button b = parentActivity.findViewById(R.id.settingsSaveButton);
         b.setOnClickListener(this);
     }
 
@@ -207,7 +207,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             case R.id.settingsSaveButton:
                 saveSettingsObject();
                 Log.e("SAVE", "PREASE");
-
         }
     }
 
