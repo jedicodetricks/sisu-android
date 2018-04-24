@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     ParentActivity parentActivity;
 
     private PendingIntent pendingIntent;
+    List<SettingsObject> settings;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -64,19 +65,19 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initSwitches();
+        initAdditionalFields();
         initTimeSelector();
         initNotificationAlarm();
-        initAdditionalFields();
-        fillFieldsWithData();
+        initSwitches();
     }
+
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
     }
 
     private void fillFieldsWithData() {
-        List<SettingsObject> settings = parentActivity.getSettings();
+        settings = parentActivity.getSettings();
 
         for (SettingsObject s : settings) {
             switch (s.getName()) {
@@ -106,6 +107,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         return true;
     }
 
+    private String isCheckedBinaryValue(SettingsObject s) {
+        if(s.getValue().equals("0")) {
+            return "1";
+        }
+        return "0";
+    }
+
     private void initNotificationAlarm() {
         Intent myIntent = new Intent(getContext(), NotificationReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, myIntent, 0);
@@ -126,11 +134,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void initSwitches() {
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
-        reminderSwitch.setOnCheckedChangeListener(this);
         lightsSwitch = getView().findViewById(R.id.lightsSwitch);
-        lightsSwitch.setOnCheckedChangeListener(this);
         idSwitch = getView().findViewById(R.id.idSwitch);
+
+        fillFieldsWithData();
+
         idSwitch.setOnCheckedChangeListener(this);
+        reminderSwitch.setOnCheckedChangeListener(this);
+        lightsSwitch.setOnCheckedChangeListener(this);
+
+
     }
 
     @Override
@@ -142,19 +155,39 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
                 }
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("daily_reminder")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "REMINDER");
                 break;
             case R.id.lightsSwitch:
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("lights")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "LIGHTS");
                 break;
             case R.id.idSwitch:
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("biometrics")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "ID");
                 break;
+        }
+
+        for(SettingsObject so : settings) {
+            Log.e("SETTINGS", so.getName() + " " + so.getValue());
         }
     }
 
     @Override
     public void onClick(View v) {
+        Log.e("CLICK", "FUCK");
         switch (v.getId()) {
             case R.id.timeButton:
             case R.id.timeDisplay:
@@ -163,6 +196,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 if(reminderSwitch.isChecked()) {
                     launchTimePicker();
                 }
+                break;
+            case R.id.saveButton:
+                Log.e("SAVE", "PREASE");
 
         }
     }

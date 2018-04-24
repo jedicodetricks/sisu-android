@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,15 +60,20 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void setupFieldsWithGoalData(boolean isAnnual) {
+        AgentModel agent = parentActivity.getAgentInfo();
+
         if(isAnnual) {
             activityTitle.setText(R.string.yearlyTitle);
+            desiredIncome.setText(agent.getDesired_income());
         }
         else {
             activityTitle.setText(R.string.monthlyTitle);
+            String formattedIncome = agent.getDesired_income().replace(".0", "");
+            int toDisplay = Integer.valueOf(formattedIncome) / 12;
+            desiredIncome.setText(String.valueOf(toDisplay));
         }
 
-        AgentModel agent = parentActivity.getAgentInfo();
-        desiredIncome.setText(agent.getDesired_income());
+
         trackingReasons.setText(agent.getVision_statement());
         for(AgentGoalsObject go : agent.getAgentGoalsObject()) {
 //            Log.e("Goals Setup", go.getName() + " " + go.getValue());
