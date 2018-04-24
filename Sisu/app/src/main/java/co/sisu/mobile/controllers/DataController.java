@@ -290,7 +290,6 @@ public class DataController {
         List<SettingsObject> relevantSettings = new ArrayList<>();
 
         for(SettingsObject s : settings) {
-            Log.e("SETTINGS", s.getName());
             switch(s.getName()) {
                 case "local_timezone":
                 case "daily_reminder_time":
@@ -309,6 +308,15 @@ public class DataController {
 
     public void clearUpdatedRecords() {
         updatedRecords = new ArrayList<>();
+    }
+
+    public void setSpecificGoal(String fieldName, int value) {
+        for(AgentGoalsObject goal : agent.getAgentGoalsObject()) {
+            if(goal.getName().equals(fieldName)) {
+                goal.setValue(String.valueOf(value));
+                break;
+            }
+        }
     }
 }
 

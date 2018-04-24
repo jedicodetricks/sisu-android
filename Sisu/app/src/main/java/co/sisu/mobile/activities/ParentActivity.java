@@ -513,4 +513,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void updateSelectedRecordDate(String formattedDate) {
         this.currentSelectedRecordDate = formattedDate;
     }
+
+    public void setSpecificGoal(String fieldName, int value) {
+        dataController.setSpecificGoal(fieldName, value);
+    }
 }

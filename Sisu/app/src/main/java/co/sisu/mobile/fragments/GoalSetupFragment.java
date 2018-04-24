@@ -1,11 +1,9 @@
 package co.sisu.mobile.fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentGoalsObject;
@@ -24,13 +21,15 @@ import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
     Switch timelineSwitch;
     TextView activityTitle;
     AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
+    private boolean dateSwap;
+    private boolean isAnnualChecked = true;
 
     public GoalSetupFragment() {
         // Required empty public constructor
@@ -63,6 +62,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     private void setupFieldsWithGoalData(boolean isAnnual) {
         AgentModel agent = parentActivity.getAgentInfo();
+        dateSwap = true;
 
         if(isAnnual) {
             activityTitle.setText(R.string.yearlyTitle);
@@ -114,31 +114,33 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             }
         }
 
+        dateSwap = false;
     }
 
     private void initFields() {
         desiredIncome = getView().findViewById(R.id.desiredIncome);
-        desiredIncome.setOnFocusChangeListener(this);
+        desiredIncome.addTextChangedListener(this);
         trackingReasons = getView().findViewById(R.id.goalsReason);
-        trackingReasons.setOnFocusChangeListener(this);
+        trackingReasons.addTextChangedListener(this);
+
         contacts = getView().findViewById(R.id.contacts);
-        contacts.setOnFocusChangeListener(this);
+        contacts.addTextChangedListener(this);
         bAppointments = getView().findViewById(R.id.buyerAppts);
-        bAppointments.setOnFocusChangeListener(this);
+        bAppointments.addTextChangedListener(this);
         sAppointments = getView().findViewById(R.id.sellerAppts);
-        sAppointments.setOnFocusChangeListener(this);
+        sAppointments.addTextChangedListener(this);
         bSigned = getView().findViewById(R.id.signedBuyers);
-        bSigned.setOnFocusChangeListener(this);
+        bSigned.addTextChangedListener(this);
         sSigned = getView().findViewById(R.id.signedSellers);
-        sSigned.setOnFocusChangeListener(this);
+        sSigned.addTextChangedListener(this);
         bContract = getView().findViewById(R.id.buyersUnderContract);
-        bContract.setOnFocusChangeListener(this);
+        bContract.addTextChangedListener(this);
         sContract = getView().findViewById(R.id.sellersUnderContract);
-        sContract.setOnFocusChangeListener(this);
+        sContract.addTextChangedListener(this);
         bClosed = getView().findViewById(R.id.buyersClosed);
-        bClosed.setOnFocusChangeListener(this);
+        bClosed.addTextChangedListener(this);
         sClosed = getView().findViewById(R.id.sellersClosed);
-        sClosed.setOnFocusChangeListener(this);
+        sClosed.addTextChangedListener(this);
         activityTitle = getView().findViewById(R.id.activityTitle);
     }
 
@@ -146,11 +148,62 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         setupFieldsWithGoalData(isChecked);
-
+        isAnnualChecked = isChecked;
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        Log.e("FOCUS", String.valueOf(v.getId()));
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if(!dateSwap && !s.equals("")) {
+            if (contacts.getText().hashCode() == s.hashCode())
+            {
+                updateField("Contacts", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bAppointments.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyer Appointments", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sAppointments.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Appointments", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bSigned.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Signed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sSigned.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Signed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bContract.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Under Contract", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sContract.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Under Contract", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bClosed.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Closed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sClosed.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Closed", Integer.valueOf(String.valueOf(s)));
+            }
+        }
+    }
+
+    private void updateField(String fieldName, int value) {
+        if(!isAnnualChecked) {
+            value = value * 12;
+        }
+
+        parentActivity.setSpecificGoal(fieldName, value);
     }
 }
