@@ -30,7 +30,7 @@
             android:textSize="@dimen/font_large" />
 
         <TextView
-            android:id="@+id/saveButton"
+            android:id="@+id/testSaveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"

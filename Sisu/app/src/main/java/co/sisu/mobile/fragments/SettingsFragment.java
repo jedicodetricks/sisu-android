@@ -13,26 +13,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateSettings;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.UpdateSettingsObject;
 
 import static android.content.Context.ALARM_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
     TextView timeZoneDisplay;
@@ -44,6 +50,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     ParentActivity parentActivity;
 
     private PendingIntent pendingIntent;
+    List<SettingsObject> settings;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -64,19 +71,21 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        initSwitches();
+        initAdditionalFields();
         initTimeSelector();
         initNotificationAlarm();
-        initAdditionalFields();
-        fillFieldsWithData();
+        initSwitches();
+        Button b = view.findViewById(R.id.settingsSaveButton);
+        b.setOnClickListener(this);
     }
+
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
     }
 
     private void fillFieldsWithData() {
-        List<SettingsObject> settings = parentActivity.getSettings();
+        settings = parentActivity.getSettings();
 
         for (SettingsObject s : settings) {
             switch (s.getName()) {
@@ -106,6 +115,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         return true;
     }
 
+    private String isCheckedBinaryValue(SettingsObject s) {
+        if(s.getValue().equals("0")) {
+            return "1";
+        }
+        return "0";
+    }
+
     private void initNotificationAlarm() {
         Intent myIntent = new Intent(getContext(), NotificationReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getContext(), alarmId, myIntent, 0);
@@ -126,11 +142,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void initSwitches() {
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
-        reminderSwitch.setOnCheckedChangeListener(this);
         lightsSwitch = getView().findViewById(R.id.lightsSwitch);
-        lightsSwitch.setOnCheckedChangeListener(this);
         idSwitch = getView().findViewById(R.id.idSwitch);
+
+        fillFieldsWithData();
+
         idSwitch.setOnCheckedChangeListener(this);
+        reminderSwitch.setOnCheckedChangeListener(this);
+        lightsSwitch.setOnCheckedChangeListener(this);
+
+
     }
 
     @Override
@@ -142,14 +163,33 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
                 }
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("daily_reminder")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "REMINDER");
                 break;
             case R.id.lightsSwitch:
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("lights")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "LIGHTS");
                 break;
             case R.id.idSwitch:
+                for(SettingsObject so : settings) {
+                    if(so.getName().equals("biometrics")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
                 Log.d("CHECK LISTENER", "ID");
                 break;
+        }
+
+        for(SettingsObject so : settings) {
+            Log.e("SETTINGS", so.getName() + " " + so.getValue());
         }
     }
 
@@ -163,8 +203,24 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 if(reminderSwitch.isChecked()) {
                     launchTimePicker();
                 }
+                break;
+            case R.id.settingsSaveButton:
+                saveSettingsObject();
+                Log.e("SAVE", "PREASE");
 
         }
+    }
+
+    private void saveSettingsObject() {
+        List<UpdateSettingsObject> settingsObjects = new ArrayList<>();
+
+        for(SettingsObject so : settings) {
+            settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
+        }
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
+        new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject).execute();
+        SettingsObject[] array = new SettingsObject[settings.size()];
+        parentActivity.setSettings(settings.toArray(array));
     }
 
     private void launchTimePicker() {
@@ -214,5 +270,15 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
         AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        Log.e("COMPLETE", "YES");
+    }
+
+    @Override
+    public void onEventFailed() {
+
     }
 }

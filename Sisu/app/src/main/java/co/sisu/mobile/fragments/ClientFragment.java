@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,6 +197,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.record));
                 break;
             case R.id.saveButton://notify of success update api
+                //TODO: I assume we just want to go back to the client page, not the scoreboard
                 parentActivity.setRecordSaved(saveClient());
                 parentActivity.stackReplaceFragment(ScoreboardFragment.class);
                 parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.scoreboard));
@@ -244,23 +246,24 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
                 contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
+                //TODO: Check for a home phone or mobile and see if you can't do both if not at least one or the other
                 contactIntent
                         .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
                         .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, "m")
                         .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getMobile_phone())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, "h")
-                        .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getHome_phone());
+                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+
 
                 startActivityForResult(contactIntent, 1);
-                //add contact to phone
                 break;
             default:
                 break;
         }
     }
+
     //TODO do stuff for this
     private boolean saveClient(){
+
         return true; //return status of api success or failure
     }
 
@@ -273,6 +276,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         settlementClear.setOnClickListener(this);
         appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
+        exportContact.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

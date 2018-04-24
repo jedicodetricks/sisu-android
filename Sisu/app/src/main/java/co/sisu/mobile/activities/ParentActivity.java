@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -499,6 +500,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<SettingsObject> getSettings() {
         return dataController.getSettings();
+    }
+
+    public void setSettings(SettingsObject[] settings) {
+        dataController.setSettings(settings);
     }
 
     public void clearUpdatedRecords() {

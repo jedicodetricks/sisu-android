@@ -45,11 +45,6 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         activity = (ParentActivity) getActivity();
         initializeListView();
-        inititializeButtons();
-    }
-
-    private void inititializeButtons() {
-
     }
 
     private void initializeListView() {
