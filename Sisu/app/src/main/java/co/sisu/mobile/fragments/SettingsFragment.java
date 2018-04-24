@@ -13,26 +13,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateSettings;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.UpdateSettingsObject;
 
 import static android.content.Context.ALARM_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
     TextView timeZoneDisplay;
@@ -69,6 +75,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initTimeSelector();
         initNotificationAlarm();
         initSwitches();
+        Button b = view.findViewById(R.id.settingsSaveButton);
+        b.setOnClickListener(this);
     }
 
 
@@ -187,7 +195,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onClick(View v) {
-        Log.e("CLICK", "FUCK");
         switch (v.getId()) {
             case R.id.timeButton:
             case R.id.timeDisplay:
@@ -197,10 +204,23 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     launchTimePicker();
                 }
                 break;
-            case R.id.saveButton:
+            case R.id.settingsSaveButton:
+                saveSettingsObject();
                 Log.e("SAVE", "PREASE");
 
         }
+    }
+
+    private void saveSettingsObject() {
+        List<UpdateSettingsObject> settingsObjects = new ArrayList<>();
+
+        for(SettingsObject so : settings) {
+            settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
+        }
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
+        new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject).execute();
+        SettingsObject[] array = new SettingsObject[settings.size()];
+        parentActivity.setSettings(settings.toArray(array));
     }
 
     private void launchTimePicker() {
@@ -250,5 +270,15 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
         AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        Log.e("COMPLETE", "YES");
+    }
+
+    @Override
+    public void onEventFailed() {
+
     }
 }

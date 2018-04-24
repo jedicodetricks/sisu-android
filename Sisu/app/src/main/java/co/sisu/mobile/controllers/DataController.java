@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -288,6 +289,7 @@ public class DataController {
         List<SettingsObject> relevantSettings = new ArrayList<>();
 
         for(SettingsObject s : settings) {
+            Log.e("SETTINGS", s.getName());
             switch(s.getName()) {
                 case "local_timezone":
                 case "daily_reminder_time":

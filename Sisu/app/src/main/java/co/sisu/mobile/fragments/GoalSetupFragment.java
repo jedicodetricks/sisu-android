@@ -3,6 +3,8 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,7 @@ import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
@@ -116,16 +118,27 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     private void initFields() {
         desiredIncome = getView().findViewById(R.id.desiredIncome);
+        desiredIncome.setOnFocusChangeListener(this);
         trackingReasons = getView().findViewById(R.id.goalsReason);
+        trackingReasons.setOnFocusChangeListener(this);
         contacts = getView().findViewById(R.id.contacts);
+        contacts.setOnFocusChangeListener(this);
         bAppointments = getView().findViewById(R.id.buyerAppts);
+        bAppointments.setOnFocusChangeListener(this);
         sAppointments = getView().findViewById(R.id.sellerAppts);
+        sAppointments.setOnFocusChangeListener(this);
         bSigned = getView().findViewById(R.id.signedBuyers);
+        bSigned.setOnFocusChangeListener(this);
         sSigned = getView().findViewById(R.id.signedSellers);
+        sSigned.setOnFocusChangeListener(this);
         bContract = getView().findViewById(R.id.buyersUnderContract);
+        bContract.setOnFocusChangeListener(this);
         sContract = getView().findViewById(R.id.sellersUnderContract);
+        sContract.setOnFocusChangeListener(this);
         bClosed = getView().findViewById(R.id.buyersClosed);
+        bClosed.setOnFocusChangeListener(this);
         sClosed = getView().findViewById(R.id.sellersClosed);
+        sClosed.setOnFocusChangeListener(this);
         activityTitle = getView().findViewById(R.id.activityTitle);
     }
 
@@ -134,5 +147,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         setupFieldsWithGoalData(isChecked);
 
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        Log.e("FOCUS", String.valueOf(v.getId()));
     }
 }
