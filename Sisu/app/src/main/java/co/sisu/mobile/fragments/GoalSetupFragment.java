@@ -3,8 +3,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +18,19 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
+import co.sisu.mobile.models.UpdateAgentGoalsObject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, View.OnClickListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
     Switch timelineSwitch;
     TextView activityTitle;
     AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
+    UpdateAgentGoalsObject currentGoals;
 
     public GoalSetupFragment() {
         // Required empty public constructor
@@ -152,5 +152,26 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         Log.e("FOCUS", String.valueOf(v.getId()));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saveButton://notify of success update api
+                //TODO: I assume we just want to go back to the client page, not the scoreboard
+                updateCurrentGoals();
+                saveGoals();
+                parentActivity.stackReplaceFragment(MoreFragment.class);
+                parentActivity.swapToBacktionBar("More");
+                break;
+        }
+    }
+
+    private void updateCurrentGoals() {
+        //set all currentGoals object with data from user
+    }
+
+    private void saveGoals() {
+        // TODO: 4/24/2018 async call
     }
 }

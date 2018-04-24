@@ -72,6 +72,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setRecordSaved(boolean recordSaved) {
+        Toast.makeText(this, "parent saved", Toast.LENGTH_SHORT).show();
         this.recordSaved = recordSaved;
     }
 
@@ -261,12 +262,30 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 fragmentTag = "Scoreboard";
                 replaceFragment(ScoreboardFragment.class);
             case R.id.saveButton:
-                resetToolbarImages("scoreboard");
-                pageTitle.setText("Scoreboard");
-                fragmentTag = "Scoreboard";
-                replaceFragment(ScoreboardFragment.class);
+//                resetToolbarImages("scoreboard");
+//                pageTitle.setText("Scoreboard");
+//                fragmentTag = "Scoreboard";
+//                replaceFragment(ScoreboardFragment.class);
             default:
                 break;
+        }
+    }
+
+    public void saveData(Object object) {
+        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
+        String objectClass = object.getClass().toString();
+        if(objectClass.contains("ClientObject")) {
+            Log.e("SAVE CLASS", objectClass);
+        } else if(objectClass.contains("AgentGoalsObject")) {
+            Log.e("SAVE CLASS", objectClass);
+        } else if(objectClass.contains("SettingsObject")) {
+            Log.e("SAVE CLASS", objectClass);
+        } else if(objectClass.contains("ActivitySettingsObject")) {
+            Log.e("SAVE CLASS", objectClass);
+        } else if(objectClass.contains("ProfileObject")) {
+            Log.e("SAVE CLASS", objectClass);
+        } else {
+            Log.e("SAVE CLASS", objectClass + " was not found.");
         }
     }
 
@@ -351,9 +370,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         backtionTitle = findViewById(R.id.actionBarTitle);
         if(titleString == null) {
             backtionTitle.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
-            View view = getSupportActionBar().getCustomView();
-            TextView saveButton = view.findViewById(R.id.saveButton);
-            saveButton.setOnClickListener(this);
         } else {
             backtionTitle.setText(titleString);
         }
@@ -369,7 +385,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void swapToClientListBar() {
         activeClientListBar = true;
         bar.setCustomView(R.layout.action_bar_clients_layout);
-        View view = getSupportActionBar().getCustomView();
     }
 
     public AgentModel getAgentInfo() {

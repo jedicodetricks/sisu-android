@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -31,7 +31,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentModel;
 
@@ -49,6 +48,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     AgentModel agent;
 
     EditText username, firstName, lastName, phone, password;
+    //ProfileObject currentProfile;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -96,6 +96,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     private void initButtons() {
         profileImage = getView().findViewById(R.id.profileImage);
         profileImage.setOnClickListener(this);
+
+        TextView save = parentActivity.findViewById(R.id.saveButton);
+        save.setOnClickListener(this);
     }
 
     @Override
@@ -134,9 +137,24 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
                 }
 
                 break;
+            case R.id.saveButton:
+                //TODO: I assume we just want to go back to the client page, not the scoreboard
+                updateProfile();
+                saveProfile();
+                parentActivity.stackReplaceFragment(MoreFragment.class);
+                parentActivity.swapToBacktionBar("More");
+                break;
             default:
                 break;
         }
+    }
+
+    private void updateProfile() {
+        //update currentProfile with user input
+    }
+
+    private void saveProfile() {
+        // TODO: 4/24/2018 async call 
     }
 
     private void launchImageSelector() {
