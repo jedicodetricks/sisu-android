@@ -138,7 +138,7 @@ public class DataController {
     private void setMetricThumbnail(Metric metric) {
         switch (metric.getTitle()) {
             case "Buyer Showings":
-                metric.setThumbnailId(R.drawable.buyer_icon);
+                metric.setThumbnailId(R.drawable.open_house_icon);
                 break;
             case "Contacts":
                 metric.setThumbnailId(R.drawable.contact_icon);
@@ -178,6 +178,7 @@ public class DataController {
                 break;
             case "Hours Prospected":
                 metric.setThumbnailId(R.drawable.clock_icon);
+                break;
             case "Buyer Closed":
                 metric.setThumbnailId(R.drawable.closed_icon);
                 break;

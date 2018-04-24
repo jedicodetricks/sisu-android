@@ -72,7 +72,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Clients":
                 activity.stackReplaceFragment(ClientListFragment.class);
-                activity.swapToClientListBar();
+                activity.swapToBacktionBar("Clients");
                 break;
             case "My Profile":
                 activity.stackReplaceFragment(MyProfileFragment.class);
@@ -92,7 +92,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Feedback":
                 activity.stackReplaceFragment(FeedbackFragment.class);
-                activity.swapToBacktionBar("Feedback");
+                activity.swapToTitleBar("Feedback");
                 break;
             case "Logout":
                 activity.logout();
