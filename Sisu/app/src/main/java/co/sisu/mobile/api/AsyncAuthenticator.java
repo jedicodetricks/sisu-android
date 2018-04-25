@@ -7,9 +7,13 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -40,7 +44,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
     public String test(){
 
         byte[] secretArray = new byte[0];
-        String secretKey = "33SnhbgJaXFp6fYYd1Ru";
+//        String secretKey = "33SnhbgJaXFp6fYYd1Ru";
 //        try {
 //            secretArray = "33SnhbgJaXFp6fYYd1Ru".getBytes("UTF-8");
 //            secretKey = new String(secretArray, "ISO-8859-1");
@@ -48,9 +52,23 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //            e.printStackTrace();
 //        }
 //        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(secretKey);
+//
+//        String formattedKey = new String(byteBuffer, StandardCharsets.UTF_8);
+        String newString = null;
+        try {
+            newString = new String(secretKey.getBytes("UTF-8"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+//        String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+//        time = time.replace(".","");
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+        Date date = cal.getTime(); // get back a Date object
+        Log.e("EPOCH", String.valueOf(cal.getTime()));
+        Date d = new Date();
+        String time = String.valueOf(date.getTime());
 
-        String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        time = time.replace(".","");
         String transactionID = UUID.randomUUID().toString();
         Calendar expDate = Calendar.getInstance();
         expDate.add(Calendar.DATE, 1);
@@ -61,16 +79,19 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //            Claims claims = Jwts.claims();
 //            claims.put("Client-Timestamp", time);
 //            claims.put("Transaction-Id", transactionID);
-
+            Log.e("SECRET KEYS", secretKey + " " + newString);
             compact = Jwts.builder()
                     .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                    .setIssuedAt(new Date())
-                    .claim("Client-Timestamp", time)
-                    .claim("Transaction-Id", transactionID)
-                    .setExpiration(expDate.getTime())
-                    .signWith(SignatureAlgorithm.HS256, secretKey)
+//                    .setIssuedAt(d)
+                    .claim("Client-Timestamp", "11111")
+                    .claim("iat", 12345.6)
+                    .claim("Transaction-Id", "2a029d3d-b7f9-4790-b680-a1c554a3b416")
+                    .claim("exp", 12345.6)
+//                    .setExpiration(expDate.getTime())
+                    .signWith(SignatureAlgorithm.HS256, newString)
                     .compact();
-            return authenticateUser(transactionID, compact, time, secretKey, email, password);
+            return authenticateUser("2a029d3d-b7f9-4790-b680-a1c554a3b416", compact, "12345.6", secretKey, email, password);
+//            return authenticateUser(transactionID, compact, time, secretKey, email, password);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -80,9 +101,9 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
     public String authenticateUser(String transID, String compact, String time, String secretKey, String email, String password) throws UnsupportedEncodingException {
 //        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
 
-        compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
-        transID = "E958DC02-8F61-4E97-90B7-F266DCC597E9";
-        time = "1520999095";
+//        compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
+//        transID = "E958DC02-8F61-4E97-90B7-F266DCC597E9";
+//        time = "1520999095";
         return getJsonString(compact, transID, time, email, password);
     }
 
@@ -96,50 +117,58 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         final String loginEmail = email;
         final String loginPassword = password;
 
+        Log.e("jwt", jwt);
+        Log.e("finalTrans", finalTrans);
+        Log.e("finalTime", finalTime);
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {
-//                try {
-//                    Response response = null;
-//                    try {
-//                        OkHttpClient client = new OkHttpClient();
-//
-//                        MediaType mediaType = MediaType.parse("application/json");
-//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brian@sisu.co\",\"password\":\"hellosisu\"}");
-//
-////                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
-//
-//                        Request request = new Request.Builder()
-//                                .url("http://staging.sisu.co/api/agent/authenticate")
-//                                .post(body)
-//                                .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-//                                .addHeader("Client-Timestamp", "1520999095")
-//                                .addHeader("Content-Type", "application/json")
-//                                .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
-//                                .build();
-//
-//                        try {
-//                            response = client.newCall(request).execute();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        if (response != null) {
-//                            if (response.code() == 200) {
-//                                callback.onEventCompleted(null);
-//                            } else {
-//                                callback.onEventFailed();
-//                            }
-//                        } else {
-//                            callback.onEventFailed();
-//                        }
-//
-//                        response.body().close();
-//
+                try {
+                    Response response = null;
+                    try {
+                        OkHttpClient client = new OkHttpClient();
+
+                        MediaType mediaType = MediaType.parse("application/json");
+                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brian@sisu.co\",\"password\":\"hellosisu\"}");
+
+//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
+
+                        Request request = new Request.Builder()
+                                .url("http://staging.sisu.co/api/agent/authenticate")
+                                .post(body)
+                                .addHeader("Authorization", jwt)
+                                .addHeader("Client-Timestamp", finalTime)
+                                .addHeader("Content-Type", "application/json")
+                                .addHeader("Transaction-Id", finalTrans)
+                                .build();
+
+                        try {
+                            response = client.newCall(request).execute();
+                            Log.e("RESPONSE", response.body().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (response != null) {
+                            if (response.code() == 200) {
+                                callback.onEventCompleted(null, "Authenticator");
+                            } else {
+                                callback.onEventFailed();
+                            }
+                        } else {
+                            callback.onEventFailed();
+                        }
+
+                        response.body().close();
+
 //                        System.out.println(response.body().string());
 //                        System.out.println(response.code());
-//
-//                    }
-//                }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         thread.start();
@@ -149,47 +178,48 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-//        test();
-        try {
-            Response response = null;
-            OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
-
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
-
-//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
-
-            Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/agent/authenticate")
-                    .post(body)
-                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                    .addHeader("Client-Timestamp", "1520999095")
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
-                    .build();
-
-            try {
-                response = client.newCall(request).execute();
-                Log.e("AUTH AWAY", "GO GO GO");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (response != null) {
-                if (response.code() == 200) {
-                    AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
-                    callback.onEventCompleted(agent, "Authenticator");
-                } else {
-                    callback.onEventFailed();
-                }
-            } else {
-                callback.onEventFailed();
-            }
-
-            response.body().close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //TODO: remember to unmess this up
+        test();
+//        try {
+//            Response response = null;
+//            OkHttpClient client = new OkHttpClient();
+//            Gson gson = new Gson();
+//
+//            MediaType mediaType = MediaType.parse("application/json");
+//            RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
+//
+////                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
+//
+//            Request request = new Request.Builder()
+//                    .url("http://staging.sisu.co/api/agent/authenticate")
+//                    .post(body)
+//                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
+//                    .addHeader("Client-Timestamp", "1520999095")
+//                    .addHeader("Content-Type", "application/json")
+//                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+//                    .build();
+//
+//            try {
+//                response = client.newCall(request).execute();
+//                Log.e("AUTH AWAY", "GO GO GO");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if (response != null) {
+//                if (response.code() == 200) {
+//                    AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
+//                    callback.onEventCompleted(agent, "Authenticator");
+//                } else {
+//                    callback.onEventFailed();
+//                }
+//            } else {
+//                callback.onEventFailed();
+//            }
+//
+//            response.body().close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         return null;
     }
