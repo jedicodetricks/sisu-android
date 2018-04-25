@@ -13,8 +13,14 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -23,16 +29,15 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
     Switch timelineSwitch;
-    TextView activityTitle;
-    AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
+    TextView activityTitle, saveButton;
     private boolean dateSwap;
     private boolean isAnnualChecked = true;
-    UpdateAgentGoalsObject currentGoals;
+    private List<UpdateAgentGoalsObject> updatedGoals;
     private AgentModel agent;
 
     public GoalSetupFragment() {
@@ -53,15 +58,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        updatedGoals = new ArrayList<>();
         initFields();
-        initSwitch();
+        initSwitchAndButtons();
         setupFieldsWithGoalData(true);
     }
 
-    private void initSwitch() {
+    private void initSwitchAndButtons() {
         timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
         timelineSwitch.setChecked(true);
         timelineSwitch.setOnCheckedChangeListener(this);
+
+        saveButton = parentActivity.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
     }
 
     private void setupFieldsWithGoalData(boolean isAnnual) {
@@ -82,7 +91,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
         trackingReasons.setText(agent.getVision_statement());
         for(AgentGoalsObject go : agent.getAgentGoalsObject()) {
-//            Log.e("Goals Setup", go.getName() + " " + go.getValue());
             String value = go.getValue();
             if(!isAnnual) {
                 value = String.valueOf(Integer.valueOf(go.getValue()) / 12);
@@ -163,7 +171,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(!dateSwap && !s.equals("")) {
+        if(!dateSwap && !s.toString().equals("")) {
             if (contacts.getText().hashCode() == s.hashCode())
             {
                 updateField("Contacts", Integer.valueOf(String.valueOf(s)));
@@ -212,32 +220,34 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         for(AgentGoalsObject ago : agent.getAgentGoalsObject()) {
             if(ago.getName().equals(fieldName)) {
                 selectedGoal = ago;
+                break;
             }
         }
         if(selectedGoal != null) {
-            parentActivity.setSpecificGoal(selectedGoal, value);
-
+            UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(selectedGoal.getGoal_id(), String.valueOf(value));
+            updatedGoals.add(toUpdate);
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.saveButton://notify of success update api
-                //TODO: I assume we just want to go back to the client page, not the scoreboard
-                updateCurrentGoals();
-                saveGoals();
-                parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More");
+            case R.id.saveButton:
+                UpdateAgentGoalsObject[] array = new UpdateAgentGoalsObject[updatedGoals.size()];
+                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(updatedGoals.toArray(array))).execute();
+
                 break;
         }
     }
 
-    private void updateCurrentGoals() {
-        //set all currentGoals object with data from user
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        //TODO: We're going to want to notify the parent that stuff is updated or go get goals again
+        updatedGoals = new ArrayList<>();
     }
 
-    private void saveGoals() {
-        // TODO: 4/24/2018 async call
+    @Override
+    public void onEventFailed() {
+
     }
 }

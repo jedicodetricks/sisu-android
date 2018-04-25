@@ -7,6 +7,10 @@ package co.sisu.mobile.models;
 public class AsyncUpdateAgentGoalsJsonObject {
     UpdateAgentGoalsObject[] goals;
 
+    public AsyncUpdateAgentGoalsJsonObject(UpdateAgentGoalsObject[] goals) {
+        this.goals = goals;
+    }
+
     public UpdateAgentGoalsObject[] getGoals() {
         return goals;
     }
