@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
-    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller;
+    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
     Button signedClear, contractClear, settlementClear, appointmentClear, exportContact;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -70,6 +69,58 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         contractDisplay.setText(currentClient.getUc_dt());
         settlementDisplay.setText(currentClient.getClosed_dt());//is this RIGHT?! closed date == settlement date?
 
+    }
+
+    private void updateCurrentClient() {
+        //These can never be null
+        currentClient.setFirst_name(firstNameText.getText().toString());
+        currentClient.setLast_name(lastNameText.getText().toString());
+        currentClient.setTrans_amt(transAmount.getText().toString());
+        currentClient.setCommission_amt(paidIncome.getText().toString());
+
+        //These need to be checked for null
+        currentClient.setGross_commission_amt(gci.getText().toString().equals("") ? null : gci.getText().toString());
+        currentClient.setMobile_phone(phoneText.getText().toString().equals("") ? null : phoneText.getText().toString());
+        currentClient.setEmail(emailText.getText().toString().equals("") ? null : emailText.getText().toString());
+        currentClient.setAppt_dt(null);
+        currentClient.setSigned_dt(null);
+        currentClient.setUc_dt(null);
+        currentClient.setClosed_dt(null);
+
+        if(!appointmentDisplay.getText().equals("")) {
+            currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
+        }
+        if(!signedDisplay.getText().equals("")) {
+            currentClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
+        }
+        if(!contractDisplay.getText().equals("")) {
+            currentClient.setUc_dt(getFormattedDate(contractDisplay.getText().toString()));
+        }
+        if(!settlementDisplay.getText().equals("")) {
+            currentClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
+        }
+    }
+
+    private String getFormattedDate(String incomingDate) {
+        String returnString = "";
+        Date d;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
+
+        Calendar calendar = Calendar.getInstance();
+        try {
+            d = sdf.parse(incomingDate);
+            calendar.setTime(d);
+
+            SimpleDateFormat format1 = new SimpleDateFormat("EEE, dd MMM yyyy");
+
+            returnString = format1.format(calendar.getTime()) + " 00:00:00 GMT";
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return  returnString;
     }
 
     private void setStatus() {
@@ -191,16 +242,12 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cancelButton:
-                parentActivity.setRecordSaved(false);
-                parentActivity.stackReplaceFragment(RecordFragment.class);
-                parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.record));
-                break;
             case R.id.saveButton://notify of success update api
                 //TODO: I assume we just want to go back to the client page, not the scoreboard
-                parentActivity.setRecordSaved(saveClient());
-                parentActivity.stackReplaceFragment(ScoreboardFragment.class);
-                parentActivity.swapToBacktionBar(parentActivity.getResources().getString(R.string.scoreboard));
+                updateCurrentClient();
+                saveClient();
+                parentActivity.stackReplaceFragment(ClientListFragment.class);
+                parentActivity.swapToClientListBar();
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
@@ -261,9 +308,9 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
-    //TODO do stuff for this
+    //TODO do async call here
     private boolean saveClient(){
-
+        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         return true; //return status of api success or failure
     }
 
@@ -277,6 +324,8 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
         exportContact.setOnClickListener(this);
+        saveButton = parentActivity.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

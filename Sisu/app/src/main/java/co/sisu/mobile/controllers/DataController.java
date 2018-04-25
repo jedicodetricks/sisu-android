@@ -34,6 +34,7 @@ public class DataController {
     private List<Metric> activitiesObject;
     private List<Metric> scoreboardObject;
     private AgentModel agent;
+    private List<AgentGoalsObject> updatedGoals;
 
     private List<ClientObject> pipelineList;
     private List<ClientObject> signedList;
@@ -42,7 +43,6 @@ public class DataController {
     private List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
     private List<SettingsObject> settings;
-
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -54,6 +54,7 @@ public class DataController {
         closedList = new ArrayList<>();
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
+        updatedGoals = new ArrayList<>();
         initializeMorePageObject();
     }
 
@@ -310,13 +311,10 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public void setSpecificGoal(String fieldName, int value) {
-        for(AgentGoalsObject goal : agent.getAgentGoalsObject()) {
-            if(goal.getName().equals(fieldName)) {
-                goal.setValue(String.valueOf(value));
-                break;
-            }
-        }
+    public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
+        selectedGoal.setValue(String.valueOf(value));
+        updatedGoals.add(selectedGoal);
+        Log.e("Updated Size", String.valueOf(updatedGoals.size()));
     }
 }
 

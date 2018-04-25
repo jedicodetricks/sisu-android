@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,12 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
+import co.sisu.mobile.models.UpdateAgentGoalsObject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
@@ -30,6 +32,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
     private boolean dateSwap;
     private boolean isAnnualChecked = true;
+    UpdateAgentGoalsObject currentGoals;
+    private AgentModel agent;
 
     public GoalSetupFragment() {
         // Required empty public constructor
@@ -61,7 +65,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void setupFieldsWithGoalData(boolean isAnnual) {
-        AgentModel agent = parentActivity.getAgentInfo();
+        agent = parentActivity.getAgentInfo();
         dateSwap = true;
 
         if(isAnnual) {
@@ -170,7 +174,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             }
             else if (sAppointments.getText().hashCode() == s.hashCode())
             {
-                updateField("Sellers Appointments", Integer.valueOf(String.valueOf(s)));
+                updateField("Seller Appointments", Integer.valueOf(String.valueOf(s)));
             }
             else if (bSigned.getText().hashCode() == s.hashCode())
             {
@@ -203,7 +207,37 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         if(!isAnnualChecked) {
             value = value * 12;
         }
+        AgentGoalsObject selectedGoal = null;
 
-        parentActivity.setSpecificGoal(fieldName, value);
+        for(AgentGoalsObject ago : agent.getAgentGoalsObject()) {
+            if(ago.getName().equals(fieldName)) {
+                selectedGoal = ago;
+            }
+        }
+        if(selectedGoal != null) {
+            parentActivity.setSpecificGoal(selectedGoal, value);
+
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saveButton://notify of success update api
+                //TODO: I assume we just want to go back to the client page, not the scoreboard
+                updateCurrentGoals();
+                saveGoals();
+                parentActivity.stackReplaceFragment(MoreFragment.class);
+                parentActivity.swapToBacktionBar("More");
+                break;
+        }
+    }
+
+    private void updateCurrentGoals() {
+        //set all currentGoals object with data from user
+    }
+
+    private void saveGoals() {
+        // TODO: 4/24/2018 async call
     }
 }

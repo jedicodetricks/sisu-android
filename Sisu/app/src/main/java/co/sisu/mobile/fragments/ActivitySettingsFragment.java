@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -20,11 +21,12 @@ import co.sisu.mobile.models.Metric;
  * Created by Jeff on 4/18/2018.
  */
 
-public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener{
 
     private ListView mListView;
     DataController dataController;
     ParentActivity activity;
+    //ActivitySettingsObject currentSettings;
     public ActivitySettingsFragment() {
         // Required empty public constructor
     }
@@ -43,11 +45,12 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     public void onViewCreated(View view, Bundle savedInstanceState) {
         activity = (ParentActivity) getActivity();
         initializeListView();
-        inititializeButtons();
+        initializeButtons();
     }
 
-    private void inititializeButtons() {
-
+    private void initializeButtons() {
+        TextView saveButton = activity.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
     }
 
     private void initializeListView() {
@@ -73,5 +76,26 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 //            default:
 //                break;
 //        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saveButton://notify of success update api
+                //TODO: I assume we just want to go back to the client page, not the scoreboard
+                updateCurrentSettings();
+                saveSettings();
+                activity.stackReplaceFragment(MoreFragment.class);
+                activity.swapToBacktionBar("More");
+                break;
+        }
+    }
+
+    private void updateCurrentSettings() {
+
+    }
+
+    private void saveSettings() {
+        // TODO: 4/24/2018 async call here 
     }
 }
