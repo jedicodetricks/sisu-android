@@ -20,16 +20,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
@@ -64,11 +67,47 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         }
         setStatus();
         emailText.setText(currentClient.getEmail());
-        appointmentDisplay.setText(currentClient.getAppt_dt());
-        signedDisplay.setText(currentClient.getSigned_dt());
-        contractDisplay.setText(currentClient.getUc_dt());
-        settlementDisplay.setText(currentClient.getClosed_dt());//is this RIGHT?! closed date == settlement date?
 
+        String formattedApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_dt());
+        String formattedSignedDt = getFormattedDateFromApiReturn(currentClient.getSigned_dt());
+        String formattedContractDt = getFormattedDateFromApiReturn(currentClient.getUc_dt());
+        String formattedClosedDt = getFormattedDateFromApiReturn(currentClient.getClosed_dt());
+//        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+//        Date d = null;
+//        try {
+//            d = sdf.parse(formattedApptDt);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(d);
+//        Date date = dateFormat.parse(utcDate);
+//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-5"));
+//        calendar.setTime(date);
+
+        appointmentDisplay.setText(formattedApptDt);
+        signedDisplay.setText(formattedSignedDt);
+        contractDisplay.setText(formattedContractDt);
+        settlementDisplay.setText(formattedClosedDt);
+
+    }
+
+    private String getFormattedDateFromApiReturn(String dateString) {
+        if(dateString != null) {
+            dateString = dateString.replace("00:00:00 GMT", "");
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+            Date d = null;
+            try {
+                d = sdf.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+            SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+            return format.format(calendar.getTime());
+        }
+        return "";
     }
 
     private void updateCurrentClient() {
@@ -112,9 +151,9 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             d = sdf.parse(incomingDate);
             calendar.setTime(d);
 
-            SimpleDateFormat format1 = new SimpleDateFormat("EEE, dd MMM yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy");
 
-            returnString = format1.format(calendar.getTime()) + " 00:00:00 GMT";
+            returnString = format.format(calendar.getTime()) + " 00:00:00 GMT";
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -246,8 +285,8 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
                 //TODO: I assume we just want to go back to the client page, not the scoreboard
                 updateCurrentClient();
                 saveClient();
-                parentActivity.stackReplaceFragment(ClientListFragment.class);
-                parentActivity.swapToClientListBar();
+//                parentActivity.stackReplaceFragment(ClientListFragment.class);
+//                parentActivity.swapToClientListBar();
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
@@ -311,6 +350,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     //TODO do async call here
     private boolean saveClient(){
         Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
+        new AsyncUpdateClients(this, currentClient).execute();
         return true; //return status of api success or failure
     }
 
