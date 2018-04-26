@@ -154,7 +154,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     }
 
     private void saveProfile() {
-        // TODO: 4/24/2018 async call 
+        // TODO: 4/24/2018 async call
     }
 
     private void launchImageSelector() {
