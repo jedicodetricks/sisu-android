@@ -384,7 +384,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void swapToClientListBar() {
         activeClientListBar = true;
-        bar.setCustomView(R.layout.action_bar_clients_layout);
+        getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
     }
 
     public AgentModel getAgentInfo() {
