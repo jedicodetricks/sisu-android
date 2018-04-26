@@ -243,11 +243,10 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
-                //TODO: I assume we just want to go back to the client page, not the scoreboard
                 updateCurrentClient();
                 saveClient();
-                parentActivity.stackReplaceFragment(ClientListFragment.class);
                 parentActivity.swapToClientListBar();
+                parentActivity.replaceFragment(ClientListFragment.class);
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
