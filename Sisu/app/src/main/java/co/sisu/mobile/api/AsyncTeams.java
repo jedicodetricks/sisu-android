@@ -51,7 +51,7 @@ public class AsyncTeams extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(teams, "Teams");
         }
         else {
-            callback.onEventFailed();
+            callback.onEventFailed(null, "Server Ping");
         }
         teamsResponse.body().close();
         return null;

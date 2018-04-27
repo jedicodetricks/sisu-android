@@ -56,7 +56,7 @@ public class AsyncSignUp extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(null, "Sign Up");
         }
         else {
-            callback.onEventFailed();
+            callback.onEventFailed(null, "Server Ping");
         }
         Log.d("ASYNC PING IS", "NULL");
         response.body().close();

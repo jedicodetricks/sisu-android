@@ -452,7 +452,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 

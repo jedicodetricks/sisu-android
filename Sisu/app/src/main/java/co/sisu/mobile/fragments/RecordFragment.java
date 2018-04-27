@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -241,7 +240,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

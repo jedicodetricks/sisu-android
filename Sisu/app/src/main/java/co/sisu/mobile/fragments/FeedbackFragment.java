@@ -72,7 +72,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -53,7 +53,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
         showToast("There was an error sending that request. Please try again.");
     }
 }

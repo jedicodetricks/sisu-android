@@ -66,11 +66,24 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.d("FAILED", "FAILED");
-        if(!pingRetry) {
-            pingRetry = true;
-            pingServer();
+        if(asyncReturnType.equals("Server Ping")) {
+            if(!pingRetry) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pingRetry = true;
+                pingServer();
+            }
+            else {
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("Network", false);
+                launchActivity();
+            }
         }
+
     }
 }

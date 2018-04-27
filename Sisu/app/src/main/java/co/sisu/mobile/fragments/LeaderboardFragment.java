@@ -209,7 +209,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

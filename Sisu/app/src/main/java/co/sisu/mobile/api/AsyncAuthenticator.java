@@ -7,13 +7,8 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -152,10 +147,10 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                             if (response.code() == 200) {
                                 callback.onEventCompleted(null, "Authenticator");
                             } else {
-                                callback.onEventFailed();
+                                callback.onEventFailed(null, "Server Ping");
                             }
                         } else {
-                            callback.onEventFailed();
+                            callback.onEventFailed(null, "Server Ping");
                         }
 
                         response.body().close();
@@ -201,7 +196,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-                Log.e("AUTH AWAY", "GO GO GO");
+//                Log.e("AUTH AWAY", "GO GO GO");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -210,10 +205,10 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                     AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
                     callback.onEventCompleted(agent, "Authenticator");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

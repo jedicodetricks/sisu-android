@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
-import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -63,10 +62,10 @@ public class AsyncUpdateGoals extends AsyncTask<Void, Void, Void> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Update Goals");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

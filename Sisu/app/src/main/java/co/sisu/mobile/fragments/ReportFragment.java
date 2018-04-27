@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
 
@@ -245,7 +243,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

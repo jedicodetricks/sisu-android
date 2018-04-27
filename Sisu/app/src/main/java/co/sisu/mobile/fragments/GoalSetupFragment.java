@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,7 +246,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

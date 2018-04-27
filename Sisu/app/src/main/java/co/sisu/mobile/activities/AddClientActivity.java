@@ -578,7 +578,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String emailAddress;
     String password;
-    byte[] key = "SisuRocks".getBytes();
+//    byte[] key = "SisuRocks".getBytes();
+    boolean networkActive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initializeButtons();
         final EditText password = findViewById(R.id.passwordInput);
         password.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
+        networkActive = getIntent().getBooleanExtra("Network", true);
+
+        if(!networkActive) {
+            showToast("The server is experiencing issues, please try again later.");
+        }
     }
 
     @Override
@@ -74,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
-
     }
 
     private void showToast(CharSequence msg){
@@ -102,36 +107,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onEventFailed() {
-
-    }
-
-    private void test() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] b = baos.toByteArray();
-
-            byte[] key = "SisuRocks".getBytes();
-
-// encrypt
-            byte[] encryptedData = encrypt(key,b);
-// decrypt
-//            byte[] decryptedData = decrypt(key,encryptedData);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-        byte[] encrypted = cipher.doFinal(clear);
-        return encrypted;
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showToast("The server is experiencing issues, please try again later.");
+            }
+        });
     }
 
 }

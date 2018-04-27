@@ -1,7 +1,6 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -50,7 +49,7 @@ public class AsyncFeedback extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(null, "Feedback");
         }
         else {
-            callback.onEventFailed();
+            callback.onEventFailed(null, "Server Ping");
         }
         response.body().close();
         return null;

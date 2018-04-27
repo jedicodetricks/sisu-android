@@ -20,14 +20,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -487,7 +485,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 
