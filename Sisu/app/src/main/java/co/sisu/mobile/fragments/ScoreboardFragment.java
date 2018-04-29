@@ -213,7 +213,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         spinnerArray.add(thisMonth);
 
         calendar = Calendar.getInstance();
-        sdf = new SimpleDateFormat("YYYY");
+        sdf = new SimpleDateFormat("yyyy");
         String thisYear = sdf.format(calendar.getTime());
 
         calendar.add(Calendar.YEAR, -1);

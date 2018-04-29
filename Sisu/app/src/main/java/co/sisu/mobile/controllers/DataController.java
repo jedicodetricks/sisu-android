@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -13,11 +14,13 @@ import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
@@ -32,6 +35,7 @@ public class DataController {
     private int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private List<TeamObject> teamsObject;
     private List<Metric> activitiesObject;
+    private List<Metric> masterActivitiesObject;
     private List<Metric> scoreboardObject;
     private AgentModel agent;
     private List<AgentGoalsObject> updatedGoals;
@@ -43,6 +47,7 @@ public class DataController {
     private List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
     private List<SettingsObject> settings;
+    private HashMap<String, SelectedActivities> activitiesSelected;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -55,6 +60,7 @@ public class DataController {
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
         updatedGoals = new ArrayList<>();
+        masterActivitiesObject = new ArrayList<>();
         initializeMorePageObject();
     }
 
@@ -106,6 +112,7 @@ public class DataController {
     public void setActivitiesObject(Object returnObject) {
         activitiesObject = new ArrayList<>();
         scoreboardObject = new ArrayList<>();
+        masterActivitiesObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
@@ -116,6 +123,15 @@ public class DataController {
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
+            masterActivitiesObject.add(metric);
+            if(activitiesSelected.containsKey(metric.getType())) {
+                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+                selectedActivities.setName(metric.getTitle());
+//                Log.e("VALUE", selectedActivities.getValue());
+                if(selectedActivities.getValue().equals("0")) {
+                    continue;
+                }
+            }
             activitiesObject.add(metric);
             switch(counters[i].getName()) {
                 case "Contacts":
@@ -298,9 +314,35 @@ public class DataController {
                 case "biometrics":
                 case "daily_reminder":
                     relevantSettings.add(s);
+                    break;
+                case "record_activities":
+                    setupSelectedActivities(s);
             }
         }
         this.settings = relevantSettings;
+    }
+
+    private void setupSelectedActivities(SettingsObject s) {
+        activitiesSelected = new HashMap<>();
+        String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
+        String[] splitString = formattedString.split(",");
+
+        for(String setting : splitString) {
+            String[] splitSetting = setting.split(":");
+            activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
+        }
+
+        if(masterActivitiesObject.size() > 0) {
+            for(Metric m : masterActivitiesObject) {
+                if(activitiesSelected.containsKey(m.getType())) {
+                    SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
+                    selectedActivities.setName(m.getTitle());
+                    if(selectedActivities.getValue().equals("0")) {
+                        continue;
+                    }
+                }
+            }
+        }
     }
 
     public List<SettingsObject> getSettings() {
@@ -314,7 +356,15 @@ public class DataController {
     public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
         selectedGoal.setValue(String.valueOf(value));
         updatedGoals.add(selectedGoal);
-        Log.e("Updated Size", String.valueOf(updatedGoals.size()));
+//        Log.e("Updated Size", String.valueOf(updatedGoals.size()));
+    }
+
+    public HashMap<String, SelectedActivities> getActivitiesSelected() {
+        return activitiesSelected;
+    }
+
+    public void setActivitiesSelected(SettingsObject activitiesSelected) {
+        setupSelectedActivities(activitiesSelected);
     }
 }
 

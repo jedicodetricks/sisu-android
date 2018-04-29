@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,64 +10,83 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
+import co.sisu.mobile.api.AsyncActivitySettings;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
+import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.SelectedActivities;
+import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
  * Created by Jeff on 4/18/2018.
  */
 
-public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener{
+public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
 
     private ListView mListView;
-    DataController dataController;
-    ParentActivity activity;
-    //ActivitySettingsObject currentSettings;
+    ParentActivity parentActivity;
+    List<SelectedActivities> selectedActivities;
+
     public ActivitySettingsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController();
         View toReturn = inflater.inflate(R.layout.activity_activities_settings, container, false);
         return toReturn;
-
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        activity = (ParentActivity) getActivity();
-        initializeListView();
+        parentActivity = (ParentActivity) getActivity();
         initializeButtons();
+//        initializeListView();
+        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+    }
+
+    private void setupFieldsWithData() {
+        HashMap<String, SelectedActivities> activitiesSelected = parentActivity.getActivitiesSelected();
+        selectedActivities = new ArrayList<>();
+
+        for ( String key : activitiesSelected.keySet() ) {
+            SelectedActivities selectedActivity = activitiesSelected.get(key);
+            if(selectedActivity.getName() != null) {
+                selectedActivities.add(selectedActivity);
+            }
+        }
     }
 
     private void initializeButtons() {
-        TextView saveButton = activity.findViewById(R.id.saveButton);
+        TextView saveButton = parentActivity.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
     }
 
     private void initializeListView() {
-        ParentActivity parentActivity = (ParentActivity) getActivity();
         mListView = getView().findViewById(R.id.activity_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-        final List<Metric> activitiesContainerList = parentActivity.getActivitiesObject();
+//        final List<SelectedActivities> activitiesContainerList = parentActivity.getActivitiesObject();
 
-        ActivityListAdapter adapter = new ActivityListAdapter(getContext(), activitiesContainerList);
+        ActivityListAdapter adapter = new ActivityListAdapter(getContext(), selectedActivities);
         mListView.setAdapter(adapter);
 
-        mListView.setOnItemClickListener(this);
+//        mListView.setOnItemClickListener(this);
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,10 +103,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
                 //TODO: I assume we just want to go back to the client page, not the scoreboard
-                updateCurrentSettings();
                 saveSettings();
-                activity.stackReplaceFragment(MoreFragment.class);
-                activity.swapToBacktionBar("More");
+                parentActivity.stackReplaceFragment(MoreFragment.class);
+                parentActivity.swapToBacktionBar("More");
                 break;
         }
     }
@@ -96,6 +115,45 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void saveSettings() {
-        // TODO: 4/24/2018 async call here 
+        new AsyncUpdateActivitySettings(this, parentActivity.getAgentInfo().getAgent_id(), createUpdateObject(selectedActivities)).execute();
+    }
+
+    private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
+        String valueString = "{";
+        int counter = 0;
+//        {\"APPTT\":\"1\",\"SHWNG\":\"1\",\"REFFR\":\"0\",\"REFFC\":\"0\",\"ADDDB\":\"1\",\"TEAM2\":\"1\",\"EXERS\":\"1\",\"PCMAS\":\"0\",\"OPENH\":\"0\",\"APPTS\":\"1\",\"HOURP\":\"1\",\"DIALS\":\"0\",\"BSHNG\":\"0\",\"THANX\":\"0\"}
+        for(SelectedActivities activity : selectedActivities) {
+            valueString += activity.getType() + ":" + activity.getValue();
+            if(counter < selectedActivities.size()) {
+                valueString += ",";
+            }
+            counter++;
+        }
+        List<UpdateSettingsObject> list = new ArrayList<>();
+        list.add(new UpdateSettingsObject("record_activities", valueString, 7));
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), list);
+        return asyncUpdateSettingsJsonObject;
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Activity Settings")) {
+            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            SettingsObject settings = settingsJson.getParameter();
+            parentActivity.setActivitiesSelected(settings);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+//                    loader.setVisibility(View.GONE);
+                    setupFieldsWithData();
+                    initializeListView();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+
     }
 }

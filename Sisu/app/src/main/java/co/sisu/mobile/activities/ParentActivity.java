@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -40,11 +41,13 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -531,5 +534,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
         dataController.setSpecificGoal(selectedGoal, value);
+    }
+
+    public HashMap<String, SelectedActivities> getActivitiesSelected() {
+        return dataController.getActivitiesSelected();
+    }
+
+    public void setActivitiesSelected(SettingsObject activitiesSelected) {
+        dataController.setActivitiesSelected(activitiesSelected);
     }
 }
