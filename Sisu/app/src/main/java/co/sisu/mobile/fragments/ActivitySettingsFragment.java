@@ -121,7 +121,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
         String valueString = "{";
         int counter = 0;
-//        {\"APPTT\":\"1\",\"SHWNG\":\"1\",\"REFFR\":\"0\",\"REFFC\":\"0\",\"ADDDB\":\"1\",\"TEAM2\":\"1\",\"EXERS\":\"1\",\"PCMAS\":\"0\",\"OPENH\":\"0\",\"APPTS\":\"1\",\"HOURP\":\"1\",\"DIALS\":\"0\",\"BSHNG\":\"0\",\"THANX\":\"0\"}
         for(SelectedActivities activity : selectedActivities) {
             valueString += activity.getType() + ":" + activity.getValue();
             if(counter < selectedActivities.size()) {

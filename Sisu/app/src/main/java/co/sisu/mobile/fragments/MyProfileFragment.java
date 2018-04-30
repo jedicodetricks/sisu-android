@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,37 +18,49 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncProfileImage;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateProfile;
+import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncProfileImageJsonObject;
+import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment implements View.OnClickListener {
+public class MyProfileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     private final int SELECT_PHOTO = 1;
     ImageView profileImage;
     ParentActivity parentActivity;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     AgentModel agent;
-
+    private boolean imageChanged;
     EditText username, firstName, lastName, phone, password;
+    private String imageData, imageFormat;
     //ProfileObject currentProfile;
 
     public MyProfileFragment() {
@@ -74,6 +87,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         if(agent != null) {
             fillInAgentInfo();
         }
+        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
     }
 
     private void initFields() {
@@ -82,6 +96,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         lastName = getView().findViewById(R.id.profileLastName);
         phone = getView().findViewById(R.id.profilePhone);
         password = getView().findViewById(R.id.profilePassword);
+        password.setTransformationMethod(new PasswordTransformationMethod());//this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
     }
 
@@ -154,7 +169,34 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     }
 
     private void saveProfile() {
-        // TODO: 4/24/2018 async call
+        if(imageChanged) {
+            AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject = new AsyncUpdateProfileImageJsonObject(imageData, parentActivity.getAgentInfo().getAgent_id(), "3", imageFormat);
+            new AsyncUpdateProfileImage(this, asyncUpdateProfileImageJsonObject).execute();
+        }
+
+        HashMap<String, String> changedFields = new HashMap<>();
+
+        if(!username.getText().toString().equals(agent.getEmail())) {
+            changedFields.put("email", username.getText().toString());
+        }
+        if(!firstName.getText().toString().equals(agent.getFirst_name())) {
+            changedFields.put("first_name", firstName.getText().toString());
+        }
+        if(!lastName.getText().toString().equals(agent.getLast_name())) {
+            changedFields.put("last_name", lastName.getText().toString());
+        }
+        if(!phone.getText().toString().equals(agent.getMobile_phone())) {
+            changedFields.put("phone", phone.getText().toString());
+        }
+        if(!password.getText().toString().equals("***********")) {
+            changedFields.put("password", password.getText().toString());
+        }
+
+        if(changedFields.size() > 0) {
+            new AsyncUpdateProfile(this, parentActivity.getAgentInfo().getAgent_id(), changedFields).execute();
+        }
+
+
     }
 
     private void launchImageSelector() {
@@ -182,24 +224,32 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
 
                     int rotateImage = getCameraPhotoOrientation(parentActivity, selectedImage, filePath);
 
-//                        final Uri imageUri = imageReturnedIntent.getData();
-//                        getCameraPhotoOrientation(getContext(), imageUri);
                     final InputStream imageStream;
                     try {
+                        ContentResolver cR = getContext().getContentResolver();
+                        MimeTypeMap mime = MimeTypeMap.getSingleton();
+                        String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
+                        Log.e("IMAGE TYPE", type);
+
 
                         imageStream = getContext().getContentResolver().openInputStream(selectedImage);
                         Matrix matrix = new Matrix();
                         matrix.postRotate(rotateImage);
                         final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
-                        Bitmap rotated = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
+                        Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
                                 matrix, true);
-                        
-                        profileImage.setImageBitmap(rotated);
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                        byte[] b = baos.toByteArray();
+                        imageData = Base64.encodeToString(b, Base64.DEFAULT);
+                        imageFormat = "2";
+
+                        profileImage.setImageBitmap(rotatedImage);
+                        imageChanged = true;
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-
-//
 
                 }
         }
@@ -234,4 +284,27 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
         return rotate;
     }
 
+    private void decodeBase64Image(String data) {
+        byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
+        Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+        profileImage.setImageBitmap(bmp);
+    }
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Profile Image")) {
+            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    decodeBase64Image(profileObject.getData());
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onEventFailed(Object o, String s) {
+        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+    }
 }

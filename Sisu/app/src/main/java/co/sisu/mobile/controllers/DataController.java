@@ -113,6 +113,7 @@ public class DataController {
         activitiesObject = new ArrayList<>();
         scoreboardObject = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
+        activitiesSelected = new HashMap<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
@@ -327,6 +328,7 @@ public class DataController {
         String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
         String[] splitString = formattedString.split(",");
 
+        //TODO: This needs to check if the value of the parameter is ""
         for(String setting : splitString) {
             String[] splitSetting = setting.split(":");
             activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
