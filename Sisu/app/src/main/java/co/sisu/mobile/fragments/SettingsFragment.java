@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -75,7 +74,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initTimeSelector();
         initNotificationAlarm();
         initSwitches();
-        Button b = parentActivity.findViewById(R.id.settingsSaveButton);
+        TextView b = parentActivity.findViewById(R.id.saveButton);
         b.setOnClickListener(this);
     }
 
@@ -204,7 +203,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     launchTimePicker();
                 }
                 break;
-            case R.id.settingsSaveButton:
+            case R.id.saveButton:
                 saveSettingsObject();
                 Log.e("SAVE", "PREASE");
         }

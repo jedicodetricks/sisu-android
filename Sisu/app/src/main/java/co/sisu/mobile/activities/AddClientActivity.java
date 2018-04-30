@@ -489,7 +489,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
-        DatePickerDialog dialog = new DatePickerDialog(AddClientActivity.this, android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(AddClientActivity.this, android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 updateDisplayDate(year, month, day, calendarCaller);

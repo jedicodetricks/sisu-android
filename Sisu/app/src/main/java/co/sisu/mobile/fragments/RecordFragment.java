@@ -70,6 +70,8 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         loader.setVisibility(View.VISIBLE);
 
         initializeCalendarHandler();
+        TextView save = parentActivity.findViewById(R.id.saveButton);
+        save.setOnClickListener(this);
     }
 
     private void initializeCalendarHandler() {
@@ -150,7 +152,7 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void showDatePickerDialog() {
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 if(year != selectedYear || month != selectedMonth || day != selectedDay) {
@@ -192,9 +194,23 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.record_date:
                 showDatePickerDialog();
                 break;
+            case R.id.saveButton:
+                updateRecords();
+                saveRecords();
+                break;
             default:
                 break;
         }
+    }
+
+    private void updateRecords() {
+        // TODO: 4/30/2018 set activities object model with current stats
+    }
+
+    private boolean saveRecords() {
+        Toast.makeText(parentActivity, "Record Saved", Toast.LENGTH_SHORT).show();
+        //new AsyncUpdateActivities(this, currentActivities).execute();
+        return true; //return status of api success or failure
     }
 
     @Override

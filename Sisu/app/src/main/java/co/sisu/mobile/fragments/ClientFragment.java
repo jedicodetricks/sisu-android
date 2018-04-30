@@ -46,6 +46,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    String typeSelected;
     private List<Integer> statusButtons = new ArrayList<>();
 
     public ClientFragment() {
@@ -53,6 +54,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void initializeClient() {
+        typeSelected = currentClient.getType_id();
         firstNameText.setText(currentClient.getFirst_name().toString());
         lastNameText.setText(currentClient.getLast_name());
         transAmount.setText(currentClient.getTrans_amt());
@@ -123,6 +125,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         currentClient.setSigned_dt(null);
         currentClient.setUc_dt(null);
         currentClient.setClosed_dt(null);
+        currentClient.setType_id(typeSelected);
 
         if(!appointmentDisplay.getText().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -279,6 +282,20 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.buyerButton:
+                buyer.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                buyer.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                seller.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                typeSelected = "b";
+                break;
+            case R.id.sellerButton:
+                buyer.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                buyer.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                seller.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
+                typeSelected = "s";
+                break;
             case R.id.saveButton://notify of success update api
                 updateCurrentClient();
                 saveClient();
@@ -363,10 +380,14 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         exportContact.setOnClickListener(this);
         saveButton = parentActivity.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
+        buyer = parentActivity.findViewById(R.id.buyerButton);
+        buyer.setOnClickListener(this);
+        seller = parentActivity.findViewById(R.id.sellerButton);
+        seller.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
-        DatePickerDialog dialog = new DatePickerDialog(parentActivity, android.R.style.Theme_Holo_Light_Dialog, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(parentActivity, android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 updateDisplayDate(year, month, day, calendarCaller);

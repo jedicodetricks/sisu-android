@@ -2,19 +2,18 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
@@ -227,12 +226,22 @@ public class DataController {
         }
     }
 
+    private void removeDecimalsFromAmounts(ClientObject co) {
+        String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
+        co.setCommission_amt(commission);
+        String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
+        co.setTrans_amt(trans);
+        String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
+        co.setGross_commission_amt(gci);
+    }
+
     public void setClientListObject(Object returnObject) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
 
         for(int i = 0; i < clientObject.length; i++) {
             ClientObject co = clientObject[i];
+            removeDecimalsFromAmounts(co);
             if(co.getStatus().equalsIgnoreCase("D")) {
                 //Archived List
                 archivedList.add(co);
@@ -310,6 +319,7 @@ public class DataController {
         for(SettingsObject s : settings) {
             switch(s.getName()) {
                 case "local_timezone":
+                    s.setValue(TimeZone.getDefault().getID().toString());
                 case "daily_reminder_time":
                 case "lights":
                 case "biometrics":
