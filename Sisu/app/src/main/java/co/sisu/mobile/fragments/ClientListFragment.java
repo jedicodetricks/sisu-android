@@ -159,7 +159,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 

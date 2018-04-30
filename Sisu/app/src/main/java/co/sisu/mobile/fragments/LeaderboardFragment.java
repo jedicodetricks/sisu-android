@@ -152,7 +152,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         spinnerArray.add(thisMonth);
 
         calendar = Calendar.getInstance();
-        sdf = new SimpleDateFormat("YYYY");
+        sdf = new SimpleDateFormat("yyyy");
         String thisYear = sdf.format(calendar.getTime());
 
         calendar.add(Calendar.YEAR, -1);
@@ -209,7 +209,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

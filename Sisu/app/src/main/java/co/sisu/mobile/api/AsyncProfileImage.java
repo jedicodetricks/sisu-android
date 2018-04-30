@@ -1,28 +1,36 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Brady Groharing on 3/21/2018.
+ * Created by Brady Groharing on 4/29/2018.
  */
 
-public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
+public class AsyncProfileImage extends AsyncTask<Void, Void, Void> {
     private AsyncServerEventListener callback;
+    private String agentId;
 
-    public AsyncServerPing (AsyncServerEventListener cb) {
-       callback = cb;
+    public AsyncProfileImage(AsyncServerEventListener cb, String agentId) {
+        callback = cb;
+        this.agentId = agentId;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         Response response = null;
+        Gson gson = new Gson();
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
@@ -30,7 +38,7 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/ping-test")
+                .url("http://staging.sisu.co/api/image/3/" + agentId)
                 .get()
                 .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                 .addHeader("Client-Timestamp", "1520999095")
@@ -38,23 +46,23 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
                 .build();
         try {
             response = client.newCall(request).execute();
-//            Log.d("ASYNC", response.body().string());
+//            Log.e("PROFILE PIC", response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
-                callback.onEventCompleted(null, "Server Ping");
+                AsyncProfileImageJsonObject profileObject = gson.fromJson(response.body().charStream(), AsyncProfileImageJsonObject.class);
+                callback.onEventCompleted(profileObject, "Profile Image");
             }
             else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Profile Image");
             }
         }
         else {
-            callback.onEventFailed(null, "Server Ping");
+            callback.onEventFailed(null, "Profile Image");
         }
 
-//        Log.d("ASYNC PING IS", "NULL");
         response.body().close();
         return null;
     }

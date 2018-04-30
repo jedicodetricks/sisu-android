@@ -6,13 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
-import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
-import co.sisu.mobile.models.UpdateActivitiesModel;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -71,10 +66,10 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Update Activities");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

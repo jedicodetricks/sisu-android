@@ -1,14 +1,12 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
 
 import co.sisu.mobile.models.AsyncClientJsonObject;
-import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -55,10 +53,10 @@ public class AsyncClients extends AsyncTask<Void, Void, Void> {
                     AsyncClientJsonObject clientObject = gson.fromJson(response.body().charStream(), AsyncClientJsonObject.class);
                     callback.onEventCompleted(clientObject, "Clients");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

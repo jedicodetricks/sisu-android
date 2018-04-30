@@ -1,10 +1,12 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.SelectedActivities;
 
 /**
  * Created by Jeff on 4/18/2018.
@@ -22,11 +25,11 @@ public class ActivityListAdapter extends BaseAdapter{
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<Metric> mDataSource;
+    private ArrayList<SelectedActivities> mDataSource;
 
-    public ActivityListAdapter(Context context, List<Metric> items) {
+    public ActivityListAdapter(Context context, List<SelectedActivities> items) {
         mContext = context;
-        mDataSource = (ArrayList<Metric>) items;
+        mDataSource = (ArrayList<SelectedActivities>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -49,14 +52,34 @@ public class ActivityListAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
         View rowView = mInflater.inflate(R.layout.adapter_activity_list, parent, false);
-        final Metric metric = (Metric) getItem(position);
+        final SelectedActivities selectedActivity = (SelectedActivities) getItem(position);
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.activity_list_title);
 
         Switch activitySwitch = rowView.findViewById(R.id.activity_list_switch);
 
-        titleTextView.setText(metric.getTitle());
-
+        titleTextView.setText(selectedActivity.getName());
+        activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
+        activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                selectedActivity.setValue(jsonIsChecked(isChecked));
+            }
+        });
         return rowView;
+    }
+
+    private boolean parseValue(String value) {
+        if(value.equals("0")) {
+            return false;
+        }
+        return true;
+    }
+
+    private String jsonIsChecked(boolean isChecked) {
+        if(isChecked) {
+            return "1";
+        }
+        return "0";
     }
 }

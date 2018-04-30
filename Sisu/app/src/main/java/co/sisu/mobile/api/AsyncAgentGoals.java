@@ -47,7 +47,7 @@ public class AsyncAgentGoals extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(goals, "Goals");
         }
         else {
-            callback.onEventFailed();
+            callback.onEventFailed(null, "Server Ping");
         }
 
         response.body().close();

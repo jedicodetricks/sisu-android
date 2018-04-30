@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.fragments.MyProfileFragment;
+import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,36 +17,35 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Brady Groharing on 4/21/2018.
+ * Created by Brady Groharing on 4/29/2018.
  */
 
-public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
+public class AsyncUpdateProfileImage extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
-    private String agentId;
-    ClientObject clientObject;
+    AsyncUpdateProfileImageJsonObject updateProfileImageModel;
 
-    public AsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject clientObject) {
-        callback = cb;
-        this.agentId = agentId;
-        this.clientObject = clientObject;
+    public AsyncUpdateProfileImage(AsyncServerEventListener cb, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
+        this.callback = cb;
+        this.updateProfileImageModel = asyncUpdateProfileImageJsonObject;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
+
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
-            String jsonInString = gson.toJson(clientObject);
-            Log.e("POST CLIENT", jsonInString);
+            String jsonInString = gson.toJson(updateProfileImageModel);
+            Log.e("POST IMAGE", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/client/edit-client/" + agentId)
-                    .post(body)
+                    .url("http://staging.sisu.co/api/image")
+                    .put(body)
                     .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                     .addHeader("Client-Timestamp", "1520999095")
                     .addHeader("Content-Type", "application/json")
@@ -53,13 +54,13 @@ public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-                Log.e("ADD CLIENT", response.body().string());
+//                Log.e("UPDATE SETTINGS", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Add Client");
+                    callback.onEventCompleted(null, "Update Settings");
                 } else {
                     callback.onEventFailed(null, "Server Ping");
                 }

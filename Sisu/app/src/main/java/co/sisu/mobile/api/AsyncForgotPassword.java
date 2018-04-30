@@ -48,7 +48,7 @@ public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(null, "ForgotPassword");
         }
         else {
-            callback.onEventFailed();
+            callback.onEventFailed(null, "Server Ping");
         }
 
         response.body().close();

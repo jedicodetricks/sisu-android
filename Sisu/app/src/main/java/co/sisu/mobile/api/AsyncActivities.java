@@ -2,7 +2,6 @@ package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.AdapterView;
 
 import com.google.gson.Gson;
 
@@ -11,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncAgentJsonObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,10 +79,10 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
                     AsyncActivitiesJsonObject activities = gson.fromJson(response.body().charStream(), AsyncActivitiesJsonObject.class);
                     callback.onEventCompleted(activities, "Activities");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

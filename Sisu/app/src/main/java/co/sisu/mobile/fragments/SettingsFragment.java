@@ -277,7 +277,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object o, String s) {
 
     }
 }

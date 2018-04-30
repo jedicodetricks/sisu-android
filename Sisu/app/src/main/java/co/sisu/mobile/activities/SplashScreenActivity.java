@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.testfairy.TestFairy;
+
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
@@ -25,7 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TestFairy.begin(this, "9eb176da8ee4fd4ce62ad1275210bbc526800c0c");
+//        TestFairy.begin(this, "9eb176da8ee4fd4ce62ad1275210bbc526800c0c");
 
         loaded = false;
 
@@ -66,11 +68,24 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     }
 
     @Override
-    public void onEventFailed() {
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.d("FAILED", "FAILED");
-        if(!pingRetry) {
-            pingRetry = true;
-            pingServer();
+        if(asyncReturnType.equals("Server Ping")) {
+            if(!pingRetry) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pingRetry = true;
+                pingServer();
+            }
+            else {
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("Network", false);
+                launchActivity();
+            }
         }
+
     }
 }

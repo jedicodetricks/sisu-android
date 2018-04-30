@@ -1,7 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
+
 import com.google.gson.Gson;
 import java.io.IOException;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
@@ -58,10 +58,10 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
                     AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(response.body().charStream(), AsyncLeaderboardJsonObject.class);
                     callback.onEventCompleted(leaderboardObject, "Leaderboard");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();

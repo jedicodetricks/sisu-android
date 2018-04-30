@@ -1,9 +1,9 @@
 package co.sisu.mobile.fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,13 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -23,14 +28,16 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener, View.OnClickListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener {
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
     Switch timelineSwitch;
-    TextView activityTitle;
-    AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
-    UpdateAgentGoalsObject currentGoals;
+    TextView activityTitle, saveButton;
+    private boolean dateSwap;
+    private boolean isAnnualChecked = true;
+    private List<UpdateAgentGoalsObject> updatedGoals;
+    private AgentModel agent;
 
     public GoalSetupFragment() {
         // Required empty public constructor
@@ -50,19 +57,24 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        updatedGoals = new ArrayList<>();
         initFields();
-        initSwitch();
+        initSwitchAndButtons();
         setupFieldsWithGoalData(true);
     }
 
-    private void initSwitch() {
+    private void initSwitchAndButtons() {
         timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
         timelineSwitch.setChecked(true);
         timelineSwitch.setOnCheckedChangeListener(this);
+
+        saveButton = parentActivity.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
     }
 
     private void setupFieldsWithGoalData(boolean isAnnual) {
-        AgentModel agent = parentActivity.getAgentInfo();
+        agent = parentActivity.getAgentInfo();
+        dateSwap = true;
 
         if(isAnnual) {
             activityTitle.setText(R.string.yearlyTitle);
@@ -78,7 +90,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
         trackingReasons.setText(agent.getVision_statement());
         for(AgentGoalsObject go : agent.getAgentGoalsObject()) {
-//            Log.e("Goals Setup", go.getName() + " " + go.getValue());
             String value = go.getValue();
             if(!isAnnual) {
                 value = String.valueOf(Integer.valueOf(go.getValue()) / 12);
@@ -114,31 +125,33 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             }
         }
 
+        dateSwap = false;
     }
 
     private void initFields() {
         desiredIncome = getView().findViewById(R.id.desiredIncome);
-        desiredIncome.setOnFocusChangeListener(this);
+        desiredIncome.addTextChangedListener(this);
         trackingReasons = getView().findViewById(R.id.goalsReason);
-        trackingReasons.setOnFocusChangeListener(this);
+        trackingReasons.addTextChangedListener(this);
+
         contacts = getView().findViewById(R.id.contacts);
-        contacts.setOnFocusChangeListener(this);
+        contacts.addTextChangedListener(this);
         bAppointments = getView().findViewById(R.id.buyerAppts);
-        bAppointments.setOnFocusChangeListener(this);
+        bAppointments.addTextChangedListener(this);
         sAppointments = getView().findViewById(R.id.sellerAppts);
-        sAppointments.setOnFocusChangeListener(this);
+        sAppointments.addTextChangedListener(this);
         bSigned = getView().findViewById(R.id.signedBuyers);
-        bSigned.setOnFocusChangeListener(this);
+        bSigned.addTextChangedListener(this);
         sSigned = getView().findViewById(R.id.signedSellers);
-        sSigned.setOnFocusChangeListener(this);
+        sSigned.addTextChangedListener(this);
         bContract = getView().findViewById(R.id.buyersUnderContract);
-        bContract.setOnFocusChangeListener(this);
+        bContract.addTextChangedListener(this);
         sContract = getView().findViewById(R.id.sellersUnderContract);
-        sContract.setOnFocusChangeListener(this);
+        sContract.addTextChangedListener(this);
         bClosed = getView().findViewById(R.id.buyersClosed);
-        bClosed.setOnFocusChangeListener(this);
+        bClosed.addTextChangedListener(this);
         sClosed = getView().findViewById(R.id.sellersClosed);
-        sClosed.setOnFocusChangeListener(this);
+        sClosed.addTextChangedListener(this);
         activityTitle = getView().findViewById(R.id.activityTitle);
     }
 
@@ -146,32 +159,94 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         setupFieldsWithGoalData(isChecked);
-
+        isAnnualChecked = isChecked;
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        Log.e("FOCUS", String.valueOf(v.getId()));
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if(!dateSwap && !s.toString().equals("")) {
+            if (contacts.getText().hashCode() == s.hashCode())
+            {
+                updateField("Contacts", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bAppointments.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyer Appointments", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sAppointments.getText().hashCode() == s.hashCode())
+            {
+                updateField("Seller Appointments", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bSigned.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Signed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sSigned.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Signed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bContract.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Under Contract", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sContract.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Under Contract", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (bClosed.getText().hashCode() == s.hashCode())
+            {
+                updateField("Buyers Closed", Integer.valueOf(String.valueOf(s)));
+            }
+            else if (sClosed.getText().hashCode() == s.hashCode())
+            {
+                updateField("Sellers Closed", Integer.valueOf(String.valueOf(s)));
+            }
+        }
+    }
+
+    private void updateField(String fieldName, int value) {
+        if(!isAnnualChecked) {
+            value = value * 12;
+        }
+        AgentGoalsObject selectedGoal = null;
+
+        for(AgentGoalsObject ago : agent.getAgentGoalsObject()) {
+            if(ago.getName().equals(fieldName)) {
+                selectedGoal = ago;
+                break;
+            }
+        }
+        if(selectedGoal != null) {
+            UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(selectedGoal.getGoal_id(), String.valueOf(value));
+            updatedGoals.add(toUpdate);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.saveButton://notify of success update api
-                //TODO: I assume we just want to go back to the client page, not the scoreboard
-                updateCurrentGoals();
-                saveGoals();
-                parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More");
+            case R.id.saveButton:
+                UpdateAgentGoalsObject[] array = new UpdateAgentGoalsObject[updatedGoals.size()];
+                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(updatedGoals.toArray(array))).execute();
+
                 break;
         }
     }
 
-    private void updateCurrentGoals() {
-        //set all currentGoals object with data from user
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        //TODO: We're going to want to notify the parent that stuff is updated or go get goals again
+        updatedGoals = new ArrayList<>();
     }
 
-    private void saveGoals() {
-        // TODO: 4/24/2018 async call
+    @Override
+    public void onEventFailed(Object o, String s) {
+
     }
 }

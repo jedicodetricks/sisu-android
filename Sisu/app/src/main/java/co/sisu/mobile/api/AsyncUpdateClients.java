@@ -15,23 +15,24 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Brady Groharing on 4/21/2018.
+ * Created by bradygroharing on 4/25/18.
  */
 
-public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
+public class AsyncUpdateClients extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
-    private String agentId;
+    private String clientId;
     ClientObject clientObject;
 
-    public AsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject clientObject) {
+    public AsyncUpdateClients(AsyncServerEventListener cb, ClientObject client) {
         callback = cb;
-        this.agentId = agentId;
-        this.clientObject = clientObject;
+        this.clientId = client.getClient_id();
+        this.clientObject = client;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
+
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
@@ -43,8 +44,8 @@ public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/client/edit-client/" + agentId)
-                    .post(body)
+                    .url("http://staging.sisu.co/api/client/edit-client/" + clientId)
+                    .put(body)
                     .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                     .addHeader("Client-Timestamp", "1520999095")
                     .addHeader("Content-Type", "application/json")
@@ -53,13 +54,13 @@ public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-                Log.e("ADD CLIENT", response.body().string());
+//                Log.e("UPDATE ACTIVITIES", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Add Client");
+                    callback.onEventCompleted(null, "Update Client");
                 } else {
                     callback.onEventFailed(null, "Server Ping");
                 }

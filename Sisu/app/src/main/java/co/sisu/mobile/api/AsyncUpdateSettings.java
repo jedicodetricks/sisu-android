@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -63,10 +62,10 @@ public class AsyncUpdateSettings extends AsyncTask<Void, Void, Void> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Update Settings");
                 } else {
-                    callback.onEventFailed();
+                    callback.onEventFailed(null, "Server Ping");
                 }
             } else {
-                callback.onEventFailed();
+                callback.onEventFailed(null, "Server Ping");
             }
 
             response.body().close();
