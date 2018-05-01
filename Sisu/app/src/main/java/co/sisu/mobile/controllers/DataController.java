@@ -124,18 +124,9 @@ public class DataController {
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
             masterActivitiesObject.add(metric);
-            if(activitiesSelected.containsKey(metric.getType())) {
-                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
-                selectedActivities.setName(metric.getTitle());
-//                Log.e("VALUE", selectedActivities.getValue());
-                if(selectedActivities.getValue().equals("0")) {
-                    continue;
-                }
-            }
-            activitiesObject.add(metric);
+
             switch(counters[i].getName()) {
                 case "Contacts":
-//                case "Appointments":
                 case "Buyer Signed":
                 case "Open Houses":
                 case "Buyer Under Contract":
@@ -148,6 +139,16 @@ public class DataController {
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
             }
+
+            if(activitiesSelected.containsKey(metric.getType())) {
+                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+                selectedActivities.setName(metric.getTitle());
+//                Log.e("VALUE", selectedActivities.getValue());
+                if(selectedActivities.getValue().equals("0")) {
+                    continue;
+                }
+            }
+            activitiesObject.add(metric);
         }
         scoreboardObject.add(firstAppointment);
     }

@@ -2,7 +2,6 @@ package co.sisu.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,7 +80,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     int selectedTeam = 0;
     ActionBar bar;
     AgentModel agent;
-//    byte[] key = "SisuRocks".getBytes();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,7 +288,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        }
 //    }
 
-    private void updateRecordedActivities() {
+    public void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
 
@@ -551,5 +548,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setActivitiesSelected(SettingsObject activitiesSelected) {
         dataController.setActivitiesSelected(activitiesSelected);
+    }
+
+    public List<Metric> getUpdatedRecords() {
+        return dataController.getUpdatedRecords();
     }
 }

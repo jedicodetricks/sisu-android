@@ -207,10 +207,11 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         // TODO: 4/30/2018 set activities object model with current stats
     }
 
-    private boolean saveRecords() {
+    private void saveRecords() {
+        if(parentActivity.getUpdatedRecords().size() > 0) {
+            parentActivity.updateRecordedActivities();
+        }
         Toast.makeText(parentActivity, "Record Saved", Toast.LENGTH_SHORT).show();
-        //new AsyncUpdateActivities(this, currentActivities).execute();
-        return true; //return status of api success or failure
     }
 
     @Override
