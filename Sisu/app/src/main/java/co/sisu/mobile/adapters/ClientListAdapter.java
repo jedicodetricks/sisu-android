@@ -1,8 +1,6 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,9 +104,8 @@ public class ClientListAdapter extends BaseAdapter {
             });
         }
         titleTextView.setText(clientObject.getFirst_name() + " " + clientObject.getLast_name());
-        String splitString = clientObject.getGross_commission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
-        subtitleTextView.setText("$" + splitString);
-
+//        String splitString = clientObject.getCommission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
+        subtitleTextView.setText("$" + clientObject.getCommission_amt());
 
         return rowView;
     }

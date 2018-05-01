@@ -41,7 +41,6 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
@@ -245,6 +244,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
+                swapToBacktionBar(fragmentTag);
                 replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:

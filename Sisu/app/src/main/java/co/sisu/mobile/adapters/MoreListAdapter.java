@@ -9,13 +9,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
 
 /**
@@ -64,7 +61,7 @@ public class MoreListAdapter extends BaseAdapter {
         MorePageContainer morePageContainer = (MorePageContainer) getItem(position);
         if(morePageContainer.getSubTitle().equals("")) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rowView.findViewById(R.id.more_list_title).getLayoutParams();
-            layoutParams.setMargins(layoutParams.leftMargin, 60, layoutParams.rightMargin, layoutParams.bottomMargin);
+            layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
             titleTextView.setLayoutParams(layoutParams);
         }
 
