@@ -1,6 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -38,6 +39,8 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
             if(!searchMonth.equals("")) {
                 url = "http://staging.sisu.co/api/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
             }
+
+            Log.e("LEADERBOARD URL", url);
 
             Request request = new Request.Builder()
                     .url(url)

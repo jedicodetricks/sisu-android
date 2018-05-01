@@ -2,18 +2,18 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/headerLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/leaderboard_date"
@@ -23,25 +23,23 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
             android:text="@string/record_date"
+            app:layout_constraintStart_toEndOf="@id/leaderboard_calender_date_picker"
             app:layout_constraintBottom_toBottomOf="@id/headerLayout"
-            app:layout_constraintEnd_toStartOf="@+id/timeLineGuideLine"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/calender_date_picker"
+            android:id="@+id/leaderboard_calender_date_picker"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="16dp"
-            android:maxHeight="@dimen/button_height_normal"
-            android:maxWidth="@dimen/button_height_normal"
-            app:layout_constraintBottom_toBottomOf="@id/headerLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/leaderboard_date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/appointment_icon" />
+
 
         <TextView
             android:id="@+id/monthToggleText"
@@ -71,13 +69,6 @@
             android:text="@string/year"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/leaderboardToggle" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/timeLineGuideLine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.39" />
 
     </android.support.constraint.ConstraintLayout>
 

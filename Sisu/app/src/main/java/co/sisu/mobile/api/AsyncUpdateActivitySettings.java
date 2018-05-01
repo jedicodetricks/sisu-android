@@ -21,12 +21,10 @@ import okhttp3.Response;
 public class AsyncUpdateActivitySettings extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
-    private String agentId;
     AsyncUpdateSettingsJsonObject updateSettingsModel;
 
-    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateSettingsModel) {
+    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, AsyncUpdateSettingsJsonObject updateSettingsModel) {
         callback = cb;
-        this.agentId = agentId;
         this.updateSettingsModel = updateSettingsModel;
     }
 
@@ -38,7 +36,7 @@ public class AsyncUpdateActivitySettings extends AsyncTask<Void, Void, Void> {
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
             String jsonInString = gson.toJson(updateSettingsModel);
-//            Log.e("POST ACTIVITY SETTINGS", jsonInString);
+            Log.e("POST ACTIVITY SETTINGS", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);

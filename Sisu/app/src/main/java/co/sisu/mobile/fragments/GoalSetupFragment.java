@@ -234,15 +234,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             case R.id.saveButton:
                 UpdateAgentGoalsObject[] array = new UpdateAgentGoalsObject[updatedGoals.size()];
                 new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(updatedGoals.toArray(array))).execute();
-
                 break;
         }
     }
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        //TODO: We're going to want to notify the parent that stuff is updated or go get goals again
-        updatedGoals = new ArrayList<>();
+        if(asyncReturnType.equals("Update Goals")) {
+            //TODO: We're going to want to notify the parent that stuff is updated or go get goals again
+            updatedGoals = new ArrayList<>();
+            parentActivity.showToast("Goals have been updated");
+            parentActivity.stackReplaceFragment(MoreFragment.class);
+            parentActivity.swapToTitleBar("More");
+        }
     }
 
     @Override

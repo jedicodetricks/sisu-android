@@ -231,19 +231,29 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                         String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
                         Log.e("IMAGE TYPE", type);
 
-
                         imageStream = getContext().getContentResolver().openInputStream(selectedImage);
                         Matrix matrix = new Matrix();
                         matrix.postRotate(rotateImage);
                         final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
                         Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
                                 matrix, true);
-
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+
+                        if(type.equals("jpeg")) {
+                            imageFormat = "2";
+                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                        }
+                        else if(type.equals("png")) {
+                            imageFormat = "1";
+                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                        }
+                        else {
+                            imageFormat = "0";
+                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                        }
+
                         byte[] b = baos.toByteArray();
                         imageData = Base64.encodeToString(b, Base64.DEFAULT);
-                        imageFormat = "2";
 
                         profileImage.setImageBitmap(rotatedImage);
                         imageChanged = true;
@@ -276,8 +286,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                     break;
             }
 
-            Log.e("RotateImage", "Exif orientation: " + orientation);
-            Log.e("RotateImage", "Rotate value: " + rotate);
+//            Log.e("RotateImage", "Exif orientation: " + orientation);
+//            Log.e("RotateImage", "Rotate value: " + rotate);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,6 +309,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                     decodeBase64Image(profileObject.getData());
                 }
             });
+        }
+        else if(asyncReturnType.equals("")) {
+            parentActivity.showToast("Your profile has been updated");
+            parentActivity.stackReplaceFragment(MoreFragment.class);
+            parentActivity.swapToTitleBar("More");
         }
 
     }

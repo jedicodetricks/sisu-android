@@ -129,7 +129,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-            pageTitle.setText("More");
         }
     }
 
@@ -274,23 +273,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void saveData(Object object) {
-        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
-        String objectClass = object.getClass().toString();
-        if(objectClass.contains("ClientObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("AgentGoalsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("SettingsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("ActivitySettingsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("ProfileObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else {
-            Log.e("SAVE CLASS", objectClass + " was not found.");
-        }
-    }
+//    public void saveData(Object object) {
+//        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
+//        String objectClass = object.getClass().toString();
+//        if(objectClass.contains("ClientObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("AgentGoalsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("SettingsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("ActivitySettingsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("ProfileObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else {
+//            Log.e("SAVE CLASS", objectClass + " was not found.");
+//        }
+//    }
 
     private void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
@@ -378,11 +377,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void swapToTitleBar(String titleString) {
+    public void swapToTitleBar(final String titleString) {
         activeTitleBar = true;
-        getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
-        title = findViewById(R.id.title);
-        title.setText(titleString);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
+                title = findViewById(R.id.title);
+                title.setText(titleString);
+            }
+        });
+
     }
 
     public void swapToClientListBar() {
@@ -421,9 +426,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         super.onBackPressed();
     }
 
-    public void showToast(CharSequence msg){
-        Looper.prepare();
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    public void showToast(final CharSequence msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
