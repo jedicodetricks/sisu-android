@@ -140,7 +140,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                     getLeaderboard(selectedYear, selectedMonth + 1);
                 }
                 else {
-                    Toast.makeText(getContext(), "You have selected the same day", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "You have selected the same time period", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -276,7 +276,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         updateDisplayDate(selectedYear, selectedMonth, selectedDay);
-        getLeaderboard(selectedYear, selectedMonth);
+        getLeaderboard(selectedYear, selectedMonth + 1);
     }
 }
 

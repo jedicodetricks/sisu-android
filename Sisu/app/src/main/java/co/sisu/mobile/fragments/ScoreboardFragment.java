@@ -175,6 +175,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
                 String formattedStartMonth = String.valueOf(selectedStartMonth);
                 String formattedEndMonth = String.valueOf(selectedEndMonth);
+                String formattedStartDay = String.valueOf(selectedStartDay);
+                String formattedEndDay = String.valueOf(selectedEndDay);
+
+                if(selectedStartDay < 10) {
+                    formattedStartDay = "0" + selectedStartDay;
+                }
+
+                if(selectedEndDay < 10) {
+                    formattedEndDay = "0" + selectedEndDay;
+                }
+
                 if(selectedStartMonth < 10) {
                     formattedStartMonth = "0" + selectedStartMonth;
                 }
@@ -183,8 +194,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     formattedEndMonth = "0" + selectedEndMonth;
                 }
 
-                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + selectedStartDay;
-                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + selectedEndDay;
+
+
+                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
                 new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime).execute();
 
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected

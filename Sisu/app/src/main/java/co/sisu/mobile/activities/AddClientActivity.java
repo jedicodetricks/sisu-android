@@ -321,17 +321,57 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void updateStatus() {
+        Date d = null;
+        Calendar currentTime = Calendar.getInstance();
+        Calendar updatedTime = Calendar.getInstance();
+
         if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(closedStatus);
-            removeStatusColor(underContractStatus);
+            getTime(d, updatedTime, settlementDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(closedStatus);
+                removeStatusColor(underContractStatus);
+            }
+            else {
+                removeStatusColor(closedStatus);
+            }
         } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(underContractStatus);
-            removeStatusColor(signedStatus);
+            getTime(d, updatedTime, contractDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(underContractStatus);
+                removeStatusColor(signedStatus);
+            }
+            else {
+                removeStatusColor(underContractStatus);
+            }
         } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(signedStatus);
-            removeStatusColor(pipelineStatus);
+            getTime(d, updatedTime, signedDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(signedStatus);
+                removeStatusColor(pipelineStatus);
+            }
+            else {
+                removeStatusColor(signedStatus);
+            }
         } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
-            activateStatusColor(pipelineStatus);
+            getTime(d, updatedTime, appointmentDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(pipelineStatus);
+            }
+            else {
+                removeStatusColor(pipelineStatus);
+            }
+        }
+    }
+
+    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+
+        try {
+            d = sdf.parse(displayView.getText().toString());
+            updatedTime.setTime(d);
+        } catch (ParseException e) {
+            Toast.makeText(this, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -543,28 +583,28 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         switch (calendarCaller) {
             case "signed":
                 signedSelectedYear = year;
-                signedSelectedMonth = month;
+                signedSelectedMonth = month - 1;
                 signedSelectedDay = day;
                 signedDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "contract":
                 contractSelectedYear = year;
-                contractSelectedMonth = month;
+                contractSelectedMonth = month - 1;
                 contractSelectedDay = day;
                 contractDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "settlement":
                 settlementSelectedYear = year;
-                settlementSelectedMonth = month;
+                settlementSelectedMonth = month - 1;
                 settlementSelectedDay = day;
                 settlementDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "appointment":
                 appointmentSelectedYear = year;
-                appointmentSelectedMonth = month;
+                appointmentSelectedMonth = month - 1;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
