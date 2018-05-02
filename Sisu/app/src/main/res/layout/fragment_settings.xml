@@ -39,41 +39,41 @@
         tools:layout_editor_absoluteY="184dp"
         app:layout_constraintTop_toBottomOf="@id/versionLabel"/>
 
-    <RelativeLayout
-        style="@style/DividerStyle"
-        android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/lightsSwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--<RelativeLayout-->
+        <!--style="@style/DividerStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/lightsSwitch"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent" />-->
 
-    <Switch
-        android:id="@+id/lightsSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:scaleX="1.3"
-        android:scaleY="1.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeButton" />
+    <!--<Switch-->
+        <!--android:id="@+id/lightsSwitch"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:scaleX="1.3"-->
+        <!--android:scaleY="1.3"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/timeButton" />-->
 
-    <RelativeLayout
-        style="@style/DividerStyle"
-        android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/idSwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--<RelativeLayout-->
+        <!--style="@style/DividerStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/idSwitch"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent" />-->
 
-    <Switch
-        android:id="@+id/idSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:scaleX="1.3"
-        android:scaleY="1.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lightsSwitch" />
+    <!--<Switch-->
+        <!--android:id="@+id/idSwitch"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:scaleX="1.3"-->
+        <!--android:scaleY="1.3"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/lightsSwitch" />-->
 
     <RelativeLayout
         style="@style/DividerStyle"
@@ -123,40 +123,40 @@
         app:layout_constraintStart_toEndOf="@id/reminderSwitch"
         app:layout_constraintTop_toTopOf="@id/reminderSwitch" />
 
-    <TextView
-        android:id="@+id/lightsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="@string/lights"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintBottom_toBottomOf="@id/lightsSwitch"
-        app:layout_constraintStart_toEndOf="@id/lightsSwitch"
-        app:layout_constraintTop_toTopOf="@id/lightsSwitch" />
+    <!--<TextView-->
+        <!--android:id="@+id/lightsLabel"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:paddingBottom="8dp"-->
+        <!--android:text="@string/lights"-->
+        <!--android:textSize="@dimen/font_normal"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/lightsSwitch"-->
+        <!--app:layout_constraintStart_toEndOf="@id/lightsSwitch"-->
+        <!--app:layout_constraintTop_toTopOf="@id/lightsSwitch" />-->
 
-    <TextView
-        android:id="@+id/idLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="@string/touchId"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintBottom_toBottomOf="@id/idSwitch"
-        app:layout_constraintStart_toEndOf="@id/idSwitch"
-        app:layout_constraintTop_toTopOf="@id/idSwitch" />
+    <!--<TextView-->
+        <!--android:id="@+id/idLabel"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:paddingBottom="8dp"-->
+        <!--android:text="@string/touchId"-->
+        <!--android:textSize="@dimen/font_normal"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/idSwitch"-->
+        <!--app:layout_constraintStart_toEndOf="@id/idSwitch"-->
+        <!--app:layout_constraintTop_toTopOf="@id/idSwitch" />-->
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/reminderLayout"
         style="@style/DividerStyle"
         android:layout_width="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/idLabel" />
+        app:layout_constraintTop_toBottomOf="@id/timeDisplay" />
 
     <TextView
         android:id="@+id/timeLabel"
@@ -188,7 +188,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/timezone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/reminderLayout" />
 
     <TextView
         android:id="@+id/timeZoneDisplay"

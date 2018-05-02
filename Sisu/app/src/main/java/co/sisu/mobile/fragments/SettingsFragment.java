@@ -94,12 +94,12 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 case "daily_reminder_time":
                     displayTime.setText(s.getValue());
                     break;
-                case "lights":
-                    lightsSwitch.setChecked(isChecked(s));
-                    break;
-                case "biometrics":
-                    idSwitch.setChecked(isChecked(s));
-                    break;
+//                case "lights":
+//                    lightsSwitch.setChecked(isChecked(s));
+//                    break;
+//                case "biometrics":
+//                    idSwitch.setChecked(isChecked(s));
+//                    break;
                 case "daily_reminder":
                     reminderSwitch.setChecked(isChecked(s));
                     break;
@@ -141,14 +141,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void initSwitches() {
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
-        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
-        idSwitch = getView().findViewById(R.id.idSwitch);
+//        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
+//        idSwitch = getView().findViewById(R.id.idSwitch);
 
         fillFieldsWithData();
 
-        idSwitch.setOnCheckedChangeListener(this);
+        //idSwitch.setOnCheckedChangeListener(this);
         reminderSwitch.setOnCheckedChangeListener(this);
-        lightsSwitch.setOnCheckedChangeListener(this);
+        //lightsSwitch.setOnCheckedChangeListener(this);
 
 
     }
@@ -169,22 +169,22 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 }
                 Log.d("CHECK LISTENER", "REMINDER");
                 break;
-            case R.id.lightsSwitch:
-                for(SettingsObject so : settings) {
-                    if(so.getName().equals("lights")) {
-                        so.setValue(isCheckedBinaryValue(so));
-                    }
-                }
-                Log.d("CHECK LISTENER", "LIGHTS");
-                break;
-            case R.id.idSwitch:
-                for(SettingsObject so : settings) {
-                    if(so.getName().equals("biometrics")) {
-                        so.setValue(isCheckedBinaryValue(so));
-                    }
-                }
-                Log.d("CHECK LISTENER", "ID");
-                break;
+//            case R.id.lightsSwitch:
+//                for(SettingsObject so : settings) {
+//                    if(so.getName().equals("lights")) {
+//                        so.setValue(isCheckedBinaryValue(so));
+//                    }
+//                }
+//                Log.d("CHECK LISTENER", "LIGHTS");
+//                break;
+//            case R.id.idSwitch:
+//                for(SettingsObject so : settings) {
+//                    if(so.getName().equals("biometrics")) {
+//                        so.setValue(isCheckedBinaryValue(so));
+//                    }
+//                }
+//                Log.d("CHECK LISTENER", "ID");
+//                break;
         }
 
         for(SettingsObject so : settings) {

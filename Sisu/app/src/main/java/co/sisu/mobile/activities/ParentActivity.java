@@ -358,6 +358,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
+        swapToClientListBar();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }

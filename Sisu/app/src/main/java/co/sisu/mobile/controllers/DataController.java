@@ -214,28 +214,28 @@ public class DataController {
             case "Hours Prospected":
                 metric.setThumbnailId(R.drawable.clock_icon);
                 break;
-            case "Buyer Closed":
+            case "Buyers Closed":
                 metric.setThumbnailId(R.drawable.closed_icon);
                 break;
-            case "Buyer Signed":
+            case "Buyers Signed":
                 metric.setThumbnailId(R.drawable.signed_icon);
                 break;
-            case "Buyer Under Contract":
+            case "Buyers Under Contract":
                 metric.setThumbnailId(R.drawable.contract_icon);
                 break;
-            case "Buyer Initial Appointments":
+            case "Buyer Appointments":
                 metric.setThumbnailId(R.drawable.appointment_icon);
                 break;
-            case "Seller Closed":
+            case "Sellers Closed":
                 metric.setThumbnailId(R.drawable.closed_icon);
                 break;
-            case "Seller Signed":
+            case "Sellers Signed":
                 metric.setThumbnailId(R.drawable.signed_icon);
                 break;
-            case "Seller Under Contract":
+            case "Sellers Under Contract":
                 metric.setThumbnailId(R.drawable.contract_icon);
                 break;
-            case "Seller Initial Appointments":
+            case "Seller Appointments":
                 metric.setThumbnailId(R.drawable.appointment_icon);
                 break;
             default:
