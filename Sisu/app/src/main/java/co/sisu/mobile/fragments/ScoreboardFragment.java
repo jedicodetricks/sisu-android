@@ -76,6 +76,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeTimelineSelector();
         initializeButtons();
         initProgressBars();
+        calculateVolumes();
+    }
+
+    private void calculateVolumes() {
+        //TODO: Get specific client lists and calculate the volume totals based off of that.
+
     }
 
 
