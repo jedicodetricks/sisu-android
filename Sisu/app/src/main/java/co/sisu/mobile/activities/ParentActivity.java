@@ -34,6 +34,7 @@ import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -346,6 +347,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+    }
+
+    public void navigateToClientList(String tab) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) ClientListFragment.newInstance(tab);
         } catch (Exception e) {
             e.printStackTrace();
         }
