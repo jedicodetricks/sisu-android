@@ -217,16 +217,16 @@ public class DataController {
             case "Buyer Initial Appointments":
                 metric.setThumbnailId(R.drawable.appointment_icon);
                 break;
-            case "Seller Closed":
+            case "Sellers Closed":
                 metric.setThumbnailId(R.drawable.closed_icon);
                 break;
-            case "Seller Signed":
+            case "Sellers Signed":
                 metric.setThumbnailId(R.drawable.signed_icon);
                 break;
-            case "Seller Under Contract":
+            case "Sellers Under Contract":
                 metric.setThumbnailId(R.drawable.contract_icon);
                 break;
-            case "Seller Initial Appointments":
+            case "Seller Appointments":
                 metric.setThumbnailId(R.drawable.appointment_icon);
                 break;
             default:
