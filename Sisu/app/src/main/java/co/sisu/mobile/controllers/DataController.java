@@ -245,10 +245,7 @@ public class DataController {
     public void setClientListObject(Object returnObject) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
-        Date date = null;
-        Date d = null;
-        Calendar currentTime = Calendar.getInstance();
-        Calendar updatedTime = Calendar.getInstance();
+
         //TODO: This needs to check the date and not sort into lists if that date is in the future
         for(int i = 0; i < clientObject.length; i++) {
             ClientObject co = clientObject[i];
@@ -257,24 +254,72 @@ public class DataController {
                 //Archived List
                 archivedList.add(co);
             }
-            else if(co.getClosed_dt() != null) {
-                //Closed List
-                Log.e("CLOSED", co.getClosed_dt());
-                date = getFormattedDateFromApiReturn(co.getClosed_dt());
-                closedList.add(co);
-            }
-            else if(co.getPaid_dt() != null) {
-                //Contract List
-                contractList.add(co);
-            }
-            else if(co.getSigned_dt() != null) {
-                //Signed List
-                signedList.add(co);
-            }
             else {
-                //Pipeline List
-                pipelineList.add(co);
+                sortIntoList(co);
             }
+//            else if(co.getClosed_dt() != null) {
+//                //Closed List
+//                Log.e("CLOSED", co.getClosed_dt());
+//                date = getFormattedDateFromApiReturn(co.getClosed_dt());
+//                closedList.add(co);
+//            }
+//            else if(co.getPaid_dt() != null) {
+//                //Contract List
+//                contractList.add(co);
+//            }
+//            else if(co.getSigned_dt() != null) {
+//                //Signed List
+//                signedList.add(co);
+//            }
+//            else {
+//                //Pipeline List
+//                pipelineList.add(co);
+//            }
+        }
+    }
+
+    private void sortIntoList(ClientObject co) {
+        boolean isClosed = false, isContract = false, isSigned = false;
+        Date date = null;
+        Calendar currentTime = Calendar.getInstance();
+        Calendar updatedTime = Calendar.getInstance();
+        if(co.getClosed_dt() != null) {
+            //Closed List
+            date = getFormattedDateFromApiReturn(co.getClosed_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isClosed = true;
+            }
+        }
+        if(co.getPaid_dt() != null) {
+            //Contract List
+            date = getFormattedDateFromApiReturn(co.getPaid_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isContract = true;
+            }
+        }
+        if(co.getSigned_dt() != null) {
+            //Signed List
+            date = getFormattedDateFromApiReturn(co.getSigned_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isSigned = true;
+            }
+        }
+
+        if(isClosed) {
+            closedList.add(co);
+        }
+        else if(isContract) {
+            contractList.add(co);
+        }
+        else if(isSigned) {
+            signedList.add(co);
+        }
+        else {
+            //Pipeline List
+            pipelineList.add(co);
         }
     }
 
