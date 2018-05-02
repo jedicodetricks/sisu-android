@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -195,10 +194,13 @@ public class DataController {
                 metric.setThumbnailId(R.drawable.appointment_icon);
                 break;
             case "Prepared CMA":
-                metric.setThumbnailId(R.drawable.contract_icon);
+                metric.setThumbnailId(R.drawable.cma_icon);
                 break;
             case "Exercise":
-                metric.setThumbnailId(R.drawable.leaderboard_icon);
+                metric.setThumbnailId(R.drawable.exercise_icon);
+                break;
+            case "Meditate":
+                metric.setThumbnailId(R.drawable.meditate_icon);
                 break;
             case "Hours Prospected":
                 metric.setThumbnailId(R.drawable.clock_icon);
