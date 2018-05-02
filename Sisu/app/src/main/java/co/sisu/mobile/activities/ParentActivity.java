@@ -459,7 +459,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             });
         }
         else if(asyncReturnType.equals("Goals")) {
-            Log.e("FUCKING GOALS", "FUCK");
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
@@ -490,21 +489,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
     public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
-//    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-//        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-//        Cipher cipher = Cipher.getInstance("AES");
-//        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-//        byte[] decrypted = cipher.doFinal(encrypted);
-//        return decrypted;
-//    }
 
     public void setClientsObject(Object returnObject) {
         dataController.setClientListObject(returnObject);
     }
-
-//    public void setSelectedClientObject(Object returnObject) {
-//        dataController.setSelectedClientObject(returnObject);
-//    }
 
     public void setSelectedClient(ClientObject client) {
         selectedClient = client;

@@ -76,16 +76,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeTimelineSelector();
         initializeButtons();
         initProgressBars();
-//        setupGoalsFields();
     }
 
-//    private void setupGoalsFields() {
-//        AgentGoalsObject[] goals = parentActivity.getAgentInfo().getAgentGoalsObject();
-//
-//        for(AgentGoalsObject ago : goals) {
-//            Log.e("GOALS", ago.getName() + " " + ago.getValue());
-//        }
-//    }
 
     private void initializeTimelineSelector() {
         Spinner spinner = getView().findViewById(R.id.timelineSelector);
@@ -423,12 +415,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         Intent intent = new Intent(getContext(), AddClientActivity.class);
         intent.putExtra("Agent", parentActivity.getAgentInfo());
         startActivity(intent);
-    }
-
-    private void showToast(CharSequence msg){
-        if(getContext() != null) {
-            Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
