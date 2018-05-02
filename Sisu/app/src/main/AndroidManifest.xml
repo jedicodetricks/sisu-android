@@ -37,6 +37,7 @@
         <activity android:name=".activities.SignUpActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.ParentActivity"
+            android:windowSoftInputMode="stateHidden|adjustNothing"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.AddClientActivity"
             android:screenOrientation="portrait"/>
