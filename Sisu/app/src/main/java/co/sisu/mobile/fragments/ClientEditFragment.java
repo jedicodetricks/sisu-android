@@ -34,7 +34,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
+public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
 
     ParentActivity parentActivity;
     ProgressBar loader;
@@ -50,7 +50,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
     String typeSelected;
     private List<Integer> statusButtons = new ArrayList<>();
 
-    public ClientFragment() {
+    public ClientEditFragment() {
         // Required empty public constructor
     }
 

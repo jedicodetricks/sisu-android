@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
@@ -74,8 +76,14 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeTimelineSelector();
         initializeButtons();
         initProgressBars();
+        calculateVolumes();
+    }
+
+    private void calculateVolumes() {
+        //TODO: Get specific client lists and calculate the volume totals based off of that.
 
     }
+
 
     private void initializeTimelineSelector() {
         Spinner spinner = getView().findViewById(R.id.timelineSelector);
@@ -413,12 +421,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         Intent intent = new Intent(getContext(), AddClientActivity.class);
         intent.putExtra("Agent", parentActivity.getAgentInfo());
         startActivity(intent);
-    }
-
-    private void showToast(CharSequence msg){
-        if(getContext() != null) {
-            Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

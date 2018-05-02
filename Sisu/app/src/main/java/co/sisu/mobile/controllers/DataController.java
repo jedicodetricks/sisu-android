@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -123,8 +124,16 @@ public class DataController {
 
         Arrays.sort(counters);
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+//        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
+//            for(AgentGoalsObject ago : goals) {
+//                Log.e("METRIC", counters[i].getActivity_type());
+//                Log.e("GOAL", ago.getGoal_id());
+//                if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
+//                    Log.e("GOAL MATCHES", counters[i].getName());
+//                }
+//            }
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
@@ -248,7 +257,6 @@ public class DataController {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
 
-        //TODO: This needs to check the date and not sort into lists if that date is in the future
         for(int i = 0; i < clientObject.length; i++) {
             ClientObject co = clientObject[i];
             removeDecimalsFromAmounts(co);
@@ -259,24 +267,6 @@ public class DataController {
             else {
                 sortIntoList(co);
             }
-//            else if(co.getClosed_dt() != null) {
-//                //Closed List
-//                Log.e("CLOSED", co.getClosed_dt());
-//                date = getFormattedDateFromApiReturn(co.getClosed_dt());
-//                closedList.add(co);
-//            }
-//            else if(co.getPaid_dt() != null) {
-//                //Contract List
-//                contractList.add(co);
-//            }
-//            else if(co.getSigned_dt() != null) {
-//                //Signed List
-//                signedList.add(co);
-//            }
-//            else {
-//                //Pipeline List
-//                pipelineList.add(co);
-//            }
         }
     }
 
@@ -325,16 +315,16 @@ public class DataController {
         }
     }
 
-    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-
-        try {
-            d = sdf.parse(displayView.getText().toString());
-            updatedTime.setTime(d);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+//
+//        try {
+//            d = sdf.parse(displayView.getText().toString());
+//            updatedTime.setTime(d);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private Date getFormattedDateFromApiReturn(String dateString) {
         dateString = dateString.replace("00:00:00 GMT", "");
@@ -351,10 +341,10 @@ public class DataController {
         return calendar.getTime();
     }
 
-    public void setSelectedClientObject(Object returnObject) {
-        //AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
-        //do some type of client update api call here and possibly add to a list like above
-    }
+//    public void setSelectedClientObject(Object returnObject) {
+//        //AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
+//        //do some type of client update api call here and possibly add to a list like above
+//    }
 
     public List<ClientObject> getPipelineList() {
         return pipelineList;
@@ -424,7 +414,7 @@ public class DataController {
         String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
         String[] splitString = formattedString.split(",");
 
-        //TODO: This needs to check if the value of the parameter is ""
+        //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
         for(String setting : splitString) {
             String[] splitSetting = setting.split(":");
             activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
@@ -454,7 +444,6 @@ public class DataController {
     public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
         selectedGoal.setValue(String.valueOf(value));
         updatedGoals.add(selectedGoal);
-//        Log.e("Updated Size", String.valueOf(updatedGoals.size()));
     }
 
     public HashMap<String, SelectedActivities> getActivitiesSelected() {
@@ -464,36 +453,18 @@ public class DataController {
     public void setActivitiesSelected(SettingsObject activitiesSelected) {
         setupSelectedActivities(activitiesSelected);
     }
+
+    public void setActivityGoals() {
+        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+
+        for(Metric metric : masterActivitiesObject) {
+            for(AgentGoalsObject ago : goals) {
+                Log.e("METRIC", metric.getTitle());
+                Log.e("GOAL", ago.getName());
+                if(metric.getTitle().equals(ago.getName())) {
+                    Log.e("GOAL MATCHES", metric.getTitle());
+                }
+            }
+        }
+    }
 }
-
-
-//RICK'S METHOD FOR CREATING CLIENTS LISTS
-//if underlineSegment.selectedSegmentIndex == PipelineType.pipeline.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.signed_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.signed.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.signed_dt != nil) }
-//        clientArray  = clientArray.filter { ($0.uc_dt == nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.contract.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.uc_dt != nil) }
-//        clientArray  = clientArray.filter { ($0.closed_dt == nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.closed.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "N") }
-//        clientArray  = clientArray.filter { ($0.closed_dt != nil) }
-//        }
-//        if underlineSegment.selectedSegmentIndex == PipelineType.archive.rawValue{
-//        clientArray = ClientController.shared.clients
-//        clientArray  = clientArray.filter { ($0.status == "D") }
-//        }

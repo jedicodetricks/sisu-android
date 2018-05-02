@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
+import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeams;
@@ -67,6 +69,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
     String currentSelectedRecordDate = "";
+    private boolean clientFinished = false;
+    private boolean goalsFinished = false;
 
     public boolean isRecordSaved() {
         return recordSaved;
@@ -106,8 +110,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
-
-        navigateToScoreboard();
+        new AsyncClients(this, agent.getAgent_id()).execute();
     }
 
 
@@ -148,8 +151,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        resetToolbarImages("scoreboard");
-        replaceFragment(ScoreboardFragment.class);
+        if(clientFinished && goalsFinished) {
+            resetToolbarImages("scoreboard");
+            replaceFragment(ScoreboardFragment.class);
+        }
+
     }
 
     private void initializeButtons(){
@@ -270,24 +276,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
-
-//    public void saveData(Object object) {
-//        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
-//        String objectClass = object.getClass().toString();
-//        if(objectClass.contains("ClientObject")) {
-//            Log.e("SAVE CLASS", objectClass);
-//        } else if(objectClass.contains("AgentGoalsObject")) {
-//            Log.e("SAVE CLASS", objectClass);
-//        } else if(objectClass.contains("SettingsObject")) {
-//            Log.e("SAVE CLASS", objectClass);
-//        } else if(objectClass.contains("ActivitySettingsObject")) {
-//            Log.e("SAVE CLASS", objectClass);
-//        } else if(objectClass.contains("ProfileObject")) {
-//            Log.e("SAVE CLASS", objectClass);
-//        } else {
-//            Log.e("SAVE CLASS", objectClass + " was not found.");
-//        }
-//    }
 
     public void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
@@ -463,6 +451,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
+            goalsFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Settings")) {
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
@@ -471,6 +461,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(asyncReturnType.equals("Update Activities")) {
             clearUpdatedRecords();
+        }
+        else if(asyncReturnType.equals("Clients")) {
+            setClientsObject(returnObject);
+            clientFinished = true;
+            navigateToScoreboard();
         }
     }
 
@@ -488,20 +483,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
     public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
-//    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-//        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-//        Cipher cipher = Cipher.getInstance("AES");
-//        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-//        byte[] decrypted = cipher.doFinal(encrypted);
-//        return decrypted;
-//    }
 
     public void setClientsObject(Object returnObject) {
         dataController.setClientListObject(returnObject);
-    }
-
-    public void setSelectedClientObject(Object returnObject) {
-        dataController.setSelectedClientObject(returnObject);
     }
 
     public void setSelectedClient(ClientObject client) {
