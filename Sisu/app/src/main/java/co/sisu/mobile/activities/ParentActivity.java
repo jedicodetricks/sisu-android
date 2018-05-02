@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -106,8 +107,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
-
-        navigateToScoreboard();
     }
 
 
@@ -459,9 +458,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             });
         }
         else if(asyncReturnType.equals("Goals")) {
+            Log.e("FUCKING GOALS", "FUCK");
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
+            navigateToScoreboard();
+
         }
         else if(asyncReturnType.equals("Settings")) {
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
@@ -499,9 +501,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setClientListObject(returnObject);
     }
 
-    public void setSelectedClientObject(Object returnObject) {
-        dataController.setSelectedClientObject(returnObject);
-    }
+//    public void setSelectedClientObject(Object returnObject) {
+//        dataController.setSelectedClientObject(returnObject);
+//    }
 
     public void setSelectedClient(ClientObject client) {
         selectedClient = client;

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,17 +97,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         mListView.setOnItemClickListener(this);
     }
 
-//    private void initializeClickables() {
-//        ImageView text = (ImageView) getView().findViewById(R.id.leftButton);
-//        text.setOnClickListener(this);
-//
-//        ImageView call = (ImageView) getView().findViewById(R.id.centerButton);
-//        call.setOnClickListener(this);
-//
-//        ImageView email = (ImageView) getView().findViewById(R.id.rightButton);
-//        email.setOnClickListener(this);
-//    }
-
     private void searchClients() {
         List<ClientObject> sortedList = new ArrayList<>();
         for (ClientObject co : currentList) {
@@ -172,10 +162,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     }
 
-    public void setTab(String tab) {
-        selectedTab = tab;
-    }
-
     private void selectTab() {
         switch (selectedTab.toLowerCase()) {
             case "pipeline":
@@ -201,6 +187,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
+        mListView.setAdapter(null);
         switch ((String) tab.getText()) {
             case "Pipeline":
                 currentList = parentActivity.getPipelineList();
@@ -208,7 +195,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             case "Signed":
                 currentList = parentActivity.getSignedList();
                 break;
-            case "Contract":
+            case "Under Contract":
                 currentList = parentActivity.getContractList();
                 break;
             case "Closed":
@@ -230,7 +217,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onPhoneClicked(String number) {
-//        Log.e("NUMBER", number);
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + number));
         startActivity(intent);
@@ -238,16 +224,13 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTextClicked(String number) {
-//        Log.e("NUMBER", number);
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
         startActivity(intent);
-
     }
 
     @Override
     public void onEmailClicked(String email) {
-//        Log.e("EMAIL", email);
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, email);

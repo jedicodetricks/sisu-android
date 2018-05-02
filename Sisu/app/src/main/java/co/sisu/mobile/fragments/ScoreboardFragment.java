@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
@@ -74,8 +76,16 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeTimelineSelector();
         initializeButtons();
         initProgressBars();
-
+//        setupGoalsFields();
     }
+
+//    private void setupGoalsFields() {
+//        AgentGoalsObject[] goals = parentActivity.getAgentInfo().getAgentGoalsObject();
+//
+//        for(AgentGoalsObject ago : goals) {
+//            Log.e("GOALS", ago.getName() + " " + ago.getValue());
+//        }
+//    }
 
     private void initializeTimelineSelector() {
         Spinner spinner = getView().findViewById(R.id.timelineSelector);
