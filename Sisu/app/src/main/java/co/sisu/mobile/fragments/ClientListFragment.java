@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +111,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
-        parentActivity.stackReplaceFragment(ClientFragment.class);
+        parentActivity.stackReplaceFragment(ClientEditFragment.class);
         parentActivity.swapToBacktionBar(null);
     }
 
