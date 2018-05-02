@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,18 +73,6 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         String formattedSignedDt = getFormattedDateFromApiReturn(currentClient.getSigned_dt());
         String formattedContractDt = getFormattedDateFromApiReturn(currentClient.getUc_dt());
         String formattedClosedDt = getFormattedDateFromApiReturn(currentClient.getClosed_dt());
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
-//        Date d = null;
-//        try {
-//            d = sdf.parse(formattedApptDt);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(d);
-//        Date date = dateFormat.parse(utcDate);
-//        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT-5"));
-//        calendar.setTime(date);
 
         appointmentDisplay.setText(formattedApptDt);
         signedDisplay.setText(formattedSignedDt);
@@ -107,7 +96,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
             return format.format(calendar.getTime());
         }
-        return "";
+        return "Tap To Select";
     }
 
     private void updateCurrentClient() {
@@ -127,16 +116,16 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
 
-        if(!appointmentDisplay.getText().equals("")) {
+        if(!appointmentDisplay.getText().equals("Tap To Select")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
         }
-        if(!signedDisplay.getText().equals("")) {
+        if(!signedDisplay.getText().equals("Tap To Select")) {
             currentClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
         }
-        if(!contractDisplay.getText().equals("")) {
+        if(!contractDisplay.getText().equals("Tap To Select")) {
             currentClient.setUc_dt(getFormattedDate(contractDisplay.getText().toString()));
         }
-        if(!settlementDisplay.getText().equals("")) {
+        if(!settlementDisplay.getText().equals("Tap To Select")) {
             currentClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
     }
@@ -323,7 +312,6 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             case R.id.appointmentDatePicker:
             case R.id.appointmentDateDisplay:
             case R.id.appointmentDateTitle:
-//                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
                 break;
             case R.id.signedDateButton:
@@ -361,9 +349,8 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         }
     }
 
-    //TODO do async call here
     private boolean saveClient(){
-        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient).execute();
         return true; //return status of api success or failure
     }
@@ -414,20 +401,64 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
             case "appointment":
                 appointmentDisplay.setText(setText);
         }
+        updateStatus();
     }
 
     private void updateStatus() {
+        Date d = null;
+        Calendar currentTime = Calendar.getInstance();
+        Calendar updatedTime = Calendar.getInstance();
+
         if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(closedStatus);
-            removeStatusColor(underContractStatus);
+            getTime(d, updatedTime, settlementDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(closedStatus);
+                removeStatusColor(underContractStatus);
+            }
+            else {
+                removeStatusColor(closedStatus);
+            }
+
         } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(underContractStatus);
-            removeStatusColor(signedStatus);
+            getTime(d, updatedTime, contractDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(underContractStatus);
+                removeStatusColor(signedStatus);
+            }
+            else {
+                removeStatusColor(underContractStatus);
+            }
+
         } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
-            activateStatusColor(signedStatus);
-            removeStatusColor(pipelineStatus);
+            getTime(d, updatedTime, signedDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(signedStatus);
+                removeStatusColor(pipelineStatus);
+            }
+            else {
+                removeStatusColor(signedStatus);
+            }
+
         } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
-            activateStatusColor(pipelineStatus);
+            getTime(d, updatedTime, appointmentDisplay);
+            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                activateStatusColor(pipelineStatus);
+            }
+            else {
+                removeStatusColor(pipelineStatus);
+            }
+        }
+    }
+
+    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+
+        try {
+            d = sdf.parse(displayView.getText().toString());
+            updatedTime.setTime(d);
+        } catch (ParseException e) {
+            Toast.makeText(parentActivity, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -447,6 +478,7 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         month += 1;
+        Log.e("MONTH", String.valueOf(month));
         String formatDate = year + "/" + month + "/" + day;
         Calendar updatedTime = Calendar.getInstance();
 
@@ -461,28 +493,28 @@ public class ClientFragment extends Fragment implements AdapterView.OnItemClickL
         switch (calendarCaller) {
             case "signed":
                 signedSelectedYear = year;
-                signedSelectedMonth = month;
+                signedSelectedMonth = month - 1;
                 signedSelectedDay = day;
                 signedDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "contract":
                 contractSelectedYear = year;
-                contractSelectedMonth = month;
+                contractSelectedMonth = month - 1;
                 contractSelectedDay = day;
                 contractDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "settlement":
                 settlementSelectedYear = year;
-                settlementSelectedMonth = month;
+                settlementSelectedMonth = month - 1;
                 settlementSelectedDay = day;
                 settlementDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "appointment":
                 appointmentSelectedYear = year;
-                appointmentSelectedMonth = month;
+                appointmentSelectedMonth = month - 1;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();

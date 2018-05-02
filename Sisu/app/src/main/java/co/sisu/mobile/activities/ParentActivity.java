@@ -2,7 +2,6 @@ package co.sisu.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -83,7 +81,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     int selectedTeam = 0;
     ActionBar bar;
     AgentModel agent;
-//    byte[] key = "SisuRocks".getBytes();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +127,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-            pageTitle.setText("More");
         }
     }
 
@@ -275,25 +271,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void saveData(Object object) {
-        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
-        String objectClass = object.getClass().toString();
-        if(objectClass.contains("ClientObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("AgentGoalsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("SettingsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("ActivitySettingsObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else if(objectClass.contains("ProfileObject")) {
-            Log.e("SAVE CLASS", objectClass);
-        } else {
-            Log.e("SAVE CLASS", objectClass + " was not found.");
-        }
-    }
+//    public void saveData(Object object) {
+//        // TODO: 4/23/2018 add Async calls for each respective type, if necessary create model objects for each type, and refactor the classes holding this data
+//        String objectClass = object.getClass().toString();
+//        if(objectClass.contains("ClientObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("AgentGoalsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("SettingsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("ActivitySettingsObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else if(objectClass.contains("ProfileObject")) {
+//            Log.e("SAVE CLASS", objectClass);
+//        } else {
+//            Log.e("SAVE CLASS", objectClass + " was not found.");
+//        }
+//    }
 
-    private void updateRecordedActivities() {
+    public void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
 
@@ -391,11 +387,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void swapToTitleBar(String titleString) {
+    public void swapToTitleBar(final String titleString) {
         activeTitleBar = true;
-        getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
-        title = findViewById(R.id.title);
-        title.setText(titleString);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
+                title = findViewById(R.id.title);
+                title.setText(titleString);
+            }
+        });
+
     }
 
     public void swapToClientListBar() {
@@ -434,9 +436,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         super.onBackPressed();
     }
 
-    public void showToast(CharSequence msg){
-        Looper.prepare();
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    public void showToast(final CharSequence msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -555,5 +561,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setActivitiesSelected(SettingsObject activitiesSelected) {
         dataController.setActivitiesSelected(activitiesSelected);
+    }
+
+    public List<Metric> getUpdatedRecords() {
+        return dataController.getUpdatedRecords();
     }
 }

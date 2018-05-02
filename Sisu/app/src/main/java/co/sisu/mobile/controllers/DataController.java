@@ -2,9 +2,15 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
@@ -124,18 +130,9 @@ public class DataController {
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
             masterActivitiesObject.add(metric);
-            if(activitiesSelected.containsKey(metric.getType())) {
-                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
-                selectedActivities.setName(metric.getTitle());
-//                Log.e("VALUE", selectedActivities.getValue());
-                if(selectedActivities.getValue().equals("0")) {
-                    continue;
-                }
-            }
-            activitiesObject.add(metric);
+
             switch(counters[i].getName()) {
                 case "Contacts":
-//                case "Appointments":
                 case "Buyer Signed":
                 case "Open Houses":
                 case "Buyer Under Contract":
@@ -148,6 +145,16 @@ public class DataController {
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
             }
+
+            if(activitiesSelected.containsKey(metric.getType())) {
+                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+                selectedActivities.setName(metric.getTitle());
+//                Log.e("VALUE", selectedActivities.getValue());
+                if(selectedActivities.getValue().equals("0")) {
+                    continue;
+                }
+            }
+            activitiesObject.add(metric);
         }
         scoreboardObject.add(firstAppointment);
     }
@@ -239,6 +246,7 @@ public class DataController {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
 
+        //TODO: This needs to check the date and not sort into lists if that date is in the future
         for(int i = 0; i < clientObject.length; i++) {
             ClientObject co = clientObject[i];
             removeDecimalsFromAmounts(co);
@@ -246,23 +254,99 @@ public class DataController {
                 //Archived List
                 archivedList.add(co);
             }
-            else if(co.getClosed_dt() != null) {
-                //Closed List
-                closedList.add(co);
-            }
-            else if(co.getPaid_dt() != null) {
-                //Contract List
-                contractList.add(co);
-            }
-            else if(co.getSigned_dt() != null) {
-                //Signed List
-                signedList.add(co);
-            }
             else {
-                //Pipeline List
-                pipelineList.add(co);
+                sortIntoList(co);
+            }
+//            else if(co.getClosed_dt() != null) {
+//                //Closed List
+//                Log.e("CLOSED", co.getClosed_dt());
+//                date = getFormattedDateFromApiReturn(co.getClosed_dt());
+//                closedList.add(co);
+//            }
+//            else if(co.getPaid_dt() != null) {
+//                //Contract List
+//                contractList.add(co);
+//            }
+//            else if(co.getSigned_dt() != null) {
+//                //Signed List
+//                signedList.add(co);
+//            }
+//            else {
+//                //Pipeline List
+//                pipelineList.add(co);
+//            }
+        }
+    }
+
+    private void sortIntoList(ClientObject co) {
+        boolean isClosed = false, isContract = false, isSigned = false;
+        Date date = null;
+        Calendar currentTime = Calendar.getInstance();
+        Calendar updatedTime = Calendar.getInstance();
+        if(co.getClosed_dt() != null) {
+            //Closed List
+            date = getFormattedDateFromApiReturn(co.getClosed_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isClosed = true;
             }
         }
+        if(co.getPaid_dt() != null) {
+            //Contract List
+            date = getFormattedDateFromApiReturn(co.getPaid_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isContract = true;
+            }
+        }
+        if(co.getSigned_dt() != null) {
+            //Signed List
+            date = getFormattedDateFromApiReturn(co.getSigned_dt());
+            updatedTime.setTime(date);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                isSigned = true;
+            }
+        }
+
+        if(isClosed) {
+            closedList.add(co);
+        }
+        else if(isContract) {
+            contractList.add(co);
+        }
+        else if(isSigned) {
+            signedList.add(co);
+        }
+        else {
+            //Pipeline List
+            pipelineList.add(co);
+        }
+    }
+
+    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+
+        try {
+            d = sdf.parse(displayView.getText().toString());
+            updatedTime.setTime(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Date getFormattedDateFromApiReturn(String dateString) {
+        dateString = dateString.replace("00:00:00 GMT", "");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+        Date d = null;
+        try {
+            d = sdf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+//        SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
+        return calendar.getTime();
     }
 
     public void setSelectedClientObject(Object returnObject) {

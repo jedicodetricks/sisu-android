@@ -115,19 +115,20 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void saveSettings() {
-        new AsyncUpdateActivitySettings(this, parentActivity.getAgentInfo().getAgent_id(), createUpdateObject(selectedActivities)).execute();
+        new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities)).execute();
     }
 
     private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
         String valueString = "{";
         int counter = 0;
         for(SelectedActivities activity : selectedActivities) {
-            valueString += activity.getType() + ":" + activity.getValue();
-            if(counter < selectedActivities.size()) {
+            valueString += "\"" + activity.getType() + "\"" + ":" + activity.getValue();
+            if(counter < selectedActivities.size() - 1) {
                 valueString += ",";
             }
             counter++;
         }
+        valueString += "}";
         List<UpdateSettingsObject> list = new ArrayList<>();
         list.add(new UpdateSettingsObject("record_activities", valueString, 7));
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), list);

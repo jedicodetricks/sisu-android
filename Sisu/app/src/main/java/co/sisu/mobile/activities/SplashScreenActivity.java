@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.testfairy.TestFairy;
+
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
@@ -30,7 +32,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
         loaded = false;
 
         pingServer();
-
     }
 
     private void pingServer() {

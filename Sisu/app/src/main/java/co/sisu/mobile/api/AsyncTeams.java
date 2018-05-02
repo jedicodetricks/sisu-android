@@ -24,7 +24,6 @@ public class AsyncTeams extends AsyncTask<Void, Void, Void> {
         this.agentId = agentId;
     }
 
-    //Test: bg@test.com asdf123
     @Override
     protected Void doInBackground(Void... voids) {
         Response teamsResponse = null;
@@ -40,7 +39,6 @@ public class AsyncTeams extends AsyncTask<Void, Void, Void> {
                 .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
                 .build();
 
-
         try {
             teamsResponse = client.newCall(teamsRequest).execute();
         } catch (IOException e) {
@@ -51,7 +49,7 @@ public class AsyncTeams extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(teams, "Teams");
         }
         else {
-            callback.onEventFailed(null, "Server Ping");
+            callback.onEventFailed(null, "Teams");
         }
         teamsResponse.body().close();
         return null;
