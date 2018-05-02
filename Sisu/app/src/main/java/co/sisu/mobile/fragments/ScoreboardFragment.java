@@ -72,7 +72,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         loader = view.findViewById(R.id.scoreboardLoader);
 
         initializeTimelineSelector();
-        initializeButton();
+        initializeButtons();
         initProgressBars();
 
     }
@@ -225,9 +225,27 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         return spinnerArray;
     }
 
-    private void initializeButton(){
+    private void initializeButtons(){
         ImageView addButton = getView().findViewById(R.id.addView);
         addButton.setOnClickListener(this);
+
+        CircularProgressBar contact = getView().findViewById(R.id.contactsProgressMark);
+        contact.setOnClickListener(this);
+
+        CircularProgressBar appointments = getView().findViewById(R.id.appointmentsProgressMark);
+        appointments.setOnClickListener(this);
+
+        CircularProgressBar signed = getView().findViewById(R.id.bbSignedProgressMark);
+        signed.setOnClickListener(this);
+
+        CircularProgressBar listing = getView().findViewById(R.id.listingsTakenProgressMark);
+        listing.setOnClickListener(this);
+
+        CircularProgressBar underContract = getView().findViewById(R.id.underContractProgressMark);
+        underContract.setOnClickListener(this);
+
+        CircularProgressBar closed = getView().findViewById(R.id.closedProgressMark);
+        closed.setOnClickListener(this);
     }
 
     private void initProgressBars() {
@@ -351,15 +369,31 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             case R.id.addView:
                 launchAddClient();
                 break;
+            case R.id.contactsProgressMark:
+                navigateToClientList("pipeline");
+                break;
+            case R.id.appointmentsProgressMark:
+                navigateToClientList("pipeline");
+                break;
+            case R.id.bbSignedProgressMark:
+                navigateToClientList("signed");
+                break;
+            case R.id.listingsTakenProgressMark:
+                navigateToClientList("signed");
+                break;
+            case R.id.underContractProgressMark:
+                navigateToClientList("contract");
+                break;
+            case R.id.closedProgressMark:
+                navigateToClientList("closed");
+                break;
             default:
                 break;
         }
     }
 
-    private void navigatePage(Class c){
-        Intent intent = new Intent(getContext(), c);
-
-        startActivity(intent);
+    private void navigateToClientList(String tabName){
+        parentActivity.navigateToClientList(tabName);
     }
 
     private void launchAddClient() {
