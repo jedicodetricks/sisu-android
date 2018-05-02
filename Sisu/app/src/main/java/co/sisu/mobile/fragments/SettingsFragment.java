@@ -94,12 +94,12 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 case "daily_reminder_time":
                     displayTime.setText(s.getValue());
                     break;
-                case "lights":
-                    lightsSwitch.setChecked(isChecked(s));
-                    break;
-                case "biometrics":
-                    idSwitch.setChecked(isChecked(s));
-                    break;
+//                case "lights":
+//                    lightsSwitch.setChecked(isChecked(s));
+//                    break;
+//                case "biometrics":
+//                    idSwitch.setChecked(isChecked(s));
+//                    break;
                 case "daily_reminder":
                     reminderSwitch.setChecked(isChecked(s));
                     break;
@@ -146,9 +146,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
         fillFieldsWithData();
 
-        idSwitch.setOnCheckedChangeListener(this);
+        //idSwitch.setOnCheckedChangeListener(this);
         reminderSwitch.setOnCheckedChangeListener(this);
-        lightsSwitch.setOnCheckedChangeListener(this);
+        //lightsSwitch.setOnCheckedChangeListener(this);
 
 
     }
