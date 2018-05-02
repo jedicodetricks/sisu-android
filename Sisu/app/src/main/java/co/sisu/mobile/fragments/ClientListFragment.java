@@ -35,9 +35,17 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     ParentActivity parentActivity;
     ProgressBar loader;
     List<ClientObject> currentList = new ArrayList<>();
+    TabLayout tabLayout;
+    static String selectedTab = "";
 
     public ClientListFragment() {
         // Required empty public constructor
+    }
+
+    public static ClientListFragment newInstance(String tab) {
+        ClientListFragment c = new ClientListFragment();
+        selectedTab = tab;
+        return c;
     }
 
     @Override
@@ -60,6 +68,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         initializeTabView();
         new AsyncClients(this, agent.getAgent_id()).execute();
         view.clearFocus();
+        selectTab();
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -71,7 +80,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
 
     private void initializeTabView() {
-        TabLayout tabLayout = getView().findViewById(R.id.tabHost);
+        tabLayout = getView().findViewById(R.id.tabHost);
         tabLayout.addOnTabSelectedListener(this);
     }
 
@@ -161,6 +170,33 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onEventFailed(Object o, String s) {
 
+    }
+
+    public void setTab(String tab) {
+        selectedTab = tab;
+    }
+
+    private void selectTab() {
+        switch (selectedTab.toLowerCase()) {
+            case "pipeline":
+                tabLayout.getTabAt(0).select();
+                break;
+            case "signed":
+                tabLayout.getTabAt(1).select();
+                break;
+            case "contract":
+                tabLayout.getTabAt(2).select();
+                break;
+            case "closed":
+                tabLayout.getTabAt(3).select();
+                break;
+            case "archived":
+                tabLayout.getTabAt(4).select();
+                break;
+            default:
+                tabLayout.getTabAt(0).select();
+                break;
+        }
     }
 
     @Override
