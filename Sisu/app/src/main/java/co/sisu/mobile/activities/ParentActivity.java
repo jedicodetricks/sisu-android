@@ -470,8 +470,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventFailed(Object o, String s) {
-
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Goals")) {
+            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+        }
     }
 
     public void setActivitiesObject(Object returnObject) {
