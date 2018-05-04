@@ -225,15 +225,17 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
         switch(metric.getTitle()) {
             case "1st Time Appts":
                 break;
-            case "Buyer Signed":
+            case "Buyers Signed":
                 recordMetric();
                 break;
-            case "Seller Signed":
+            case "Sellers Signed":
                 recordMetric();
                 break;
-            case "Buyer Under Contract":
+            case "Buyers Under Contract":
+                recordMetric();
                 break;
-            case "Seller Under Contract":
+            case "Sellers Under Contract":
+                recordMetric();
                 break;
             case "Closed":
                 break;

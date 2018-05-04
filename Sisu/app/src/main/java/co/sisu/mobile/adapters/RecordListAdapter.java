@@ -107,14 +107,15 @@ public class RecordListAdapter extends BaseAdapter {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.e("METRIC", metric.getTitle());
                 if(!rowCounter.getText().toString().equals("")) {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
                         switch(metric.getTitle()) {
                             case "1st Time Appts":
-                            case "Buyer Signed":
-                            case "Seller Signed":
-                            case "Buyer Under Contract":
-                            case "Seller Under Contract":
+                            case "Buyers Signed":
+                            case "Sellers Signed":
+                            case "Buyers Under Contract":
+                            case "Sellers Under Contract":
                             case "Closed":
                                 mRecordEventHandler.onClientDirectorClicked(metric);
                                 break;

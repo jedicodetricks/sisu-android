@@ -295,9 +295,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void decodeBase64Image(String data) {
-        byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
-        Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-        profileImage.setImageBitmap(bmp);
+        if(data != null) {
+            byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
+            Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            profileImage.setImageBitmap(bmp);
+        }
     }
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {

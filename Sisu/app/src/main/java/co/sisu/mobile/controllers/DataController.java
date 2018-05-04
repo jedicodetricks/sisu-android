@@ -258,10 +258,16 @@ public class DataController {
     }
 
     private void removeDecimalsFromAmounts(ClientObject co) {
-        String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
-        co.setCommission_amt(commission);
-        String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
-        co.setTrans_amt(trans);
+        if(co.getCommission_amt() != null) {
+            String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
+            co.setCommission_amt(commission);
+        }
+
+        if(co.getTrans_amt() != null) {
+            String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
+            co.setTrans_amt(trans);
+        }
+
         if(co.getGross_commission_amt() != null) {
             String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
             co.setGross_commission_amt(gci);
@@ -435,26 +441,29 @@ public class DataController {
 
     private void setupSelectedActivities(SettingsObject s) {
         activitiesSelected = new HashMap<>();
-        String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
-        String[] splitString = formattedString.split(",");
+        if(s != null) {
+            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
+            String[] splitString = formattedString.split(",");
 
-        //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
-        for(String setting : splitString) {
-            String[] splitSetting = setting.split(":");
-            activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
-        }
+            //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
+            for(String setting : splitString) {
+                String[] splitSetting = setting.split(":");
+                activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
+            }
 
-        if(masterActivitiesObject.size() > 0) {
-            for(Metric m : masterActivitiesObject) {
-                if(activitiesSelected.containsKey(m.getType())) {
-                    SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
-                    selectedActivities.setName(m.getTitle());
-                    if(selectedActivities.getValue().equals("0")) {
-                        continue;
+            if(masterActivitiesObject.size() > 0) {
+                for(Metric m : masterActivitiesObject) {
+                    if(activitiesSelected.containsKey(m.getType())) {
+                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
+                        selectedActivities.setName(m.getTitle());
+                        if(selectedActivities.getValue().equals("0")) {
+                            continue;
+                        }
                     }
                 }
             }
         }
+
     }
 
     public List<SettingsObject> getSettings() {
