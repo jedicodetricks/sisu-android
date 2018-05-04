@@ -124,6 +124,9 @@ public class DataController {
 
         Arrays.sort(counters);
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+
 //        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
@@ -143,9 +146,17 @@ public class DataController {
                 case "Contacts":
                 case "Buyer Signed":
                 case "Open Houses":
-                case "Buyer Under Contract":
-                case "Buyer Closed":
                     scoreboardObject.add(metric);
+                    break;
+                case "Buyer Under Contract":
+                case "Seller Under Contract":
+                    contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
+                    contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
+                    break;
+                case "Buyer Closed":
+                case "Seller Closed":
+                    closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
+                    closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     break;
                 case "Buyer Initial Appointments":
                 case "Seller Initial Appointments":
@@ -165,6 +176,8 @@ public class DataController {
             activitiesObject.add(metric);
         }
         scoreboardObject.add(firstAppointment);
+        scoreboardObject.add(closed);
+        scoreboardObject.add(contract);
     }
 
     private void setMetricThumbnail(Metric metric) {
@@ -256,7 +269,7 @@ public class DataController {
     public void setClientListObject(Object returnObject) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
-
+        resetClientLists();
         for(int i = 0; i < clientObject.length; i++) {
             ClientObject co = clientObject[i];
             removeDecimalsFromAmounts(co);
@@ -268,6 +281,14 @@ public class DataController {
                 sortIntoList(co);
             }
         }
+    }
+
+    private void resetClientLists() {
+        pipelineList = new ArrayList<>();
+        signedList = new ArrayList<>();
+        contractList = new ArrayList<>();
+        closedList = new ArrayList<>();
+        archivedList = new ArrayList<>();
     }
 
     private void sortIntoList(ClientObject co) {
@@ -283,9 +304,9 @@ public class DataController {
                 isClosed = true;
             }
         }
-        if(co.getPaid_dt() != null) {
+        if(co.getUc_dt() != null) {
             //Contract List
-            date = getFormattedDateFromApiReturn(co.getPaid_dt());
+            date = getFormattedDateFromApiReturn(co.getUc_dt());
             updatedTime.setTime(date);
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 isContract = true;

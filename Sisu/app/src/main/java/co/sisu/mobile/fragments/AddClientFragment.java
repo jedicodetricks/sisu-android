@@ -1,7 +1,8 @@
-package co.sisu.mobile.activities;
+package co.sisu.mobile.fragments;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +15,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,16 +30,19 @@ import java.util.Calendar;
 import java.util.Date;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Brady Groharing on 3/5/2018.
  */
 
-public class AddClientActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
+public class AddClientFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
@@ -48,42 +54,56 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-    AgentModel agent;
+//    AgentModel agent;
+    ParentActivity parentActivity;
+
+    //TODO: Replace the onBackPressed()s and all the toasts need proper context
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_add_client);
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        initializeActionBar();
+//        getSupportActionBar().setElevation(0);
+//        agent = getIntent().getParcelableExtra("Agent");
+
+//    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_client);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        initializeActionBar();
-        getSupportActionBar().setElevation(0);
-        agent = getIntent().getParcelableExtra("Agent");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_add_client, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        parentActivity = (ParentActivity) getActivity();
         initializeButtons();
         initializeForm();
         initializeCalendar();
     }
 
     private void initializeCalendar() {
-        findViewById(R.id.signedDatePicker).setOnClickListener(this);
-        signedDisplay = findViewById(R.id.signedDateDisplay);
+        getView().findViewById(R.id.signedDatePicker).setOnClickListener(this);
+        signedDisplay = getView().findViewById(R.id.signedDateDisplay);
         signedDisplay.setOnClickListener(this);
-        findViewById(R.id.signedDateTitle).setOnClickListener(this);
+        getView().findViewById(R.id.signedDateTitle).setOnClickListener(this);
 
-        findViewById(R.id.underContractDatePicker).setOnClickListener(this);
-        contractDisplay = findViewById(R.id.underContractDateDisplay);
+        getView().findViewById(R.id.underContractDatePicker).setOnClickListener(this);
+        contractDisplay = getView().findViewById(R.id.underContractDateDisplay);
         contractDisplay.setOnClickListener(this);
-        findViewById(R.id.underContractDateTitle).setOnClickListener(this);
+        getView().findViewById(R.id.underContractDateTitle).setOnClickListener(this);
 
-        findViewById(R.id.settlementDatePicker).setOnClickListener(this);
-        settlementDisplay = findViewById(R.id.settlementDateDisplay);
+        getView().findViewById(R.id.settlementDatePicker).setOnClickListener(this);
+        settlementDisplay = getView().findViewById(R.id.settlementDateDisplay);
         settlementDisplay.setOnClickListener(this);
-        findViewById(R.id.settlementDateTitle).setOnClickListener(this);
+        getView().findViewById(R.id.settlementDateTitle).setOnClickListener(this);
 
-        findViewById(R.id.appointmentDatePicker).setOnClickListener(this);
-        appointmentDisplay = findViewById(R.id.appointmentDateDisplay);
+        getView().findViewById(R.id.appointmentDatePicker).setOnClickListener(this);
+        appointmentDisplay = getView().findViewById(R.id.appointmentDateDisplay);
         appointmentDisplay.setOnClickListener(this);
-        findViewById(R.id.appointmentDateTitle).setOnClickListener(this);
+        getView().findViewById(R.id.appointmentDateTitle).setOnClickListener(this);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -109,57 +129,57 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     private void initializeForm() {
         typeSelected = "";
-        firstNameText = findViewById(R.id.editFirstName);
-        lastNameText = findViewById(R.id.addClientEditLastName);
-        emailText = findViewById(R.id.editEmail);
-        phoneText = findViewById(R.id.editPhone);
-        transAmount = findViewById(R.id.editTransAmount);
-        paidIncome = findViewById(R.id.editPaidIncome);
-        gci = findViewById(R.id.editGci);
-        pipelineStatus = findViewById(R.id.pipelineButton);
-        signedStatus = findViewById(R.id.signedButton);
-        underContractStatus = findViewById(R.id.contractButton);
-        closedStatus = findViewById(R.id.closedButton);
+        firstNameText = getView().findViewById(R.id.editFirstName);
+        lastNameText = getView().findViewById(R.id.addClientEditLastName);
+        emailText = getView().findViewById(R.id.editEmail);
+        phoneText = getView().findViewById(R.id.editPhone);
+        transAmount = getView().findViewById(R.id.editTransAmount);
+        paidIncome = getView().findViewById(R.id.editPaidIncome);
+        gci = getView().findViewById(R.id.editGci);
+        pipelineStatus = getView().findViewById(R.id.pipelineButton);
+        signedStatus = getView().findViewById(R.id.signedButton);
+        underContractStatus = getView().findViewById(R.id.contractButton);
+        closedStatus = getView().findViewById(R.id.closedButton);
     }
 
     @Override
     public void onClick(View v) {
-        Button buyerButton = (Button) findViewById(R.id.buyerButton);
-        Button sellerButton= (Button) findViewById(R.id.sellerButton);
+        Button buyerButton = (Button) getView().findViewById(R.id.buyerButton);
+        Button sellerButton= (Button) getView().findViewById(R.id.sellerButton);
         switch (v.getId()) {
             case R.id.cancelButton:
-                onBackPressed();
+//                onBackPressed();
                 break;
             case R.id.saveButton:
                 if(saveClient()){
                     //do save in api call to add new client
                     //animation of confirmation
-                    onBackPressed();
+//                    onBackPressed();
                 }
                 break;
             case R.id.buyerButton:
-                buyerButton.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
-                buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
-                sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
-                sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
+                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                buyerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                sellerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-                buyerButton.setTextColor(ContextCompat.getColor(this,R.color.colorLightGrey));
-                buyerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
-                sellerButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
-                sellerButton.setTextColor(ContextCompat.getColor(this,R.color.colorCorporateOrange));
+                buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                buyerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                sellerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
                 break;
             case R.id.importContactButton:
                 //do stuff for import
-                if (ContextCompat.checkSelfPermission(AddClientActivity.this,
+                if (ContextCompat.checkSelfPermission(parentActivity,
                         Manifest.permission.READ_CONTACTS)
                         != PackageManager.PERMISSION_GRANTED) {
 
                     // Permission is not granted
                     // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddClientActivity.this,
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(parentActivity,
                             Manifest.permission.READ_CONTACTS)) {
 
                         // Show an explanation to the user *asynchronously* -- don't block
@@ -169,7 +189,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                     } else {
 
                         // No explanation needed; request the permission
-                        ActivityCompat.requestPermissions(AddClientActivity.this,
+                        ActivityCompat.requestPermissions(parentActivity,
                                 new String[]{Manifest.permission.READ_CONTACTS},
                                 MY_PERMISSIONS_REQUEST_READ_CONTACTS);
 
@@ -243,23 +263,23 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
     private boolean verifyInputFields() {
         boolean isVerified = true;
         if(typeSelected.equals("")) {
-            Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(firstNameText.getText().toString().equals("")) {
-            Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(lastNameText.getText().toString().equals("")) {
-            Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(transAmount.getText().toString().equals("")) {
-            Toast.makeText(this, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(paidIncome.getText().toString().equals("")) {
-            Toast.makeText(this, "Paid Income is required", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Paid Income is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         return isVerified;
@@ -295,7 +315,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
-        new AsyncAddClient(this, agent.getAgent_id(), newClient).execute();
+        new AsyncAddClient(this, parentActivity.getAgentInfo().getAgent_id(), newClient).execute();
     }
 
     private String getFormattedDate(String incomingDate) {
@@ -370,26 +390,26 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             d = sdf.parse(displayView.getText().toString());
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(this, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Error parsing selected date", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
     private void activateStatusColor(TextView status) {
-        status.setTextColor(ContextCompat.getColor(this, R.color.colorCorporateOrange));
-        status.setBackgroundColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
     }
 
     private void removeStatusColor(TextView status) {
-        status.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
-        status.setBackgroundColor(ContextCompat.getColor(this, R.color.colorCorporateGrey));
+        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
     }
 
     private void initializeActionBar() {
-        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+//        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
 
-        TextView cancelButton = findViewById(R.id.cancelButton);
-        TextView saveButton = findViewById(R.id.saveButton);
+        TextView cancelButton = getView().findViewById(R.id.cancelButton);
+        TextView saveButton = getView().findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
     }
@@ -424,7 +444,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PICK_CONTACT:
@@ -441,7 +461,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                         // get the contact id from the Uri
                         String id = result.getLastPathSegment();
 
-                        cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        cursor = parentActivity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                                 null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[] { id },
                                 null);
 
@@ -469,7 +489,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
                         }
 
                         // query for everything email
-                        cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                        cursor = parentActivity.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                                 null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id },
                                 null);
 
@@ -509,27 +529,27 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
 
     private void initializeButtons(){
 
-        Button buyerButton= findViewById(R.id.buyerButton);
+        Button buyerButton= getView().findViewById(R.id.buyerButton);
         buyerButton.setOnClickListener(this);
 
-        Button sellerButton= findViewById(R.id.sellerButton);
+        Button sellerButton= getView().findViewById(R.id.sellerButton);
         sellerButton.setOnClickListener(this);
 
-        Button importContactButton = findViewById(R.id.importContactButton);
+        Button importContactButton = getView().findViewById(R.id.importContactButton);
         importContactButton.setOnClickListener(this);
 
-        signedClear = findViewById(R.id.signedDateButton);
+        signedClear = getView().findViewById(R.id.signedDateButton);
         signedClear.setOnClickListener(this);
-        contractClear = findViewById(R.id.underContractDateButton);
+        contractClear = getView().findViewById(R.id.underContractDateButton);
         contractClear.setOnClickListener(this);
-        settlementClear = findViewById(R.id.settlementDateButton);
+        settlementClear = getView().findViewById(R.id.settlementDateButton);
         settlementClear.setOnClickListener(this);
-        appointmentClear = findViewById(R.id.appointmentDateButton);
+        appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
-        DatePickerDialog dialog = new DatePickerDialog(AddClientActivity.this, android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(parentActivity, android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 updateDisplayDate(year, month, day, calendarCaller);
@@ -576,7 +596,7 @@ public class AddClientActivity extends AppCompatActivity implements View.OnClick
             d = formatter.parse(formatDate);
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(AddClientActivity.this, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Error parsing selected date", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

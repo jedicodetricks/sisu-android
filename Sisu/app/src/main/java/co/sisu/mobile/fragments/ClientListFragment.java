@@ -66,10 +66,15 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         AgentModel agent = parentActivity.getAgentInfo();
         initializeTabView();
-        new AsyncClients(this, agent.getAgent_id()).execute();
+//        new AsyncClients(this, agent.getAgent_id()).execute();
 //        view.clearFocus();
         selectTab();
-        loader.setVisibility(View.VISIBLE);
+//        loader.setVisibility(View.VISIBLE);
+        //TODO: we need to figure out how we want the client page to act. api calls? manage locally?
+        currentList = parentActivity.getPipelineList();
+        initListView(currentList);
+        loader.setVisibility(View.GONE);
+
     }
 
     private void initSearchBar() {

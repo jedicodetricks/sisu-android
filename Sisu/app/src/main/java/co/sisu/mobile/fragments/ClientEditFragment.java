@@ -54,6 +54,30 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         // Required empty public constructor
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        ScrollView contentView = (ScrollView) inflater.inflate(R.layout.activity_client_layout, container, false);
+        ScrollView.LayoutParams viewLayout = new ScrollView.LayoutParams(container.getWidth(), container.getHeight());
+        contentView.setLayoutParams(viewLayout);
+        return contentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        loader = view.findViewById(R.id.clientLoader);
+        parentActivity = (ParentActivity) getActivity();
+        currentClient = parentActivity.getSelectedClient();
+        view.clearFocus();
+        loader.setVisibility(View.VISIBLE);
+        initializeForm();
+        initializeButtons();
+        initializeCalendar();
+        initializeClient();
+        loader.setVisibility(View.GONE);
+    }
+
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
         firstNameText.setText(currentClient.getFirst_name().toString());
@@ -96,7 +120,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
             return format.format(calendar.getTime());
         }
-        return "Tap To Select";
+        return "";
     }
 
     private void updateCurrentClient() {
@@ -116,17 +140,29 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
 
-        if(!appointmentDisplay.getText().equals("Tap To Select")) {
+        if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
         }
-        if(!signedDisplay.getText().equals("Tap To Select")) {
+        else {
+            currentClient.setAppt_dt(null);
+        }
+        if(!signedDisplay.getText().toString().equals("")) {
             currentClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
         }
-        if(!contractDisplay.getText().equals("Tap To Select")) {
+        else {
+            currentClient.setSigned_dt(null);
+        }
+        if(!contractDisplay.getText().toString().equals("")) {
             currentClient.setUc_dt(getFormattedDate(contractDisplay.getText().toString()));
         }
-        if(!settlementDisplay.getText().equals("Tap To Select")) {
+        else {
+            currentClient.setUc_dt(null);
+        }
+        if(!settlementDisplay.getText().toString().equals("")) {
             currentClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
+        }
+        else {
+            currentClient.setClosed_dt(null);
         }
     }
 
@@ -176,30 +212,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private void changeStatusColor(TextView status) {
         status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
         status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        ScrollView contentView = (ScrollView) inflater.inflate(R.layout.activity_client_layout, container, false);
-        ScrollView.LayoutParams viewLayout = new ScrollView.LayoutParams(container.getWidth(), container.getHeight());
-        contentView.setLayoutParams(viewLayout);
-        return contentView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        loader = view.findViewById(R.id.clientLoader);
-        parentActivity = (ParentActivity) getActivity();
-        currentClient = parentActivity.getSelectedClient();
-        view.clearFocus();
-        loader.setVisibility(View.VISIBLE);
-        initializeForm();
-        initializeButtons();
-        initializeCalendar();
-        initializeClient();
-        loader.setVisibility(View.GONE);
     }
 
     private void initializeCalendar() {
@@ -390,16 +402,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         String setText = "Tap To Select";
         switch (calendarCaller) {
             case "signed":
-                signedDisplay.setText(setText);
+                signedDisplay.setText("");
+                signedDisplay.setHint(setText);
                 break;
             case "contract":
-                contractDisplay.setText(setText);
+                contractDisplay.setText("");
+                contractDisplay.setHint(setText);
                 break;
             case "settlement":
-                settlementDisplay.setText(setText);
+                settlementDisplay.setText("");
+                settlementDisplay.setHint(setText);
                 break;
             case "appointment":
-                appointmentDisplay.setText(setText);
+                appointmentDisplay.setText("");
+                appointmentDisplay.setHint(setText);
         }
         updateStatus();
     }

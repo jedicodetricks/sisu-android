@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
@@ -36,7 +37,9 @@ public class AsyncUpdateClients extends AsyncTask<Void, Void, Void> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .serializeNulls()
+                    .create();
             String jsonInString = gson.toJson(clientObject);
             Log.e("POST CLIENT", jsonInString);
 
@@ -54,7 +57,7 @@ public class AsyncUpdateClients extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-//                Log.e("UPDATE ACTIVITIES", response.body().string());
+                Log.e("UPDATE ACTIVITIES", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }

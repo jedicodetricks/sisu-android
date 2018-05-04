@@ -122,7 +122,7 @@
 
     <!--temp strings-->
     <string name="record_date">March 23, 2018</string>
-    <string name="temp_date">Tap to Select</string>
+    <string name="temp_date">Tap To Select</string>
     <string name="contacts_current_num"></string>
     <string name="contacts_goal_num"></string>
     <string name="bb_signed_current_num"></string>
