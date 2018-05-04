@@ -67,6 +67,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeBacktionBar = false;
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
+    private boolean activeAddClientBar = false;
+
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
@@ -363,6 +365,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
+    public void popStackReplaceFragment(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+    }
+
+
+
     public void swapToBacktionBar(String titleString) {
         //Get it?! Back action... Backtion!
         activeBacktionBar = true;
@@ -419,6 +436,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(activeTitleBar) {
             activeTitleBar = false;
+            initializeActionBar();
+        }
+        else if(activeAddClientBar) {
+            activeAddClientBar = false;
             initializeActionBar();
         }
         super.onBackPressed();
@@ -551,5 +572,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<Metric> getUpdatedRecords() {
         return dataController.getUpdatedRecords();
+    }
+
+    public void swapToAddClientBar() {
+        activeAddClientBar = true;
+        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+
+//        backtionTitle = findViewById(R.id.actionBarTitle);
+//        backtionTitle.setText(titleString);
+
     }
 }
