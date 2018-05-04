@@ -151,10 +151,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private void navigateToScoreboard() {
         if(clientFinished && goalsFinished) {
-            resetToolbarImages("scoreboard");
-            replaceFragment(ScoreboardFragment.class);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    resetToolbarImages("scoreboard");
+                    replaceFragment(ScoreboardFragment.class);
+                }
+            });
         }
-
     }
 
     private void initializeButtons(){
