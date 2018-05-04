@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ListView mListView;
     ParentActivity parentActivity;
     List<SelectedActivities> selectedActivities;
+    ProgressBar loader;
 
     public ActivitySettingsFragment() {
         // Required empty public constructor
@@ -53,8 +55,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        loader = view.findViewById(R.id.activitySettingsLoader);
         initializeButtons();
 //        initializeListView();
+        loader.setVisibility(View.VISIBLE);
         new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id()).execute();
     }
 
@@ -144,7 +148,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    loader.setVisibility(View.GONE);
+                    loader.setVisibility(View.GONE);
                     setupFieldsWithData();
                     initializeListView();
                 }

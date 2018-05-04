@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
     private boolean activeAddClientBar = false;
+    ProgressBar parentLoader;
 
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -105,6 +107,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parent.setPaddingRelative(0,0,0,0);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
+        parentLoader = findViewById(R.id.parentLoader);
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
@@ -112,6 +115,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
+        parentLoader.setVisibility(View.VISIBLE);
     }
 
 
@@ -159,6 +163,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    parentLoader.setVisibility(View.GONE);
                     resetToolbarImages("scoreboard");
                     replaceFragment(ScoreboardFragment.class);
                 }

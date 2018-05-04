@@ -92,7 +92,12 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     timeZoneDisplay.setText(s.getValue());
                     break;
                 case "daily_reminder_time":
-                    displayTime.setText(s.getValue());
+                    if(s.getValue().equals("11:01")) {
+                        displayTime.setText("");
+                    }
+                    else {
+                        displayTime.setText(s.getValue());
+                    }
                     break;
 //                case "lights":
 //                    lightsSwitch.setChecked(isChecked(s));
