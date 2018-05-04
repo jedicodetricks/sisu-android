@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.AddClientActivity;
+//import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -492,7 +492,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void launchAddClient() {
-        parentActivity.stackReplaceFragment(AddClientActivity.class);
+        parentActivity.stackReplaceFragment(AddClientFragment.class);
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);
