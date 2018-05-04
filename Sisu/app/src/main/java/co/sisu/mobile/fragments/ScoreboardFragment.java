@@ -2,11 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -27,14 +24,14 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
-//import co.sisu.mobile.activities.AddClientActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
+
+//import co.sisu.mobile.activities.AddClientActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -140,7 +137,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 return true;
             }
         }
-
         return false;
     }
 
@@ -451,9 +447,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         Context context = getContext();
         if (metric.getPercentComplete() < positionPercent) {
             metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-        } else if (metric.getPercentComplete() == positionPercent) {
+        } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
             metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-        } else {
+        } else if (metric.getPercentComplete() >= 100){
             metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
         }
     }
