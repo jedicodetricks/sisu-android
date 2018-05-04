@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +31,6 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
 import static android.app.Activity.RESULT_OK;
@@ -54,21 +51,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-//    AgentModel agent;
     ParentActivity parentActivity;
+    private String currentStatus;
 
     //TODO: Replace the onBackPressed()s and all the toasts need proper context
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_add_client);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        initializeActionBar();
-//        getSupportActionBar().setElevation(0);
-//        agent = getIntent().getParcelableExtra("Agent");
-
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +68,14 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         initializeButtons();
         initializeForm();
         initializeCalendar();
+        initActionBar();
+    }
+
+    private void initActionBar() {
+        TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
+        TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
     }
 
     private void initializeCalendar() {
@@ -144,18 +138,18 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        Button buyerButton = (Button) getView().findViewById(R.id.buyerButton);
-        Button sellerButton= (Button) getView().findViewById(R.id.sellerButton);
+        Button buyerButton = getView().findViewById(R.id.buyerButton);
+        Button sellerButton= getView().findViewById(R.id.sellerButton);
         switch (v.getId()) {
             case R.id.cancelButton:
-//                onBackPressed();
+                Log.e("CANCEL", "YES");
+                parentActivity.onBackPressed();
                 break;
             case R.id.saveButton:
-                if(saveClient()){
-                    //do save in api call to add new client
+                Log.e("SAVE", "YES");
+                saveClient();
                     //animation of confirmation
 //                    onBackPressed();
-                }
                 break;
             case R.id.buyerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
@@ -263,23 +257,23 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private boolean verifyInputFields() {
         boolean isVerified = true;
         if(typeSelected.equals("")) {
-//            Toast.makeText(this, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentActivity, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(firstNameText.getText().toString().equals("")) {
-//            Toast.makeText(this, "First Name is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentActivity, "First Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(lastNameText.getText().toString().equals("")) {
-//            Toast.makeText(this, "Last Name is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentActivity, "Last Name is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(transAmount.getText().toString().equals("")) {
-//            Toast.makeText(this, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentActivity, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         else if(paidIncome.getText().toString().equals("")) {
-//            Toast.makeText(this, "Paid Income is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentActivity, "Paid Income is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
         return isVerified;
@@ -350,6 +344,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(closedStatus);
                 removeStatusColor(underContractStatus);
+                currentStatus = "closed";
             }
             else {
                 removeStatusColor(closedStatus);
@@ -359,6 +354,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(underContractStatus);
                 removeStatusColor(signedStatus);
+                currentStatus = "contract";
             }
             else {
                 removeStatusColor(underContractStatus);
@@ -368,6 +364,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(signedStatus);
                 removeStatusColor(pipelineStatus);
+                currentStatus = "signed";
             }
             else {
                 removeStatusColor(signedStatus);
@@ -376,6 +373,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             getTime(d, updatedTime, appointmentDisplay);
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(pipelineStatus);
+                currentStatus = "pipeline";
             }
             else {
                 removeStatusColor(pipelineStatus);
@@ -404,16 +402,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
         status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
     }
-
-    private void initializeActionBar() {
-//        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-
-        TextView cancelButton = getView().findViewById(R.id.cancelButton);
-        TextView saveButton = getView().findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
-        cancelButton.setOnClickListener(this);
-    }
-
 
     public void launchContactPicker() {
         Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -634,7 +622,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-
+        if(asyncReturnType.equals("Add Client")) {
+            parentActivity.navigateToClientList(currentStatus);
+        }
     }
 
     @Override

@@ -521,6 +521,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         parentActivity.stackReplaceFragment(AddClientFragment.class);
+        parentActivity.swapToAddClientBar();
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);

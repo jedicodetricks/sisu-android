@@ -67,6 +67,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeBacktionBar = false;
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
+    private boolean activeAddClientBar = false;
+
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
@@ -133,20 +135,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initializeTeamBar(List<TeamObject> teamsList) {
-        ListView mListView = findViewById(R.id.navViewList);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        if(teamsList.size() > 0) {
+            ListView mListView = findViewById(R.id.navViewList);
+            mListView.setDivider(null);
+            mListView.setDividerHeight(30);
 
-        this.teamsList = teamsList;
+            this.teamsList = teamsList;
 
-        TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
-        mListView.setAdapter(adapter);
+            TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
+            mListView.setAdapter(adapter);
 
-        mListView.setOnItemClickListener(this);
+            mListView.setOnItemClickListener(this);
 
-        teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-        teamLetter.setText(teamsList.get(0).getTeamLetter());
-        teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+            teamBlock.setBackgroundColor(teamsList.get(0).getColor());
+            teamLetter.setText(teamsList.get(0).getTeamLetter());
+            teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+        }
+
     }
 
     private void navigateToScoreboard() {
@@ -352,7 +357,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         // Insert the fragment by replacing any existing fragment
         swapToClientListBar();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
@@ -366,6 +371,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
+
+    public void popStackReplaceFragment(Class fragmentClass) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+    }
+
+
 
     public void swapToBacktionBar(String titleString) {
         //Get it?! Back action... Backtion!
@@ -394,14 +414,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void swapToClientListBar() {
         activeClientListBar = true;
-        getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+            }
+        });
     }
 
     public AgentModel getAgentInfo() {
         return agent;
     }
 
-    public int getSelectedTeamId() { return teamsList.get(selectedTeam).getId(); }
+    public int getSelectedTeamId() {
+        int teamId = -1;
+        if(teamsList != null) {
+            teamId = teamsList.get(selectedTeam).getId();
+
+        }
+        return teamId;
+    }
 
     public void logout() {
         Intent intent = new Intent(this, MainActivity.class);
@@ -423,6 +455,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(activeTitleBar) {
             activeTitleBar = false;
+            initializeActionBar();
+        }
+        else if(activeAddClientBar) {
+            activeAddClientBar = false;
             initializeActionBar();
         }
         super.onBackPressed();
@@ -555,5 +591,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<Metric> getUpdatedRecords() {
         return dataController.getUpdatedRecords();
+    }
+
+    public void swapToAddClientBar() {
+        activeAddClientBar = true;
+        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+
+//        backtionTitle = findViewById(R.id.actionBarTitle);
+//        backtionTitle.setText(titleString);
+
     }
 }

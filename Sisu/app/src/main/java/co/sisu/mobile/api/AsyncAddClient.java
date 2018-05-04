@@ -61,10 +61,10 @@ public class AsyncAddClient extends AsyncTask<Void, Void, Void> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Add Client");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Add Client");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Add Client");
             }
 
             response.body().close();

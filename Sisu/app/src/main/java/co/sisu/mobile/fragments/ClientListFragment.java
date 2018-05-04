@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
+import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.models.AgentModel;
@@ -35,7 +37,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     ProgressBar loader;
     List<ClientObject> currentList = new ArrayList<>();
     TabLayout tabLayout;
-    static String selectedTab = "";
+    static String selectedTab = "pipeline";
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -65,14 +67,15 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         AgentModel agent = parentActivity.getAgentInfo();
         initializeTabView();
-//        new AsyncClients(this, agent.getAgent_id()).execute();
+        new AsyncClients(this, agent.getAgent_id()).execute();
         view.clearFocus();
-        selectTab();
-//        loader.setVisibility(View.VISIBLE);
+        selectTab(selectedTab);
+        loader.setVisibility(View.VISIBLE);
+
         //TODO: we need to figure out how we want the client page to act. api calls? manage locally?
-        currentList = parentActivity.getPipelineList();
-        initListView(currentList);
-        loader.setVisibility(View.GONE);
+//        currentList = parentActivity.getPipelineList();
+//        initListView(currentList);
+//        loader.setVisibility(View.GONE);
 
     }
 
@@ -154,8 +157,10 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             @Override
             public void run() {
                 loader.setVisibility(View.GONE);
-                currentList = parentActivity.getPipelineList();
-                initListView(currentList);
+                selectTab(selectedTab);
+//                currentList = getListForSelectedTab();
+//                currentList = parentActivity.getPipelineList();
+//                initListView(currentList);
             }
         });
     }
@@ -165,47 +170,62 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     }
 
-    private void selectTab() {
+    private void selectTab(String selectedTab) {
         switch (selectedTab.toLowerCase()) {
             case "pipeline":
                 tabLayout.getTabAt(0).select();
+                currentList = parentActivity.getPipelineList();
                 break;
             case "signed":
                 tabLayout.getTabAt(1).select();
+                currentList = parentActivity.getSignedList();
+                Log.e("SIGNED", "SELECTED");
                 break;
             case "contract":
                 tabLayout.getTabAt(2).select();
+                currentList = parentActivity.getContractList();
                 break;
             case "closed":
                 tabLayout.getTabAt(3).select();
+                currentList = parentActivity.getClosedList();
                 break;
             case "archived":
                 tabLayout.getTabAt(4).select();
+                currentList = parentActivity.getArchivedList();
                 break;
             default:
                 tabLayout.getTabAt(0).select();
+                currentList = parentActivity.getPipelineList();
                 break;
         }
+        initListView(currentList);
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        mListView.setAdapter(null);
+        if(mListView != null) {
+            mListView.setAdapter(null);
+        }
         switch ((String) tab.getText()) {
             case "Pipeline":
                 currentList = parentActivity.getPipelineList();
+                selectedTab = "pipeline";
                 break;
             case "Signed":
                 currentList = parentActivity.getSignedList();
+                selectedTab = "signed";
                 break;
             case "Under Contract":
                 currentList = parentActivity.getContractList();
+                selectedTab = "contract";
                 break;
             case "Closed":
                 currentList = parentActivity.getClosedList();
+                selectedTab = "closed";
                 break;
             case "Archived":
                 currentList = parentActivity.getArchivedList();
+                selectedTab = "archived";
                 break;
         }
         initListView(currentList);

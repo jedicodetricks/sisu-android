@@ -262,8 +262,11 @@ public class DataController {
         co.setCommission_amt(commission);
         String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
         co.setTrans_amt(trans);
-        String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
-        co.setGross_commission_amt(gci);
+        if(co.getGross_commission_amt() != null) {
+            String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
+            co.setGross_commission_amt(gci);
+
+        }
     }
 
     public void setClientListObject(Object returnObject) {
