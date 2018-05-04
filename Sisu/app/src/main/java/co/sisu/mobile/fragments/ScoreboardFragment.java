@@ -18,9 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -29,6 +32,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentGoalsObject;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
@@ -45,13 +49,19 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     int selectedEndMonth = 0;
     int selectedEndDay = 0;
     Calendar calendar = Calendar.getInstance();
+    Date selectedStartTime;
+    Date selectedEndTime;
     ProgressBar loader;
+    int pendingVolume = 0;
+    int closedVolume = 0;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
 
     private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
             listingsTakenCurrentNumber, listingsTakenGoalNumber, underContractCurrentNumber, underContractGoalNumber, closedCurrentNumber, closedGoalNumber;
+
+    private TextView pendingVolumeDisplay, closedVolumeDisplay;
 
     public ScoreboardFragment() {
         // Required empty public constructor
@@ -80,8 +90,58 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void calculateVolumes() {
-        //TODO: Get specific client lists and calculate the volume totals based off of that.
+        pendingVolume = 0;
+        closedVolume = 0;
 
+        //Pending
+        List<ClientObject> underContractClients = parentActivity.getContractList();
+        for(ClientObject co : underContractClients) {
+            pendingVolume += Integer.valueOf(co.getTrans_amt());
+        }
+        NumberFormat format = NumberFormat.getNumberInstance();
+
+        pendingVolumeDisplay = getView().findViewById(R.id.underContractAmount);
+        pendingVolumeDisplay.setText("$" + format.format(pendingVolume));
+
+
+        //Closed
+        List<ClientObject> closedClients = parentActivity.getClosedList();
+        for(ClientObject co : closedClients) {
+
+            if(insideSelectedTimeRange(co.getClosed_dt())) {
+                closedVolume += Integer.valueOf(co.getTrans_amt());
+            }
+        }
+
+        closedVolumeDisplay = getView().findViewById(R.id.closedAmount);
+        closedVolumeDisplay.setText("$" + format.format(closedVolume));
+    }
+
+    private boolean insideSelectedTimeRange(String closedDate) {
+        closedDate = closedDate.replace("00:00:00 GMT", "");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+        Date d = null;
+        try {
+            d = sdf.parse(closedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar closedTime = Calendar.getInstance();
+        closedTime.setTime(d);
+
+        if(selectedStartTime != null && selectedEndTime != null) {
+            if(closedTime.getTimeInMillis() > selectedStartTime.getTime() && closedTime.getTimeInMillis() < selectedEndTime.getTime()) {
+                return true;
+            }
+        }
+        else {
+            Calendar currentTime = Calendar.getInstance();
+            if(closedTime.getTimeInMillis() > currentTime.getTimeInMillis() && closedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -206,6 +266,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
                 String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
                 String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                selectedStartTime = getDateFromFormattedTime(formattedStartTime);
+                selectedEndTime = getDateFromFormattedTime(formattedEndTime);
+
                 new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime).execute();
 
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
@@ -215,6 +278,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 //not sure what this does
             }
         });
+    }
+
+    private Date getDateFromFormattedTime(String formattedTime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date d = formatter.parse(formattedTime);
+            return d;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private List<String> initSpinnerArray() {
@@ -418,9 +492,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void launchAddClient() {
-        Intent intent = new Intent(getContext(), AddClientActivity.class);
-        intent.putExtra("Agent", parentActivity.getAgentInfo());
-        startActivity(intent);
+        parentActivity.stackReplaceFragment(AddClientActivity.class);
+//        Intent intent = new Intent(getContext(), AddClientActivity.class);
+//        intent.putExtra("Agent", parentActivity.getAgentInfo());
+//        startActivity(intent);
     }
 
     @Override
@@ -432,6 +507,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 public void run() {
                     loader.setVisibility(View.GONE);
                     animateProgressBars(parentActivity.getScoreboardObject());
+                    calculateVolumes();
                 }
             });
         }
