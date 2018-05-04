@@ -21,7 +21,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
-import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.models.AgentModel;
@@ -67,7 +66,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         AgentModel agent = parentActivity.getAgentInfo();
         initializeTabView();
 //        new AsyncClients(this, agent.getAgent_id()).execute();
-//        view.clearFocus();
+        view.clearFocus();
         selectTab();
 //        loader.setVisibility(View.VISIBLE);
         //TODO: we need to figure out how we want the client page to act. api calls? manage locally?
