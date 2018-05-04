@@ -52,6 +52,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
     ParentActivity parentActivity;
+    private String currentStatus;
 
     //TODO: Replace the onBackPressed()s and all the toasts need proper context
 
@@ -343,6 +344,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(closedStatus);
                 removeStatusColor(underContractStatus);
+                currentStatus = "closed";
             }
             else {
                 removeStatusColor(closedStatus);
@@ -352,6 +354,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(underContractStatus);
                 removeStatusColor(signedStatus);
+                currentStatus = "contract";
             }
             else {
                 removeStatusColor(underContractStatus);
@@ -361,6 +364,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(signedStatus);
                 removeStatusColor(pipelineStatus);
+                currentStatus = "signed";
             }
             else {
                 removeStatusColor(signedStatus);
@@ -369,6 +373,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             getTime(d, updatedTime, appointmentDisplay);
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
                 activateStatusColor(pipelineStatus);
+                currentStatus = "pipeline";
             }
             else {
                 removeStatusColor(pipelineStatus);
@@ -618,8 +623,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Add Client")) {
-            //TODO: this is where we'll route it to the clientListFragment
-            parentActivity.popStackReplaceFragment(ClientListFragment.class);
+            parentActivity.navigateToClientList(currentStatus);
         }
     }
 

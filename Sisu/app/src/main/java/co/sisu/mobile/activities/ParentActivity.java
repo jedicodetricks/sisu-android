@@ -135,20 +135,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initializeTeamBar(List<TeamObject> teamsList) {
-        ListView mListView = findViewById(R.id.navViewList);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        if(teamsList.size() > 0) {
+            ListView mListView = findViewById(R.id.navViewList);
+            mListView.setDivider(null);
+            mListView.setDividerHeight(30);
 
-        this.teamsList = teamsList;
+            this.teamsList = teamsList;
 
-        TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
-        mListView.setAdapter(adapter);
+            TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
+            mListView.setAdapter(adapter);
 
-        mListView.setOnItemClickListener(this);
+            mListView.setOnItemClickListener(this);
 
-        teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-        teamLetter.setText(teamsList.get(0).getTeamLetter());
-        teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+            teamBlock.setBackgroundColor(teamsList.get(0).getColor());
+            teamLetter.setText(teamsList.get(0).getTeamLetter());
+            teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+        }
+
     }
 
     private void navigateToScoreboard() {
@@ -354,7 +357,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         // Insert the fragment by replacing any existing fragment
         swapToClientListBar();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
@@ -411,14 +414,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void swapToClientListBar() {
         activeClientListBar = true;
-        getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+            }
+        });
     }
 
     public AgentModel getAgentInfo() {
         return agent;
     }
 
-    public int getSelectedTeamId() { return teamsList.get(selectedTeam).getId(); }
+    public int getSelectedTeamId() {
+        int teamId = -1;
+        if(teamsList != null) {
+            teamId = teamsList.get(selectedTeam).getId();
+
+        }
+        return teamId;
+    }
 
     public void logout() {
         Intent intent = new Intent(this, MainActivity.class);
