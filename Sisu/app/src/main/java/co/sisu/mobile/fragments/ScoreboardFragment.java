@@ -51,6 +51,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     ProgressBar loader;
     int pendingVolume = 0;
     int closedVolume = 0;
+    boolean needsProgress;
+    String timeline = "";
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -167,9 +169,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        needsProgress = false;
                         break;
                     case 1:
                         //Last Week
+                        needsProgress = false;
+                        timeline = "week";
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -183,6 +188,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         break;
                     case 2:
                         //This Week
+                        needsProgress = true;
+                        timeline = "week";
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -195,6 +202,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         break;
                     case 3:
                         //Last Month
+                        needsProgress = false;
+                        timeline = "month";
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -206,6 +215,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         break;
                     case 4:
                         //This Month
+                        needsProgress = true;
+                        timeline = "month";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = 1;
@@ -216,6 +227,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         break;
                     case 5:
                         //Last year
+                        needsProgress = false;
+                        timeline = "year";
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -227,6 +240,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         break;
                     case 6:
                         //This year
+                        needsProgress = true;
+                        timeline = "year";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
                         selectedStartDay = 1;
@@ -429,13 +444,30 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private int calculateProgressMarkPosition(Metric metric) {
-        Calendar calendar = Calendar.getInstance();
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int maximum = 0;
+        int increment = 0;
+        switch (timeline) {
+            case "week":
+                maximum = Calendar.DAY_OF_MONTH;
+                increment = 51;
+            break;
+            case "month":
+                maximum = Calendar.DAY_OF_MONTH;
+                increment = 12;
+            break;
+            case "year":
+                maximum = Calendar.DAY_OF_YEAR;
+                increment = 1;
+            break;
+        }
+        int current = calendar.get(maximum);
         int position = -90;
-        for(int i = 1; i <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-            position += 12;
-            if(i == currentDay) {
-                break;
+        if(needsProgress) {
+            for(int i = 1; i <= calendar.getActualMaximum(maximum); i++) {
+                position += increment;
+                if(i == current) {
+                    break;
+                }
             }
         }
         return position;
