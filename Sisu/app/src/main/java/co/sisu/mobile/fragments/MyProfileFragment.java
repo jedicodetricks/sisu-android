@@ -28,7 +28,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -161,7 +160,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 updateProfile();
                 saveProfile();
                 parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More");
+                parentActivity.swapToBacktionBar("More", null);
                 break;
             default:
                 break;

@@ -31,8 +31,6 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
-//import co.sisu.mobile.activities.AddClientActivity;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -422,7 +420,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     break;
             }
         }
-
     }
 
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
@@ -521,7 +518,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         parentActivity.stackReplaceFragment(AddClientFragment.class);
-        parentActivity.swapToAddClientBar();
+        parentActivity.swapToAddClientBar("scoreboard");
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);

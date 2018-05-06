@@ -115,7 +115,8 @@ public class RecordListAdapter extends BaseAdapter {
                             case "Sellers Signed":
                             case "Buyers Under Contract":
                             case "Sellers Under Contract":
-                            case "Closed":
+                            case "Buyers Closed":
+                            case "Sellers Closed":
                                 mRecordEventHandler.onClientDirectorClicked(metric);
                                 break;
                             default:

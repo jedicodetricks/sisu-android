@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,8 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     List<ClientObject> currentList = new ArrayList<>();
     TabLayout tabLayout;
     static String selectedTab = "pipeline";
+    private TextView addButton;
+    ConstraintLayout contentView;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -53,7 +57,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_clients, container, false);
+        contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_clients, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
         return contentView;
@@ -71,12 +75,18 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
+        initAddButton();
 
         //TODO: we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
 //        initListView(currentList);
 //        loader.setVisibility(View.GONE);
 
+    }
+
+    private void initAddButton() {
+        addButton = parentActivity.findViewById(R.id.addClientButton);
+        addButton.setOnClickListener(this);
     }
 
     private void initSearchBar() {
@@ -119,7 +129,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
         parentActivity.stackReplaceFragment(ClientEditFragment.class);
-        parentActivity.swapToBacktionBar(null);
+        parentActivity.swapToBacktionBar(null, "client");
     }
 
     @Override
@@ -141,8 +151,10 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.cancelButton:
                 getActivity().onBackPressed();
                 break;
-            case R.id.addButton:
+            case R.id.addClientButton:
                 //navigate to addClient
+                parentActivity.stackReplaceFragment(AddClientFragment.class);
+                parentActivity.swapToAddClientBar("client");
                 break;
             case R.id.searchClient:
                 break;
@@ -171,6 +183,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void selectTab(String selectedTab) {
+
         switch (selectedTab.toLowerCase()) {
             case "pipeline":
                 tabLayout.getTabAt(0).select();
@@ -179,7 +192,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             case "signed":
                 tabLayout.getTabAt(1).select();
                 currentList = parentActivity.getSignedList();
-                Log.e("SIGNED", "SELECTED");
                 break;
             case "contract":
                 tabLayout.getTabAt(2).select();
@@ -199,11 +211,11 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 break;
         }
         initListView(currentList);
+        clientSearch.clearFocus();
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        getView().clearFocus();
 
         if(mListView != null) {
             mListView.setAdapter(null);
@@ -232,6 +244,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         }
         initListView(currentList);
         searchClients();
+        clientSearch.clearFocus();
     }
 
     @Override

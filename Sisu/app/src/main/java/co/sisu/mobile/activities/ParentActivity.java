@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -69,6 +70,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
     private boolean activeAddClientBar = false;
+    private String addClientChild = "";
     ProgressBar parentLoader;
 
     String currentSelectedRecordDate = "";
@@ -260,7 +262,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
-                swapToBacktionBar(fragmentTag);
+                swapToBacktionBar(fragmentTag, null);
                 replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
@@ -392,8 +394,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-    public void swapToBacktionBar(String titleString) {
+    public void swapToBacktionBar(String titleString, String child) {
         //Get it?! Back action... Backtion!
+        if(child != null) {
+            addClientChild = child;
+        }
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
         backtionTitle = findViewById(R.id.actionBarTitle);
@@ -449,10 +454,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-
+        Log.e("BACK PRESSED", "FUCK");
         if(activeBacktionBar) {
             activeBacktionBar = false;
-            initializeActionBar();
+            if(addClientChild.equals("client")) {
+                swapToClientListBar();
+            }
+            else {
+                initializeActionBar();
+            }
         }
         else if(activeClientListBar) {
             activeClientListBar = false;
@@ -464,7 +474,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(activeAddClientBar) {
             activeAddClientBar = false;
-            initializeActionBar();
+            if(addClientChild.equals("client")) {
+                swapToClientListBar();
+            }
+            else if(addClientChild.equals("record")) {
+                swapToBacktionBar("Record", null);
+            }
+            else {
+                initializeActionBar();
+            }
         }
         super.onBackPressed();
     }
@@ -598,8 +616,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return dataController.getUpdatedRecords();
     }
 
-    public void swapToAddClientBar() {
+    public void swapToAddClientBar(String child) {
         activeAddClientBar = true;
+        activeBacktionBar = false;
+        activeClientListBar = false;
+        activeTitleBar = false;
+        addClientChild = child;
         getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
 
 //        backtionTitle = findViewById(R.id.actionBarTitle);
