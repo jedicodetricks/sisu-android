@@ -23,10 +23,8 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -42,13 +40,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
-    Button signedClear, contractClear, settlementClear, appointmentClear, exportContact;
+    Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
     int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
     String typeSelected;
-    private List<Integer> statusButtons = new ArrayList<>();
 
     public ClientEditFragment() {
         // Required empty public constructor
@@ -70,7 +67,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
-        loader.setVisibility(View.VISIBLE);
+//        loader.setVisibility(View.VISIBLE);
         initializeForm();
         initializeButtons();
         initializeCalendar();
@@ -123,7 +120,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         return "";
     }
 
-    private void updateCurrentClient() {
+    private void updateCurrentClient(boolean deleteClient) {
         //These can never be null
         currentClient.setFirst_name(firstNameText.getText().toString());
         currentClient.setLast_name(lastNameText.getText().toString());
@@ -164,6 +161,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         else {
             currentClient.setClosed_dt(null);
         }
+        if(deleteClient) {
+            currentClient.setStatus("D");
+        }
     }
 
     private String getFormattedDate(String incomingDate) {
@@ -196,7 +196,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 changeStatusColor(underContractStatus);
             } else if(currentClient.getSigned_dt() != null) {
                 changeStatusColor(signedStatus);
-            } else {
+            } else if(currentClient.getAppt_dt() != null) {
                 changeStatusColor(pipelineStatus);
             }
         } else {
@@ -298,7 +298,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.saveButton://notify of success update api
-                updateCurrentClient();
+                updateCurrentClient(false);
                 saveClient();
 //                parentActivity.stackReplaceFragment(ClientListFragment.class);
 //                parentActivity.swapToClientListBar();
@@ -356,15 +356,18 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
                 startActivityForResult(contactIntent, 1);
                 break;
+            case R.id.clientDeleteButton:
+                updateCurrentClient(true);
+                saveClient();
+                break;
             default:
                 break;
         }
     }
 
-    private boolean saveClient(){
+    private void saveClient(){
 //        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient).execute();
-        return true; //return status of api success or failure
     }
 
     private void initializeButtons(){
@@ -383,6 +386,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);
         seller.setOnClickListener(this);
+        deleteButton = getView().findViewById(R.id.clientDeleteButton);
+        deleteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
@@ -428,31 +433,37 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
             getTime(d, updatedTime, settlementDisplay);
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
                 activateStatusColor(closedStatus);
-                removeStatusColor(underContractStatus);
+//                removeStatusColor(underContractStatus);
             }
             else {
-                removeStatusColor(closedStatus);
+//                removeStatusColor(closedStatus);
+                resetAllStatusColors();
             }
 
         } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
             getTime(d, updatedTime, contractDisplay);
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
                 activateStatusColor(underContractStatus);
-                removeStatusColor(signedStatus);
+//                removeStatusColor(signedStatus);
             }
             else {
-                removeStatusColor(underContractStatus);
+//                removeStatusColor(underContractStatus);
+                resetAllStatusColors();
             }
 
         } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
             getTime(d, updatedTime, signedDisplay);
             if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
                 activateStatusColor(signedStatus);
-                removeStatusColor(pipelineStatus);
+//                removeStatusColor(pipelineStatus);
             }
             else {
-                removeStatusColor(signedStatus);
+//                removeStatusColor(signedStatus);
+                resetAllStatusColors();
             }
 
         } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
@@ -461,7 +472,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 activateStatusColor(pipelineStatus);
             }
             else {
-                removeStatusColor(pipelineStatus);
+//                removeStatusColor(pipelineStatus);
+                resetAllStatusColors();
             }
         }
     }
@@ -483,6 +495,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
     }
 
+    private void resetAllStatusColors() {
+        pipelineStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        pipelineStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        underContractStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        underContractStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        closedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        closedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        signedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        signedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+    }
     private void removeStatusColor(TextView status) {
         status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
         status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
@@ -544,13 +566,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         //initializeClient();
         loader.setVisibility(View.GONE);
-//        parentActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                loader.setVisibility(View.GONE);
-//                currentClient = parentActivity.getSelectedClient();
-//            }
-//        });
+        //TODO: make this go to the correct tab that your client will be in
+        parentActivity.navigateToClientList("pipeline");
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(parentActivity, "Client updates saved", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

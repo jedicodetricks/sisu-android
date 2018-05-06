@@ -123,13 +123,16 @@ public class DataController {
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
         Arrays.sort(counters);
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric closed = new Metric("Closed", "CLSD", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
 
 //        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
+            if(counters[i].getCoalesce() != null) {
+               counters[i].setName(counters[i].getCoalesce());
+            }
 //            for(AgentGoalsObject ago : goals) {
 //                Log.e("METRIC", counters[i].getActivity_type());
 //                Log.e("GOAL", ago.getGoal_id());
@@ -141,11 +144,10 @@ public class DataController {
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
             masterActivitiesObject.add(metric);
-
             switch(counters[i].getName()) {
                 case "Contacts":
-                case "Buyer Signed":
-                case "Open Houses":
+                case "Buyers Signed":
+                case "Listing Showings":
                     scoreboardObject.add(metric);
                     break;
                 case "Buyer Under Contract":
@@ -158,8 +160,8 @@ public class DataController {
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     break;
-                case "Buyer Initial Appointments":
-                case "Seller Initial Appointments":
+                case "Buyer Appointments":
+                case "Seller Appointments":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
@@ -181,87 +183,96 @@ public class DataController {
     }
 
     private void setMetricThumbnail(Metric metric) {
-        switch (metric.getTitle()) {
-            case "Buyer Showings":
-                metric.setThumbnailId(R.drawable.open_house_icon);
-                break;
-            case "Contacts":
-                metric.setThumbnailId(R.drawable.contact_icon);
-                break;
-            case "Listing Showings":
-                metric.setThumbnailId(R.drawable.listing_icon);
-                break;
-            case "Other Appointments":
-                metric.setThumbnailId(R.drawable.appointment_icon);
-                break;
-            case "Number of Dials":
-                metric.setThumbnailId(R.drawable.phone_icon);
-                break;
-            case "Thank You Cards":
-                metric.setThumbnailId(R.drawable.thankyou_card_icon);
-                break;
-            case "Open Houses":
-                metric.setThumbnailId(R.drawable.open_house_icon);
-                break;
-            case "Added to Database":
-                metric.setThumbnailId(R.drawable.database_icon);
-                break;
-            case "Referrals Requested":
-                metric.setThumbnailId(R.drawable.referals_icon);
-                break;
-            case "Referrals Received":
-                metric.setThumbnailId(R.drawable.referals_icon);
-                break;
-            case "Appointments Set":
-                metric.setThumbnailId(R.drawable.appointment_icon);
-                break;
-            case "Prepared CMA":
-                metric.setThumbnailId(R.drawable.cma_icon);
-                break;
-            case "Exercise":
-                metric.setThumbnailId(R.drawable.exercise_icon);
-                break;
-            case "Meditate":
-                metric.setThumbnailId(R.drawable.meditate_icon);
-                break;
-            case "Hours Prospected":
-                metric.setThumbnailId(R.drawable.clock_icon);
-                break;
-            case "Buyers Closed":
-                metric.setThumbnailId(R.drawable.closed_icon);
-                break;
-            case "Buyers Signed":
-                metric.setThumbnailId(R.drawable.signed_icon);
-                break;
-            case "Buyers Under Contract":
-                metric.setThumbnailId(R.drawable.contract_icon);
-                break;
-            case "Buyer Appointments":
-                metric.setThumbnailId(R.drawable.appointment_icon);
-                break;
-            case "Sellers Closed":
-                metric.setThumbnailId(R.drawable.closed_icon);
-                break;
-            case "Sellers Signed":
-                metric.setThumbnailId(R.drawable.signed_icon);
-                break;
-            case "Sellers Under Contract":
-                metric.setThumbnailId(R.drawable.contract_icon);
-                break;
-            case "Seller Appointments":
-                metric.setThumbnailId(R.drawable.appointment_icon);
-                break;
-            default:
-                metric.setThumbnailId(R.drawable.leaderboard_icon);
-                break;
+        if(metric.getTitle() != null) {
+
+            switch (metric.getTitle()) {
+                case "Buyer Showings":
+                    metric.setThumbnailId(R.drawable.open_house_icon);
+                    break;
+                case "Contacts":
+                    metric.setThumbnailId(R.drawable.contact_icon);
+                    break;
+                case "Listing Showings":
+                    metric.setThumbnailId(R.drawable.listing_icon);
+                    break;
+                case "Other Appointments":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
+                    break;
+                case "Number of Dials":
+                    metric.setThumbnailId(R.drawable.phone_icon);
+                    break;
+                case "Thank You Cards":
+                    metric.setThumbnailId(R.drawable.thankyou_card_icon);
+                    break;
+                case "Open Houses":
+                    metric.setThumbnailId(R.drawable.open_house_icon);
+                    break;
+                case "Added to Database":
+                    metric.setThumbnailId(R.drawable.database_icon);
+                    break;
+                case "Referrals Requested":
+                    metric.setThumbnailId(R.drawable.referals_icon);
+                    break;
+                case "Referrals Received":
+                    metric.setThumbnailId(R.drawable.referals_icon);
+                    break;
+                case "Appointments Set":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
+                    break;
+                case "Prepared CMA":
+                    metric.setThumbnailId(R.drawable.cma_icon);
+                    break;
+                case "Exercise":
+                    metric.setThumbnailId(R.drawable.exercise_icon);
+                    break;
+                case "Meditate":
+                    metric.setThumbnailId(R.drawable.meditate_icon);
+                    break;
+                case "Hours Prospected":
+                    metric.setThumbnailId(R.drawable.clock_icon);
+                    break;
+                case "Buyers Closed":
+                    metric.setThumbnailId(R.drawable.closed_icon);
+                    break;
+                case "Buyers Signed":
+                    metric.setThumbnailId(R.drawable.signed_icon);
+                    break;
+                case "Buyers Under Contract":
+                    metric.setThumbnailId(R.drawable.contract_icon);
+                    break;
+                case "Buyer Appointments":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
+                    break;
+                case "Sellers Closed":
+                    metric.setThumbnailId(R.drawable.closed_icon);
+                    break;
+                case "Sellers Signed":
+                    metric.setThumbnailId(R.drawable.signed_icon);
+                    break;
+                case "Sellers Under Contract":
+                    metric.setThumbnailId(R.drawable.contract_icon);
+                    break;
+                case "Seller Appointments":
+                    metric.setThumbnailId(R.drawable.appointment_icon);
+                    break;
+                default:
+                    metric.setThumbnailId(R.drawable.leaderboard_icon);
+                    break;
+            }
         }
     }
 
     private void removeDecimalsFromAmounts(ClientObject co) {
-        String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
-        co.setCommission_amt(commission);
-        String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
-        co.setTrans_amt(trans);
+        if(co.getCommission_amt() != null) {
+            String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
+            co.setCommission_amt(commission);
+        }
+
+        if(co.getTrans_amt() != null) {
+            String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
+            co.setTrans_amt(trans);
+        }
+
         if(co.getGross_commission_amt() != null) {
             String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
             co.setGross_commission_amt(gci);
@@ -435,26 +446,29 @@ public class DataController {
 
     private void setupSelectedActivities(SettingsObject s) {
         activitiesSelected = new HashMap<>();
-        String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
-        String[] splitString = formattedString.split(",");
+        if(s != null) {
+            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
+            String[] splitString = formattedString.split(",");
 
-        //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
-        for(String setting : splitString) {
-            String[] splitSetting = setting.split(":");
-            activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
-        }
+            //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
+            for(String setting : splitString) {
+                String[] splitSetting = setting.split(":");
+                activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
+            }
 
-        if(masterActivitiesObject.size() > 0) {
-            for(Metric m : masterActivitiesObject) {
-                if(activitiesSelected.containsKey(m.getType())) {
-                    SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
-                    selectedActivities.setName(m.getTitle());
-                    if(selectedActivities.getValue().equals("0")) {
-                        continue;
+            if(masterActivitiesObject.size() > 0) {
+                for(Metric m : masterActivitiesObject) {
+                    if(activitiesSelected.containsKey(m.getType())) {
+                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
+                        selectedActivities.setName(m.getTitle());
+                        if(selectedActivities.getValue().equals("0")) {
+                            continue;
+                        }
                     }
                 }
             }
         }
+
     }
 
     public List<SettingsObject> getSettings() {

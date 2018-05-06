@@ -88,7 +88,7 @@ public class ReportListAdapter extends BaseAdapter {
         progressBar.setProgress(metric.getPercentComplete());
         progressBar.setScaleY(4f);
 
-        int color = metric.getColor() != 0? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());
+        int color = metric.getColor() != 0 ? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());
         progressBar.setProgressTintList(ColorStateList.valueOf(color));
         animateBars(progressBar);
         thumbnailImageView.setImageResource(metric.getThumbnailId());

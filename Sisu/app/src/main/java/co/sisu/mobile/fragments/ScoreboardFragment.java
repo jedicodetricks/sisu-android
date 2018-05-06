@@ -31,8 +31,6 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
 
-//import co.sisu.mobile.activities.AddClientActivity;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -401,28 +399,27 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     setupProgressBar(appointmentsMetric, appointmentsProgress, appointmentsProgressMark, appointmentsCurrentNumber, appointmentsGoalNumber);
                     break;
 
-                case "Buyer Signed":
+                case "Buyers Signed":
                     Metric bbSignedMetric = metricList.get(i);
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
                     break;
 
-                case "Open Houses":
+                case "Listing Showings":
                     Metric listingsTakenMetric = metricList.get(i);
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
                     break;
 
-                case "Buyer Under Contract":
+                case "Under Contract":
                     Metric underContractMetric = metricList.get(i);
                     setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
                     break;
 
-                case "Buyer Closed":
+                case "Closed":
                     Metric closedMetric = metricList.get(i);
                     setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
                     break;
             }
         }
-
     }
 
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
@@ -521,7 +518,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         parentActivity.stackReplaceFragment(AddClientFragment.class);
-        parentActivity.swapToAddClientBar();
+        parentActivity.swapToAddClientBar("scoreboard");
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);

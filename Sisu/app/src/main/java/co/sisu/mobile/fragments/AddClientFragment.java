@@ -593,6 +593,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 signedSelectedYear = year;
                 signedSelectedMonth = month - 1;
                 signedSelectedDay = day;
+
                 signedDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;

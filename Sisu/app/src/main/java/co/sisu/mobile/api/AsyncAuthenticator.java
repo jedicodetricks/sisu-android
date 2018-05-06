@@ -129,7 +129,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
 
                         Request request = new Request.Builder()
-                                .url("http://staging.sisu.co/api/agent/authenticate")
+                                .url("http://staging.sisu.co/api/v1/agent/authenticate")
                                 .post(body)
                                 .addHeader("Authorization", jwt)
                                 .addHeader("Client-Timestamp", finalTime)
@@ -147,10 +147,10 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                             if (response.code() == 200) {
                                 callback.onEventCompleted(null, "Authenticator");
                             } else {
-                                callback.onEventFailed(null, "Server Ping");
+                                callback.onEventFailed(null, "Authenticator");
                             }
                         } else {
-                            callback.onEventFailed(null, "Server Ping");
+                            callback.onEventFailed(null, "Authenticator");
                         }
 
                         response.body().close();
@@ -186,7 +186,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/agent/authenticate")
+                    .url("http://staging.sisu.co/api/v1/agent/authenticate")
                     .post(body)
                     .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                     .addHeader("Client-Timestamp", "1520999095")

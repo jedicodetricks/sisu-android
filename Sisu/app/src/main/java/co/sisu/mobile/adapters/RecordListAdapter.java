@@ -111,11 +111,12 @@ public class RecordListAdapter extends BaseAdapter {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
                         switch(metric.getTitle()) {
                             case "1st Time Appts":
-                            case "Buyer Signed":
-                            case "Seller Signed":
-                            case "Buyer Under Contract":
-                            case "Seller Under Contract":
-                            case "Closed":
+                            case "Buyers Signed":
+                            case "Sellers Signed":
+                            case "Buyers Under Contract":
+                            case "Sellers Under Contract":
+                            case "Buyers Closed":
+                            case "Sellers Closed":
                                 mRecordEventHandler.onClientDirectorClicked(metric);
                                 break;
                             default:

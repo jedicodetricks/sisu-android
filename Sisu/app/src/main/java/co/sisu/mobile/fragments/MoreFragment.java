@@ -72,23 +72,23 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Clients":
                 activity.stackReplaceFragment(ClientListFragment.class);
-                activity.swapToBacktionBar("Clients");
+                activity.swapToClientListBar();
                 break;
             case "My Profile":
                 activity.stackReplaceFragment(MyProfileFragment.class);
-                activity.swapToBacktionBar("My Profile");
+                activity.swapToBacktionBar("My Profile", null);
                 break;
             case "Goal Setup":
                 activity.stackReplaceFragment(GoalSetupFragment.class);
-                activity.swapToBacktionBar("Goal Setup");
+                activity.swapToBacktionBar("Goal Setup", null);
                 break;
             case "Activity Settings":
                 activity.stackReplaceFragment(ActivitySettingsFragment.class);
-                activity.swapToBacktionBar("Activity Settings");
+                activity.swapToBacktionBar("Activity Settings", null);
                 break;
             case "Settings":
                 activity.stackReplaceFragment(SettingsFragment.class);
-                activity.swapToBacktionBar("Settings");
+                activity.swapToBacktionBar("Settings", null);
                 break;
             case "Feedback":
                 activity.stackReplaceFragment(FeedbackFragment.class);

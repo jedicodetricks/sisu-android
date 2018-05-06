@@ -78,6 +78,8 @@
     <string name="clear">Clear</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
 
     <!--Hints-->
     <string name="password_hint">Password*</string>
