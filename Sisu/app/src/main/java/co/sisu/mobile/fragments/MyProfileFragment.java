@@ -28,7 +28,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,11 +37,13 @@ import java.util.HashMap;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 
@@ -84,9 +85,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         agent = parentActivity.getAgentInfo();
         initButtons();
         initFields();
-        if(agent != null) {
-            fillInAgentInfo();
-        }
+        new AsyncAgent(this, agent.getAgent_id()).execute();
         new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
     }
 
@@ -101,11 +100,17 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void fillInAgentInfo() {
-        username.setText(agent.getEmail());
-        firstName.setText(agent.getFirst_name());
-        lastName.setText(agent.getLast_name());
-        phone.setText(agent.getMobile_phone());
-        password.setText("***********");
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                username.setText(agent.getEmail());
+                firstName.setText(agent.getFirst_name());
+                lastName.setText(agent.getLast_name());
+                phone.setText(agent.getMobile_phone());
+                password.setText("***********");
+            }
+        });
+
     }
 
     private void initButtons() {
@@ -148,16 +153,14 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 }
                 else {
                     launchImageSelector();
-                    Toast.makeText(getContext(), "Profile Image", Toast.LENGTH_LONG).show();
                 }
 
                 break;
             case R.id.saveButton:
-                //TODO: I assume we just want to go back to the client page, not the scoreboard
                 updateProfile();
                 saveProfile();
                 parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More");
+                parentActivity.swapToBacktionBar("More", null);
                 break;
             default:
                 break;
@@ -186,7 +189,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             changedFields.put("last_name", lastName.getText().toString());
         }
         if(!phone.getText().toString().equals(agent.getMobile_phone())) {
-            changedFields.put("phone", phone.getText().toString());
+            changedFields.put("mobile_phone", phone.getText().toString());
         }
         if(!password.getText().toString().equals("***********")) {
             changedFields.put("password", password.getText().toString());
@@ -295,9 +298,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void decodeBase64Image(String data) {
-        byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
-        Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-        profileImage.setImageBitmap(bmp);
+        if(data != null) {
+            byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
+            Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            profileImage.setImageBitmap(bmp);
+        }
     }
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
@@ -310,16 +315,32 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 }
             });
         }
-        else if(asyncReturnType.equals("")) {
+        else if(asyncReturnType.equals("Update Profile")) {
             parentActivity.showToast("Your profile has been updated");
             parentActivity.stackReplaceFragment(MoreFragment.class);
             parentActivity.swapToTitleBar("More");
+        }
+        else if(asyncReturnType.equals("Get Agent")) {
+            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
+            AgentModel agentModel = agentJsonObject.getAgent();
+            parentActivity.setAgent(agentModel);
+            agent = parentActivity.getAgentInfo();
+            fillInAgentInfo();
         }
 
     }
 
     @Override
-    public void onEventFailed(Object o, String s) {
-        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+        //TODO: We'll need a counter to make sure this just doesn't loop infinitely
+//        if(asyncReturnType.equals("Profile Image")) {
+//            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+//        }
+//        else if(asyncReturnType.equals("Update Profile")) {
+//            parentActivity.showToast("Your profile has been updated");
+//            parentActivity.stackReplaceFragment(MoreFragment.class);
+//            parentActivity.swapToTitleBar("More");
+//        }
+
     }
 }

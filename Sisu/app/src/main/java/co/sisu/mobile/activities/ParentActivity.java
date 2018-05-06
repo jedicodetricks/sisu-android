@@ -9,11 +9,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +70,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     boolean activeClientListBar = false;
     boolean activeTitleBar = false;
     private boolean activeAddClientBar = false;
+    private String addClientChild = "";
+    ProgressBar parentLoader;
 
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -105,6 +109,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parent.setPaddingRelative(0,0,0,0);
         initializeActionBar();
         getSupportActionBar().setElevation(0);
+        parentLoader = findViewById(R.id.parentLoader);
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
@@ -112,6 +117,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
+        parentLoader.setVisibility(View.VISIBLE);
     }
 
 
@@ -159,6 +165,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    parentLoader.setVisibility(View.GONE);
                     resetToolbarImages("scoreboard");
                     replaceFragment(ScoreboardFragment.class);
                 }
@@ -255,7 +262,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
-                swapToBacktionBar(fragmentTag);
+                swapToBacktionBar(fragmentTag, null);
                 replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
@@ -387,8 +394,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-    public void swapToBacktionBar(String titleString) {
+    public void swapToBacktionBar(String titleString, String child) {
         //Get it?! Back action... Backtion!
+        if(child != null) {
+            addClientChild = child;
+        }
         activeBacktionBar = true;
         getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
         backtionTitle = findViewById(R.id.actionBarTitle);
@@ -444,10 +454,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-
+        Log.e("BACK PRESSED", "FUCK");
         if(activeBacktionBar) {
             activeBacktionBar = false;
-            initializeActionBar();
+            if(addClientChild.equals("client")) {
+                swapToClientListBar();
+            }
+            else {
+                initializeActionBar();
+            }
         }
         else if(activeClientListBar) {
             activeClientListBar = false;
@@ -459,7 +474,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(activeAddClientBar) {
             activeAddClientBar = false;
-            initializeActionBar();
+            if(addClientChild.equals("client")) {
+                swapToClientListBar();
+            }
+            else if(addClientChild.equals("record")) {
+                swapToBacktionBar("Record", null);
+            }
+            else {
+                initializeActionBar();
+            }
         }
         super.onBackPressed();
     }
@@ -593,12 +616,32 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return dataController.getUpdatedRecords();
     }
 
-    public void swapToAddClientBar() {
+    public void swapToAddClientBar(String child) {
         activeAddClientBar = true;
+        activeBacktionBar = false;
+        activeClientListBar = false;
+        activeTitleBar = false;
+        addClientChild = child;
         getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
 
 //        backtionTitle = findViewById(R.id.actionBarTitle);
 //        backtionTitle.setText(titleString);
 
+    }
+
+    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
+        dataController.setAgentGoals(agentGoalsObject);
+    }
+
+    public void setAgentIncomeAndReason(AgentModel agentModel) {
+//        dataController.setAgent(agentModel);
+        agent.setDesired_income(agentModel.getDesired_income());
+        agent.setVision_statement(agentModel.getVision_statement());
+    }
+
+    public void setAgent(AgentModel agentModel) {
+        agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
+        this.agent = agentModel;
+        dataController.setAgent(agentModel);
     }
 }

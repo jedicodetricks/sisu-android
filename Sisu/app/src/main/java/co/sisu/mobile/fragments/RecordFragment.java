@@ -75,7 +75,6 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     private void initializeCalendarHandler() {
-
         final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
         final TextView dateDisplay = getView().findViewById(R.id.record_date);
 
@@ -145,8 +144,8 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     private boolean recordMetric() {
         //open clients view to select contact to add this metric
         //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
-        parentActivity.stackReplaceFragment(ClientListFragment.class);
-        parentActivity.swapToClientListBar();
+        parentActivity.stackReplaceFragment(AddClientFragment.class);
+        parentActivity.swapToAddClientBar("record");
 
         return parentActivity.isRecordSaved();//returns the value set by saveButton within Client
     }
@@ -224,18 +223,25 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     public void onClientDirectorClicked(Metric metric) {
         switch(metric.getTitle()) {
             case "1st Time Appts":
-                break;
-            case "Buyer Signed":
                 recordMetric();
                 break;
-            case "Seller Signed":
+            case "Buyers Signed":
                 recordMetric();
                 break;
-            case "Buyer Under Contract":
+            case "Sellers Signed":
+                recordMetric();
                 break;
-            case "Seller Under Contract":
+            case "Buyers Under Contract":
+                recordMetric();
                 break;
-            case "Closed":
+            case "Sellers Under Contract":
+                recordMetric();
+                break;
+            case "Buyers Closed":
+                recordMetric();
+                break;
+            case "Sellers Closed":
+                recordMetric();
                 break;
         }
     }

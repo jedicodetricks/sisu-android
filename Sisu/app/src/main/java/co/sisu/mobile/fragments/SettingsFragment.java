@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,8 +93,15 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     timeZoneDisplay.setText(s.getValue());
                     break;
                 case "daily_reminder_time":
-                    displayTime.setText(s.getValue());
+                    if(s.getValue().equals("11:01")) {
+                        displayTime.setText("");
+                    }
+                    else {
+                        displayTime.setText(s.getValue());
+                    }
                     break;
+                //Keep these, we'll need them for V2
+
 //                case "lights":
 //                    lightsSwitch.setChecked(isChecked(s));
 //                    break;
@@ -140,6 +148,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void initSwitches() {
+        //Keep these, we'll need them for V2
+
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
 //        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
 //        idSwitch = getView().findViewById(R.id.idSwitch);
@@ -167,8 +177,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
-                Log.d("CHECK LISTENER", "REMINDER");
                 break;
+                //Keep these, we'll need them for V2
 //            case R.id.lightsSwitch:
 //                for(SettingsObject so : settings) {
 //                    if(so.getName().equals("lights")) {
@@ -187,9 +197,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 //                break;
         }
 
-        for(SettingsObject so : settings) {
-            Log.e("SETTINGS", so.getName() + " " + so.getValue());
-        }
+
     }
 
     @Override
@@ -198,14 +206,12 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             case R.id.timeButton:
             case R.id.timeDisplay:
             case R.id.timeLabel:
-                Log.d("CHECK LISTENER", "Launch Time");
                 if(reminderSwitch.isChecked()) {
                     launchTimePicker();
                 }
                 break;
             case R.id.saveButton:
                 saveSettingsObject();
-                Log.e("SAVE", "PREASE");
         }
     }
 
@@ -215,6 +221,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         for(SettingsObject so : settings) {
             settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
         }
+
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
         new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject).execute();
         SettingsObject[] array = new SettingsObject[settings.size()];
@@ -256,13 +263,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
 
-//        if(selectedPeriod.equals("AM")) {
-//            calendar.set(Calendar.AM_PM,Calendar.AM);
-//        }
-//        else {
-//            calendar.set(Calendar.AM_PM,Calendar.PM);
-//            calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
-//        }
         Log.d("CALENDAR SET", calendar.getTime().toString());
         Log.d("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
 
@@ -272,7 +272,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        Log.e("COMPLETE", "YES");
+        if(asyncReturnType.equals("Update Settings")) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
