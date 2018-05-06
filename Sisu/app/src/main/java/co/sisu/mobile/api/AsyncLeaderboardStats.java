@@ -35,9 +35,9 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
 
-            String url = "http://staging.sisu.co/api/team/leaderboards/" + teamId + "/" + searchYear;
+            String url = "http://staging.sisu.co/api/v1/v1/team/leaderboards/" + teamId + "/" + searchYear;
             if(!searchMonth.equals("")) {
-                url = "http://staging.sisu.co/api/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
+                url = "http://staging.sisu.co/api/v1/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
             }
 
             Log.e("LEADERBOARD URL", url);
@@ -61,10 +61,10 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
                     AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(response.body().charStream(), AsyncLeaderboardJsonObject.class);
                     callback.onEventCompleted(leaderboardObject, "Leaderboard");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Leaderboard");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Leaderboard");
             }
 
             response.body().close();

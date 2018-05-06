@@ -10,6 +10,13 @@ public class AgentGoalsObject {
     String name;
     String value;
 
+    public AgentGoalsObject(String agent_id, String goal_id, String name, String value) {
+        this.agent_id = agent_id;
+        this.goal_id = goal_id;
+        this.name = name;
+        this.value = value;
+    }
+
     public String getAgent_id() {
         return agent_id;
     }

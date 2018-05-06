@@ -401,22 +401,22 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     setupProgressBar(appointmentsMetric, appointmentsProgress, appointmentsProgressMark, appointmentsCurrentNumber, appointmentsGoalNumber);
                     break;
 
-                case "Buyer Signed":
+                case "Buyers Signed":
                     Metric bbSignedMetric = metricList.get(i);
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
                     break;
 
-                case "Open Houses":
+                case "Listing Showings":
                     Metric listingsTakenMetric = metricList.get(i);
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
                     break;
 
-                case "Buyer Under Contract":
+                case "Under Contract":
                     Metric underContractMetric = metricList.get(i);
                     setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
                     break;
 
-                case "Buyer Closed":
+                case "Closed":
                     Metric closedMetric = metricList.get(i);
                     setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
                     break;

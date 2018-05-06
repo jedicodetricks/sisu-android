@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Brady Groharing on 4/8/2018.
  */
 
-public class AgentModel implements Parcelable{
+public class AgentModel implements Parcelable, Cloneable{
     String agent_id;
     String desired_income;
     String email;
@@ -21,6 +21,7 @@ public class AgentModel implements Parcelable{
     public AgentGoalsObject[] getAgentGoalsObject() {
         return agentGoalsObject;
     }
+
 
     public void setAgentGoalsObject(AgentGoalsObject[] agentGoalsObject) {
         this.agentGoalsObject = agentGoalsObject;
@@ -134,4 +135,20 @@ public class AgentModel implements Parcelable{
             return new AgentModel[size];
         }
     };
+
+//    @Override
+//    public AgentModel clone() {
+//        try {
+//            return (AgentModel) super.clone();
+//        } catch (CloneNotSupportedException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        AgentModel cloned = (AgentModel)super.clone();
+        return cloned;
+    }
 }

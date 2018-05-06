@@ -62,7 +62,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-
+        feedback.setText("");
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

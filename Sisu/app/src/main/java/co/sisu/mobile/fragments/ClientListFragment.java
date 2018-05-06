@@ -203,6 +203,8 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
+        getView().clearFocus();
+
         if(mListView != null) {
             mListView.setAdapter(null);
         }

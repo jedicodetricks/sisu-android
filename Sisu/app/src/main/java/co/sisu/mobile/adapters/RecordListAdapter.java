@@ -107,7 +107,6 @@ public class RecordListAdapter extends BaseAdapter {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.e("METRIC", metric.getTitle());
                 if(!rowCounter.getText().toString().equals("")) {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
                         switch(metric.getTitle()) {

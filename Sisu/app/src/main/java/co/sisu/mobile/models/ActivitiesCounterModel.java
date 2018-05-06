@@ -7,6 +7,7 @@ package co.sisu.mobile.models;
 public class ActivitiesCounterModel implements Comparable<ActivitiesCounterModel> {
     String activity_type;
     String count;
+    String coalesce;
     String name;
     int records;
     int weight;
@@ -49,6 +50,14 @@ public class ActivitiesCounterModel implements Comparable<ActivitiesCounterModel
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public String getCoalesce() {
+        return coalesce;
+    }
+
+    public void setCoalesce(String coalesce) {
+        this.coalesce = coalesce;
     }
 
     @Override

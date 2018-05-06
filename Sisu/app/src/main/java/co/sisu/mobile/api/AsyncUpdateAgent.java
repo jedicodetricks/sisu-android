@@ -15,21 +15,21 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by bradygroharing on 4/17/18.
+ * Created by Brady Groharing on 5/5/2018.
  */
 
-public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
+public class AsyncUpdateAgent extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-    private String startDate;
-    private String endDate;
-    AsyncUpdateActivitiesJsonObject updateActivitiesModels;
+    private String income;
+    private String reason;
 
-    public AsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
+    public AsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
         callback = cb;
         this.agentId = agentId;
-        this.updateActivitiesModels = updateActivitiesModels;
+        this.income = income;
+        this.reason = reason;
     }
 
     @Override
@@ -39,16 +39,24 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
-            String jsonInString = gson.toJson(updateActivitiesModels);
-            Log.e("POST ACTIVITY", jsonInString);
+            String jsonInString = "";
+            if(!income.equals("") && !reason.equals("")) {
+                jsonInString = "{\"vision_statement\":\"" + reason + "\", \"desired_income\":\"" + income + "\"}";
+            }
+            else if(!reason.equals("")) {
+                jsonInString = "{\"vision_statement\":\"" + reason + "\"}";
+            }
+            else if(!income.equals("")){
+                jsonInString = "{\"desired_income\":\"" + income + "\"}";
+            }
+
+            Log.e("POST AGENT", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
-//            startDate = "2017-02-01";
-//            endDate = "2018-10-05";
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/v1/agent/activity/" + agentId)
+                    .url("http://staging.sisu.co/api/v1/agent/edit-agent/" + agentId)
                     .put(body)
                     .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
                     .addHeader("Client-Timestamp", "1520999095")
@@ -58,18 +66,18 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
 
             try {
                 response = client.newCall(request).execute();
-//                Log.e("UPDATE ACTIVITIES", response.body().string());
+                Log.e("UPDATE SETTINGS", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Update Activities");
+                    callback.onEventCompleted(null, "Update Agent");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Update Agent");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Update Agent");
             }
 
             response.body().close();
@@ -80,3 +88,4 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
         return null;
     }
 }
+

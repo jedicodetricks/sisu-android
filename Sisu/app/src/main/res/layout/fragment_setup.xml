@@ -131,7 +131,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"
             tools:text="Monthly Activities" />
-///////////////////////////////////////////////////////////////
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/sellersClosedLayout"
             android:layout_width="match_parent"
@@ -153,7 +153,8 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/sellers_closed_hint"
-                android:inputType="number"/>
+                android:inputType="number"
+                />
 
         </android.support.design.widget.TextInputLayout>
 

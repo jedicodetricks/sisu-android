@@ -606,4 +606,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        backtionTitle.setText(titleString);
 
     }
+
+    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
+        dataController.setAgentGoals(agentGoalsObject);
+    }
+
+    public void setAgentIncomeAndReason(AgentModel agentModel) {
+//        dataController.setAgent(agentModel);
+        agent.setDesired_income(agentModel.getDesired_income());
+        agent.setVision_statement(agentModel.getVision_statement());
+    }
+
+    public void setAgent(AgentModel agentModel) {
+        agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
+        this.agent = agentModel;
+        dataController.setAgent(agentModel);
+    }
 }
