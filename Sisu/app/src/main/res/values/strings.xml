@@ -110,6 +110,7 @@
     <string name="goals_reason_hint">Your reason for tracking goals</string>
 
     <!--Helper Text-->
+    <string name="error_message">We had a problem contacting our servers.  Please try again later</string>
     <string name="teams_help_text">Configure team settings, invites, challenges</string>
     <string name="clients_help_text">Modify your pipeline</string>
     <string name="my_profile_help_text">Setup</string>
