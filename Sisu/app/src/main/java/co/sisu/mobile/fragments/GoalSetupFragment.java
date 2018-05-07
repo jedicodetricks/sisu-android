@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,10 +37,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
-    Switch timelineSwitch;
+    //Switch timelineSwitch;
     TextView activityTitle, saveButton;
     private boolean dateSwap;
-    private boolean isAnnualChecked = true;
+    private boolean isAnnualChecked = false;
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
     private AgentModel agent;
@@ -86,9 +84,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void initSwitchAndButtons() {
-        timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
-        timelineSwitch.setChecked(true);
-        timelineSwitch.setOnCheckedChangeListener(this);
+//        timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
+//        timelineSwitch.setChecked(true);
+//        timelineSwitch.setOnCheckedChangeListener(this);
 
         saveButton = parentActivity.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);

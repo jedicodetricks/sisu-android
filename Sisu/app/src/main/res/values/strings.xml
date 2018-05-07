@@ -14,6 +14,7 @@
     <string name="version">Version 1.1</string>
 
     <!--Labels-->
+    <string name="annual_title">Annual Goals</string>
     <string name="appointments">Appointments</string>
     <string name="first_time_appts">1st Time Appts</string>
     <string name="contacts">Contacts</string>
@@ -60,8 +61,8 @@
     <string name="timezone">Time Zone:</string>
     <string name="lights">Lights</string>
     <string name="touchId">Touch/Face Id</string>
-    <string name="monthlyTitle">Monthly Activities</string>
-    <string name="yearlyTitle">Yearly Activities</string>
+    <string name="monthlyTitle">Monthly Goals</string>
+    <string name="yearlyTitle">Yearly Goals</string>
 
     <!--Buttons/Links-->
     <string name="forgot_password_sike">Already know your password?</string>
@@ -82,6 +83,8 @@
 
 
     <!--Hints-->
+    <string name="unit_goal_hint">Unit Goal</string>
+    <string name="volume_goal_hint">Volume Goal</string>
     <string name="password_hint">Password*</string>
     <string name="password_hint_non_req">Password</string>
     <string name="email_hint">Email Address</string>
