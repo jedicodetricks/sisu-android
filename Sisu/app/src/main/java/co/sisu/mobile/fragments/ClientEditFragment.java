@@ -567,7 +567,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         //initializeClient();
         loader.setVisibility(View.GONE);
         //TODO: make this go to the correct tab that your client will be in
-        parentActivity.navigateToClientList("pipeline");
+        parentActivity.navigateToClientList("pipeline", null);
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

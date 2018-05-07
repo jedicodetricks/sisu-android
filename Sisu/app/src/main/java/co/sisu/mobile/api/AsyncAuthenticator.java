@@ -205,10 +205,10 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                     AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
                     callback.onEventCompleted(agent, "Authenticator");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Authenticator");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Authenticator");
             }
 
             response.body().close();

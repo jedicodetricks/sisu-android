@@ -354,7 +354,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
 
-    public void navigateToClientList(String tab) {
+    public void navigateToClientList(String tab, String child) {
         Fragment fragment = null;
         try {
             fragment = (Fragment) ClientListFragment.newInstance(tab);
@@ -362,7 +362,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
-        swapToClientListBar();
+        swapToClientListBar(child);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
     }
@@ -396,6 +396,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void swapToBacktionBar(String titleString, String child) {
         //Get it?! Back action... Backtion!
+        resetAllActionBars();
         if(child != null) {
             addClientChild = child;
         }
@@ -410,6 +411,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void swapToTitleBar(final String titleString) {
+        resetAllActionBars();
         activeTitleBar = true;
         this.runOnUiThread(new Runnable() {
             @Override
@@ -422,7 +424,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public void swapToClientListBar() {
+    public void swapToClientListBar(String child) {
+        if(child != null) {
+            addClientChild = child;
+        }
+        resetAllActionBars();
         activeClientListBar = true;
         this.runOnUiThread(new Runnable() {
             @Override
@@ -430,6 +436,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
             }
         });
+    }
+
+    private void resetAllActionBars() {
+         activeBacktionBar = false;
+         activeClientListBar = false;
+         activeTitleBar = false;
+         activeAddClientBar = false;
     }
 
     public AgentModel getAgentInfo() {
@@ -454,11 +467,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        Log.e("BACK PRESSED", "FUCK");
         if(activeBacktionBar) {
             activeBacktionBar = false;
             if(addClientChild.equals("client")) {
-                swapToClientListBar();
+                swapToClientListBar(null);
             }
             else {
                 initializeActionBar();
@@ -466,7 +478,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(activeClientListBar) {
             activeClientListBar = false;
-            initializeActionBar();
+
+            if(addClientChild.equals("record")) {
+                swapToBacktionBar("Record", null);
+            }
+            else {
+                initializeActionBar();
+            }
         }
         else if(activeTitleBar) {
             activeTitleBar = false;
@@ -475,10 +493,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(activeAddClientBar) {
             activeAddClientBar = false;
             if(addClientChild.equals("client")) {
-                swapToClientListBar();
-            }
-            else if(addClientChild.equals("record")) {
-                swapToBacktionBar("Record", null);
+                swapToClientListBar(null);
             }
             else {
                 initializeActionBar();
@@ -504,7 +519,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+                    if(dataController.getTeamsObject().size() != 0) {
+                        new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+                    }
+
                     new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });
@@ -520,6 +538,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
             SettingsObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
+            if(dataController.getTeamsObject().size() == 0) {
+                goalsFinished = true;
+                navigateToScoreboard();
+            }
         }
         else if(asyncReturnType.equals("Update Activities")) {
             clearUpdatedRecords();
@@ -533,9 +555,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Goals")) {
-            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
-        }
+        Log.e("FAILURE", asyncReturnType);
+//        if(asyncReturnType.equals("Goals")) {
+//            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
+//        }
     }
 
     public void setActivitiesObject(Object returnObject) {
@@ -617,16 +640,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void swapToAddClientBar(String child) {
+        resetAllActionBars();
         activeAddClientBar = true;
-        activeBacktionBar = false;
-        activeClientListBar = false;
-        activeTitleBar = false;
         addClientChild = child;
         getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-
-//        backtionTitle = findViewById(R.id.actionBarTitle);
-//        backtionTitle.setText(titleString);
-
     }
 
     public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
@@ -634,7 +651,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setAgentIncomeAndReason(AgentModel agentModel) {
-//        dataController.setAgent(agentModel);
         agent.setDesired_income(agentModel.getDesired_income());
         agent.setVision_statement(agentModel.getVision_statement());
     }
