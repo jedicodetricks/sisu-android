@@ -179,7 +179,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                        calendar.add(Calendar.DAY_OF_WEEK, 7);
+                        calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -192,8 +192,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-                        calendar.add(Calendar.DAY_OF_WEEK, 7);
 
+                        calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
