@@ -404,7 +404,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
                     break;
 
-                case "Listing Showings":
+                case "Listings Taken":
                     Metric listingsTakenMetric = metricList.get(i);
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
                     break;
@@ -513,7 +513,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void navigateToClientList(String tabName){
-        parentActivity.navigateToClientList(tabName);
+        parentActivity.navigateToClientList(tabName, null);
     }
 
     private void launchAddClient() {

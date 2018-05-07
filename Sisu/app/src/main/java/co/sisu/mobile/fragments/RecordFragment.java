@@ -34,7 +34,7 @@ import co.sisu.mobile.models.Metric;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RecordFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, RecordEventHandler, AsyncServerEventListener {
+public class RecordFragment extends Fragment implements View.OnClickListener, RecordEventHandler, AsyncServerEventListener {
 
 
     private ListView mListView;
@@ -119,35 +119,25 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
 
         RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
         mListView.setAdapter(adapter);
-
-        mListView.setOnItemClickListener(this);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//        Metric metric = (Metric) adapterView.getItemAtPosition(position);
-////        Toast.makeText(getContext(), String.valueOf(metric.getCurrentNum() + ":" + id), Toast.LENGTH_SHORT).show();
-//        Log.e("INCOMING NUMBER", String.valueOf(id));
-//        metric.setCurrentNum((int) id);
-//        if(id == 0 && metric.getCurrentNum() > 0) {
-//            if(recordMetric(metric)){
-//                metric.setCurrentNum(metric.getCurrentNum() - 1);
-//            }
-//        }
-//        else if(id == 1){
-//            if(recordMetric(metric)){
-//                metric.setCurrentNum(metric.getCurrentNum() + 1);
-//            }
-//        }
-    }
-
-    private boolean recordMetric() {
-        //open clients view to select contact to add this metric
-        //need to have a method return true if metric is saved successfully then set to recordSaved to return to successfully increment number
-        parentActivity.stackReplaceFragment(AddClientFragment.class);
-        parentActivity.swapToAddClientBar("record");
-
-        return parentActivity.isRecordSaved();//returns the value set by saveButton within Client
+    private void recordMetric(String tab) {
+        String switchTab = "";
+        switch(tab) {
+            case "appts":
+                switchTab = "pipeline";
+                break;
+            case "signed":
+                switchTab = "pipeline";
+                break;
+            case "contract":
+                switchTab= "signed";
+                break;
+            case "closed":
+                switchTab = "contract";
+                break;
+        }
+        parentActivity.navigateToClientList(switchTab, "record");
     }
 
     private void showDatePickerDialog() {
@@ -223,25 +213,25 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
     public void onClientDirectorClicked(Metric metric) {
         switch(metric.getTitle()) {
             case "1st Time Appts":
-                recordMetric();
+                recordMetric("appts");
                 break;
             case "Buyers Signed":
-                recordMetric();
+                recordMetric("signed");
                 break;
             case "Sellers Signed":
-                recordMetric();
+                recordMetric("signed");
                 break;
             case "Buyers Under Contract":
-                recordMetric();
+                recordMetric("contract");
                 break;
             case "Sellers Under Contract":
-                recordMetric();
+                recordMetric("contract");
                 break;
             case "Buyers Closed":
-                recordMetric();
+                recordMetric("closed");
                 break;
             case "Sellers Closed":
-                recordMetric();
+                recordMetric("closed");
                 break;
         }
     }
@@ -259,7 +249,6 @@ public class RecordFragment extends Fragment implements AdapterView.OnItemClickL
                 }
             });
         }
-
     }
 
     @Override
