@@ -90,20 +90,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
         AgentModel agent = agentObject.getAgent();
-        Log.e("AGENT OBJECT", agent.getAgent_id());
-        SaveSharedPreference.setUserId(this, agent.getAgent_id());
-        SaveSharedPreference.setUserName(this, emailAddress);
-        try {
-            //TODO: We need to encrypt this in some way
-            SaveSharedPreference.setUserPassword(this, password);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(agentObject.getStatus_code().equals("-1")) {
+            showToast("Incorrect username or password");
+        }
+        else {
+            Log.e("AGENT OBJECT", agent.getAgent_id());
+            SaveSharedPreference.setUserId(this, agent.getAgent_id());
+            SaveSharedPreference.setUserName(this, emailAddress);
+            try {
+                //TODO: We need to encrypt this in some way
+                SaveSharedPreference.setUserPassword(this, password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Intent intent = new Intent(this, ParentActivity.class);
+            intent.putExtra("Agent", agent);
+            startActivity(intent);
+            finish();
         }
 
-        Intent intent = new Intent(this, ParentActivity.class);
-        intent.putExtra("Agent", agent);
-        startActivity(intent);
-        finish();
     }
 
     @Override

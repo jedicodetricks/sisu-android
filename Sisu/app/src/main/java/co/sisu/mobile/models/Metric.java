@@ -1,25 +1,29 @@
 package co.sisu.mobile.models;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Jeff on 2/21/2018.
  */
 
-public class Metric {
+public class Metric implements Comparable<Metric>{
     private String title;
     private String type;
     private int currentNum;
     private int goalNum;
     private int thumbnailId;
     private int color;
+    private int weight;
 
 
-    public Metric(String title, String type, int currentNum, int goalNum, int thumbnailId, int color){
+    public Metric(String title, String type, int currentNum, int goalNum, int thumbnailId, int color, int weight){
         this.title = title;
         this.type = type;
         this.currentNum = currentNum;
         this.goalNum = goalNum;
         this.thumbnailId = thumbnailId;
         this.color = color;
+        this.weight = weight;
     }
 
     public Metric() {
@@ -78,4 +82,20 @@ public class Metric {
         this.type = type;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Metric other) {
+        if(this.getWeight() > other.getWeight())
+            return -1;
+        else if (this.getWeight() == other.getWeight())
+            return 0 ;
+        return 1 ;
+    }
 }

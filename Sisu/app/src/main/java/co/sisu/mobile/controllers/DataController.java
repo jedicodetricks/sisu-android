@@ -123,54 +123,71 @@ public class DataController {
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
         Arrays.sort(counters);
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
-        Metric closed = new Metric("Closed", "CLSD", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 42, R.drawable.appointment_icon, R.color.colorCorporateOrange);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 99);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 97);
+        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 96);
 
-//        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
             if(counters[i].getCoalesce() != null) {
                counters[i].setName(counters[i].getCoalesce());
             }
-//            for(AgentGoalsObject ago : goals) {
-//                Log.e("METRIC", counters[i].getActivity_type());
-//                Log.e("GOAL", ago.getGoal_id());
-//                if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
-//                    Log.e("GOAL MATCHES", counters[i].getName());
-//                }
-//            }
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), 42, 0, R.color.colorCorporateOrange);
+            for(AgentGoalsObject ago : goals) {
+                if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
+
+                    if(ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
+                        closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                    }
+                    else if(ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
+                        contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
+                    }
+                    else if(ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
+                        firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
+                    }
+                    else if(ago.getGoal_id().equals("SSGND")) {
+                        showing.setGoalNum(Integer.parseInt(ago.getValue()));
+                    }
+                    else {
+                        counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+
+                    }
+                }
+            }
+
+            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
-            masterActivitiesObject.add(metric);
-            switch(counters[i].getName()) {
-                case "Contacts":
-                case "Buyers Signed":
-                case "Listing Showings":
+            switch(counters[i].getActivity_type()) {
+                case "CONTA":
+                case "BSGND":
                     scoreboardObject.add(metric);
                     break;
-                case "Buyer Under Contract":
-                case "Seller Under Contract":
+                case "SSGND":
+                    showing.setCurrentNum(metric.getCurrentNum());
+                    break;
+                case "BUNDC":
+                case "SUNDC":
                     contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
                     contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
                     break;
-                case "Buyer Closed":
-                case "Seller Closed":
+                case "BCLSD":
+                case "SCLSD":
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     break;
-                case "Buyer Appointments":
-                case "Seller Appointments":
+                case "BAPPT":
+                case "SAPPT":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     break;
             }
+            masterActivitiesObject.add(metric);
 
             if(activitiesSelected.containsKey(metric.getType())) {
                 SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
                 selectedActivities.setName(metric.getTitle());
-//                Log.e("VALUE", selectedActivities.getValue());
                 if(selectedActivities.getValue().equals("0")) {
                     continue;
                 }
@@ -180,6 +197,28 @@ public class DataController {
         scoreboardObject.add(firstAppointment);
         scoreboardObject.add(closed);
         scoreboardObject.add(contract);
+        scoreboardObject.add(showing);
+//        masterActivitiesObject.add(firstAppointment);
+//        masterActivitiesObject.add(closed);
+//        masterActivitiesObject.add(contract);
+//        masterActivitiesObject.add(showing);
+//        activitiesObject.add(firstAppointment);
+//        activitiesObject.add(closed);
+//        activitiesObject.add(contract);
+//        activitiesObject.add(showing);
+
+        sortActivitesObjectByWeight();
+    }
+
+    private void sortActivitesObjectByWeight() {
+        Metric[] array = new Metric[activitiesObject.size()];
+        activitiesObject.toArray(array);
+        Arrays.sort(array);
+
+        activitiesObject = new ArrayList<Metric>(Arrays.asList(array));
+//        for(Metric m : activitiesObject) {
+//            Log.e("Metric", m.getTitle() + " : " + m.getWeight());
+//        }
     }
 
     private void setMetricThumbnail(Metric metric) {
