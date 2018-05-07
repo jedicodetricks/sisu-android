@@ -25,15 +25,17 @@
         android:id="@+id/team_letter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/colorCorporateOrange"
+        android:elevation="1dp"
         android:text="Z"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/font_larger"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="1dp"/>
+        app:layout_constraintEnd_toEndOf="@+id/action_bar_home"
+        app:layout_constraintStart_toStartOf="@+id/action_bar_home"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/action_bar_title"

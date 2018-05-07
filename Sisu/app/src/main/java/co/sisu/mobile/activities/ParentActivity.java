@@ -154,7 +154,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             mListView.setOnItemClickListener(this);
 
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-            teamLetter.setText(teamsList.get(0).getTeamLetter());
+            teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(0).getColor());
         }
 
