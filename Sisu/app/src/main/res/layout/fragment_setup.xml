@@ -13,36 +13,36 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context="co.sisu.mobile.fragments.GoalSetupFragment">
 
-        <TextView
-            android:id="@+id/monthToggleText"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/month"
-            app:layout_constraintEnd_toStartOf="@+id/goalsTimelineSelector"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--<TextView-->
+            <!--android:id="@+id/monthToggleText"-->
+            <!--style="@style/SpinnerDropdownItemStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:text="@string/month"-->
+            <!--app:layout_constraintEnd_toStartOf="@+id/goalsTimelineSelector"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-        <Switch
-            android:id="@+id/goalsTimelineSelector"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/yearToggleText"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--<Switch-->
+            <!--android:id="@+id/goalsTimelineSelector"-->
+            <!--style="@style/SpinnerDropdownItemStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--app:layout_constraintEnd_toStartOf="@+id/yearToggleText"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-        <TextView
-            android:id="@+id/yearToggleText"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/year"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--<TextView-->
+            <!--android:id="@+id/yearToggleText"-->
+            <!--style="@style/SpinnerDropdownItemStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginTop="2dp"-->
+            <!--android:text="@string/year"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 
         <TextView
@@ -57,7 +57,7 @@
             android:text="@string/goals"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goalsTimelineSelector" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/desiredIncomeLayout"
@@ -115,7 +115,71 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:id="@+id/annualActivityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textSize="@dimen/font_large"
+            android:text="@string/annual_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"
+            tools:text="@string/annual_title" />
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/unitGoalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/annualActivityTitle">
+
+            <EditText
+                android:id="@+id/unitGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/unit_goal_hint"
+                android:inputType="number"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/volumeGoalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/unitGoalLayout">
+
+            <EditText
+                android:id="@+id/volumeGoal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/volume_goal_hint"
+                android:inputType="number"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/activityTitle"
@@ -129,8 +193,7 @@
             android:text="@string/monthlyTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"
-            tools:text="Monthly Activities" />
+            app:layout_constraintTop_toBottomOf="@id/volumeGoalLayout"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/sellersClosedLayout"

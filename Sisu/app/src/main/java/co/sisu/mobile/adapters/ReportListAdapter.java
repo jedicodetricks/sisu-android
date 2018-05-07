@@ -3,14 +3,7 @@ package co.sisu.mobile.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
-import android.net.Uri;
-import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,15 +72,34 @@ public class ReportListAdapter extends BaseAdapter {
         Metric metric = (Metric) getItem(position);
 
         titleTextView.setText(metric.getTitle());
+        if(metric.getCurrentNum() < 0) {
+            metric.setCurrentNum(0);
+        }
+        if(metric.getTitle().equalsIgnoreCase("listing showings") ||
+                metric.getTitle().equalsIgnoreCase("number of dials") ||
+                metric.getTitle().equalsIgnoreCase("thank you cards") ||
+                metric.getTitle().equalsIgnoreCase("open houses") ||
+                metric.getTitle().equalsIgnoreCase("added to database") ||
+                metric.getTitle().equalsIgnoreCase("referrals requested") ||
+                metric.getTitle().equalsIgnoreCase("referrals received") ||
+                metric.getTitle().equalsIgnoreCase("prepared cma") ||
+                metric.getTitle().equalsIgnoreCase("meditate") ||
+                metric.getTitle().equalsIgnoreCase("hours prospected") ||
+                metric.getTitle().equalsIgnoreCase("exercise")) {
 
-        subtitleTextView.setText(metric.getCurrentNum() + " of " + metric.getGoalNum());
-        percentageTextView.setText(metric.getPercentComplete() + "% complete");
-        progressBar.setProgress(metric.getPercentComplete());
-        progressBar.setScaleY(4f);
+            subtitleTextView.setText("Total: " + metric.getCurrentNum());
+            percentageTextView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else {
+            subtitleTextView.setText(metric.getCurrentNum() + " of " + metric.getGoalNum());
+            percentageTextView.setText(metric.getPercentComplete() + "% complete");
+            progressBar.setProgress(metric.getPercentComplete());
+            progressBar.setScaleY(4f);
 
-        int color = metric.getColor() != 0 ? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());
-        progressBar.setProgressTintList(ColorStateList.valueOf(color));
-        animateBars(progressBar);
+            int color = metric.getColor() != 0 ? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());
+            progressBar.setProgressTintList(ColorStateList.valueOf(color));
+            animateBars(progressBar);
+        }
         thumbnailImageView.setImageResource(metric.getThumbnailId());
 
         return rowView;
