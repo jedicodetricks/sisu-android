@@ -162,25 +162,30 @@ public class DataController {
             switch(counters[i].getActivity_type()) {
                 case "CONTA":
                 case "BSGND":
+                    setupMetricGoals(metric);
                     scoreboardObject.add(metric);
                     break;
                 case "SSGND":
                     showing.setCurrentNum(metric.getCurrentNum());
+                    setupMetricGoals(showing);
                     break;
                 case "BUNDC":
                 case "SUNDC":
                     contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
                     contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(contract);
                     break;
                 case "BCLSD":
                 case "SCLSD":
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(closed);
                     break;
                 case "BAPPT":
                 case "SAPPT":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(firstAppointment);
                     break;
             }
             masterActivitiesObject.add(metric);
@@ -194,6 +199,10 @@ public class DataController {
             }
             activitiesObject.add(metric);
         }
+//        setupMetricGoals(firstAppointment);
+//        setupMetricGoals(closed);
+//        setupMetricGoals(contract);
+//        setupMetricGoals(showing);
         scoreboardObject.add(firstAppointment);
         scoreboardObject.add(closed);
         scoreboardObject.add(contract);
@@ -208,6 +217,13 @@ public class DataController {
 //        activitiesObject.add(showing);
 
         sortActivitesObjectByWeight();
+    }
+
+    private void setupMetricGoals(Metric m) {
+        int goalNum = m.getGoalNum();
+        m.setDailyGoalNum(goalNum / 30);
+        m.setWeeklyGoalNum(goalNum / 4);
+        m.setYearlyGoalNum(goalNum * 12);
     }
 
     private void sortActivitesObjectByWeight() {

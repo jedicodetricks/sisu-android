@@ -14,6 +14,9 @@ public class Metric implements Comparable<Metric>{
     private int thumbnailId;
     private int color;
     private int weight;
+    private int yearlyGoalNum;
+    private int dailyGoalNum;
+    private int weeklyGoalNum;
 
 
     public Metric(String title, String type, int currentNum, int goalNum, int thumbnailId, int color, int weight){
@@ -21,6 +24,12 @@ public class Metric implements Comparable<Metric>{
         this.type = type;
         this.currentNum = currentNum;
         this.goalNum = goalNum;
+        this.yearlyGoalNum = goalNum * 12;
+        this.dailyGoalNum = goalNum / 30;
+        if(this.dailyGoalNum == 0) {
+            dailyGoalNum = 1;
+        }
+        this.weeklyGoalNum = goalNum / 4;
         this.thumbnailId = thumbnailId;
         this.color = color;
         this.weight = weight;
@@ -31,6 +40,9 @@ public class Metric implements Comparable<Metric>{
     }
 
     public int getPercentComplete(){
+        if(goalNum == 0) {
+            return 100;
+        }
         return (int) (((double)currentNum/(double)goalNum) * 100);
     }
 
@@ -88,6 +100,33 @@ public class Metric implements Comparable<Metric>{
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public int getYearlyGoalNum() {
+        return yearlyGoalNum;
+    }
+
+    public void setYearlyGoalNum(int yearlyGoalNum) {
+        this.yearlyGoalNum = yearlyGoalNum;
+    }
+
+    public int getDailyGoalNum() {
+        return dailyGoalNum;
+    }
+
+    public void setDailyGoalNum(int dailyGoalNum) {
+        if(dailyGoalNum == 0) {
+            dailyGoalNum = 1;
+        }
+        this.dailyGoalNum = dailyGoalNum;
+    }
+
+    public int getWeeklyGoalNum() {
+        return weeklyGoalNum;
+    }
+
+    public void setWeeklyGoalNum(int weeklyGoalNum) {
+        this.weeklyGoalNum = weeklyGoalNum;
     }
 
     @Override
