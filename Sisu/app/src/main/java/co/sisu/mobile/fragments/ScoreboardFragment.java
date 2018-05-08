@@ -385,7 +385,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void animateProgressBars(List<Metric> metricList){
-
         for(int i = 0; i < metricList.size(); i++) {
 
             switch(metricList.get(i).getTitle()) {

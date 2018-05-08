@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -170,9 +168,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             public void run() {
                 loader.setVisibility(View.GONE);
                 selectTab(selectedTab);
-//                currentList = getListForSelectedTab();
-//                currentList = parentActivity.getPipelineList();
-//                initListView(currentList);
+                initListView(currentList);
             }
         });
     }
