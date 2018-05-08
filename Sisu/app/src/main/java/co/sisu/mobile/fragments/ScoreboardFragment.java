@@ -87,31 +87,34 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void calculateVolumes() {
-        pendingVolume = 0;
-        closedVolume = 0;
+        if(getView() != null) {
+            pendingVolume = 0;
+            closedVolume = 0;
 
-        //Pending
-        List<ClientObject> underContractClients = parentActivity.getContractList();
-        for(ClientObject co : underContractClients) {
-            pendingVolume += Integer.valueOf(co.getTrans_amt());
-        }
-        NumberFormat format = NumberFormat.getNumberInstance();
-
-        pendingVolumeDisplay = getView().findViewById(R.id.underContractAmount);
-        pendingVolumeDisplay.setText("$" + format.format(pendingVolume));
-
-
-        //Closed
-        List<ClientObject> closedClients = parentActivity.getClosedList();
-        for(ClientObject co : closedClients) {
-
-            if(insideSelectedTimeRange(co.getClosed_dt())) {
-                closedVolume += Integer.valueOf(co.getTrans_amt());
+            //Pending
+            List<ClientObject> underContractClients = parentActivity.getContractList();
+            for(ClientObject co : underContractClients) {
+                pendingVolume += Integer.valueOf(co.getTrans_amt());
             }
+            NumberFormat format = NumberFormat.getNumberInstance();
+
+            pendingVolumeDisplay = getView().findViewById(R.id.underContractAmount);
+            pendingVolumeDisplay.setText("$" + format.format(pendingVolume));
+
+
+            //Closed
+            List<ClientObject> closedClients = parentActivity.getClosedList();
+            for(ClientObject co : closedClients) {
+
+                if(insideSelectedTimeRange(co.getClosed_dt())) {
+                    closedVolume += Integer.valueOf(co.getTrans_amt());
+                }
+            }
+
+            closedVolumeDisplay = getView().findViewById(R.id.closedAmount);
+            closedVolumeDisplay.setText("$" + format.format(closedVolume));
         }
 
-        closedVolumeDisplay = getView().findViewById(R.id.closedAmount);
-        closedVolumeDisplay.setText("$" + format.format(closedVolume));
     }
 
     private boolean insideSelectedTimeRange(String closedDate) {
@@ -423,34 +426,37 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
-        final int ANIMATION_DURATION = 1500; // Time in millis
-        final int PROGRESS_MARK = calculateProgressMarkPosition(metric);
-        calculateProgressColor(metric, PROGRESS_MARK);
-        Context context = getContext();
-        progress.setColor(metric.getColor());
-        progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
-        progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-        progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-        progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
-        currentNumber.setText(String.valueOf(metric.getCurrentNum()));
-        switch (timeline) {
-            case "day":
-                goalNumber.setText(String.valueOf(metric.getDailyGoalNum()));
-                break;
-            case "week":
-                goalNumber.setText(String.valueOf(metric.getWeeklyGoalNum()));
-                break;
-            case "month":
-                goalNumber.setText(String.valueOf(metric.getGoalNum()));
-                break;
-            case "year":
-                goalNumber.setText(String.valueOf(metric.getYearlyGoalNum()));
-                break;
+        if(getContext() != null) {
+            final int ANIMATION_DURATION = 1500; // Time in millis
+            final int PROGRESS_MARK = calculateProgressMarkPosition(metric);
+            calculateProgressColor(metric, PROGRESS_MARK);
+            Context context = getContext();
+            progress.setColor(metric.getColor());
+            progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
+            progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+            progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+            progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
+            currentNumber.setText(String.valueOf(metric.getCurrentNum()));
+            switch (timeline) {
+                case "day":
+                    goalNumber.setText(String.valueOf(metric.getDailyGoalNum()));
+                    break;
+                case "week":
+                    goalNumber.setText(String.valueOf(metric.getWeeklyGoalNum()));
+                    break;
+                case "month":
+                    goalNumber.setText(String.valueOf(metric.getGoalNum()));
+                    break;
+                case "year":
+                    goalNumber.setText(String.valueOf(metric.getYearlyGoalNum()));
+                    break;
+            }
+            progressMark.setStartAngle(PROGRESS_MARK);
+            progressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
+            progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+            progressMark.setProgressWithAnimation(1, 0);
         }
-        progressMark.setStartAngle(PROGRESS_MARK);
-        progressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
-        progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-        progressMark.setProgressWithAnimation(1, 0);
+
     }
 
     private int calculateProgressMarkPosition(Metric metric) {
@@ -484,16 +490,19 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void calculateProgressColor(Metric metric, int position) {
-        position += 90;
-        int positionPercent = (int) (((double)position/(double)360) * 100);
-        Context context = getContext();
-        if (metric.getPercentComplete() < positionPercent) {
-            metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-        } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
-            metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-        } else if (metric.getPercentComplete() >= 100){
-            metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+        if(getContext() != null) {
+            position += 90;
+            int positionPercent = (int) (((double)position/(double)360) * 100);
+            Context context = getContext();
+            if (metric.getPercentComplete() < positionPercent) {
+                metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
+            } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
+                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
+            } else if (metric.getPercentComplete() >= 100){
+                metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+            }
         }
+
     }
 
     @Override

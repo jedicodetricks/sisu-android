@@ -289,13 +289,16 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private void calculateProgressColor(Metric metric, int positionPercent) {
-        if (metric.getPercentComplete() < positionPercent) {
-            metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
-        } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
-            metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
-        } else if (metric.getPercentComplete() >= 100){
-            metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+        if(getContext() != null) {
+            if (metric.getPercentComplete() < positionPercent) {
+                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
+            } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
+                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
+            } else if (metric.getPercentComplete() >= 100){
+                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+            }
         }
+
     }
 
     private void initializeListView() {
@@ -306,11 +309,14 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private void setData(List<Metric> metricList) {
-        for (int i = 0; i < metricList.size(); i++) {
-            calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
+        if(getContext() != null) {
+            for (int i = 0; i < metricList.size(); i++) {
+                calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
+            }
+            ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, timeline);
+            mListView.setAdapter(adapter);
         }
-        ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, timeline);
-        mListView.setAdapter(adapter);
+
     }
 
     @Override
