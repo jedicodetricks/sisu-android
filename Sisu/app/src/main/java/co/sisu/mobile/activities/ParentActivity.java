@@ -107,13 +107,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         Toolbar parent =(Toolbar) customView.getParent();
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
         initializeActionBar();
         getSupportActionBar().setElevation(0);
         parentLoader = findViewById(R.id.parentLoader);
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
-        drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
@@ -137,6 +138,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+        }
+        else {
+            teamBlock.setVisibility(View.GONE);
+            teamLetter.setVisibility(View.GONE);
         }
     }
 
@@ -519,10 +524,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    if(dataController.getTeamsObject().size() != 0) {
-                        new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
-                    }
-
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id()).execute();
                     new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });
@@ -538,10 +540,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
             SettingsObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
-            if(dataController.getTeamsObject().size() == 0) {
-                goalsFinished = true;
-                navigateToScoreboard();
-            }
         }
         else if(asyncReturnType.equals("Update Activities")) {
             clearUpdatedRecords();

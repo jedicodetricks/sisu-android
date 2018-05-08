@@ -74,12 +74,11 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         initFields();
         initSwitchAndButtons();
         agent = parentActivity.getAgentInfo();
-//        TODO: We need to go and get agent as well
         goalsUpdated = false;
         agentUpdated = false;
         income = "";
         reason = "";
-        new AsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getSelectedTeamId()).execute();
+        new AsyncAgentGoals(this, agent.getAgent_id()).execute();
         new AsyncAgent(this, agent.getAgent_id()).execute();
     }
 

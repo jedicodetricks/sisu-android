@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -43,7 +44,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
     TextView timeZoneDisplay;
     ImageView timeSelector;
-    TextView reminderTimeTitle, displayTime;
+    TextView reminderTimeTitle, displayTime, version;
     int currentSelectedHour, currentSelectedMinute;
     int alarmId = 1412;
     String selectedPeriod;
@@ -82,6 +83,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
+        version = getView().findViewById(R.id.versionLabel);
+        version.setText(BuildConfig.VERSION_NAME);
     }
 
     private void fillFieldsWithData() {

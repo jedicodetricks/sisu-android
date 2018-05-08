@@ -113,12 +113,15 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void initializeListView(List<Metric> metricList) {
-        mListView = getView().findViewById(R.id.record_list_view);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        if(getView() != null) {
+            mListView = getView().findViewById(R.id.record_list_view);
+            mListView.setDivider(null);
+            mListView.setDividerHeight(30);
 
-        RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
-        mListView.setAdapter(adapter);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
+            mListView.setAdapter(adapter);
+        }
+
     }
 
     private void recordMetric(String tab) {
