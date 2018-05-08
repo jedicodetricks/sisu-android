@@ -519,10 +519,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    if(dataController.getTeamsObject().size() != 0) {
-                        new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
-                    }
-
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id()).execute();
                     new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });
@@ -538,10 +535,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
             SettingsObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
-            if(dataController.getTeamsObject().size() == 0) {
-                goalsFinished = true;
-                navigateToScoreboard();
-            }
         }
         else if(asyncReturnType.equals("Update Activities")) {
             clearUpdatedRecords();

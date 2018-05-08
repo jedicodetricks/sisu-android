@@ -77,8 +77,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
         initToggle();
-        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         loader.setVisibility(View.VISIBLE);
+        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         initializeCalendarHandler();
     }
 
@@ -159,23 +159,34 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void getLeaderboard(int year, int month) {
-        loader.setVisibility(View.VISIBLE);
-        listAdapter = null;
-        expListView.setAdapter(listAdapter);
-
-        String formattedYear = String.valueOf(year);
-        String formattedMonth =  "";
-        String formattedTeamId = String.valueOf(parentActivity.getSelectedTeamId());
-        if(month != 0) {
-            formattedMonth = String.valueOf(month);
-        }
-        if(leaderboardToggle.isChecked()) {
-            //Year selected
-            new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "").execute();
+        if(parentActivity.getSelectedTeamId() == -1) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                }
+            });
         }
         else {
-            new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth).execute();
+            loader.setVisibility(View.VISIBLE);
+            listAdapter = null;
+            expListView.setAdapter(listAdapter);
+
+            String formattedYear = String.valueOf(year);
+            String formattedMonth =  "";
+            String formattedTeamId = String.valueOf(parentActivity.getSelectedTeamId());
+            if(month != 0) {
+                formattedMonth = String.valueOf(month);
+            }
+            if(leaderboardToggle.isChecked()) {
+                //Year selected
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "").execute();
+            }
+            else {
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth).execute();
+            }
         }
+
     }
 
     public void teamSwap() {
@@ -279,55 +290,3 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         getLeaderboard(selectedYear, selectedMonth + 1);
     }
 }
-
-
-//    private void initializeTimelineSelector() {
-//        Spinner spinner = getView().findViewById(R.id.reportsTimelineSelector);
-//        List<String> spinnerArray = initSpinnerArray();
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                parentActivity,
-//                R.layout.spinner_item,
-//                spinnerArray
-//        );
-//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-////                initializeListView(dataController.updateRecordMetrics());
-//                calendar = Calendar.getInstance();
-//
-//                switch (position) {
-//                    case 0:
-//                        //Last month
-//                        selectedYear = calendar.get(Calendar.YEAR);
-//                        calendar.add(Calendar.MONTH, -1);
-//                        selectedMonth = calendar.get(Calendar.MONTH) + 1;
-//                        break;
-//                    case 1:
-//                        //This month
-//                        selectedYear = calendar.get(Calendar.YEAR);
-//                        selectedMonth = calendar.get(Calendar.MONTH) + 1;
-//                        break;
-//                    case 2:
-//                        //Last year
-//                        calendar.add(Calendar.YEAR, -1);
-//                        selectedYear = calendar.get(Calendar.YEAR);
-//                        break;
-//                    case 3:
-//                        //This year
-//                        selectedYear = calendar.get(Calendar.YEAR);
-//                        break;
-//                }
-//                getLeaderboard(selectedYear, selectedMonth);
-//                listAdapter = null;
-//                expListView.setAdapter(listAdapter);
-//                loader.setVisibility(View.VISIBLE);
-//                //will need to refresh page with fresh data based on api call here determined by timeline value selected
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                //not sure what this does
-//            }
-//        });
-//    }
