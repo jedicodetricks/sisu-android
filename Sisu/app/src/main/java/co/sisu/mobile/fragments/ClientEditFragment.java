@@ -348,12 +348,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
                 contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
+                String phone = "";
+                int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
                 //TODO: Check for a home phone or mobile and see if you can't do both if not at least one or the other
+                if(currentClient.getMobile_phone() != null) {
+                    phone = currentClient.getMobile_phone();
+                } else {
+                    phone = currentClient.getHome_phone();
+                    phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+                }
                 contactIntent
                         .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
                         .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getMobile_phone())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+                        .putExtra(ContactsContract.Intents.Insert.PHONE, phone)
+                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, phoneType);
 
 
                 startActivityForResult(contactIntent, 1);

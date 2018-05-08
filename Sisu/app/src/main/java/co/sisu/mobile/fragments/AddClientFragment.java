@@ -54,8 +54,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     ParentActivity parentActivity;
     private String currentStatus;
 
-    //TODO: Replace the onBackPressed()s and all the toasts need proper context
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -239,7 +237,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    //TODO do stuff for this
     private boolean saveClient(){
         boolean isSaved;
         ClientObject newClient = new ClientObject();
