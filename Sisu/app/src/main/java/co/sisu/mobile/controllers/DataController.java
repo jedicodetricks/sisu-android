@@ -3,7 +3,6 @@ package co.sisu.mobile.controllers;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -244,74 +243,74 @@ public class DataController {
     private void setMetricThumbnail(Metric metric) {
         if(metric.getTitle() != null) {
 
-            switch (metric.getTitle()) {
-                case "Buyer Showings":
+            switch (metric.getType()) {
+                case "BSHNG":
                     metric.setThumbnailId(R.drawable.open_house_icon);
                     break;
-                case "Contacts":
+                case "CONTA":
                     metric.setThumbnailId(R.drawable.contact_icon);
                     break;
-                case "Listing Showings":
+                case "SHWNG":
                     metric.setThumbnailId(R.drawable.listing_icon);
                     break;
-                case "Other Appointments":
+                case "APPTS":
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
-                case "Number of Dials":
+                case "DIALS":
                     metric.setThumbnailId(R.drawable.phone_icon);
                     break;
-                case "Thank You Cards":
+                case "THANX":
                     metric.setThumbnailId(R.drawable.thankyou_card_icon);
                     break;
-                case "Open Houses":
+                case "OPENH":
                     metric.setThumbnailId(R.drawable.open_house_icon);
                     break;
-                case "Added to Database":
+                case "ADDDB":
                     metric.setThumbnailId(R.drawable.database_icon);
                     break;
-                case "Referrals Requested":
+                case "REFFR":
                     metric.setThumbnailId(R.drawable.referals_icon);
                     break;
-                case "Referrals Received":
+                case "REFFC":
                     metric.setThumbnailId(R.drawable.referals_icon);
                     break;
-                case "Appointments Set":
+                case "APPTT":
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
-                case "Prepared CMA":
+                case "PCMAS":
                     metric.setThumbnailId(R.drawable.cma_icon);
                     break;
-                case "Exercise":
+                case "EXERS":
                     metric.setThumbnailId(R.drawable.exercise_icon);
                     break;
-                case "Meditate":
+                case "TEAM2":
                     metric.setThumbnailId(R.drawable.meditate_icon);
                     break;
-                case "Hours Prospected":
+                case "HOURP":
                     metric.setThumbnailId(R.drawable.clock_icon);
                     break;
-                case "Buyers Closed":
+                case "BCLSD":
                     metric.setThumbnailId(R.drawable.closed_icon);
                     break;
-                case "Buyers Signed":
+                case "BSGND":
                     metric.setThumbnailId(R.drawable.signed_icon);
                     break;
-                case "Buyers Under Contract":
+                case "BUNDC":
                     metric.setThumbnailId(R.drawable.contract_icon);
                     break;
-                case "Buyer Appointments":
+                case "BAPPT":
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
-                case "Sellers Closed":
+                case "SCLSD":
                     metric.setThumbnailId(R.drawable.closed_icon);
                     break;
-                case "Sellers Signed":
+                case "SSGND":
                     metric.setThumbnailId(R.drawable.signed_icon);
                     break;
-                case "Sellers Under Contract":
+                case "SUNDC":
                     metric.setThumbnailId(R.drawable.contract_icon);
                     break;
-                case "Seller Appointments":
+                case "SAPPT":
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
                 default:

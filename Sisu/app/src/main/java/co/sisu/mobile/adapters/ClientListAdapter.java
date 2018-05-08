@@ -71,7 +71,7 @@ public class ClientListAdapter extends BaseAdapter {
         ImageView phoneImage = rowView.findViewById(R.id.centerButton);
         ImageView emailImage = rowView.findViewById(R.id.rightButton);
 
-        if(clientObject.getHome_phone() == null && clientObject.getMobile_phone() == null) {
+        if(clientObject.getHome_phone() == null && clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("") && clientObject.getHome_phone().equals("")) {
             phoneImage.setVisibility(View.INVISIBLE);
         } else {
             phoneImage.setOnClickListener(new View.OnClickListener() {

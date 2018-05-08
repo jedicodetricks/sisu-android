@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
@@ -89,6 +90,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void fillFieldsWithData() {
         settings = parentActivity.getSettings();
+        if(settings.isEmpty()) {
+            timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
+        }
 
         for (SettingsObject s : settings) {
             switch (s.getName()) {
@@ -279,7 +283,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT);
+                    //View view = toast.getView();
+                    //view.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
+                    toast.show();
                 }
             });
         }

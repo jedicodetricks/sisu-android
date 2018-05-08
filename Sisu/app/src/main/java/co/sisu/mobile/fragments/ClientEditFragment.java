@@ -298,8 +298,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.saveButton://notify of success update api
-                updateCurrentClient(false);
-                saveClient();
+                if(verifyRequiredDatesSet()) {
+                    updateCurrentClient(false);
+                    saveClient();
+                }
 //                parentActivity.stackReplaceFragment(ClientListFragment.class);
 //                parentActivity.swapToClientListBar();
                 break;
@@ -346,12 +348,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
                 contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
+                String phone = "";
+                int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
                 //TODO: Check for a home phone or mobile and see if you can't do both if not at least one or the other
+                if(currentClient.getMobile_phone() != null) {
+                    phone = currentClient.getMobile_phone();
+                } else {
+                    phone = currentClient.getHome_phone();
+                    phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+                }
                 contactIntent
                         .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
                         .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE, currentClient.getMobile_phone())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+                        .putExtra(ContactsContract.Intents.Insert.PHONE, phone)
+                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, phoneType);
 
 
                 startActivityForResult(contactIntent, 1);
@@ -368,6 +378,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private void saveClient(){
 //        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient).execute();
+    }
+
+    private boolean verifyRequiredDatesSet() {
+        boolean result = true;
+        if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            parentActivity.showToast("Please add your Settlement Date");
+            result = false;
+        }
+        return result;
     }
 
     private void initializeButtons(){
