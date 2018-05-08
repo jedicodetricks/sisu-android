@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
@@ -89,6 +90,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void fillFieldsWithData() {
         settings = parentActivity.getSettings();
+        if(settings.isEmpty()) {
+            timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
+        }
 
         for (SettingsObject s : settings) {
             switch (s.getName()) {
