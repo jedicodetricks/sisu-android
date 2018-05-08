@@ -63,7 +63,8 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         loader = view.findViewById(R.id.reportLoader);
-        initializeListView(initializeMetrics());
+        initializeListView();
+        //setData(initializeMetrics());
         initializeTimelineSelector();
     }
 
@@ -281,11 +282,14 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         }
     }
 
-    private void initializeListView(List<Metric> metricList) {
+    private void initializeListView() {
 
         mListView = getView().findViewById(R.id.report_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
+    }
+
+    private void setData(List<Metric> metricList) {
         for (int i = 0; i < metricList.size(); i++) {
             calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
         }
@@ -301,7 +305,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    initializeListView(parentActivity.getActivitiesObject());
+                    setData(parentActivity.getActivitiesObject());
                 }
             });
         }
