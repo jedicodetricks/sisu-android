@@ -17,6 +17,7 @@ import java.util.UUID;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.TextCodec;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,33 +73,33 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //        time = time.replace(".","");
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
-        Date date = cal.getTime(); // get back a Date object
         Log.e("EPOCH", String.valueOf(cal.getTime()));
         Date d = new Date();
-        String time = String.valueOf(date.getTime());
-
         String transactionID = UUID.randomUUID().toString();
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
+        Calendar date = Calendar.getInstance();
+        String time = String.valueOf(date.getTimeInMillis() - 10);
 
+        date.add(Calendar.DATE, 1);
+        String expTime = String.valueOf(date.getTimeInMillis());
 
         String compact = null;
         try {
 //            Claims claims = Jwts.claims();
 //            claims.put("Client-Timestamp", time);
 //            claims.put("Transaction-Id", transactionID);
-            Log.e("SECRET KEYS", secretKey + " " + newString);
-            compact = Jwts.builder()
+
+            String jwtStr = Jwts.builder()
+                    .claim("Client-Timestamp", time)
                     .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-//                    .setIssuedAt(d)
-                    .claim("Client-Timestamp", "11111")
-                    .claim("iat", 12345.6)
-                    .claim("Transaction-Id", "2a029d3d-b7f9-4790-b680-a1c554a3b416")
-                    .claim("exp", 12345.6)
-//                    .setExpiration(expDate.getTime())
-                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .claim("iat", time)
+                    .claim("exp", expTime)
+//                    .setIssuedAt(new Date(12345))
+//                    .setExpiration(new Date(12345))
+                    .claim("Transaction-Id", transactionID)
+                    .signWith(SignatureAlgorithm.HS256,"33SnhbgJaXFp6fYYd1Ru".getBytes())
                     .compact();
-            return authenticateUser("2a029d3d-b7f9-4790-b680-a1c554a3b416", compact, "12345.6", URLEncoder.encode(secretKey, "UTF-8"), email, password);
+            Log.e("SECRET KEYS", secretKey + " " + newString);
+            return authenticateUser(transactionID, jwtStr, time, email, password);
 //            return authenticateUser(transactionID, compact, time, secretKey, email, password);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -106,7 +107,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-    public String authenticateUser(String transID, String compact, String time, String secretKey, String email, String password) throws UnsupportedEncodingException {
+    public String authenticateUser(String transID, String compact, String time, String email, String password) throws UnsupportedEncodingException {
 //        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
 
 //        compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
@@ -127,7 +128,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 
         Log.e("jwt", jwt);
         Log.e("finalTrans", finalTrans);
-        Log.e("finalTime", finalTime);
+        Log.e("finalTime", String.valueOf(finalTime));
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {
