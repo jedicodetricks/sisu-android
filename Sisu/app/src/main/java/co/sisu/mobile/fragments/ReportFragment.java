@@ -41,7 +41,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     int selectedEndDay = 0;
     Calendar calendar = Calendar.getInstance();
     ProgressBar loader;
-    String timeline = "";
+    String timeline = "day";
 
     public ReportFragment() {
         // Required empty public constructor
@@ -87,6 +87,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 switch (position) {
                     case 0:
                         //Today
+                        timeline = "day";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -205,12 +206,27 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private int calculateProgressOnTrack(Metric metric) {
         int positionPercent = 0; //will determine blue
         int goalNum = metric.getGoalNum(); //monthly goal
+        switch (timeline) {
+            case "day":
+                goalNum = metric.getDailyGoalNum();
+                break;
+            case "week":
+                goalNum = metric.getWeeklyGoalNum();
+                break;
+            case "month":
+                goalNum = metric.getGoalNum();
+                break;
+            case "year":
+                goalNum = metric.getYearlyGoalNum();
+                break;
+        }
+
         int dayDifference = selectedEndDay - selectedStartDay;
 
         if(timeline.equalsIgnoreCase("week")) { //week
             int dayOfWeek = Calendar.DAY_OF_WEEK;
             int weekDifference = 7 - dayOfWeek;
-            goalNum = goalNum / calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+//            goalNum = goalNum / calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
             } else if (metric.getCurrentNum() * weekDifference >= goalNum) {
@@ -225,7 +241,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 positionPercent = metric.getPercentComplete() + 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         } else if(timeline.equalsIgnoreCase("year")) { //year
-            goalNum = goalNum * 12; //annual goal
+//            goalNum = goalNum * 12; //annual goal
             int dayOfYear = Calendar.DAY_OF_YEAR;
             int yearDifference = calendar.getActualMaximum(Calendar.DAY_OF_YEAR) - dayOfYear;
             if(metric.getCurrentNum() >= goalNum) {
@@ -293,7 +309,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         for (int i = 0; i < metricList.size(); i++) {
             calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
         }
-        ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList);
+        ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, timeline);
         mListView.setAdapter(adapter);
     }
 

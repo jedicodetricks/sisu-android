@@ -28,11 +28,13 @@ public class ReportListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<Metric> mDataSource;
+    private String timeline;
 
-    public ReportListAdapter(Context context, List<Metric> items) {
+    public ReportListAdapter(Context context, List<Metric> items, String timeline) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.timeline = timeline;
     }
 
     @Override
@@ -91,7 +93,22 @@ public class ReportListAdapter extends BaseAdapter {
             percentageTextView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
         } else {
-            subtitleTextView.setText(metric.getCurrentNum() + " of " + metric.getGoalNum());
+            int goalNum = 0;
+            switch (timeline) {
+                case "day":
+                    goalNum = metric.getDailyGoalNum();
+                    break;
+                case "week":
+                    goalNum = metric.getWeeklyGoalNum();
+                    break;
+                case "month":
+                    goalNum = metric.getGoalNum();
+                    break;
+                case "year":
+                    goalNum = metric.getYearlyGoalNum();
+                    break;
+            }
+            subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
             percentageTextView.setText(metric.getPercentComplete() + "% complete");
             progressBar.setProgress(metric.getPercentComplete());
             progressBar.setScaleY(4f);

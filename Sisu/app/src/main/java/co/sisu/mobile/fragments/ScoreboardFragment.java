@@ -50,7 +50,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     int pendingVolume = 0;
     int closedVolume = 0;
     boolean needsProgress;
-    String timeline = "";
+    String timeline = "day";
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -160,6 +160,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 switch (position) {
                     case 0:
                         //Today
+                        timeline = "day";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -432,7 +433,20 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
         currentNumber.setText(String.valueOf(metric.getCurrentNum()));
-        goalNumber.setText(String.valueOf(metric.getGoalNum()));
+        switch (timeline) {
+            case "day":
+                goalNumber.setText(String.valueOf(metric.getDailyGoalNum()));
+                break;
+            case "week":
+                goalNumber.setText(String.valueOf(metric.getWeeklyGoalNum()));
+                break;
+            case "month":
+                goalNumber.setText(String.valueOf(metric.getGoalNum()));
+                break;
+            case "year":
+                goalNumber.setText(String.valueOf(metric.getYearlyGoalNum()));
+                break;
+        }
         progressMark.setStartAngle(PROGRESS_MARK);
         progressMark.setColor(ContextCompat.getColor(context, R.color.colorWhite));
         progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
