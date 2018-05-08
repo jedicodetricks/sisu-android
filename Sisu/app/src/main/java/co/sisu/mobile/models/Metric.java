@@ -1,6 +1,7 @@
 package co.sisu.mobile.models;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 /**
  * Created by Jeff on 2/21/2018.
@@ -41,7 +42,7 @@ public class Metric implements Comparable<Metric>{
 
     public int getPercentComplete(){
         if(goalNum == 0) {
-            return 100;
+            return 0;
         }
         return (int) (((double)currentNum/(double)goalNum) * 100);
     }

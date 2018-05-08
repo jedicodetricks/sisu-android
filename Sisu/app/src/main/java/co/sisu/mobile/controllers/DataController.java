@@ -134,27 +134,31 @@ public class DataController {
             if(counters[i].getCoalesce() != null) {
                counters[i].setName(counters[i].getCoalesce());
             }
-            for(AgentGoalsObject ago : goals) {
-                if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
 
-                    if(ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
-                        closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
-                    }
-                    else if(ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
-                        contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
-                    }
-                    else if(ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
-                        firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
-                    }
-                    else if(ago.getGoal_id().equals("SSGND")) {
-                        showing.setGoalNum(Integer.parseInt(ago.getValue()));
-                    }
-                    else {
-                        counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+            if(goals != null) {
+                for(AgentGoalsObject ago : goals) {
+                    if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
 
+                        if(ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
+                            closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if(ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
+                            contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if(ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
+                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if(ago.getGoal_id().equals("SSGND")) {
+                            showing.setGoalNum(Integer.parseInt(ago.getValue()));
+                        }
+                        else {
+                            counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+
+                        }
                     }
                 }
             }
+
 
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
 //            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());

@@ -107,13 +107,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         Toolbar parent =(Toolbar) customView.getParent();
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
         initializeActionBar();
         getSupportActionBar().setElevation(0);
         parentLoader = findViewById(R.id.parentLoader);
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
-        drawerLayout = findViewById(R.id.drawer_layout);
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
@@ -137,6 +138,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+        }
+        else {
+            teamBlock.setVisibility(View.GONE);
+            teamLetter.setVisibility(View.GONE);
         }
     }
 
