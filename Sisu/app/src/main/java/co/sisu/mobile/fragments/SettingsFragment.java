@@ -283,7 +283,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT);
+                    //View view = toast.getView();
+                    //view.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
+                    toast.show();
                 }
             });
         }

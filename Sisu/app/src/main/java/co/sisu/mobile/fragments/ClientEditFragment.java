@@ -298,8 +298,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.saveButton://notify of success update api
-                updateCurrentClient(false);
-                saveClient();
+                if(verifyRequiredDatesSet()) {
+                    updateCurrentClient(false);
+                    saveClient();
+                }
 //                parentActivity.stackReplaceFragment(ClientListFragment.class);
 //                parentActivity.swapToClientListBar();
                 break;
@@ -368,6 +370,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private void saveClient(){
 //        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient).execute();
+    }
+
+    private boolean verifyRequiredDatesSet() {
+        boolean result = true;
+        if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            parentActivity.showToast("Please add your Settlement Date");
+            result = false;
+        }
+        return result;
     }
 
     private void initializeButtons(){

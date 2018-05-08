@@ -276,6 +276,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             Toast.makeText(parentActivity, "Paid Income is required", Toast.LENGTH_SHORT).show();
             isVerified = false;
         }
+        else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            parentActivity.showToast("Please add your Settlement Date");
+            isVerified = false;
+        }
         return isVerified;
     }
 
