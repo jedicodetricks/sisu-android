@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -55,6 +58,16 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+//        String secret = null;
+//        try {
+//            secret = ;
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(secretKey);
+//        Log.e("KEY", String.valueOf(byteBuffer.get(0)));
+//        Log.e("ENCODE", secret);
+
 //        String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 //        time = time.replace(".","");
         Calendar cal = Calendar.getInstance();
@@ -83,9 +96,9 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                     .claim("Transaction-Id", "2a029d3d-b7f9-4790-b680-a1c554a3b416")
                     .claim("exp", 12345.6)
 //                    .setExpiration(expDate.getTime())
-                    .signWith(SignatureAlgorithm.HS256, newString)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
-            return authenticateUser("2a029d3d-b7f9-4790-b680-a1c554a3b416", compact, "12345.6", secretKey, email, password);
+            return authenticateUser("2a029d3d-b7f9-4790-b680-a1c554a3b416", compact, "12345.6", URLEncoder.encode(secretKey, "UTF-8"), email, password);
 //            return authenticateUser(transactionID, compact, time, secretKey, email, password);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -174,47 +187,47 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         //TODO: remember to unmess this up
-//        test();
-        try {
-            Response response = null;
-            OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
-
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
-
-//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
-
-            Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/v1/agent/authenticate")
-                    .post(body)
-                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                    .addHeader("Client-Timestamp", "1520999095")
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
-                    .build();
-
-            try {
-                response = client.newCall(request).execute();
-//                Log.e("AUTH AWAY", "GO GO GO");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (response != null) {
-                if (response.code() == 200) {
-                    AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
-                    callback.onEventCompleted(agent, "Authenticator");
-                } else {
-                    callback.onEventFailed(null, "Authenticator");
-                }
-            } else {
-                callback.onEventFailed(null, "Authenticator");
-            }
-
-            response.body().close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        test();
+//        try {
+//            Response response = null;
+//            OkHttpClient client = new OkHttpClient();
+//            Gson gson = new Gson();
+//
+//            MediaType mediaType = MediaType.parse("application/json");
+//            RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
+//
+////                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
+//
+//            Request request = new Request.Builder()
+//                    .url("http://staging.sisu.co/api/v1/agent/authenticate")
+//                    .post(body)
+//                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
+//                    .addHeader("Client-Timestamp", "1520999095")
+//                    .addHeader("Content-Type", "application/json")
+//                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+//                    .build();
+//
+//            try {
+//                response = client.newCall(request).execute();
+////                Log.e("AUTH AWAY", "GO GO GO");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if (response != null) {
+//                if (response.code() == 200) {
+//                    AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
+//                    callback.onEventCompleted(agent, "Authenticator");
+//                } else {
+//                    callback.onEventFailed(null, "Authenticator");
+//                }
+//            } else {
+//                callback.onEventFailed(null, "Authenticator");
+//            }
+//
+//            response.body().close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         return null;
     }

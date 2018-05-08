@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -289,6 +290,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         }
         AgentGoalsObject selectedGoal = null;
 
+        int currentGoalsLength = currentGoalsObject.length;
+        Log.e("LENGTH", String.valueOf(currentGoalsObject.length));
+
         for(AgentGoalsObject ago : currentGoalsObject) {
             if(ago.getGoal_id().equals(fieldName)) {
                 selectedGoal = ago;
@@ -298,7 +302,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, String.valueOf(value));
 
         if(selectedGoal == null) {
-            currentGoalsObject[currentGoalsObject.length] = selectedGoal;
+
+            currentGoalsObject[currentGoalsLength] = selectedGoal;
             updatedGoals.put(fieldName, toUpdate);
         }
         else {

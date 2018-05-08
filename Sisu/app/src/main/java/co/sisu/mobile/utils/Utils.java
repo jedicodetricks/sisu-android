@@ -1,4 +1,4 @@
-package co.sisu.mobile.controllers;
+package co.sisu.mobile.utils;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,8 +24,8 @@ public class Utils {
 
         android.support.v7.app.NotificationCompat.Builder nb = new android.support.v7.app.NotificationCompat.Builder(context);
         nb.setSmallIcon(R.drawable.sisu_mark);
-        nb.setContentTitle("This is a test notification title");
-        nb.setContentText("This is a test notification content");
+        nb.setContentTitle("Sisu");
+        nb.setContentText("Reminder: Enter your numbers for today!");
         nb.setTicker("Take a look");
 
         nb.setAutoCancel(true);
@@ -34,7 +34,7 @@ public class Utils {
         //get the bitmap to show in notification bar
         Bitmap bitmap_image = BitmapFactory.decodeResource(context.getResources(), R.drawable.sisu_mark);
         android.support.v7.app.NotificationCompat.BigPictureStyle s = new android.support.v7.app.NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
-        s.setSummaryText("This is a test notification");
+        s.setSummaryText("Sisu");
         nb.setStyle(s);
 
 
