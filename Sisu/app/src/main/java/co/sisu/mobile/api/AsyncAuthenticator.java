@@ -7,13 +7,19 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.JWTObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.TextCodec;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,85 +42,36 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         this.password = password;
     }
 
-    public String test(){
+    public String getJWT(String transactionID, Calendar time, String timestamp, Calendar expTime) {
 
-        byte[] secretArray = new byte[0];
-//        String secretKey = "33SnhbgJaXFp6fYYd1Ru";
-//        try {
-//            secretArray = "33SnhbgJaXFp6fYYd1Ru".getBytes("UTF-8");
-//            secretKey = new String(secretArray, "ISO-8859-1");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(secretKey);
-//
-//        String formattedKey = new String(byteBuffer, StandardCharsets.UTF_8);
-        String newString = null;
-        try {
-            newString = new String(secretKey.getBytes("UTF-8"), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-//        String time = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-//        time = time.replace(".","");
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-        Date date = cal.getTime(); // get back a Date object
-        Log.e("EPOCH", String.valueOf(cal.getTime()));
-        Date d = new Date();
-        String time = String.valueOf(date.getTime());
+        String jwtStr = Jwts.builder()
+                .claim("Client-Timestamp", timestamp)
+                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
+                .setIssuedAt(time.getTime())
+                .setExpiration(expTime.getTime())
+//                .claim("iat", time)
+//                .claim("exp", expTime)
+                .claim("Transaction-Id", transactionID)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
 
-        String transactionID = UUID.randomUUID().toString();
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-
-        String compact = null;
-        try {
-//            Claims claims = Jwts.claims();
-//            claims.put("Client-Timestamp", time);
-//            claims.put("Transaction-Id", transactionID);
-            Log.e("SECRET KEYS", secretKey + " " + newString);
-            compact = Jwts.builder()
-                    .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-//                    .setIssuedAt(d)
-                    .claim("Client-Timestamp", "11111")
-                    .claim("iat", 12345.6)
-                    .claim("Transaction-Id", "2a029d3d-b7f9-4790-b680-a1c554a3b416")
-                    .claim("exp", 12345.6)
-//                    .setExpiration(expDate.getTime())
-                    .signWith(SignatureAlgorithm.HS256, newString)
-                    .compact();
-            return authenticateUser("2a029d3d-b7f9-4790-b680-a1c554a3b416", compact, "12345.6", secretKey, email, password);
-//            return authenticateUser(transactionID, compact, time, secretKey, email, password);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return jwtStr;
     }
 
-    public String authenticateUser(String transID, String compact, String time, String secretKey, String email, String password) throws UnsupportedEncodingException {
-//        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(compact).getBody();
+//    public String authenticateUser(String transID, String compact, float time, String timestamp, String email, String password) throws UnsupportedEncodingException {
+//        return getJsonString(compact, transID, time, timestamp, email, password);
+//    }
 
-//        compact = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg";
-//        transID = "E958DC02-8F61-4E97-90B7-F266DCC597E9";
-//        time = "1520999095";
-        return getJsonString(compact, transID, time, email, password);
-    }
-
-    public String getJsonString(String auth, String transID, String timeStamp, String email, String password){
-//        System.out.println("AUTH: " + auth);
-//        System.out.println("TRANS ID: " + transID);
-//        System.out.println("TIMESTAMP: " + timeStamp);
+    public String getJsonString(String auth, String transID, final float time, final String timestamp, String email, String password){
         final String jwt = auth;
         final String finalTrans = transID;
-        final String finalTime = timeStamp;
+        final String finalTime = timestamp;
         final String loginEmail = email;
         final String loginPassword = password;
 
         Log.e("jwt", jwt);
         Log.e("finalTrans", finalTrans);
-        Log.e("finalTime", finalTime);
+        Log.e("finalTime", String.valueOf(finalTime));
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run() {
@@ -132,19 +89,20 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                                 .url("http://staging.sisu.co/api/v1/agent/authenticate")
                                 .post(body)
                                 .addHeader("Authorization", jwt)
-                                .addHeader("Client-Timestamp", finalTime)
+                                .addHeader("Client-Timestamp", timestamp)
                                 .addHeader("Content-Type", "application/json")
                                 .addHeader("Transaction-Id", finalTrans)
                                 .build();
 
                         try {
                             response = client.newCall(request).execute();
-                            Log.e("RESPONSE", response.body().string());
+//                            Log.e("RESPONSE", response.body().string());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         if (response != null) {
                             if (response.code() == 200) {
+
                                 callback.onEventCompleted(null, "Authenticator");
                             } else {
                                 callback.onEventFailed(null, "Authenticator");
@@ -173,8 +131,18 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        //TODO: remember to unmess this up
-//        test();
+        String transactionID = UUID.randomUUID().toString();
+        Calendar date = Calendar.getInstance();
+        String timestamp = String.valueOf(date.getTimeInMillis());
+        float time = ((date.getTimeInMillis() / 1000) - 10);
+
+        Calendar expDate = Calendar.getInstance();
+        expDate.add(Calendar.DATE, 1);
+        float expTime = ((expDate.getTimeInMillis() / 1000) - 10);
+
+        String jwt = getJWT(transactionID, date, timestamp, expDate);
+        Log.e("time", String.valueOf(time));
+        Log.e("exp", String.valueOf(expTime));
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
@@ -183,27 +151,28 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
 
-//                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
-
             Request request = new Request.Builder()
                     .url("http://staging.sisu.co/api/v1/agent/authenticate")
                     .post(body)
-                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                    .addHeader("Client-Timestamp", "1520999095")
+                    .addHeader("Authorization", jwt)
+                    .addHeader("Client-Timestamp", timestamp)
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+                    .addHeader("Transaction-Id", transactionID)
                     .build();
-
+            String responseBody = "";
             try {
                 response = client.newCall(request).execute();
-//                Log.e("AUTH AWAY", "GO GO GO");
+                responseBody = response.body().string();
+                Log.e("RESPOSNE", responseBody);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    AsyncAgentJsonObject agent = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
+                    AsyncAgentJsonObject agent = gson.fromJson(responseBody, AsyncAgentJsonObject.class);
+                    callback.onEventCompleted(new JWTObject(jwt, timestamp, transactionID), "JWT");
                     callback.onEventCompleted(agent, "Authenticator");
+
                 } else {
                     callback.onEventFailed(null, "Authenticator");
                 }
@@ -219,28 +188,3 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         return null;
     }
 }
-
-
-//    let client_timestamp:String = "\(Int(Date().timeIntervalSince1970))"
-//        let transaction_id:String = UUID().uuidString
-//        request?.setValue(client_timestamp, forHTTPHeaderField: "Client-Timestamp")
-//        request?.setValue(transaction_id, forHTTPHeaderField: "Transaction-Id")
-//        request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//        let jwt = self.encodeJWT(timestamp:client_timestamp,transaction:transaction_id)
-//        request?.setValue(jwt, forHTTPHeaderField: "Authorization")
-//
-//
-//        func encodeJWT(timestamp:String,transaction:String) -> String{
-//
-//        var claims = ClaimSet()
-//        claims.issuer = "sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d"
-//        claims.issuedAt = Date()
-//        // currently make tokens good for 1 day
-//        claims.expiration = Calendar.current.date(byAdding: .day, value: 1, to: Date())
-//        claims["Client-Timestamp"] = timestamp
-//        claims["Transaction-Id"] = transaction
-//
-//        //TODO: Put key somewhere encrypted
-//        return JWT.encode(claims: claims, algorithm: .hs256(“SECRET KEY HERE“.data(using: .utf8)!))
-//        }

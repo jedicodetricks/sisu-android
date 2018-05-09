@@ -12,6 +12,9 @@ public class SaveSharedPreference
     static final String PREF_USER_ID= "userid";
     static final String PREF_USER_NAME= "username";
     static final String PREF_USER_PASSWORD= "password";
+    static final String JWT = "jwt";
+    static final String CLIENT_TIMESTAMP = "client-timestamp";
+    static final String TRANS_ID = "trans-id";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         SharedPreferences sharedPref = ctx.getSharedPreferences("login", Context.MODE_PRIVATE);
@@ -53,4 +56,39 @@ public class SaveSharedPreference
     {
         return getSharedPreferences(ctx).getString(PREF_USER_PASSWORD, "");
     }
+
+    public static String getJWT(Context ctx) {
+        return getSharedPreferences(ctx).getString(JWT, "");
+    }
+
+    public static void setJWT(Context ctx, String jwt)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(JWT, jwt);
+        editor.commit();
+    }
+
+    public static String getClientTimestamp(Context ctx) {
+        return getSharedPreferences(ctx).getString(CLIENT_TIMESTAMP, "");
+    }
+
+    public static void setClientTimestamp(Context ctx, String timestamp)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(CLIENT_TIMESTAMP, timestamp);
+        editor.commit();
+    }
+
+    public static String getTransId(Context ctx) {
+        return getSharedPreferences(ctx).getString(TRANS_ID, "");
+    }
+
+    public static void setTransId(Context ctx, String transId)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(TRANS_ID, transId);
+        editor.commit();
+    }
+
+
 }

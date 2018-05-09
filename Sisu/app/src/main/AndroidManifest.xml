@@ -34,8 +34,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.ForgotPasswordActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SignUpActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activities.ParentActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
         android:screenOrientation="portrait"/>

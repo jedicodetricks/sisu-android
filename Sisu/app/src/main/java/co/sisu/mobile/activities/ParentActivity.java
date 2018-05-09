@@ -48,11 +48,13 @@ import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -77,6 +79,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
+    private JWTObject jwtObject;
+
 
     public boolean isRecordSaved() {
         return recordSaved;
@@ -114,12 +118,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeActionBar();
         getSupportActionBar().setElevation(0);
         parentLoader = findViewById(R.id.parentLoader);
+        getJwtFromPrefs();
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         initializeButtons();
-        new AsyncTeams(this, agent.getAgent_id()).execute();
-        new AsyncClients(this, agent.getAgent_id()).execute();
+        new AsyncTeams(this, agent.getAgent_id(), getJwtObject()).execute();
+        new AsyncClients(this, agent.getAgent_id(), jwtObject).execute();
         parentLoader.setVisibility(View.VISIBLE);
     }
 
@@ -320,7 +325,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject).execute();
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getJwtObject()).execute();
     }
 
     @Override
@@ -526,8 +531,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id()).execute();
-                    new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), jwtObject).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), getJwtObject()).execute();
                 }
             });
         }
@@ -661,5 +666,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
         this.agent = agentModel;
         dataController.setAgent(agentModel);
+    }
+
+    public void getJwtFromPrefs() {
+        jwtObject = new JWTObject(SaveSharedPreference.getJWT(this), SaveSharedPreference.getClientTimestamp(this), SaveSharedPreference.getTransId(this));
+    }
+
+    public JWTObject getJwtObject() {
+        return jwtObject;
     }
 }

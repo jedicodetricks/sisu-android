@@ -69,7 +69,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         AgentModel agent = parentActivity.getAgentInfo();
         initializeTabView();
-        new AsyncClients(this, agent.getAgent_id()).execute();
+        new AsyncClients(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);

@@ -57,7 +57,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void sendFeedback(String feedback){
-        new AsyncFeedback(this, parentActivity.getAgentInfo().getAgent_id(), feedback).execute();
+        new AsyncFeedback(this, parentActivity.getAgentInfo().getAgent_id(), feedback, parentActivity.getJwtObject()).execute();
     }
 
     @Override
