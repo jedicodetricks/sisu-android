@@ -1,10 +1,12 @@
 package co.sisu.mobile.api;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
 
+import co.sisu.mobile.system.SaveSharedPreference;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
