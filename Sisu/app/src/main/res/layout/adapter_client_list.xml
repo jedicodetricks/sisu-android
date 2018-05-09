@@ -26,8 +26,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/client_list_text_layout">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/leftButton"
