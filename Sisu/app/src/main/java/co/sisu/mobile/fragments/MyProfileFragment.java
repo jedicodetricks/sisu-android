@@ -85,8 +85,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         agent = parentActivity.getAgentInfo();
         initButtons();
         initFields();
-        new AsyncAgent(this, agent.getAgent_id()).execute();
-        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+        new AsyncAgent(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
+        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id(), parentActivity.getJwtObject()).execute();
     }
 
     private void initFields() {

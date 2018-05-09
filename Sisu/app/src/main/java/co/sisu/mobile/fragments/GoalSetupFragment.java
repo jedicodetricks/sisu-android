@@ -79,8 +79,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        new AsyncAgentGoals(this, agent.getAgent_id()).execute();
-        new AsyncAgent(this, agent.getAgent_id()).execute();
+        new AsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
+        new AsyncAgent(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
     }
 
     private void initSwitchAndButtons() {

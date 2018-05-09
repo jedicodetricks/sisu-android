@@ -309,7 +309,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
-        new AsyncAddClient(this, parentActivity.getAgentInfo().getAgent_id(), newClient).execute();
+        new AsyncAddClient(this, parentActivity.getAgentInfo().getAgent_id(), newClient, parentActivity.getJwtObject()).execute();
     }
 
     private String getFormattedDate(String incomingDate) {

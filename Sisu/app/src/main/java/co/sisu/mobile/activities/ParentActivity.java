@@ -117,14 +117,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeActionBar();
         getSupportActionBar().setElevation(0);
         parentLoader = findViewById(R.id.parentLoader);
+        getJwtFromPrefs();
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id()).execute();
-        new AsyncClients(this, agent.getAgent_id()).execute();
+        new AsyncClients(this, agent.getAgent_id(), jwtObject).execute();
         parentLoader.setVisibility(View.VISIBLE);
-        getJwtFromPrefs();
     }
 
 
@@ -530,7 +530,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id()).execute();
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), jwtObject).execute();
                     new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
                 }
             });

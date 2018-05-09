@@ -56,7 +56,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeButtons();
 //        initializeListView();
         loader.setVisibility(View.VISIBLE);
-        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id(), parentActivity.getJwtObject()).execute();
     }
 
     private void setupFieldsWithData() {

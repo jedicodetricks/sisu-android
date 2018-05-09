@@ -180,10 +180,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
             if(leaderboardToggle.isChecked()) {
                 //Year selected
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "").execute();
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "", parentActivity.getJwtObject()).execute();
             }
             else {
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth).execute();
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth, parentActivity.getJwtObject()).execute();
             }
         }
 
