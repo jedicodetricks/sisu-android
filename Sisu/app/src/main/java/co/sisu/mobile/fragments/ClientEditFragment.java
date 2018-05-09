@@ -350,7 +350,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
                 String phone = "";
                 int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
-                //TODO: Check for a home phone or mobile and see if you can't do both if not at least one or the other
                 if(currentClient.getMobile_phone() != null) {
                     phone = currentClient.getMobile_phone();
                 } else {
@@ -585,7 +584,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         //initializeClient();
         loader.setVisibility(View.GONE);
-        //TODO: make this go to the correct tab that your client will be in
         parentActivity.navigateToClientList("pipeline", null);
         parentActivity.runOnUiThread(new Runnable() {
             @Override

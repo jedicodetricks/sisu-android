@@ -103,7 +103,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
-                //TODO: I assume we just want to go back to the client page, not the scoreboard
                 saveSettings();
                 parentActivity.stackReplaceFragment(MoreFragment.class);
                 parentActivity.swapToBacktionBar("More", null);
