@@ -231,7 +231,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
 
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
-        new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject).execute();
+        new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject, parentActivity.getJwtObject()).execute();
         SettingsObject[] array = new SettingsObject[settings.size()];
         parentActivity.setSettings(settings.toArray(array));
     }

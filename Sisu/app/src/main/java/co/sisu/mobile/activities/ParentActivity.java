@@ -1,7 +1,6 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -123,7 +122,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         initializeButtons();
-        new AsyncTeams(this, agent.getAgent_id()).execute();
+        new AsyncTeams(this, agent.getAgent_id(), getJwtObject()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
         parentLoader.setVisibility(View.VISIBLE);
         getJwtFromPrefs();
@@ -326,7 +325,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject).execute();
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getJwtObject()).execute();
     }
 
     @Override
@@ -533,7 +532,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
                     new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id()).execute();
-                    new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), getJwtObject()).execute();
                 }
             });
         }

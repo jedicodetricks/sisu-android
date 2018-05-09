@@ -27,13 +27,13 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        TestFairy.begin(this, "9eb176da8ee4fd4ce62ad1275210bbc526800c0c");
-
         loaded = false;
         pingServer();
     }
 
+    // TODO: 5/8/2018 make parentActivity available here
     private void pingServer() {
-        new AsyncServerPing(this).execute();
+        new AsyncServerPing(this, parentActivity.getJwtObject()).execute();
     }
 
     @Override

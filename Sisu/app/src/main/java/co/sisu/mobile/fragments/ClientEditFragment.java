@@ -377,7 +377,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void saveClient(){
 //        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
-        new AsyncUpdateClients(this, currentClient).execute();
+        new AsyncUpdateClients(this, currentClient, parentActivity.getJwtObject()).execute();
     }
 
     private boolean verifyRequiredDatesSet() {

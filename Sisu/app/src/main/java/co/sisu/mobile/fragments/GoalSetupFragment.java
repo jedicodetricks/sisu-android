@@ -324,10 +324,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array)).execute();
+                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array), parentActivity.getJwtObject()).execute();
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    new AsyncUpdateAgent(this, agent.getAgent_id(), income, reason).execute();
+                    new AsyncUpdateAgent(this, agent.getAgent_id(), income, reason, parentActivity.getJwtObject()).execute();
                 }
                 break;
         }

@@ -56,7 +56,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeButtons();
 //        initializeListView();
         loader.setVisibility(View.VISIBLE);
-        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id(), parentActivity.getJwtObject()).execute();
     }
 
     private void setupFieldsWithData() {
@@ -116,7 +116,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void saveSettings() {
-        new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities)).execute();
+        new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities), parentActivity.getJwtObject()).execute();
     }
 
     private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
