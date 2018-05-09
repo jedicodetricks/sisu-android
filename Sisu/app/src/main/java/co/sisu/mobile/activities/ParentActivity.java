@@ -138,7 +138,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(teamsList != null) {
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter());
+            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
         }
         else {
