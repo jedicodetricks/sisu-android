@@ -1,7 +1,6 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +36,7 @@ import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.fragments.ClientListFragment;
+import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -95,6 +95,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     int selectedTeam = 0;
     ActionBar bar;
     AgentModel agent;
+    ErrorMessageFragment errorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController = new DataController();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
-
+        errorFragment = new ErrorMessageFragment();
         setContentView(R.layout.activity_parent);
         bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -122,7 +123,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         initializeButtons();
-        new AsyncTeams(this, agent.getAgent_id()).execute();
+        new AsyncTeams(this, agent.getAgent_id(), getJwtObject()).execute();
         new AsyncClients(this, agent.getAgent_id(), jwtObject).execute();
         parentLoader.setVisibility(View.VISIBLE);
     }
@@ -324,7 +325,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject).execute();
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getJwtObject()).execute();
     }
 
     @Override
@@ -531,7 +532,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
                     new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), jwtObject).execute();
-                    new AsyncSettings(ParentActivity.this, agent.getAgent_id()).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), getJwtObject()).execute();
                 }
             });
         }
@@ -560,6 +561,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.e("FAILURE", asyncReturnType);
+        errorFragment.setMessage(asyncReturnType + " cause this failure.");
+        replaceFragment(ErrorMessageFragment.class);
 //        if(asyncReturnType.equals("Goals")) {
 //            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
 //        }

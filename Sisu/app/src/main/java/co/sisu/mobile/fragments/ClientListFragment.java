@@ -75,7 +75,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         loader.setVisibility(View.VISIBLE);
         initAddButton();
 
-        //TODO: we need to figure out how we want the client page to act. api calls? manage locally?
+        //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
 //        initListView(currentList);
 //        loader.setVisibility(View.GONE);

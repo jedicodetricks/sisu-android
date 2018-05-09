@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -235,6 +234,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 break;
             case "Sellers Closed":
                 recordMetric("closed");
+                break;
+            case "Contacts":
+                //addClient navigation
+                parentActivity.replaceFragment(AddClientFragment.class);
                 break;
         }
     }
