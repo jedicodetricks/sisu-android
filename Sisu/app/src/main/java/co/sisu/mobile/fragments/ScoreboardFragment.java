@@ -435,7 +435,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
             progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-            progress.setProgressWithAnimation(metric.getPercentComplete(), ANIMATION_DURATION);
+            progress.setProgressWithAnimation(metric.getPercentComplete(timeline), ANIMATION_DURATION);
             currentNumber.setText(String.valueOf(metric.getCurrentNum()));
             switch (timeline) {
                 case "day":
@@ -494,11 +494,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             position += 90;
             int positionPercent = (int) (((double)position/(double)360) * 100);
             Context context = getContext();
-            if (metric.getPercentComplete() < positionPercent) {
+            if (metric.getPercentComplete(timeline) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-            } else if (metric.getPercentComplete() > positionPercent && metric.getPercentComplete() < 100 ) {
+            } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) < 100 ) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-            } else if (metric.getPercentComplete() >= 100){
+            } else if (metric.getPercentComplete(timeline) >= 100){
                 metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
             }
         }
