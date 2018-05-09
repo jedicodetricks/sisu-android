@@ -133,7 +133,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         String transactionID = UUID.randomUUID().toString();
         Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -100);
+        date.add(Calendar.SECOND, -60);
         String timestamp = String.valueOf(date.getTimeInMillis());
         float time = ((date.getTimeInMillis() / 1000) - 10);
 
