@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,11 +49,13 @@ import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -77,6 +80,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
+    private JWTObject jwtObject;
+
 
     public boolean isRecordSaved() {
         return recordSaved;
@@ -121,6 +126,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         new AsyncTeams(this, agent.getAgent_id()).execute();
         new AsyncClients(this, agent.getAgent_id()).execute();
         parentLoader.setVisibility(View.VISIBLE);
+        getJwtFromPrefs();
     }
 
 
@@ -661,5 +667,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
         this.agent = agentModel;
         dataController.setAgent(agentModel);
+    }
+
+    public void getJwtFromPrefs() {
+        jwtObject = new JWTObject(SaveSharedPreference.getJWT(this), SaveSharedPreference.getClientTimestamp(this), SaveSharedPreference.getTransId(this));
+    }
+
+    public JWTObject getJwtObject() {
+        return jwtObject;
     }
 }

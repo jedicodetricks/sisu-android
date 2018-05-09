@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.JWTObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,25 +27,29 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
     private String agentId;
     private String startDate;
     private String endDate;
+    private JWTObject jwt;
 
-    public AsyncActivities (AsyncServerEventListener cb, String agentId) {
-        callback = cb;
-        this.agentId = agentId;
-    }
+//    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String agentId, JWTObject jwtObject) {
+//        callback = cb;
+//        this.agentId = agentId;
+//        jwt = jwtObject;
+//    }
 
-    public AsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public AsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, JWTObject jwtObject) {
         callback = cb;
         this.agentId = agentId;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.startDate = formatter.format(startDate);
         this.endDate = formatter.format(endDate);
+        jwt = jwtObject;
     }
 
-    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String formattedEndTime) {
+    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String formattedEndTime, JWTObject jwtObject) {
         callback = cb;
         this.agentId = agent_id;
         this.startDate = formattedStartTime;
         this.endDate = formattedEndTime;
+        jwt = jwtObject;
     }
 
     @Override
@@ -62,10 +67,10 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             Request request = new Request.Builder()
                     .url("http://staging.sisu.co/api/v1/agent/activity/" + agentId)
                     .post(body)
-                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                    .addHeader("Client-Timestamp", "1520999095")
+                    .addHeader("Authorization", jwt.getJwt())
+                    .addHeader("Client-Timestamp", jwt.getTimestamp())
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+                    .addHeader("Transaction-Id", jwt.getTransId())
                     .build();
 
             try {

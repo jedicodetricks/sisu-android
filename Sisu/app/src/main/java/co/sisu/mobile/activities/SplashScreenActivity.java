@@ -10,6 +10,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncServerPing;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
@@ -47,6 +48,12 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                 String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
                 new AsyncAuthenticator(this, userName, userPassword).execute();
             }
+        }
+        else if(asyncReturnType.equals("JWT")) {
+            JWTObject jwt = (JWTObject) returnObject;
+            SaveSharedPreference.setJWT(this, jwt.getJwt());
+            SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
+            SaveSharedPreference.setTransId(this, jwt.getTransId());
         }
         else if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;

@@ -176,6 +176,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         switch (buttonView.getId()) {
             case R.id.reminderSwitch:
                 if(!reminderSwitch.isChecked()) {
+                    Log.e("CANCELING", "ALARM");
                     AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
                 }

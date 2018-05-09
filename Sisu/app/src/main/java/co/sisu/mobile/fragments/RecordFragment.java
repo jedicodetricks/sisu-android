@@ -64,7 +64,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         parentActivity = (ParentActivity) getActivity();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d).execute();
+        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d, parentActivity.getJwtObject()).execute();
         loader = view.findViewById(R.id.recordLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -174,7 +174,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), formattedDate, formattedDate).execute();
+        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), formattedDate, formattedDate, parentActivity.getJwtObject()).execute();
         loader.setVisibility(View.VISIBLE);
     }
 

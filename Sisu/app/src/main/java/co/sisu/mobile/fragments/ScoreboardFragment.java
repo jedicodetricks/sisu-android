@@ -282,7 +282,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime).execute();
+                new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getJwtObject()).execute();
 
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
