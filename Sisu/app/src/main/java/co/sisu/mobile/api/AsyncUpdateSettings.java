@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
+import co.sisu.mobile.models.JWTObject;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,12 +23,14 @@ public class AsyncUpdateSettings extends AsyncTask<Void, Void, Void> {
 
     private AsyncServerEventListener callback;
     private String agentId;
+    private JWTObject jwt;
     AsyncUpdateSettingsJsonObject updateSettingsModel;
 
-    public AsyncUpdateSettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateSettingsModel) {
+    public AsyncUpdateSettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateSettingsModel, JWTObject jwtObject) {
         callback = cb;
         this.agentId = agentId;
         this.updateSettingsModel = updateSettingsModel;
+        jwt = jwtObject;
     }
 
     @Override
@@ -46,10 +49,10 @@ public class AsyncUpdateSettings extends AsyncTask<Void, Void, Void> {
             Request request = new Request.Builder()
                     .url("http://staging.sisu.co/api/v1/parameter/edit-parameter")
                     .put(body)
-                    .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                    .addHeader("Client-Timestamp", "1520999095")
+                    .addHeader("Authorization", jwt.getJwt())
+                    .addHeader("Client-Timestamp", jwt.getTimestamp())
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+                    .addHeader("Transaction-Id", jwt.getTransId())
                     .build();
 
             try {

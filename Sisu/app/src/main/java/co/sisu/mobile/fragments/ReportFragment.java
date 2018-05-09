@@ -193,7 +193,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
                 String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                new AsyncActivities(ReportFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime).execute();
+                new AsyncActivities(ReportFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getJwtObject()).execute();
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override

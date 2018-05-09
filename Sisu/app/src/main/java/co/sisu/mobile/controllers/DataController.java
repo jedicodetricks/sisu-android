@@ -507,12 +507,15 @@ public class DataController {
         if(s != null) {
             String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
             String[] splitString = formattedString.split(",");
+            //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)  5/8 Might be the code below
 
-            //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)
-            for(String setting : splitString) {
-                String[] splitSetting = setting.split(":");
-                activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
+            if(splitString.length > 1) {
+                for(String setting : splitString) {
+                    String[] splitSetting = setting.split(":");
+                    activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
+                }
             }
+
 
             if(masterActivitiesObject.size() > 0) {
                 for(Metric m : masterActivitiesObject) {

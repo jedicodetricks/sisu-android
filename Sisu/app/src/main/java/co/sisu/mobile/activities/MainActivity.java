@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 
@@ -88,28 +90,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-        AgentModel agent = agentObject.getAgent();
-        if(agentObject.getStatus_code().equals("-1")) {
-            showToast("Incorrect username or password");
+        if(asyncReturnType.equals("JWT")) {
+            JWTObject jwt = (JWTObject) returnObject;
+            SaveSharedPreference.setJWT(this, jwt.getJwt());
+            SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
+            SaveSharedPreference.setTransId(this, jwt.getTransId());
         }
         else {
-            Log.e("AGENT OBJECT", agent.getAgent_id());
-            SaveSharedPreference.setUserId(this, agent.getAgent_id());
-            SaveSharedPreference.setUserName(this, emailAddress);
-            try {
-                //TODO: We need to encrypt this in some way
-                SaveSharedPreference.setUserPassword(this, password);
-            } catch (Exception e) {
-                e.printStackTrace();
+            AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
+            AgentModel agent = agentObject.getAgent();
+            if (agentObject.getStatus_code().equals("-1")) {
+                showToast("Incorrect username or password");
+            } else {
+                Log.e("AGENT OBJECT", agent.getAgent_id());
+                SaveSharedPreference.setUserId(this, agent.getAgent_id());
+                SaveSharedPreference.setUserName(this, emailAddress);
+                try {
+                    //TODO: We need to encrypt this in some way
+                    SaveSharedPreference.setUserPassword(this, password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(this, ParentActivity.class);
+                intent.putExtra("Agent", agent);
+                startActivity(intent);
+                finish();
             }
-
-            Intent intent = new Intent(this, ParentActivity.class);
-            intent.putExtra("Agent", agent);
-            startActivity(intent);
-            finish();
         }
-
     }
 
     @Override

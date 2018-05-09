@@ -85,8 +85,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         agent = parentActivity.getAgentInfo();
         initButtons();
         initFields();
-        new AsyncAgent(this, agent.getAgent_id()).execute();
-        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
+        new AsyncAgent(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
+        new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id(), parentActivity.getJwtObject()).execute();
     }
 
     private void initFields() {
@@ -174,7 +174,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private void saveProfile() {
         if(imageChanged) {
             AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject = new AsyncUpdateProfileImageJsonObject(imageData, parentActivity.getAgentInfo().getAgent_id(), "3", imageFormat);
-            new AsyncUpdateProfileImage(this, asyncUpdateProfileImageJsonObject).execute();
+            new AsyncUpdateProfileImage(this, asyncUpdateProfileImageJsonObject, parentActivity.getJwtObject()).execute();
         }
 
         HashMap<String, String> changedFields = new HashMap<>();
@@ -196,7 +196,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
 
         if(changedFields.size() > 0) {
-            new AsyncUpdateProfile(this, parentActivity.getAgentInfo().getAgent_id(), changedFields).execute();
+            new AsyncUpdateProfile(this, parentActivity.getAgentInfo().getAgent_id(), changedFields, parentActivity.getJwtObject()).execute();
         }
 
 
