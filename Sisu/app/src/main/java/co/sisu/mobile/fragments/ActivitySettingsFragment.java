@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,11 +61,14 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void setupFieldsWithData() {
+        Log.e("SETUP WITH DATA", "YEP");
         HashMap<String, SelectedActivities> activitiesSelected = parentActivity.getActivitiesSelected();
         selectedActivities = new ArrayList<>();
 
         for ( String key : activitiesSelected.keySet() ) {
             SelectedActivities selectedActivity = activitiesSelected.get(key);
+            Log.e(selectedActivity.getName(), selectedActivity.getValue());
+
             if(selectedActivity.getName() != null) {
                 selectedActivities.add(selectedActivity);
             }

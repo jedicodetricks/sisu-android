@@ -46,6 +46,7 @@
             android:backgroundTint="@color/colorCorporateOrange"
             android:ems="10"
             android:hint="Email Address"
+            android:maxLength="35"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +76,7 @@
             android:backgroundTint="@color/colorCorporateOrange"
             android:ems="10"
             android:hint="Password"
+            android:maxLength="15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout"/>

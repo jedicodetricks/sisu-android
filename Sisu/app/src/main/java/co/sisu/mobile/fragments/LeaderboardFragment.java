@@ -78,7 +78,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         expListView.setGroupIndicator(null);
         initToggle();
         loader.setVisibility(View.VISIBLE);
-        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
     }
 
