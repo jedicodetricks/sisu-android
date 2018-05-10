@@ -109,8 +109,8 @@ public class ReportListAdapter extends BaseAdapter {
                     break;
             }
             subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
-            percentageTextView.setText(metric.getPercentComplete() + "% complete");
-            progressBar.setProgress(metric.getPercentComplete());
+            percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
+            progressBar.setProgress(metric.getPercentComplete(timeline));
             progressBar.setScaleY(4f);
 
             int color = metric.getColor() != 0 ? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());

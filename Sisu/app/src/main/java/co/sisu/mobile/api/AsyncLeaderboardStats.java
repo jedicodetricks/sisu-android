@@ -38,7 +38,7 @@ public class AsyncLeaderboardStats extends AsyncTask<Void, Void, Void> {
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
 
-            String url = "http://staging.sisu.co/api/v1/v1/team/leaderboards/" + teamId + "/" + searchYear;
+            String url = "http://staging.sisu.co/api/v1/team/leaderboards/" + teamId + "/" + searchYear;
             if(!searchMonth.equals("")) {
                 url = "http://staging.sisu.co/api/v1/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
             }

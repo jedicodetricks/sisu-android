@@ -179,35 +179,42 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void selectTab(String selectedTab) {
-
-        switch (selectedTab.toLowerCase()) {
-            case "pipeline":
-                tabLayout.getTabAt(0).select();
-                currentList = parentActivity.getPipelineList();
-                break;
-            case "signed":
-                tabLayout.getTabAt(1).select();
-                currentList = parentActivity.getSignedList();
-                break;
-            case "contract":
-                tabLayout.getTabAt(2).select();
-                currentList = parentActivity.getContractList();
-                break;
-            case "closed":
-                tabLayout.getTabAt(3).select();
-                currentList = parentActivity.getClosedList();
-                break;
-            case "archived":
-                tabLayout.getTabAt(4).select();
-                currentList = parentActivity.getArchivedList();
-                break;
-            default:
-                tabLayout.getTabAt(0).select();
-                currentList = parentActivity.getPipelineList();
-                break;
+        if(selectedTab != null) {
+            switch (selectedTab.toLowerCase()) {
+                case "pipeline":
+                    tabLayout.getTabAt(0).select();
+                    currentList = parentActivity.getPipelineList();
+                    break;
+                case "signed":
+                    tabLayout.getTabAt(1).select();
+                    currentList = parentActivity.getSignedList();
+                    break;
+                case "contract":
+                    tabLayout.getTabAt(2).select();
+                    currentList = parentActivity.getContractList();
+                    break;
+                case "closed":
+                    tabLayout.getTabAt(3).select();
+                    currentList = parentActivity.getClosedList();
+                    break;
+                case "archived":
+                    tabLayout.getTabAt(4).select();
+                    currentList = parentActivity.getArchivedList();
+                    break;
+                default:
+                    tabLayout.getTabAt(0).select();
+                    currentList = parentActivity.getPipelineList();
+                    break;
+            }
         }
+        else {
+            tabLayout.getTabAt(0).select();
+            currentList = parentActivity.getPipelineList();
+        }
+
         initListView(currentList);
         clientSearch.clearFocus();
+
     }
 
     @Override
