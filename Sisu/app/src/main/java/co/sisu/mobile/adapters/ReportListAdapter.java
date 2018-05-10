@@ -3,7 +3,6 @@ package co.sisu.mobile.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,18 +76,7 @@ public class ReportListAdapter extends BaseAdapter {
         if(metric.getCurrentNum() < 0) {
             metric.setCurrentNum(0);
         }
-        if(metric.getTitle().equalsIgnoreCase("listing showings") ||
-                metric.getTitle().equalsIgnoreCase("number of dials") ||
-                metric.getTitle().equalsIgnoreCase("thank you cards") ||
-                metric.getTitle().equalsIgnoreCase("open houses") ||
-                metric.getTitle().equalsIgnoreCase("added to database") ||
-                metric.getTitle().equalsIgnoreCase("referrals requested") ||
-                metric.getTitle().equalsIgnoreCase("referrals received") ||
-                metric.getTitle().equalsIgnoreCase("prepared cma") ||
-                metric.getTitle().equalsIgnoreCase("meditate") ||
-                metric.getTitle().equalsIgnoreCase("hours prospected") ||
-                metric.getTitle().equalsIgnoreCase("exercise")) {
-
+        if(metric.getGoalNum() < 1) {
             subtitleTextView.setText("Total: " + metric.getCurrentNum());
             percentageTextView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
@@ -112,8 +100,6 @@ public class ReportListAdapter extends BaseAdapter {
             percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
             progressBar.setProgress(metric.getPercentComplete(timeline));
             progressBar.setScaleY(4f);
-
-            int color = metric.getColor() != 0 ? ContextCompat.getColor(mContext, R.color.colorMoonBlue) : ContextCompat.getColor(mContext, metric.getColor());
             progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
             animateBars(progressBar);
         }
