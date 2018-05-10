@@ -58,11 +58,11 @@ public class AsyncSettings extends AsyncTask<Void, Void, Void> {
                 callback.onEventCompleted(settings, "Settings");
             }
             else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Settings");
             }
         }
         else {
-            callback.onEventFailed(null, "Server Ping");
+            callback.onEventFailed(null, "Settings");
         }
 
 //        Log.d("ASYNC PING IS", "NULL");

@@ -237,6 +237,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         }
     }
 
+
+
     private boolean saveClient(){
         boolean isSaved;
         ClientObject newClient = new ClientObject();
