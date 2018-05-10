@@ -54,6 +54,7 @@
         android:padding="8dp"
         android:background="@drawable/input_text_box"
         android:ems="10"
+        android:maxLength="400"
         android:isScrollContainer="true"
         android:selectAllOnFocus="false"
         android:singleLine="false"
