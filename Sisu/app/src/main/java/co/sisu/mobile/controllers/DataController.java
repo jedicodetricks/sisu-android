@@ -468,7 +468,12 @@ public class DataController {
     }
 
     public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
-        this.agent.setAgentGoalsObject(agentGoalsObject);
+        if(agentGoalsObject.length == 0) {
+            setDefaultGoalsObject();
+        }
+        else {
+            this.agent.setAgentGoalsObject(agentGoalsObject);
+        }
     }
 
     public void setRecordUpdated(Metric recordUpdated) {
@@ -484,22 +489,23 @@ public class DataController {
     public void setSettings(SettingsObject[] settings) {
 
         List<SettingsObject> relevantSettings = new ArrayList<>();
-
-        for(SettingsObject s : settings) {
-            switch(s.getName()) {
+        if(settings.length == 0) {
+            settings = setDefaultSettingsObject();
+        }
+        for (SettingsObject s : settings) {
+            switch (s.getName()) {
                 case "local_timezone":
-                    s.setValue(TimeZone.getDefault().getID().toString());
                 case "daily_reminder_time":
-                case "lights":
-                case "biometrics":
+//                    case "lights":
+//                    case "biometrics":
                 case "daily_reminder":
                     relevantSettings.add(s);
                     break;
                 case "record_activities":
                     setupSelectedActivities(s);
             }
-        }
         this.settings = relevantSettings;
+        }
     }
 
     private void setupSelectedActivities(SettingsObject s) {
@@ -550,6 +556,9 @@ public class DataController {
     }
 
     public void setActivitiesSelected(SettingsObject activitiesSelected) {
+        if(activitiesSelected == null) {
+            activitiesSelected = setDefaultActivitesSelected();
+        }
         setupSelectedActivities(activitiesSelected);
     }
 
@@ -565,5 +574,35 @@ public class DataController {
                 }
             }
         }
+    }
+
+    private void setDefaultGoalsObject() {
+        AgentGoalsObject[] agentGoalsObject = new AgentGoalsObject[9];
+        agentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
+        agentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
+        agentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
+        agentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
+        agentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
+        agentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
+        agentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
+        agentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
+        agentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
+
+        this.agent.setAgentGoalsObject(agentGoalsObject);
+    }
+
+    private SettingsObject[] setDefaultSettingsObject() {
+        SettingsObject[] settings = new SettingsObject[4];
+        settings[0] = (new SettingsObject("local_timezone", "N", "", "0"));
+        settings[1] = (new SettingsObject("daily_reminder_time", "N", "11:01", "5"));
+        settings[2] = (new SettingsObject("daily_reminder", "N", "0", "3"));
+        settings[3] = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+
+        return settings;
+    }
+
+    private SettingsObject setDefaultActivitesSelected() {
+        SettingsObject activites = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+        return  activites;
     }
 }

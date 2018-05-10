@@ -38,10 +38,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
     ParentActivity parentActivity;
-    //Switch timelineSwitch;
     TextView activityTitle, saveButton;
     private boolean dateSwap;
-    private boolean isAnnualChecked = false;
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
     private AgentModel agent;
@@ -84,32 +82,17 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void initSwitchAndButtons() {
-//        timelineSwitch = getView().findViewById(R.id.goalsTimelineSelector);
-//        timelineSwitch.setChecked(true);
-//        timelineSwitch.setOnCheckedChangeListener(this);
-
         saveButton = parentActivity.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
     }
 
-    private void setupFieldsWithGoalData(final boolean isAnnual) {
+    private void setupFieldsWithGoalData() {
         dateSwap = true;
         currentGoalsObject = agent.getAgentGoalsObject();
 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(isAnnual) {
-                    activityTitle.setText(R.string.yearlyTitle);
-                    if(income.equals("")) {
-                        desiredIncome.setText(agent.getDesired_income() == null ? "" : agent.getDesired_income().replace(".0", ""));
-                    }
-                    else {
-                        desiredIncome.setText(income);
-
-                    }
-                }
-                else {
                     activityTitle.setText(R.string.monthlyTitle);
                     String formattedIncome = "";
                     if(income.equals("")) {
@@ -122,10 +105,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     }
                     String toDisplay = "";
                     if(!formattedIncome.equals("")) {
-                        toDisplay = String.valueOf(Integer.valueOf(formattedIncome) / 12);
+                        toDisplay = String.valueOf(formattedIncome);
                     }
                     desiredIncome.setText(String.valueOf(toDisplay));
-                }
+//                }
 
                 if(reason.equals("")) {
                     trackingReasons.setText(agent.getVision_statement());
@@ -136,9 +119,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
                 for(AgentGoalsObject go : currentGoalsObject) {
                     String value = go.getValue();
-                    if(!isAnnual) {
-                        value = String.valueOf(Integer.valueOf(go.getValue()) / 12);
-                    }
+
                     switch (go.getName()) {
                         case "Contacts":
                             contacts.setText(value);
@@ -215,8 +196,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        isAnnualChecked = isChecked;
-        setupFieldsWithGoalData(isChecked);
+        setupFieldsWithGoalData();
     }
 
     @Override
@@ -266,11 +246,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             }
             else if (desiredIncome.getText().hashCode() == s.hashCode()) {
                 updateProfile("Income", s.toString());
-//                Log.e("DESIRED INCOME", s.toString());
             }
             else if(trackingReasons.getText().hashCode() == s.hashCode()) {
                 updateProfile("Reasons", s.toString());
-//                Log.e("TRACKING REASONS", s.toString());
             }
         }
     }
@@ -285,9 +263,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void updateField(String fieldName, int value) {
-        if(!isAnnualChecked) {
-            value = value * 12;
-        }
         AgentGoalsObject selectedGoal = null;
 
         int currentGoalsLength = currentGoalsObject.length;
@@ -349,7 +324,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             parentActivity.setAgentGoals(agentGoalsObject);
             goalsUpdated = true;
             if(agentUpdated) {
-                setupFieldsWithGoalData(isAnnualChecked);
+                setupFieldsWithGoalData();
             }
         }
         else if(asyncReturnType.equals("Update Agent")) {
@@ -366,13 +341,13 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             agent = parentActivity.getAgentInfo();
             agentUpdated = true;
             if(goalsUpdated) {
-                setupFieldsWithGoalData(isAnnualChecked);
+                setupFieldsWithGoalData();
             }
         }
     }
 
     @Override
-    public void onEventFailed(Object o, String s) {
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
 
     }
 }

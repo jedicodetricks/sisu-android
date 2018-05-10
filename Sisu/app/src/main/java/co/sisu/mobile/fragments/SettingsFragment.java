@@ -85,19 +85,22 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
         version = getView().findViewById(R.id.versionLabel);
-        version.setText(BuildConfig.VERSION_NAME);
+        version.setText("Version: " + BuildConfig.VERSION_NAME);
     }
 
     private void fillFieldsWithData() {
         settings = parentActivity.getSettings();
-        if(settings.isEmpty()) {
-            timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
-        }
 
         for (SettingsObject s : settings) {
+            Log.e(s.getName(), s.getValue());
             switch (s.getName()) {
                 case "local_timezone":
-                    timeZoneDisplay.setText(s.getValue());
+                    if(s.getValue().equals("")) {
+                        timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
+                    }
+                    else {
+                        timeZoneDisplay.setText(s.getValue());
+                    }
                     break;
                 case "daily_reminder_time":
                     if(s.getValue().equals("11:01")) {
@@ -131,6 +134,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private String isCheckedBinaryValue(SettingsObject s) {
         if(s.getValue().equals("0")) {
+            return "1";
+        }
+        return "0";
+    }
+
+    private String isCheckedBinaryValue(boolean isChecked) {
+        if(isChecked) {
             return "1";
         }
         return "0";
@@ -219,7 +229,32 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 }
                 break;
             case R.id.saveButton:
+                updateSettingsObject();
                 saveSettingsObject();
+        }
+    }
+
+    private void updateSettingsObject() {
+        for (SettingsObject s : settings) {
+            switch (s.getName()) {
+                case "local_timezone":
+                    s.setValue(timeZoneDisplay.getText().toString());
+                    break;
+                case "daily_reminder_time":
+                    s.setValue(displayTime.getText().toString());
+                    break;
+                //Keep these, we'll need them for V2
+
+//                case "lights":
+//                    lightsSwitch.setChecked(isChecked(s));
+//                    break;
+//                case "biometrics":
+//                    idSwitch.setChecked(isChecked(s));
+//                    break;
+                case "daily_reminder":
+                    s.setValue(isCheckedBinaryValue(reminderSwitch.isChecked()));
+                    break;
+            }
         }
     }
 
@@ -232,8 +267,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
         new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject, parentActivity.getJwtObject()).execute();
-        SettingsObject[] array = new SettingsObject[settings.size()];
-        parentActivity.setSettings(settings.toArray(array));
+
+
     }
 
     private void launchTimePicker() {
@@ -284,6 +319,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    SettingsObject[] array = new SettingsObject[settings.size()];
+                    parentActivity.setSettings(settings.toArray(array));
                     Toast toast = Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT);
                     //View view = toast.getView();
                     //view.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
