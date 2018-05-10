@@ -468,8 +468,8 @@ public class DataController {
     }
 
     public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
-        if(agentGoalsObject.length == 0) {
-            setDefaultGoalsObject();
+        if(agentGoalsObject.length < 9) {
+            setDefaultGoalsObject(agentGoalsObject);
         }
         else {
             this.agent.setAgentGoalsObject(agentGoalsObject);
@@ -593,19 +593,96 @@ public class DataController {
         }
     }
 
-    private void setDefaultGoalsObject() {
-        AgentGoalsObject[] agentGoalsObject = new AgentGoalsObject[9];
-        agentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
-        agentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
-        agentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
-        agentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
-        agentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
-        agentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
-        agentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
-        agentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
-        agentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
+    private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {
+        List<String> addedGoals = new ArrayList<>();
+        AgentGoalsObject[] updatedAgentGoalsObject = new AgentGoalsObject[9];
 
-        this.agent.setAgentGoalsObject(agentGoalsObject);
+        for (AgentGoalsObject ago : agentGoalsObject) {
+            switch (ago.getGoal_id()) {
+                case "CONTA":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[0] = ago;
+                    break;
+                case "BAPPT":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[1] = ago;
+                    break;
+                case "SAPPT":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[2] = ago;
+                    break;
+                case "BSGND":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[3] = ago;
+                    break;
+                case "SSGND":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[4] = ago;
+                    break;
+                case "BUNDC":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[5] = ago;
+                    break;
+                case "SUNDC":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[6] = ago;
+                    break;
+                case "BCLSD":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[7] = ago;
+                    break;
+                case "SCLSD":
+                    addedGoals.add(ago.getGoal_id());
+                    updatedAgentGoalsObject[8] = ago;
+                    break;
+            }
+        }
+        if(!addedGoals.contains("CONTA")) {
+            updatedAgentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
+
+        }
+
+        if(!addedGoals.contains("BAPPT")) {
+            updatedAgentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
+
+        }
+
+        if(!addedGoals.contains("SAPPT")) {
+            updatedAgentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
+
+        }
+
+        if(!addedGoals.contains("BSGND")) {
+            updatedAgentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
+
+        }
+
+        if(!addedGoals.contains("SSGND")) {
+            updatedAgentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
+
+        }
+
+        if(!addedGoals.contains("BUNDC")) {
+            updatedAgentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
+
+        }
+
+        if(!addedGoals.contains("SUNDC")) {
+            updatedAgentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
+
+        }
+
+        if(!addedGoals.contains("BCLSD")) {
+            updatedAgentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
+
+        }
+
+        if(!addedGoals.contains("SCLSD")) {
+            updatedAgentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
+
+        }
+
+        this.agent.setAgentGoalsObject(updatedAgentGoalsObject);
     }
 
     private SettingsObject[] setDefaultSettingsObject(SettingsObject[] settings) {
