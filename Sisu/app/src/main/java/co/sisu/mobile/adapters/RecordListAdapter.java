@@ -106,7 +106,6 @@ public class RecordListAdapter extends BaseAdapter {
                 if(!rowCounter.getText().toString().equals("")) {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
                         switch(metric.getType()) {
-                            case "CONTA":
                             case "1TAPT":
                             case "BSGND":
                             case "SSGND":
@@ -114,6 +113,8 @@ public class RecordListAdapter extends BaseAdapter {
                             case "SUNDC":
                             case "BCLSD":
                             case "SCLSD":
+                            case "BAPPT":
+                            case "SAPPT":
                                 mRecordEventHandler.onClientDirectorClicked(metric);
                                 break;
                             default:
@@ -128,15 +129,19 @@ public class RecordListAdapter extends BaseAdapter {
         titleTextView.setText(metric.getTitle());
         thumbnailImageView.setImageResource(metric.getThumbnailId());
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
-        if(metric.getTitle().equals("1st Time Appts") ||
-                metric.getTitle().equals("Buyers Signed") ||
-                metric.getTitle().equals("Sellers Signed") ||
-                metric.getTitle().equals("Buyers Under Contract") ||
-                metric.getTitle().equals("Sellers Under Contract") ||
-                metric.getTitle().equals("Sellers Closed") ||
-                metric.getTitle().equals("Buyers Closed")){
-            minusButton.setVisibility(View.INVISIBLE);
-            rowCounter.setEnabled(false);
+        switch(metric.getType()) {
+            case "1TAPT":
+            case "BSGND":
+            case "SSGND":
+            case "BUNDC":
+            case "SUNDC":
+            case "BCLSD":
+            case "SCLSD":
+            case "BAPPT":
+            case "SAPPT":
+                minusButton.setVisibility(View.INVISIBLE);
+                rowCounter.setEnabled(false);
+                break;
         }
 
         return rowView;

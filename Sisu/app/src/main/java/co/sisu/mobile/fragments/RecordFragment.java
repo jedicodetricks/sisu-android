@@ -213,31 +213,25 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onClientDirectorClicked(Metric metric) {
-        switch(metric.getTitle()) {
-            case "1st Time Appts":
+        switch(metric.getType()) {
+            case "1TAPT":
                 recordMetric("appts");
                 break;
-            case "Buyers Signed":
+            case "BSGND":
+            case "SSGND":
                 recordMetric("signed");
                 break;
-            case "Sellers Signed":
-                recordMetric("signed");
-                break;
-            case "Buyers Under Contract":
+            case "BUNDC":
+            case "SUNDC":
                 recordMetric("contract");
                 break;
-            case "Sellers Under Contract":
-                recordMetric("contract");
-                break;
-            case "Buyers Closed":
+            case "BCLSD":
+            case "SCLSD":
                 recordMetric("closed");
                 break;
-            case "Sellers Closed":
-                recordMetric("closed");
-                break;
-            case "Contacts":
-                //addClient navigation
-                parentActivity.replaceFragment(AddClientFragment.class);
+            case "BAPPT":
+            case "SAPPT":
+                recordMetric("pipeline");
                 break;
         }
     }

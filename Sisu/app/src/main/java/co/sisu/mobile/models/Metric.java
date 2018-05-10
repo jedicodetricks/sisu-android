@@ -40,10 +40,22 @@ public class Metric implements Comparable<Metric>{
 
     }
 
-    public int getPercentComplete(){
+    public int getPercentComplete(String timeline){
         if(goalNum == 0) {
             return 0;
         }
+
+        switch (timeline) {
+            case "day":
+                return (int) (((double)currentNum/(double)dailyGoalNum) * 100);
+            case "week":
+                return (int) (((double)currentNum/(double)weeklyGoalNum) * 100);
+            case "month":
+                return (int) (((double)currentNum/(double)goalNum) * 100);
+            case "year":
+                return (int) (((double)currentNum/(double)yearlyGoalNum) * 100);
+        }
+
         return (int) (((double)currentNum/(double)goalNum) * 100);
     }
 
