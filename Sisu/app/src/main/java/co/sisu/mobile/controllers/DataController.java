@@ -87,7 +87,7 @@ public class DataController {
         TeamJsonObject[] teams = teamsObjects.getTeams();
         int colorCounter = 0;
         for(int i = 0; i < teams.length; i++) {
-            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[i])));
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter])));
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
             }
@@ -489,22 +489,40 @@ public class DataController {
     public void setSettings(SettingsObject[] settings) {
 
         List<SettingsObject> relevantSettings = new ArrayList<>();
-        if(settings.length == 0) {
-            settings = setDefaultSettingsObject();
+        if(settings.length < 4) {
+            settings = setDefaultSettingsObject(settings);
         }
         for (SettingsObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("");
+                    }
+                    relevantSettings.add(s);
+                    break;
                 case "daily_reminder_time":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("0");
+                    }
+                    relevantSettings.add(s);
+                    break;
 //                    case "lights":
 //                    case "biometrics":
                 case "daily_reminder":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("11:01");
+                    }
                     relevantSettings.add(s);
                     break;
                 case "record_activities":
+                    if(s.getValue().equals("{}")) {
+                        s = setDefaultActivitesSelected();
+                    }
                     setupSelectedActivities(s);
             }
-        this.settings = relevantSettings;
+
+
+            this.settings = relevantSettings;
         }
     }
 
@@ -513,7 +531,6 @@ public class DataController {
         if(s != null) {
             String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
             String[] splitString = formattedString.split(",");
-            //TODO: This needs to check if the value of the parameter is "" (It should only ever be that the first time)  5/8 Might be the code below
 
             if(splitString.length > 1) {
                 for(String setting : splitString) {
@@ -556,7 +573,7 @@ public class DataController {
     }
 
     public void setActivitiesSelected(SettingsObject activitiesSelected) {
-        if(activitiesSelected == null) {
+        if(activitiesSelected == null || activitiesSelected.getValue().equals("{}")) {
             activitiesSelected = setDefaultActivitesSelected();
         }
         setupSelectedActivities(activitiesSelected);
@@ -591,14 +608,53 @@ public class DataController {
         this.agent.setAgentGoalsObject(agentGoalsObject);
     }
 
-    private SettingsObject[] setDefaultSettingsObject() {
-        SettingsObject[] settings = new SettingsObject[4];
-        settings[0] = (new SettingsObject("local_timezone", "N", "", "0"));
-        settings[1] = (new SettingsObject("daily_reminder_time", "N", "11:01", "5"));
-        settings[2] = (new SettingsObject("daily_reminder", "N", "0", "3"));
-        settings[3] = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+    private SettingsObject[] setDefaultSettingsObject(SettingsObject[] settings) {
+        List<String> addedSettings = new ArrayList<>();
+        SettingsObject[] updatedSettings = new SettingsObject[4];
 
-        return settings;
+        for (SettingsObject s : settings) {
+            switch (s.getName()) {
+                case "local_timezone":
+                    addedSettings.add("local_timezone");
+                    updatedSettings[0] = s;
+                    break;
+                case "daily_reminder_time":
+                    addedSettings.add("daily_reminder_time");
+                    updatedSettings[1] = s;
+                    break;
+//                    case "lights":
+//                    case "biometrics":
+                case "daily_reminder":
+                    addedSettings.add("daily_reminder");
+                    updatedSettings[2] = s;
+                    break;
+                case "record_activities":
+                    addedSettings.add("record_activities");
+                    updatedSettings[3] = s;
+            }
+        }
+
+
+        if(!addedSettings.contains("local_timezone")) {
+            updatedSettings[0] = (new SettingsObject("local_timezone", "N", "", "0"));
+        }
+
+        if(!addedSettings.contains("daily_reminder_time")) {
+            updatedSettings[1] = (new SettingsObject("daily_reminder_time", "N", "11:01", "5"));
+
+        }
+
+        if(!addedSettings.contains("daily_reminder")) {
+            updatedSettings[2] = (new SettingsObject("daily_reminder", "N", "0", "3"));
+
+        }
+
+        if(!addedSettings.contains("record_activities")) {
+            updatedSettings[3] = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+
+        }
+
+        return updatedSettings;
     }
 
     private SettingsObject setDefaultActivitesSelected() {
