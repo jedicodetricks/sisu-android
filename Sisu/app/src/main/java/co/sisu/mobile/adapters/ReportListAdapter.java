@@ -76,11 +76,7 @@ public class ReportListAdapter extends BaseAdapter {
         if(metric.getCurrentNum() < 0) {
             metric.setCurrentNum(0);
         }
-        if(metric.getGoalNum() < 1) {
-            subtitleTextView.setText("Total: " + metric.getCurrentNum());
-            percentageTextView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        } else {
+        else {
             int goalNum = 0;
             switch (timeline) {
                 case "day":
@@ -95,13 +91,21 @@ public class ReportListAdapter extends BaseAdapter {
                 case "year":
                     goalNum = metric.getYearlyGoalNum();
                     break;
-            }
+        }
+        if(goalNum == 0) {
+            subtitleTextView.setText("Total: " + metric.getCurrentNum());
+            percentageTextView.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        else {
             subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
-            percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
-            progressBar.setProgress(metric.getPercentComplete(timeline));
-            progressBar.setScaleY(4f);
-            progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
-            animateBars(progressBar);
+        }
+
+        percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
+        progressBar.setProgress(metric.getPercentComplete(timeline));
+        progressBar.setScaleY(4f);
+        progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
+        animateBars(progressBar);
         }
         thumbnailImageView.setImageResource(metric.getThumbnailId());
 

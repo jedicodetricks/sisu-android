@@ -125,9 +125,10 @@ public class DataController {
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 99);
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 97);
-        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 96);
+//        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 96);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+        boolean firstContract = false, firstClosed = false, firstAppt = false;
 
         for(int i = 0; i < counters.length; i++) {
             if(counters[i].getCoalesce() != null) {
@@ -147,9 +148,9 @@ public class DataController {
                         else if(ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
                             firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
                         }
-                        else if(ago.getGoal_id().equals("SSGND")) {
-                            showing.setGoalNum(Integer.parseInt(ago.getValue()));
-                        }
+//                        else if(ago.getGoal_id().equals("SSGND")) {
+//                            showing.setGoalNum(Integer.parseInt(ago.getValue()));
+//                        }
                         else {
                             counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
 
@@ -165,59 +166,69 @@ public class DataController {
             switch(counters[i].getActivity_type()) {
                 case "CONTA":
                 case "BSGND":
+                case "SSGND":
                     setupMetricGoals(metric);
                     scoreboardObject.add(metric);
-                    break;
-                case "SSGND":
-                    showing.setCurrentNum(metric.getCurrentNum());
-                    setupMetricGoals(showing);
                     break;
                 case "BUNDC":
                 case "SUNDC":
                     contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
                     contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contract);
+                    if(!firstContract) {
+                        metric = null;
+                        firstContract = true;
+                    }
+                    else {
+                        metric = contract;
+                    }
                     break;
                 case "BCLSD":
                 case "SCLSD":
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(closed);
+                    if(!firstClosed) {
+                        metric = null;
+                        firstClosed = true;
+                    }
+                    else {
+                        metric = closed;
+                    }
                     break;
                 case "BAPPT":
                 case "SAPPT":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(firstAppointment);
+                    if(!firstAppt) {
+                        metric = null;
+                        firstAppt = true;
+                    }
+                    else {
+                        metric = firstAppointment;
+                    }
                     break;
             }
-            masterActivitiesObject.add(metric);
+            if(metric != null) {
+                masterActivitiesObject.add(metric);
 
-            if(activitiesSelected.containsKey(metric.getType())) {
-                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
-                selectedActivities.setName(metric.getTitle());
-                if(selectedActivities.getValue().equals("0")) {
-                    continue;
+                if(activitiesSelected.containsKey(metric.getType())) {
+                    SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+                    selectedActivities.setName(metric.getTitle());
+                    if(selectedActivities.getValue().equals("0")) {
+                        continue;
+                    }
                 }
+                activitiesObject.add(metric);
             }
-            activitiesObject.add(metric);
+
+
         }
-//        setupMetricGoals(firstAppointment);
-//        setupMetricGoals(closed);
-//        setupMetricGoals(contract);
-//        setupMetricGoals(showing);
+
         scoreboardObject.add(firstAppointment);
         scoreboardObject.add(closed);
         scoreboardObject.add(contract);
-        scoreboardObject.add(showing);
-//        masterActivitiesObject.add(firstAppointment);
-//        masterActivitiesObject.add(closed);
-//        masterActivitiesObject.add(contract);
-//        masterActivitiesObject.add(showing);
-//        activitiesObject.add(firstAppointment);
-//        activitiesObject.add(closed);
-//        activitiesObject.add(contract);
-//        activitiesObject.add(showing);
 
         sortActivitesObjectByWeight();
     }
