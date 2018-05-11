@@ -402,14 +402,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     setupProgressBar(appointmentsMetric, appointmentsProgress, appointmentsProgressMark, appointmentsCurrentNumber, appointmentsGoalNumber);
                     break;
 
-                case "BSGND":
+                case "BBSGD":
                     Metric bbSignedMetric = metricList.get(i);
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
                     break;
 
-                case "SSGND":
+                case "LSTT":
                     Metric listingsTakenMetric = metricList.get(i);
-                    listingsTakenMetric.setTitle("Listings Taken");
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
                     break;
 
@@ -550,7 +549,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setActivitiesObject(returnObject);
+            parentActivity.setScoreboardActivities(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
