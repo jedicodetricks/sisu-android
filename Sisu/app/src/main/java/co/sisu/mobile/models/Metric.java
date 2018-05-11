@@ -27,9 +27,6 @@ public class Metric implements Comparable<Metric>{
         this.goalNum = goalNum;
         this.yearlyGoalNum = goalNum * 12;
         this.dailyGoalNum = goalNum / 30;
-        if(this.dailyGoalNum == 0) {
-            dailyGoalNum = 1;
-        }
         this.weeklyGoalNum = goalNum / 4;
         this.thumbnailId = thumbnailId;
         this.color = color;
@@ -128,9 +125,6 @@ public class Metric implements Comparable<Metric>{
     }
 
     public void setDailyGoalNum(int dailyGoalNum) {
-        if(dailyGoalNum == 0) {
-            dailyGoalNum = 1;
-        }
         this.dailyGoalNum = dailyGoalNum;
     }
 
