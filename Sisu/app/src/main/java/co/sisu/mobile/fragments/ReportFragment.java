@@ -64,7 +64,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         parentActivity = (ParentActivity) getActivity();
         loader = view.findViewById(R.id.reportLoader);
         initializeListView();
-        //setData(initializeMetrics());
         initializeTimelineSelector();
     }
 

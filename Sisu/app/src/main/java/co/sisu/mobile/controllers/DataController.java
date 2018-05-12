@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.ActivitiesCounterModel;
@@ -42,7 +41,6 @@ public class DataController {
     private List<Metric> masterActivitiesObject;
     private List<Metric> scoreboardObject;
     private AgentModel agent;
-    private List<AgentGoalsObject> updatedGoals;
 
     private List<ClientObject> pipelineList;
     private List<ClientObject> signedList;
@@ -63,12 +61,11 @@ public class DataController {
         closedList = new ArrayList<>();
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
-        updatedGoals = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
         initializeMorePageObject();
     }
 
-    public void initializeMorePageObject() {
+    private void initializeMorePageObject() {
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
@@ -109,42 +106,34 @@ public class DataController {
         return scoreboardObject;
     }
 
-    public void setScoreboardObject(List<Metric> scoreboardObject) {
-        this.scoreboardObject = scoreboardObject;
-    }
-
-    public void setActivitiesObject(Object returnObject) {
-        activitiesObject = new ArrayList<>();
+    public void setScoreboardActivities(Object returnObject) {
         scoreboardObject = new ArrayList<>();
-        masterActivitiesObject = new ArrayList<>();
-        activitiesSelected = new HashMap<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric("BB Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
-        Arrays.sort(counters);
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 99);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 97);
-        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 96);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
-            if(counters[i].getCoalesce() != null) {
-               counters[i].setName(counters[i].getCoalesce());
+            if (counters[i].getCoalesce() != null) {
+                counters[i].setName(counters[i].getCoalesce());
             }
 
-            if(goals != null) {
-                for(AgentGoalsObject ago : goals) {
-                    if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
+            if (goals != null) {
+                for (AgentGoalsObject ago : goals) {
+                    if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
 
-                        if(ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
+                        if (ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
                             closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
-                        }
-                        else if(ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
+                        } else if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
                             contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
-                        }
-                        else if(ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
+                        } else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
                             firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
                         }
                         else if(ago.getGoal_id().equals("SSGND")) {
@@ -152,24 +141,27 @@ public class DataController {
                         }
                         else {
                             counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
-
                         }
                     }
                 }
             }
 
-
             Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
-//            Log.e("ACTIVITIES", metric.getTitle() + ": " + metric.getCurrentNum());
             setMetricThumbnail(metric);
-            switch(counters[i].getActivity_type()) {
+            switch (counters[i].getActivity_type()) {
                 case "CONTA":
+                    contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
+                    contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(contact);
+                    break;
                 case "BSGND":
-                    setupMetricGoals(metric);
-                    scoreboardObject.add(metric);
+                    signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
+                    signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(signed);
                     break;
                 case "SSGND":
-                    showing.setCurrentNum(metric.getCurrentNum());
+                    showing.setCurrentNum(showing.getCurrentNum() + metric.getCurrentNum());
+                    showing.setGoalNum(showing.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(showing);
                     break;
                 case "BUNDC":
@@ -191,6 +183,69 @@ public class DataController {
                     setupMetricGoals(firstAppointment);
                     break;
             }
+        }
+
+        scoreboardObject.add(firstAppointment);
+        scoreboardObject.add(closed);
+        scoreboardObject.add(contract);
+        scoreboardObject.add(showing);
+        scoreboardObject.add(contact);
+        scoreboardObject.add(signed);
+    }
+
+    public void setActivitiesObject(Object returnObject) {
+        activitiesObject = new ArrayList<>();
+        masterActivitiesObject = new ArrayList<>();
+        AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
+        ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+
+        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+
+        for(int i = 0; i < counters.length; i++) {
+            if(counters[i].getCoalesce() != null) {
+               counters[i].setName(counters[i].getCoalesce());
+            }
+
+            if(goals != null) {
+                for(AgentGoalsObject ago : goals) {
+                    if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
+                        counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+                    }
+                }
+            }
+
+
+            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            setMetricThumbnail(metric);
+            switch(counters[i].getActivity_type()) {
+                case "CONTA":
+                    metric.setWeight(99);
+                    break;
+                case "BSGND":
+                    metric.setWeight(96);
+                    break;
+                case "SSGND":
+                    metric.setWeight(95);
+                    break;
+                case "BUNDC":
+                    metric.setWeight(94);
+                    break;
+                case "SUNDC":
+                    metric.setWeight(93);
+                    break;
+                case "BCLSD":
+                    metric.setWeight(92);
+                    break;
+                case "SCLSD":
+                    metric.setWeight(91);
+                    break;
+                case "BAPPT":
+                    metric.setWeight(98);
+                    break;
+                case "SAPPT":
+                    metric.setWeight(97);
+                    break;
+            }
             masterActivitiesObject.add(metric);
 
             if(activitiesSelected.containsKey(metric.getType())) {
@@ -201,23 +256,10 @@ public class DataController {
                 }
             }
             activitiesObject.add(metric);
+
+
         }
-//        setupMetricGoals(firstAppointment);
-//        setupMetricGoals(closed);
-//        setupMetricGoals(contract);
-//        setupMetricGoals(showing);
-        scoreboardObject.add(firstAppointment);
-        scoreboardObject.add(closed);
-        scoreboardObject.add(contract);
-        scoreboardObject.add(showing);
-//        masterActivitiesObject.add(firstAppointment);
-//        masterActivitiesObject.add(closed);
-//        masterActivitiesObject.add(contract);
-//        masterActivitiesObject.add(showing);
-//        activitiesObject.add(firstAppointment);
-//        activitiesObject.add(closed);
-//        activitiesObject.add(contract);
-//        activitiesObject.add(showing);
+
 
         sortActivitesObjectByWeight();
     }
@@ -234,10 +276,7 @@ public class DataController {
         activitiesObject.toArray(array);
         Arrays.sort(array);
 
-        activitiesObject = new ArrayList<Metric>(Arrays.asList(array));
-//        for(Metric m : activitiesObject) {
-//            Log.e("Metric", m.getTitle() + " : " + m.getWeight());
-//        }
+        activitiesObject = new ArrayList<>(Arrays.asList(array));
     }
 
     private void setMetricThumbnail(Metric metric) {
@@ -342,8 +381,7 @@ public class DataController {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
         resetClientLists();
-        for(int i = 0; i < clientObject.length; i++) {
-            ClientObject co = clientObject[i];
+        for(ClientObject co : clientObject) {
             removeDecimalsFromAmounts(co);
             if(co.getStatus().equalsIgnoreCase("D")) {
                 //Archived List
@@ -365,7 +403,7 @@ public class DataController {
 
     private void sortIntoList(ClientObject co) {
         boolean isClosed = false, isContract = false, isSigned = false;
-        Date date = null;
+        Date date;
         Calendar currentTime = Calendar.getInstance();
         Calendar updatedTime = Calendar.getInstance();
         if(co.getClosed_dt() != null) {
@@ -563,11 +601,6 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
-        selectedGoal.setValue(String.valueOf(value));
-        updatedGoals.add(selectedGoal);
-    }
-
     public HashMap<String, SelectedActivities> getActivitiesSelected() {
         return activitiesSelected;
     }
@@ -577,20 +610,6 @@ public class DataController {
             activitiesSelected = setDefaultActivitesSelected();
         }
         setupSelectedActivities(activitiesSelected);
-    }
-
-    public void setActivityGoals() {
-        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
-
-        for(Metric metric : masterActivitiesObject) {
-            for(AgentGoalsObject ago : goals) {
-                Log.e("METRIC", metric.getTitle());
-                Log.e("GOAL", ago.getName());
-                if(metric.getTitle().equals(ago.getName())) {
-                    Log.e("GOAL MATCHES", metric.getTitle());
-                }
-            }
-        }
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {

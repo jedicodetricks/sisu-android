@@ -391,33 +391,33 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private void animateProgressBars(List<Metric> metricList){
         for(int i = 0; i < metricList.size(); i++) {
 
-            switch(metricList.get(i).getTitle()) {
-                case "Contacts":
+            switch(metricList.get(i).getType()) {
+                case "CONTA":
                     Metric contactsMetric = metricList.get(i);
                     setupProgressBar(contactsMetric, contactsProgress, contactsProgressMark, contactsCurrentNumber, contactsGoalNumber);
                     break;
 
-                case "1st Time Appts":
+                case "1TAPT":
                     Metric appointmentsMetric = metricList.get(i);
                     setupProgressBar(appointmentsMetric, appointmentsProgress, appointmentsProgressMark, appointmentsCurrentNumber, appointmentsGoalNumber);
                     break;
 
-                case "Buyers Signed":
+                case "BBSGD":
                     Metric bbSignedMetric = metricList.get(i);
                     setupProgressBar(bbSignedMetric, bbSignedProgress, bbSignedProgressMark, bbSignedCurrentNumber, bbSignedGoalNumber);
                     break;
 
-                case "Listings Taken":
+                case "LSTT":
                     Metric listingsTakenMetric = metricList.get(i);
                     setupProgressBar(listingsTakenMetric, listingsTakenProgress, listingsTakenProgressMark, listingsTakenCurrentNumber, listingsTakenGoalNumber);
                     break;
 
-                case "Under Contract":
+                case "UCNTR":
                     Metric underContractMetric = metricList.get(i);
                     setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
                     break;
 
-                case "Closed":
+                case "CLSD":
                     Metric closedMetric = metricList.get(i);
                     setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
                     break;
@@ -549,7 +549,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setActivitiesObject(returnObject);
+            parentActivity.setScoreboardActivities(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
