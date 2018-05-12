@@ -195,8 +195,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         fieldsObject.add(sClosed);
         activityTitle = getView().findViewById(R.id.activityTitle);
 
-        unitGoal = getView().findViewById(R.id.unitGoal);
-        volumeGoal = getView().findViewById(R.id.volumeGoal);
+        //unitGoal = getView().findViewById(R.id.unitGoal);
+        //volumeGoal = getView().findViewById(R.id.volumeGoal);
     }
 
     private void initEditText() {
@@ -206,8 +206,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
         desiredIncome.setOnFocusChangeListener(this);
         trackingReasons.setOnFocusChangeListener(this);
-        unitGoal.setOnFocusChangeListener(this);
-        volumeGoal.setOnFocusChangeListener(this);
+        //unitGoal.setOnFocusChangeListener(this);
+        //volumeGoal.setOnFocusChangeListener(this);
     }
 
     @Override
