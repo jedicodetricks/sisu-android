@@ -92,6 +92,10 @@ public class ReportListAdapter extends BaseAdapter {
                     goalNum = metric.getYearlyGoalNum();
                     break;
             }
+            if(goalNum < 1) {
+                goalNum = 1;
+                metric.setGoalNum(1);
+            }
             if(metric.getType().equals("CONTA") ||
                 metric.getType().equals("BUNDC") ||
                 metric.getType().equals("SUNDC") ||
@@ -103,7 +107,7 @@ public class ReportListAdapter extends BaseAdapter {
                 metric.getType().equals("SCLSD")) {
 
                 subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
-                percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
+                percentageTextView.setText((metric.getPercentComplete(timeline) > 100 ? 100: metric.getPercentComplete(timeline)) + "% complete");
                 progressBar.setProgress(metric.getPercentComplete(timeline));
                 progressBar.setScaleY(4f);
                 progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
