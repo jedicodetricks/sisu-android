@@ -1,5 +1,6 @@
 package co.sisu.mobile.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -34,9 +36,9 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener {
+public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
-    EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed;
+    EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
     ParentActivity parentActivity;
     TextView activityTitle, saveButton;
     private boolean dateSwap;
@@ -71,6 +73,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         parentActivity = (ParentActivity) getActivity();
         updatedGoals = new HashMap<>();
         initFields();
+        initEditText();
         initSwitchAndButtons();
         agent = parentActivity.getAgentInfo();
         goalsUpdated = false;
@@ -191,8 +194,33 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sClosed.addTextChangedListener(this);
         fieldsObject.add(sClosed);
         activityTitle = getView().findViewById(R.id.activityTitle);
+
+        unitGoal = getView().findViewById(R.id.unitGoal);
+        volumeGoal = getView().findViewById(R.id.volumeGoal);
     }
 
+    private void initEditText() {
+        for (int i = 0; i < fieldsObject.size(); i++) {
+            fieldsObject.get(i).setOnFocusChangeListener(this);
+        }
+
+        desiredIncome.setOnFocusChangeListener(this);
+        trackingReasons.setOnFocusChangeListener(this);
+        unitGoal.setOnFocusChangeListener(this);
+        volumeGoal.setOnFocusChangeListener(this);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            hideKeyboard(v);
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

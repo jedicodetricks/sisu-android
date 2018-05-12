@@ -88,8 +88,19 @@ public class RecordListAdapter extends BaseAdapter {
                 rowCounter.setText(String.valueOf(plusOne));
             }
         });
-//
-//
+
+        if(metric.getType().equals("CONTA") ||
+                metric.getType().equals("BUNDC") ||
+                metric.getType().equals("SUNDC") ||
+                metric.getType().equals("BSGND") ||
+                metric.getType().equals("SSGND") ||
+                metric.getType().equals("SAPPT") ||
+                metric.getType().equals("BAPPT") ||
+                metric.getType().equals("BCLSD") ||
+                metric.getType().equals("SCLSD")) {
+            rowCounter.setEnabled(false);
+        }
+
         rowCounter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

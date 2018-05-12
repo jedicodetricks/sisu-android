@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,7 +54,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
+public class MyProfileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
     private final int SELECT_PHOTO = 1;
     ImageView profileImage;
@@ -91,10 +93,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     private void initFields() {
         username = getView().findViewById(R.id.profileUsername);
+        username.setOnFocusChangeListener(this);
         firstName = getView().findViewById(R.id.profileFirstName);
+        firstName.setOnFocusChangeListener(this);
         lastName = getView().findViewById(R.id.profileLastName);
+        lastName.setOnFocusChangeListener(this);
         phone = getView().findViewById(R.id.profilePhone);
+        phone.setOnFocusChangeListener(this);
         password = getView().findViewById(R.id.profilePassword);
+        password.setOnFocusChangeListener(this);
         password.setTransformationMethod(new PasswordTransformationMethod());//this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
     }
@@ -342,5 +349,17 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 //            parentActivity.swapToTitleBar("More");
 //        }
 
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(!hasFocus) {
+            hideKeyboard(v);
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

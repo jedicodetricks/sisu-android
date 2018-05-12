@@ -1,8 +1,8 @@
 package co.sisu.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,11 +11,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -39,7 +41,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Brady Groharing on 3/5/2018.
  */
 
-public class AddClientFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
+public class AddClientFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
@@ -122,12 +124,19 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private void initializeForm() {
         typeSelected = "";
         firstNameText = getView().findViewById(R.id.editFirstName);
+        firstNameText.setOnFocusChangeListener(this);
         lastNameText = getView().findViewById(R.id.addClientEditLastName);
+        lastNameText.setOnFocusChangeListener(this);
         emailText = getView().findViewById(R.id.editEmail);
+        emailText.setOnFocusChangeListener(this);
         phoneText = getView().findViewById(R.id.editPhone);
+        phoneText.setOnFocusChangeListener(this);
         transAmount = getView().findViewById(R.id.editTransAmount);
+        transAmount.setOnFocusChangeListener(this);
         paidIncome = getView().findViewById(R.id.editPaidIncome);
+        paidIncome.setOnFocusChangeListener(this);
         gci = getView().findViewById(R.id.editGci);
+        gci.setOnFocusChangeListener(this);
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -634,6 +643,18 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventFailed(Object o, String s) {
 
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(!hasFocus) {
+            hideKeyboard(v);
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
 
