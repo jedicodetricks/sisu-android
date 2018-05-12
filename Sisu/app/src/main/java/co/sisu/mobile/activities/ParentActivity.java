@@ -572,6 +572,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setActivitiesObject(returnObject);
     }
 
+    public void setScoreboardActivities(Object returnObject) {
+        dataController.setScoreboardActivities(returnObject);
+    }
+
     public List<Metric> getActivitiesObject() {
         return dataController.getActivitiesObject();
     }
@@ -628,10 +632,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateSelectedRecordDate(String formattedDate) {
         this.currentSelectedRecordDate = formattedDate;
-    }
-
-    public void setSpecificGoal(AgentGoalsObject selectedGoal, int value) {
-        dataController.setSpecificGoal(selectedGoal, value);
     }
 
     public HashMap<String, SelectedActivities> getActivitiesSelected() {
