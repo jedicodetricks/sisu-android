@@ -3,7 +3,11 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.UUID;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,6 +19,8 @@ import okhttp3.Response;
  */
 
 public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
+    private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
+
     private AsyncServerEventListener callback;
     private String email;
 
@@ -23,8 +29,35 @@ public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
         this.email = email;
     }
 
+    public String getJWT(String transactionID, Calendar time, String timestamp, Calendar expTime) {
+
+        String jwtStr = Jwts.builder()
+                .claim("Client-Timestamp", timestamp)
+                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
+                .setIssuedAt(time.getTime())
+                .setExpiration(expTime.getTime())
+//                .claim("iat", time)
+//                .claim("exp", expTime)
+                .claim("Transaction-Id", transactionID)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+        return jwtStr;
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
+
+        String transactionID = UUID.randomUUID().toString();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.SECOND, -60);
+        String timestamp = String.valueOf(date.getTimeInMillis());
+
+        Calendar expDate = Calendar.getInstance();
+        expDate.add(Calendar.DATE, 1);
+
+        String jwt = getJWT(transactionID, date, timestamp, expDate);
+
         Response response = null;
 
         MediaType mediaType = MediaType.parse("application/json");
@@ -35,9 +68,9 @@ public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
         Request request = new Request.Builder()
                 .url("http://staging.sisu.co/api/v1/forgot-password")
                 .post(body)
-                .addHeader("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJDbGllbnQtVGltZXN0YW1wIjoiMTUyMDk5OTA5NSIsImlzcyI6InNpc3UtaW9zOjk1YmI5ZDkxLWZlMDctNGZhZi1hYzIzLTIxOTFlMGQ1Y2RlNiIsImlhdCI6MTUyMDk5OTA5NS4xMTQ2OTc5LCJleHAiOjE1Mjg3NzUwOTUuMTE1OTEyLCJUcmFuc2FjdGlvbi1JZCI6IkU5NThEQzAyLThGNjEtNEU5Ny05MEI3LUYyNjZEQ0M1OTdFOSJ9.bFQhBCgnsujtl3PndALtAL8rcqFpm3rn5quqoXak0Hg")
-                .addHeader("Client-Timestamp", "1520999095")
-                .addHeader("Transaction-Id", "E958DC02-8F61-4E97-90B7-F266DCC597E9")
+                .addHeader("Authorization", jwt)
+                .addHeader("Client-Timestamp", timestamp)
+                .addHeader("Transaction-Id", transactionID)
                 .build();
         try {
             response = client.newCall(request).execute();
