@@ -135,15 +135,11 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
         Calendar date = Calendar.getInstance();
         date.add(Calendar.SECOND, -60);
         String timestamp = String.valueOf(date.getTimeInMillis());
-        float time = ((date.getTimeInMillis() / 1000) - 10);
 
         Calendar expDate = Calendar.getInstance();
         expDate.add(Calendar.DATE, 1);
-        float expTime = ((expDate.getTimeInMillis() / 1000) - 10);
 
         String jwt = getJWT(transactionID, date, timestamp, expDate);
-        Log.e("time", String.valueOf(date.getTime()));
-        Log.e("exp", String.valueOf(expTime));
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
