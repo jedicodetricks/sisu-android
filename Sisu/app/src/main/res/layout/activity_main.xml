@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:minHeight="180dp"
     android:id="@+id/logIn"
+    android:clickable="true"
     tools:context="co.sisu.mobile.activities.MainActivity"
     tools:layout_editor_absoluteY="81dp"
     android:focusable="true"

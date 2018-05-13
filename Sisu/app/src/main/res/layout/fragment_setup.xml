@@ -11,6 +11,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         tools:context="co.sisu.mobile.fragments.GoalSetupFragment">
 
         <!--<TextView-->
@@ -117,73 +119,73 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/annualActivityTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:textSize="@dimen/font_large"
-            android:text="@string/annual_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"
-            tools:text="@string/annual_title" />
+        <!--<TextView-->
+            <!--android:id="@+id/annualActivityTitle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="@dimen/font_large"-->
+            <!--android:text="@string/annual_title"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"-->
+            <!--tools:text="@string/annual_title" />-->
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/unitGoalLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:theme="@style/EditTextTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/annualActivityTitle">
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/unitGoalLayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:theme="@style/EditTextTheme"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/annualActivityTitle">-->
 
-            <EditText
-                android:id="@+id/unitGoal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/unit_goal_hint"
-                android:maxLength="8"
-                android:inputType="number"
-                />
+            <!--<EditText-->
+                <!--android:id="@+id/unitGoal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:ems="10"-->
+                <!--android:hint="@string/unit_goal_hint"-->
+                <!--android:maxLength="8"-->
+                <!--android:inputType="number"-->
+                <!--/>-->
 
-        </android.support.design.widget.TextInputLayout>
+        <!--</android.support.design.widget.TextInputLayout>-->
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/volumeGoalLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:theme="@style/EditTextTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/unitGoalLayout">
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/volumeGoalLayout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:theme="@style/EditTextTheme"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/unitGoalLayout">-->
 
-            <EditText
-                android:id="@+id/volumeGoal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/volume_goal_hint"
-                android:maxLength="8"
-                android:inputType="number"/>
+            <!--<EditText-->
+                <!--android:id="@+id/volumeGoal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:ems="10"-->
+                <!--android:hint="@string/volume_goal_hint"-->
+                <!--android:maxLength="8"-->
+                <!--android:inputType="number"/>-->
 
-        </android.support.design.widget.TextInputLayout>
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <TextView
             android:id="@+id/activityTitle"
@@ -197,7 +199,7 @@
             android:text="@string/monthlyTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/volumeGoalLayout"/>
+            app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/sellersClosedLayout"

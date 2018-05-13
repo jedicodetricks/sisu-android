@@ -91,21 +91,33 @@ public class ReportListAdapter extends BaseAdapter {
                 case "year":
                     goalNum = metric.getYearlyGoalNum();
                     break;
-        }
-        if(goalNum == 0) {
-            subtitleTextView.setText("Total: " + metric.getCurrentNum());
-            percentageTextView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-        else {
-            subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
-        }
+            }
+            if(goalNum < 1) {
+                goalNum = 1;
+                metric.setGoalNum(1);
+            }
+            if(metric.getType().equals("CONTA") ||
+                metric.getType().equals("BUNDC") ||
+                metric.getType().equals("SUNDC") ||
+                metric.getType().equals("BSGND") ||
+                metric.getType().equals("SSGND") ||
+                metric.getType().equals("SAPPT") ||
+                metric.getType().equals("BAPPT") ||
+                metric.getType().equals("BCLSD") ||
+                metric.getType().equals("SCLSD")) {
 
-        percentageTextView.setText(metric.getPercentComplete(timeline) + "% complete");
-        progressBar.setProgress(metric.getPercentComplete(timeline));
-        progressBar.setScaleY(4f);
-        progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
-        animateBars(progressBar);
+                subtitleTextView.setText(metric.getCurrentNum() + " of " + goalNum);
+                percentageTextView.setText((metric.getPercentComplete(timeline) > 100 ? 100: metric.getPercentComplete(timeline)) + "% complete");
+                progressBar.setProgress(metric.getPercentComplete(timeline));
+                progressBar.setScaleY(4f);
+                progressBar.setProgressTintList(ColorStateList.valueOf(metric.getColor()));
+                animateBars(progressBar);
+
+            } else {
+                subtitleTextView.setText("Total: " + metric.getCurrentNum());
+                percentageTextView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
         }
         thumbnailImageView.setImageResource(metric.getThumbnailId());
 

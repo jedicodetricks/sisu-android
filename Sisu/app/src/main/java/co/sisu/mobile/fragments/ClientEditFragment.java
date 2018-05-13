@@ -1,6 +1,7 @@
 package co.sisu.mobile.fragments;
 
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -32,7 +34,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
+public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
     ParentActivity parentActivity;
     ProgressBar loader;
@@ -259,12 +261,19 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initializeForm() {
         firstNameText = getView().findViewById(R.id.editFirstName);
+        firstNameText.setOnFocusChangeListener(this);
         lastNameText = getView().findViewById(R.id.editLastName);
+        lastNameText.setOnFocusChangeListener(this);
         emailText = getView().findViewById(R.id.editEmail);
+        emailText.setOnFocusChangeListener(this);
         phoneText = getView().findViewById(R.id.editPhone);
+        phoneText.setOnFocusChangeListener(this);
         transAmount = getView().findViewById(R.id.editTransAmount);
+        transAmount.setOnFocusChangeListener(this);
         paidIncome = getView().findViewById(R.id.editPaidIncome);
+        paidIncome.setOnFocusChangeListener(this);
         gci = getView().findViewById(R.id.editGci);
+        gci.setOnFocusChangeListener(this);
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -599,4 +608,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if(!hasFocus) {
+            hideKeyboard(v);
+        }
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }
