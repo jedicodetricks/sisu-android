@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -81,7 +80,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getContext(), "Thank you for your feedback", Toast.LENGTH_SHORT).show();
+                parentActivity.showToast("Thank you for your feedback");
             }
         });
     }
@@ -91,7 +90,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getContext(), "We had an issue recording your feedback. Please try again later.", Toast.LENGTH_SHORT).show();
+                parentActivity.showToast("We had an issue recording your feedback. Please try again later.");
             }
         });
     }

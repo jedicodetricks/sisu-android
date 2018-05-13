@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -321,10 +320,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     SettingsObject[] array = new SettingsObject[settings.size()];
                     parentActivity.setSettings(settings.toArray(array));
-                    Toast toast = Toast.makeText(parentActivity, "Your settings have been updated", Toast.LENGTH_SHORT);
-                    //View view = toast.getView();
-                    //view.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.colorLightGrey));
-                    toast.show();
+                    parentActivity.showToast("Your settings have been updated");
                 }
             });
         }

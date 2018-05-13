@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
         switch(value.getTitle()) {
             case "Teams":
-                Toast.makeText(getContext(), value.getTitle(), Toast.LENGTH_SHORT).show();
+
                 break;
             case "Clients":
                 activity.stackReplaceFragment(ClientListFragment.class);

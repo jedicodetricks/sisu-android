@@ -6,21 +6,16 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -126,7 +121,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
             dateDisplay.setText(sdf.format(updatedTime.getTime()));
         } catch (ParseException e) {
-            Toast.makeText(getContext(), "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
     }
@@ -140,7 +135,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                     getLeaderboard(selectedYear, selectedMonth + 1);
                 }
                 else {
-                    Toast.makeText(getContext(), "You have selected the same time period", Toast.LENGTH_SHORT).show();
+                    parentActivity.showToast("You have selected the same time period");
                 }
 
             }
