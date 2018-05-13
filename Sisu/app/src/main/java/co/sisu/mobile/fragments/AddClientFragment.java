@@ -13,6 +13,7 @@ import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -510,7 +512,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                         firstNameText.setText(firstName);
                         lastNameText.setText(lastName);
                         emailText.setText(email);
-                        phoneText.setText(phone);
+                        phoneText.setText(PhoneNumberUtils.formatNumber(phone, Locale.getDefault().getCountry()));
                     } catch (Exception e) {
                         Log.e("TEST", "Failed to get data", e);
                     } finally {

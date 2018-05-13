@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -85,9 +87,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         paidIncome.setText(currentClient.getCommission_amt());
         gci.setText(currentClient.getGross_commission_amt());
         if(currentClient.getMobile_phone() != null){
-            phoneText.setText(currentClient.getMobile_phone());
-        } else {
-            phoneText.setText(currentClient.getHome_phone());
+            phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getMobile_phone(), Locale.getDefault().getCountry()));
+        } else if (currentClient.getHome_phone() != null){
+            phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getHome_phone(), Locale.getDefault().getCountry()));
         }
         setStatus();
         emailText.setText(currentClient.getEmail());
