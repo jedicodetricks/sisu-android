@@ -137,7 +137,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         teamBlock = findViewById(R.id.action_bar_home);
 
         View view = getSupportActionBar().getCustomView();
-
+        if(fragmentTag != null) {
+            pageTitle.setText(fragmentTag);
+        }
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(this);
 
@@ -406,20 +408,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-    public void swapToBacktionBar(String titleString, String child) {
+    public void swapToBacktionBar(final String titleString, final String child) {
         //Get it?! Back action... Backtion!
-        resetAllActionBars();
-        if(child != null) {
-            addClientChild = child;
-        }
-        activeBacktionBar = true;
-        getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-        backtionTitle = findViewById(R.id.actionBarTitle);
-        if(titleString == null) {
-            backtionTitle.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
-        } else {
-            backtionTitle.setText(titleString);
-        }
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resetAllActionBars();
+                if(child != null) {
+                    addClientChild = child;
+                }
+                activeBacktionBar = true;
+                getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+                backtionTitle = findViewById(R.id.actionBarTitle);
+                if(titleString == null) {
+                    backtionTitle.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
+                } else {
+                    backtionTitle.setText(titleString);
+                }
+            }
+        });
+
     }
 
     public void swapToTitleBar(final String titleString) {

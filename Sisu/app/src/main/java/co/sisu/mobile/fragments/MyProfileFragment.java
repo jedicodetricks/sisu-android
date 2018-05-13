@@ -166,8 +166,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             case R.id.saveButton:
                 updateProfile();
                 saveProfile();
-                parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More", null);
+//                parentActivity.stackReplaceFragment(MoreFragment.class);
+//                parentActivity.swapToBacktionBar("My Profile", null);
                 break;
             default:
                 break;
@@ -205,7 +205,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(changedFields.size() > 0) {
             new AsyncUpdateProfile(this, parentActivity.getAgentInfo().getAgent_id(), changedFields, parentActivity.getJwtObject()).execute();
         }
-
+        else {
+            parentActivity.showToast("You haven't updated anything.");
+        }
 
     }
 
