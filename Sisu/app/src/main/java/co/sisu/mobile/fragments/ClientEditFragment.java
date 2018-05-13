@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -386,7 +385,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void saveClient(){
-//        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient, parentActivity.getJwtObject()).execute();
     }
 
@@ -514,7 +512,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             d = sdf.parse(displayView.getText().toString());
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(parentActivity, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
     }
@@ -553,7 +551,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             d = formatter.parse(formatDate);
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(parentActivity, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
 
@@ -599,7 +597,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(parentActivity, "Client updates saved", Toast.LENGTH_SHORT).show();
+                parentActivity.showToast("Client updates saved");
             }
         });
     }

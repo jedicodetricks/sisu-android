@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -106,7 +105,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             TextView dateDisplay = getView().findViewById(R.id.record_date);
             dateDisplay.setText(sdf.format(updatedTime.getTime()));
         } catch (ParseException e) {
-            Toast.makeText(getContext(), "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
     }
@@ -151,7 +150,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                     updateRecordInfo();
                 }
                 else {
-                    Toast.makeText(getContext(), "You have selected the same day", Toast.LENGTH_SHORT).show();
+                    parentActivity.showToast("You have selected the same day");
                 }
 
             }
@@ -202,7 +201,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(parentActivity.getUpdatedRecords().size() > 0) {
             parentActivity.updateRecordedActivities();
         }
-        Toast.makeText(parentActivity, "Record Saved", Toast.LENGTH_SHORT).show();
+        parentActivity.showToast("Record Saved");
     }
 
     @Override

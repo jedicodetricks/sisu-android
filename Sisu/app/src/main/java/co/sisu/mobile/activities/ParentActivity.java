@@ -1,9 +1,11 @@
 package co.sisu.mobile.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -87,7 +89,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setRecordSaved(boolean recordSaved) {
-        Toast.makeText(this, "parent saved", Toast.LENGTH_SHORT).show();
+        showToast("Parent Saved");
         this.recordSaved = recordSaved;
     }
 
@@ -518,7 +520,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                TextView text = (TextView) view.findViewById(android.R.id.message);
+                text.setTextColor(Color.WHITE);
+                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
+                view.setBackgroundResource(R.color.colorCorporateOrange);
+                text.setPadding(20, 8, 20, 8);
+                toast.show();
             }
         });
     }

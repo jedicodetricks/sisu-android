@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -267,23 +266,23 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private boolean verifyInputFields() {
         boolean isVerified = true;
         if(typeSelected.equals("")) {
-            Toast.makeText(parentActivity, "Buyer or Seller is required", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Buyer or Seller is required");
             isVerified = false;
         }
         else if(firstNameText.getText().toString().equals("")) {
-            Toast.makeText(parentActivity, "First Name is required", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("First Name is required");
             isVerified = false;
         }
         else if(lastNameText.getText().toString().equals("")) {
-            Toast.makeText(parentActivity, "Last Name is required", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Last Name is required");
             isVerified = false;
         }
         else if(transAmount.getText().toString().equals("")) {
-            Toast.makeText(parentActivity, "Transaction Amount is required", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Transaction Amount is required");
             isVerified = false;
         }
         else if(paidIncome.getText().toString().equals("")) {
-            Toast.makeText(parentActivity, "Paid Income is required", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Paid Income is required");
             isVerified = false;
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
