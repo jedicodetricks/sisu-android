@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -85,9 +86,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         paidIncome.setText(currentClient.getCommission_amt());
         gci.setText(currentClient.getGross_commission_amt());
         if(currentClient.getMobile_phone() != null){
-            phoneText.setText(currentClient.getMobile_phone());
-        } else {
-            phoneText.setText(currentClient.getHome_phone());
+            phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getMobile_phone(), Locale.getDefault().getCountry()));
+        } else if (currentClient.getHome_phone() != null){
+            phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getHome_phone(), Locale.getDefault().getCountry()));
         }
         setStatus();
         emailText.setText(currentClient.getEmail());
@@ -384,7 +385,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void saveClient(){
-//        Toast.makeText(parentActivity, "Client Saved", Toast.LENGTH_SHORT).show();
         new AsyncUpdateClients(this, currentClient, parentActivity.getJwtObject()).execute();
     }
 
@@ -512,7 +512,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             d = sdf.parse(displayView.getText().toString());
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(parentActivity, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
     }
@@ -551,7 +551,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             d = formatter.parse(formatDate);
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            Toast.makeText(parentActivity, "Error parsing selected date", Toast.LENGTH_SHORT).show();
+            parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
 
@@ -597,7 +597,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(parentActivity, "Client updates saved", Toast.LENGTH_SHORT).show();
+                parentActivity.showToast("Client updates saved");
             }
         });
     }

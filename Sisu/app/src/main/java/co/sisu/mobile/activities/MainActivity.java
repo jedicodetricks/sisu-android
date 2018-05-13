@@ -2,7 +2,9 @@ package co.sisu.mobile.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
@@ -107,8 +109,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showToast(CharSequence msg){
-
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(MainActivity.this, msg,Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        TextView text = (TextView) view.findViewById(android.R.id.message);
+        text.setTextColor(Color.WHITE);
+        text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
+        view.setBackgroundResource(R.color.colorCorporateOrange);
+        text.setPadding(20, 8, 20, 8);
+        toast.show();
     }
 
     @Override
