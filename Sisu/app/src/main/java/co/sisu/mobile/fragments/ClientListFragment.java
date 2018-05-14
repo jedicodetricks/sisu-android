@@ -65,6 +65,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         loader = view.findViewById(R.id.clientLoader);
+        initListView();
         initSearchBar();
         parentActivity = (ParentActivity) getActivity();
         AgentModel agent = parentActivity.getAgentInfo();
@@ -77,7 +78,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
         //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
-//        initListView(currentList);
 //        loader.setVisibility(View.GONE);
 
     }
@@ -100,15 +100,20 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     }
 
 
-    private void initListView(List<ClientObject> metricList) {
+    private void initListView() {
         mListView = getView().findViewById(R.id.clientListView);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
+    }
 
-        ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
-        mListView.setAdapter(adapter);
+    private void fillListViewWithData(List<ClientObject> metricList) {
+        if(getContext() != null) {
+            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+            mListView.setAdapter(adapter);
 
-        mListView.setOnItemClickListener(this);
+            mListView.setOnItemClickListener(this);
+        }
+
     }
 
     private void searchClients() {
@@ -118,7 +123,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             if(name.contains(searchText.toLowerCase())) {
                 sortedList.add(co);
             }
-            initListView(sortedList);
+            fillListViewWithData(sortedList);
         }
     }
 
@@ -168,7 +173,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             public void run() {
                 loader.setVisibility(View.GONE);
                 selectTab(selectedTab);
-                initListView(currentList);
+                fillListViewWithData(currentList);
             }
         });
     }
@@ -212,7 +217,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             currentList = parentActivity.getPipelineList();
         }
 
-        initListView(currentList);
+        fillListViewWithData(currentList);
         clientSearch.clearFocus();
 
     }
@@ -245,7 +250,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 selectedTab = "archived";
                 break;
         }
-        initListView(currentList);
+        fillListViewWithData(currentList);
         searchClients();
         clientSearch.clearFocus();
     }

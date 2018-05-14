@@ -248,6 +248,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeBacktionBar = false;
         activeClientListBar = false;
         activeTitleBar = false;
+        addClientChild = "";
         initializeActionBar();
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();

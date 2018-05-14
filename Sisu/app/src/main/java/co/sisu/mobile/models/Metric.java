@@ -41,19 +41,50 @@ public class Metric implements Comparable<Metric>{
         if(goalNum == 0) {
             return 0;
         }
+        int percentComplete = 0;
 
         switch (timeline) {
             case "day":
-                return (int) (((double)currentNum/(double)dailyGoalNum) * 100);
+                percentComplete = (int) (((double)currentNum/(double)dailyGoalNum) * 100);
+                break;
             case "week":
-                return (int) (((double)currentNum/(double)weeklyGoalNum) * 100);
+                percentComplete = (int) (((double)currentNum/(double)weeklyGoalNum) * 100);
+                break;
             case "month":
-                return (int) (((double)currentNum/(double)goalNum) * 100);
+                percentComplete = (int) (((double)currentNum/(double)goalNum) * 100);
+                break;
             case "year":
-                return (int) (((double)currentNum/(double)yearlyGoalNum) * 100);
+                percentComplete = (int) (((double)currentNum/(double)yearlyGoalNum) * 100);
+                break;
         }
 
-        return (int) (((double)currentNum/(double)goalNum) * 100);
+        return percentComplete;
+    }
+
+    public int getPercentAroundCircleComplete(String timeline){
+        if(goalNum == 0) {
+            return 0;
+        }
+        double percentComplete = 0;
+
+        switch (timeline) {
+            case "day":
+                percentComplete = (double) (((double)currentNum/(double)dailyGoalNum) * 100);
+                break;
+            case "week":
+                percentComplete = (double) (((double)currentNum/(double)weeklyGoalNum) * 100);
+                break;
+            case "month":
+                percentComplete = (double) (((double)currentNum/(double)goalNum) * 100);
+                break;
+            case "year":
+                percentComplete = (double) (((double)currentNum/(double)yearlyGoalNum) * 100);
+                break;
+        }
+
+        percentComplete = (percentComplete / 100);
+        percentComplete = 360 * percentComplete;
+        return (int) percentComplete;
     }
 
     public String getTitle() {
