@@ -80,15 +80,18 @@ public class AsyncActivitySettings extends AsyncTask<Void, Void, Void> {
                 .addHeader("Client-Timestamp", timestamp)
                 .addHeader("Transaction-Id", transactionID)
                 .build();
+
+        String responseBody = "";
         try {
             response = client.newCall(request).execute();
-//            Log.e("SETTINGS", response.body().string());
+            responseBody = response.body().string();
+            Log.e("SETTINGS", responseBody);
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
-                AsyncActivitySettingsJsonObject settings = gson.fromJson(response.body().charStream(), AsyncActivitySettingsJsonObject.class);
+                AsyncActivitySettingsJsonObject settings = gson.fromJson(responseBody, AsyncActivitySettingsJsonObject.class);
                 callback.onEventCompleted(settings, "Activity Settings");
             }
             else {

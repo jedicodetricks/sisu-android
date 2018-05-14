@@ -77,24 +77,23 @@ public class ReportListAdapter extends BaseAdapter {
             metric.setCurrentNum(0);
         }
         else {
-            int goalNum = 0;
+            String goalNum = "0";
             switch (timeline) {
                 case "day":
-                    goalNum = metric.getDailyGoalNum();
+                    goalNum = String.valueOf(metric.getDailyGoalNum());
                     break;
                 case "week":
-                    goalNum = metric.getWeeklyGoalNum();
+                    goalNum = String.valueOf(metric.getWeeklyGoalNum());
                     break;
                 case "month":
-                    goalNum = metric.getGoalNum();
+                    goalNum = String.valueOf(metric.getGoalNum());
                     break;
                 case "year":
-                    goalNum = metric.getYearlyGoalNum();
+                    goalNum = String.valueOf(metric.getYearlyGoalNum());
                     break;
             }
-            if(goalNum < 1) {
-                goalNum = 1;
-                metric.setGoalNum(1);
+            if(goalNum.equals("0")) {
+                goalNum = "<1";
             }
             if(metric.getType().equals("CONTA") ||
                 metric.getType().equals("BUNDC") ||

@@ -71,39 +71,66 @@ public class ClientListAdapter extends BaseAdapter {
         ImageView phoneImage = rowView.findViewById(R.id.centerButton);
         ImageView emailImage = rowView.findViewById(R.id.rightButton);
 
-        if(clientObject.getHome_phone() == null && clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("") && clientObject.getHome_phone().equals("")) {
+        if(clientObject.getHome_phone() == null) {
             phoneImage.setVisibility(View.INVISIBLE);
-        } else {
-            phoneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClientMessagingEvent.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone());
-                }
-            });
+        }
+        else {
+            if(clientObject.getHome_phone().equals("")) {
+                phoneImage.setVisibility(View.INVISIBLE);
+            }
         }
 
-        if(clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("")) {
+        if(clientObject.getMobile_phone() == null) {
             textImage.setVisibility(View.INVISIBLE);
         } else {
-            textImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClientMessagingEvent.onTextClicked(clientObject.getMobile_phone());
-                }
-            });
+            if(clientObject.getMobile_phone().equals("")) {
+                textImage.setVisibility(View.INVISIBLE);
+            }
+            else {
+                phoneImage.setVisibility(View.VISIBLE);
+                textImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mClientMessagingEvent.onTextClicked(clientObject.getMobile_phone());
+                    }
+                });
+                phoneImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mClientMessagingEvent.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone());
+                    }
+                });
+            }
+
         }
 
-        if(clientObject.getEmail() == null || clientObject.getEmail().equals("")) {
+        if(clientObject.getEmail() == null) {
             emailImage.setVisibility(View.INVISIBLE);
         } else {
-            emailImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClientMessagingEvent.onEmailClicked(clientObject.getEmail());
-                }
-            });
+            if(clientObject.getEmail().equals("")) {
+                emailImage.setVisibility(View.INVISIBLE);
+            }
+            else {
+                emailImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mClientMessagingEvent.onEmailClicked(clientObject.getEmail());
+                    }
+                });
+            }
+
         }
-        titleTextView.setText(clientObject.getFirst_name() + " " + clientObject.getLast_name());
+        String firstName = "";
+        String lastName = "";
+
+        if(clientObject.getFirst_name() != null) {
+            firstName = clientObject.getFirst_name();
+        }
+
+        if(clientObject.getLast_name() != null) {
+            lastName = clientObject.getLast_name();
+        }
+        titleTextView.setText(firstName + " " + lastName);
 //        String splitString = clientObject.getCommission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
         subtitleTextView.setText("$" + clientObject.getCommission_amt());
 

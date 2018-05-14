@@ -494,11 +494,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             position += 90;
             int positionPercent = (int) (((double)position/(double)360) * 100);
             Context context = getContext();
-            if (metric.getPercentComplete(timeline) < positionPercent) {
+            if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-            } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) < 100 ) {
+            } else if (metric.getPercentAroundCircleComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) < 100 ) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-            } else if (metric.getPercentComplete(timeline) >= 100){
+            } else if (metric.getPercentAroundCircleComplete(timeline) >= 100){
                 metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
             }
         }
@@ -550,6 +550,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
             parentActivity.setScoreboardActivities(returnObject);
+            parentActivity.setActivitiesObject(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

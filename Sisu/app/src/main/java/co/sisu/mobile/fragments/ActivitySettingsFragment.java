@@ -67,7 +67,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         for ( String key : activitiesSelected.keySet() ) {
             SelectedActivities selectedActivity = activitiesSelected.get(key);
-            Log.e(selectedActivity.getName(), selectedActivity.getValue());
+            Log.e("NAME", selectedActivity.getName() + "");
+            Log.e("VALUE", selectedActivity.getValue());
 
             if(selectedActivity.getName() != null) {
                 selectedActivities.add(selectedActivity);
