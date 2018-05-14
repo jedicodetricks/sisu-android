@@ -286,8 +286,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             isVerified = false;
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
-            parentActivity.showToast("Please add your Settlement Date");
-            isVerified = false;
+            parentActivity.showToast("You may want to add your Settlement Date");
         }
         return isVerified;
     }

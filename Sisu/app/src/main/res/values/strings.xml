@@ -20,6 +20,7 @@
     <string name="contacts">Contacts</string>
     <string name="bb_signed">BB Signed</string>
     <string name="listings_taken">Listings Taken</string>
+    <string name="uc">U / C</string>
     <string name="under_contract">Under Contract</string>
     <string name="pending_volume">Pending Volume</string>
     <string name="activity_title">Activities</string>
@@ -49,7 +50,7 @@
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
     <string name="signed">Signed</string>
-    <string name="contract">Under Contract</string>
+    <string name="contract">Contract</string>
     <string name="archived">Archived</string>
     <string name="total">Total: $</string>
     <string name="status">Status</string>

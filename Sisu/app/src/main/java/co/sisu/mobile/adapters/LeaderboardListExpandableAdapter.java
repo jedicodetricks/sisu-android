@@ -1,9 +1,7 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +67,11 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
 
         title.setText(childText.getLabel());
         subtitle.setText(childText.getLabel());
-        score.setText(childText.getValue());
+        if(childText.getValue().contains(".")) {
+            score.setText(childText.getValue().substring(0, childText.getValue().indexOf('.')));
+        } else {
+            score.setText(childText.getValue());
+        }
         position.setText(childText.getPlace());
         return convertView;
     }
@@ -127,35 +129,9 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         int imageResourceId = isExpanded ? android.R.drawable.arrow_up_float : android.R.drawable.arrow_down_float;
         thumb.setImageResource(imageResourceId);
         thumb.setVisibility(View.VISIBLE);
-
-        Typeface mtypeFace = ResourcesCompat.getFont(_context, R.font.roboto_regular);
-        lblListHeader.setTypeface(mtypeFace);
-        lblListHeader.setTextColor( ContextCompat.getColor(_context, R.color.colorWhite));
-        lblListHeader.setTextSize(20);
         lblListHeader.setText(headerTitle);
-
-
         convertView.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
-
-
-//        switch(headerTitle) {
-//            case "Overall Leaderboard":
-//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorCorporateOrange));
-//                break;
-//            case "Under Contract":
-//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorMoonBlue));
-//                break;
-//            case "Closed":
-//                convertView.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-//                lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-//                thumb.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorYellow));
-//                break;
-//        }
     }
 }

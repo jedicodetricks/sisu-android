@@ -391,8 +391,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private boolean verifyRequiredDatesSet() {
         boolean result = true;
         if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
-            parentActivity.showToast("Please add your Settlement Date");
-            result = false;
+            parentActivity.showToast("You may want to add your Settlement Date");
         }
         return result;
     }

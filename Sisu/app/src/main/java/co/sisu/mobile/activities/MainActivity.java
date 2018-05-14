@@ -1,6 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,11 +32,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String emailAddress;
     String password;
     boolean networkActive = true;
+    Button signInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.e("Screen Density: ", getDeviceDensity(this));
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
@@ -48,6 +52,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        if(!networkActive) {
 //            showToast("The server is experiencing issues, please try again later.");
 //        }
+    }
+
+    public String getDeviceDensity(Context context){
+        String deviceDensity = "";
+        switch (context.getResources().getDisplayMetrics().densityDpi) {
+            case DisplayMetrics.DENSITY_LOW:
+                deviceDensity =  0.75 + " ldpi";
+                break;
+            case DisplayMetrics.DENSITY_MEDIUM:
+                deviceDensity =  1.0 + " mdpi";
+                break;
+            case DisplayMetrics.DENSITY_HIGH:
+                deviceDensity =  1.5 + " hdpi";
+                break;
+            case DisplayMetrics.DENSITY_XHIGH:
+                deviceDensity =  2.0 + " xhdpi";
+                break;
+            case DisplayMetrics.DENSITY_XXHIGH:
+                deviceDensity =  3.0 + " xxhdpi";
+                break;
+            case DisplayMetrics.DENSITY_XXXHIGH:
+                deviceDensity =  4.0 + " xxxhdpi";
+                break;
+            default:
+                deviceDensity = "Not found";
+        }
+        return deviceDensity;
     }
 
     @Override
@@ -103,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView forgotButton = findViewById(R.id.forgotPassword);
         forgotButton.setOnClickListener(this);
 
-        Button signInButton = findViewById(R.id.signInButton);
+        signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
     }
 
