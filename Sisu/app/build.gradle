@@ -6,9 +6,9 @@ android {
         applicationId "co.sisu.mobile"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 6
+        versionCode 7
         vectorDrawables.useSupportLibrary = true
-        versionName "1.1.3"
+        versionName "1.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
