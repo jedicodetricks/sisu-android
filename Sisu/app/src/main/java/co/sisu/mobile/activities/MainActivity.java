@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String emailAddress;
     String password;
-//    byte[] key = "SisuRocks".getBytes();
     boolean networkActive = true;
 
     @Override
@@ -108,15 +107,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signInButton.setOnClickListener(this);
     }
 
-    private void showToast(CharSequence msg){
-        Toast toast = Toast.makeText(MainActivity.this, msg,Toast.LENGTH_SHORT);
-        View view = toast.getView();
-        TextView text = (TextView) view.findViewById(android.R.id.message);
-        text.setTextColor(Color.WHITE);
-        text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-        view.setBackgroundResource(R.color.colorCorporateOrange);
-        text.setPadding(20, 8, 20, 8);
-        toast.show();
+    private void showToast(final CharSequence msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(MainActivity.this, msg,Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                TextView text = (TextView) view.findViewById(android.R.id.message);
+                text.setTextColor(Color.WHITE);
+                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
+                view.setBackgroundResource(R.color.colorCorporateOrange);
+                text.setPadding(20, 8, 20, 8);
+                toast.show();
+            }
+        });
+
     }
 
     @Override

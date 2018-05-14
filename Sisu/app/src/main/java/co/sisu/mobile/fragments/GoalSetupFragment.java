@@ -123,32 +123,32 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 for(AgentGoalsObject go : currentGoalsObject) {
                     String value = go.getValue();
 
-                    switch (go.getName()) {
-                        case "Contacts":
+                    switch (go.getGoal_id()) {
+                        case "CONTA":
                             contacts.setText(value);
                             break;
-                        case "Sellers Closed":
+                        case "SCLSD":
                             sClosed.setText(value);
                             break;
-                        case "Sellers Under Contract":
+                        case "SUNDC":
                             sContract.setText(value);
                             break;
-                        case "Seller Appointments":
+                        case "SAPPT":
                             sAppointments.setText(value);
                             break;
-                        case "Sellers Signed":
+                        case "SSGND":
                             sSigned.setText(value);
                             break;
-                        case "Buyers Signed":
+                        case "BSGND":
                             bSigned.setText(value);
                             break;
-                        case "Buyer Appointments":
+                        case "BAPPT":
                             bAppointments.setText(value);
                             break;
-                        case "Buyers Under Contract":
+                        case "BUNDC":
                             bContract.setText(value);
                             break;
-                        case "Buyers Closed":
+                        case "BCLSD":
                             bClosed.setText(value);
                             break;
                     }

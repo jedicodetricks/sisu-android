@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +40,7 @@ import co.sisu.mobile.models.LeaderboardObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LeaderboardFragment extends Fragment implements AsyncServerEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class LeaderboardFragment extends Fragment implements AsyncServerEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
     LeaderboardListExpandableAdapter listAdapter;
     ExpandableListView expListView;
@@ -84,6 +87,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void initializeCalendarHandler() {
 
+//        datePicker.date(this);
         final ImageView calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
         final TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
 
@@ -142,14 +146,14 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         }, selectedYear, selectedMonth, selectedDay);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        if(leaderboardToggle.isChecked()) {
-            //Year selected
-            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("month", "id", "android")).setVisibility(View.GONE);
-        }
-        else {
-            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-        }
+//        if(leaderboardToggle.isChecked()) {
+//            //Year selected
+//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
+//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("month", "id", "android")).setVisibility(View.GONE);
+//        }
+//        else {
+//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
+//        }
         dialog.show();
     }
 
@@ -273,7 +277,16 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         switch (v.getId()) {
             case R.id.leaderboard_calender_date_picker:
             case R.id.leaderboard_date:
-                showDatePickerDialog();
+                new SpinnerDatePickerDialogBuilder()
+                        .context(getContext())
+                        .callback(this)
+                        .spinnerTheme(android.R.style.Theme_Holo_Dialog)
+                        .showTitle(false)
+                        .defaultDate(selectedYear, selectedMonth, selectedDay)
+                        .showDaySpinner(false)
+                        .minDate(1990, 0, 1)
+                        .build()
+                        .show();
                 break;
         }
     }
@@ -283,5 +296,22 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         updateDisplayDate(selectedYear, selectedMonth, selectedDay);
         getLeaderboard(selectedYear, selectedMonth + 1);
+    }
+
+    @Override
+    public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        if(year != selectedYear || monthOfYear != selectedMonth || dayOfMonth != selectedDay) {
+            if(leaderboardToggle.isChecked() && monthOfYear != selectedMonth) {
+                //TODO: Should this just toggle for them and search it? They obviously want to do that in this situation
+                parentActivity.showToast("You're in year search mode. Swap to month search to change month selection.");
+            }
+            else {
+                updateDisplayDate(year, monthOfYear, dayOfMonth);
+                getLeaderboard(selectedYear, selectedMonth + 1);
+            }
+        }
+        else {
+            parentActivity.showToast("You have selected the same time period");
+        }
     }
 }

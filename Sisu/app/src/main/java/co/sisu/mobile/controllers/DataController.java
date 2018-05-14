@@ -257,9 +257,7 @@ public class DataController {
             }
             activitiesObject.add(metric);
 
-
         }
-
 
         sortActivitesObjectByWeight();
     }
@@ -573,6 +571,8 @@ public class DataController {
             if(splitString.length > 1) {
                 for(String setting : splitString) {
                     String[] splitSetting = setting.split(":");
+//                    Log.e("Setting up", splitSetting[1] + " " + splitSetting[0]);
+
                     activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
                 }
             }
