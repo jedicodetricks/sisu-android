@@ -106,7 +106,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         displayTime.setText("");
                     }
                     else {
-                        displayTime.setText(s.getValue());
+                        displayTime.setText(formatTimeFrom24H(s.getValue()));
                     }
                     break;
                 //Keep these, we'll need them for V2
@@ -240,7 +240,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     s.setValue(timeZoneDisplay.getText().toString());
                     break;
                 case "daily_reminder_time":
-                    s.setValue(displayTime.getText().toString());
+                    s.setValue(formatTimeTo24H(displayTime.getText().toString()));
                     break;
                 //Keep these, we'll need them for V2
 
@@ -257,6 +257,37 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
     }
 
+    private String formatTimeTo24H(String displayTime) {
+        String[] timeSplit = displayTime.split(" ");
+        String militaryTime = "";
+        if(timeSplit[1].equals("AM")) {
+            militaryTime = timeSplit[0];
+        }
+        else if(timeSplit[1].equals("PM")) {
+            String[] milTimeSplit = timeSplit[0].split(":");
+            int hour = Integer.parseInt(milTimeSplit[0]) + 12;
+            militaryTime = String.valueOf(hour) + ":" + milTimeSplit[1];
+        }
+
+        return militaryTime;
+    }
+
+    private String formatTimeFrom24H(String displayTime) {
+        String standardTime = "";
+        String timePeriod = "AM";
+        String[] milTimeSplit = displayTime.split(":");
+        int hour = Integer.parseInt(milTimeSplit[0]);
+        if(hour > 12) {
+            timePeriod = "PM";
+            hour -= 12;
+        }
+
+
+        standardTime = String.valueOf(hour) + ":" + milTimeSplit[1] + " " + timePeriod;
+
+        return standardTime;
+    }
+
     private void saveSettingsObject() {
         List<UpdateSettingsObject> settingsObjects = new ArrayList<>();
 
@@ -267,6 +298,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
         new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject, parentActivity.getJwtObject()).execute();
 
+        createNotificationAlarm();
 
     }
 
@@ -288,7 +320,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     timePrepend = "0";
                 }
                 displayTime.setText( "" + selectedHour + ":" + timePrepend + selectedMinute + " " + selectedPeriod);
-                createNotificationAlarm();
+//                createNotificationAlarm();
             }
         }, currentSelectedHour, currentSelectedMinute, false);
 
@@ -305,8 +337,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
 
-        Log.d("CALENDAR SET", calendar.getTime().toString());
-        Log.d("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
+        Log.e("CALENDAR SET", calendar.getTime().toString());
+        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
 
         AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
