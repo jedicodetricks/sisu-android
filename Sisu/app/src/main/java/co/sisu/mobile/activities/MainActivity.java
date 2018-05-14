@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         password.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
         networkActive = getIntent().getBooleanExtra("Network", true);
 
-        if(!networkActive) {
-            showToast("The server is experiencing issues, please try again later.");
-        }
+//        if(!networkActive) {
+//            showToast("The server is experiencing issues, please try again later.");
+//        }
     }
 
     @Override
