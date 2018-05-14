@@ -42,6 +42,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     Calendar calendar = Calendar.getInstance();
     ProgressBar loader;
     String timeline = "day";
+    Spinner spinner;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -65,10 +66,11 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         loader = view.findViewById(R.id.reportLoader);
         initializeListView();
         initializeTimelineSelector();
+        spinner.setSelection(4);
     }
 
     private void initializeTimelineSelector() {
-        Spinner spinner = getView().findViewById(R.id.reportsTimelineSelector);
+        spinner = getView().findViewById(R.id.reportsTimelineSelector);
         List<String> spinnerArray = initSpinnerArray();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -291,9 +293,9 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         if(getContext() != null) {
             if (metric.getPercentComplete(timeline) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
-            } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) < 100 ) {
+            } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) <= 99 ) {
                 metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
-            } else if (metric.getPercentComplete(timeline) >= 100){
+            } else if (metric.getPercentComplete(timeline) > 99){
                 metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
             }
         }

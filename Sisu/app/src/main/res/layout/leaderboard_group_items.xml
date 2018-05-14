@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.68" />
+            app:layout_constraintGuide_percent="0.6" />
 
         <TextView
             android:id="@+id/leaderboardPosition"
@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/leaderboardItemTitle"
             style="@style/LeaderboardItemsText"
-            android:layout_width="0dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:maxLines="2"
@@ -57,7 +57,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/leaderboard_list_thumbnail"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/leaderboard_list_thumbnail"
             tools:text="Title" />
 
         <TextView
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textSize="@dimen/font_small"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/leaderboard_list_thumbnail"
             app:layout_constraintStart_toEndOf="@+id/leaderboard_list_thumbnail"
             app:layout_constraintTop_toBottomOf="@+id/leaderboardItemTitle"
             app:layout_constraintVertical_bias="0.0"
@@ -90,8 +90,8 @@
             android:id="@+id/blah_list_thumbnail_list_thumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:contentDescription="@string/thumbnail"
             android:scaleType="centerInside"
             android:src="@drawable/leaderboard_icon"

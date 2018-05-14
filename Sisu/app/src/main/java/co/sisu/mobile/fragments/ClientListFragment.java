@@ -33,6 +33,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     private ListView mListView;
     String searchText = "";
     SearchView clientSearch;
+    TextView total;
     ParentActivity parentActivity;
     ProgressBar loader;
     List<ClientObject> currentList = new ArrayList<>();
@@ -104,6 +105,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         mListView = getView().findViewById(R.id.clientListView);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
+        total = getView().findViewById(R.id.total);
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
@@ -183,7 +185,16 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     }
 
+    private int calculateTotalCommission() {
+        int totalValue = 0;
+        for(int i = 0; i < currentList.size(); i++) {
+            totalValue += Integer.parseInt(currentList.get(i).getCommission_amt());
+        }
+        return totalValue;
+    }
+
     private void selectTab(String selectedTab) {
+        total.setText("Total: $");
         if(selectedTab != null) {
             switch (selectedTab.toLowerCase()) {
                 case "pipeline":
@@ -218,13 +229,14 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         }
 
         fillListViewWithData(currentList);
+        total.append("" + calculateTotalCommission());
         clientSearch.clearFocus();
 
     }
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-
+        total.setText("Total: $");
         if(mListView != null) {
             mListView.setAdapter(null);
         }
@@ -237,7 +249,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 currentList = parentActivity.getSignedList();
                 selectedTab = "signed";
                 break;
-            case "Under Contract":
+            case "Contract":
                 currentList = parentActivity.getContractList();
                 selectedTab = "contract";
                 break;
@@ -252,6 +264,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         }
         fillListViewWithData(currentList);
         searchClients();
+        total.append("" + calculateTotalCommission());
         clientSearch.clearFocus();
     }
 

@@ -88,7 +88,7 @@
     <style name="LeaderboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
@@ -154,10 +154,8 @@
     </style>
 
     <style name="MyTabTextAppearance" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textSize">@dimen/font_smaller</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:paddingLeft">1dp</item>
-        <item name="android:paddingRight">1dp</item>
         <item name="textAllCaps">true</item>
     </style>
 

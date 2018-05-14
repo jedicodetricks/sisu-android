@@ -51,6 +51,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     int closedVolume = 0;
     boolean needsProgress;
     String timeline = "day";
+    Spinner spinner;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -81,6 +82,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         loader = view.findViewById(R.id.scoreboardLoader);
 
         initializeTimelineSelector();
+        spinner.setSelection(4);
         initializeButtons();
         initProgressBars();
         calculateVolumes();
@@ -145,7 +147,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
 
     private void initializeTimelineSelector() {
-        Spinner spinner = getView().findViewById(R.id.timelineSelector);
+        spinner = getView().findViewById(R.id.timelineSelector);
         List<String> spinnerArray = initSpinnerArray();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -286,6 +288,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 //not sure what this does
