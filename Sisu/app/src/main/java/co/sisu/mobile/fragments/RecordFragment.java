@@ -64,7 +64,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d, parentActivity.getJwtObject()).execute();
-        loader = view.findViewById(R.id.recordLoader);
+        loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
         initializeCalendarHandler();

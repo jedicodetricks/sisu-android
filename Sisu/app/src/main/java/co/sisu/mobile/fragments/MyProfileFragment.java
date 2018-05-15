@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -60,6 +61,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     private final int SELECT_PHOTO = 1;
     ImageView profileImage;
+    ProgressBar imageLoader;
     ParentActivity parentActivity;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     AgentModel agent;
@@ -87,6 +89,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         agent = parentActivity.getAgentInfo();
+        imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
         new AsyncAgent(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
@@ -104,6 +107,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         phone.setOnFocusChangeListener(this);
         password = getView().findViewById(R.id.profilePassword);
         password.setOnFocusChangeListener(this);
+        profileImage.setVisibility(View.INVISIBLE);
+        imageLoader.setVisibility(View.VISIBLE);
         password.setTransformationMethod(new PasswordTransformationMethod());//this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
     }
@@ -330,7 +335,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            imageLoader.setVisibility(View.GONE);
+            profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
+        } else {
+            imageLoader.setVisibility(View.GONE);
+            profileImage.setVisibility(View.VISIBLE);
         }
     }
     @Override
@@ -340,6 +350,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     decodeBase64Image(profileObject.getData());
                 }
             });

@@ -63,7 +63,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
-        loader = view.findViewById(R.id.reportLoader);
+        loader = parentActivity.findViewById(R.id.parentLoader);
         initializeListView();
         initializeTimelineSelector();
         spinner.setSelection(4);
