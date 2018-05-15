@@ -499,9 +499,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             Context context = getContext();
             if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-            } else if (metric.getPercentAroundCircleComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) < 100 ) {
+            } else if (metric.getPercentAroundCircleComplete(timeline) >= positionPercent && metric.getPercentComplete(timeline) <= 99 ) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-            } else if (metric.getPercentAroundCircleComplete(timeline) >= 100){
+            } else if (metric.getPercentAroundCircleComplete(timeline) > 99){
                 metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
             }
         }
