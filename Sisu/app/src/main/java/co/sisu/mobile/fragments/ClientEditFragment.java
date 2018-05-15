@@ -290,6 +290,38 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     }
 
+    private boolean verifyInputFields() {
+        boolean isVerified = true;
+        if(typeSelected.equals("")) {
+            parentActivity.showToast("Buyer or Seller is required");
+            isVerified = false;
+        }
+        else if(firstNameText.getText().toString().equals("")) {
+            parentActivity.showToast("First Name is required");
+            isVerified = false;
+        }
+        else if(lastNameText.getText().toString().equals("")) {
+            parentActivity.showToast("Last Name is required");
+            isVerified = false;
+        }
+        else if(transAmount.getText().toString().equals("")) {
+            parentActivity.showToast("Transaction Amount is required");
+            isVerified = false;
+        }
+        else if(paidIncome.getText().toString().equals("")) {
+            parentActivity.showToast("Paid Income is required");
+            isVerified = false;
+        }
+        else if(gci.getText().toString().equals("")) {
+            parentActivity.showToast("GCI is required");
+            isVerified = false;
+        }
+        else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            parentActivity.showToast("You may want to add your Settlement Date");
+        }
+        return isVerified;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -308,7 +340,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.saveButton://notify of success update api
-                if(verifyRequiredDatesSet()) {
+                if(verifyInputFields()) {
                     updateCurrentClient(false);
                     saveClient();
                 }
@@ -386,14 +418,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void saveClient(){
         new AsyncUpdateClients(this, currentClient, parentActivity.getJwtObject()).execute();
-    }
-
-    private boolean verifyRequiredDatesSet() {
-        boolean result = true;
-        if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
-            parentActivity.showToast("You may want to add your Settlement Date");
-        }
-        return result;
     }
 
     private void initializeButtons(){

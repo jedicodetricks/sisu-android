@@ -19,6 +19,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneNumberUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -113,7 +115,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 username.setText(agent.getEmail());
                 firstName.setText(agent.getFirst_name());
                 lastName.setText(agent.getLast_name());
-                phone.setText(agent.getMobile_phone());
+                phone.setText(PhoneNumberUtils.formatNumber(agent.getMobile_phone(), Locale.getDefault().getCountry()));
                 password.setText("***********");
             }
         });
@@ -164,8 +166,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
                 break;
             case R.id.saveButton:
-                updateProfile();
-                saveProfile();
+                if(verifyInputs()) {
+                    saveProfile();    
+                }
 //                parentActivity.stackReplaceFragment(MoreFragment.class);
 //                parentActivity.swapToBacktionBar("My Profile", null);
                 break;
@@ -174,8 +177,25 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    private void updateProfile() {
-        //update currentProfile with user input
+    private boolean verifyInputs() {
+        boolean isVerified = true;
+        if(firstName.getText().toString().equals("")) {
+            parentActivity.showToast("First Name is required");
+            isVerified = false;
+        }
+        else if(lastName.getText().toString().equals("")) {
+            parentActivity.showToast("Last Name is required");
+            isVerified = false;
+        }
+        else if(phone.getText().toString().equals("")) {
+            parentActivity.showToast("Phone is required");
+            isVerified = false;
+        }
+        else if(password.getText().toString().equals("")) {
+            parentActivity.showToast("Password is required");
+            isVerified = false;
+        }
+        return isVerified;
     }
 
     private void saveProfile() {
