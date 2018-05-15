@@ -24,7 +24,7 @@
     <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@color/colorAlmostBlack</item>
+        <item name="android:background">#00000000</item>
         <item name="colorPrimary">@color/colorAlmostBlack</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
@@ -189,6 +189,13 @@
 
     <style name="CalendarStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColor">@color/colorLightGrey</item>
+    </style>
+
+    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:color">@color/colorWhite</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:backgroundTint">#00000000</item>
+        <item name="android:colorAccent">@color/colorWhite</item>
     </style>
 
 </resources>

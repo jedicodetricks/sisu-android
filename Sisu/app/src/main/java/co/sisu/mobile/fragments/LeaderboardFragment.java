@@ -2,11 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +69,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         parentActivity = (ParentActivity) getActivity();
-        loader = view.findViewById(R.id.leaderboardLoader);
+        loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
         initToggle();

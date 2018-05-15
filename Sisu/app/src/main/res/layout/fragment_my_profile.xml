@@ -17,17 +17,33 @@
             android:focusableInTouchMode="true"
             tools:context="co.sisu.mobile.fragments.MyProfileFragment">
 
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/add_icon"
-                app:civ_border_color="#FFFFFF"
-                android:layout_marginStart="8dp"
-                app:civ_border_width="3dp"
+            <RelativeLayout
+                android:id="@+id/profileImageLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="8dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/add_icon"
+                    app:civ_border_color="#FFFFFF"
+                    app:civ_border_width="3dp"
+                     />
+
+                <ProgressBar
+                    android:id="@+id/imageLoader"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateDrawable="@drawable/progress"
+                    android:visibility="invisible"
+                     />
+
+            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/profileUsernameLayout"
@@ -38,7 +54,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.507"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profileImage">
+                app:layout_constraintTop_toBottomOf="@+id/profileImageLayout">
 
                 <EditText
                     android:id="@+id/profileUsername"

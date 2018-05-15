@@ -79,7 +79,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
-        loader = view.findViewById(R.id.scoreboardLoader);
+        loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
         spinner.setSelection(4);
@@ -160,7 +160,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 calendar = Calendar.getInstance();
-                loader.setVisibility(View.VISIBLE);
+                //loader.setVisibility(View.VISIBLE);
 
                 switch (position) {
                     case 0:

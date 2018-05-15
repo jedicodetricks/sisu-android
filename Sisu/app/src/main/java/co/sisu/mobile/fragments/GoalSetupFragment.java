@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private AgentGoalsObject[] currentGoalsObject;
     private String income = "";
     private String reason = "";
-
+    ProgressBar loader;
     private boolean agentUpdating = false;
     private boolean goalsUpdated;
     private boolean agentUpdated;
@@ -75,6 +76,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         initFields();
         initEditText();
         initSwitchAndButtons();
+        loader = view.findViewById(R.id.goalLoader);
+        loader.setVisibility(View.VISIBLE);
         agent = parentActivity.getAgentInfo();
         goalsUpdated = false;
         agentUpdated = false;
@@ -372,6 +375,12 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 setupFieldsWithGoalData();
             }
         }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loader.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
