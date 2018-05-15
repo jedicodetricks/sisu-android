@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.activities.SplashScreenActivity;
 
 /**
  * Created by Brady Groharing on 3/25/2018.
@@ -22,42 +25,23 @@ public class Utils {
     @SuppressWarnings("static-access")
     public static void generateNotification(Context context) {
 
-        android.support.v7.app.NotificationCompat.Builder nb = new android.support.v7.app.NotificationCompat.Builder(context);
-        nb.setSmallIcon(R.drawable.sisu_mark);
-        nb.setContentTitle("Sisu");
-        nb.setContentText("Reminder: Enter your numbers for today!");
-        nb.setTicker("Take a look");
+        Intent intent = new Intent(context, SplashScreenActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        nb.setAutoCancel(true);
-
-
-        //get the bitmap to show in notification bar
-        Bitmap bitmap_image = BitmapFactory.decodeResource(context.getResources(), R.drawable.sisu_mark);
-        android.support.v7.app.NotificationCompat.BigPictureStyle s = new android.support.v7.app.NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
-        s.setSummaryText("Sisu");
-        nb.setStyle(s);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "420")
+                .setSmallIcon(R.drawable.sisu_mark)
+                .setContentTitle("Sisu")
+                .setContentText("Reminder: Enter your numbers for today!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
 
-        Intent resultIntent = new Intent(context, ParentActivity.class);
-        TaskStackBuilder TSB = TaskStackBuilder.create(context);
-        TSB.addParentStack(ParentActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        TSB.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                TSB.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
 
-        nb.setContentIntent(resultPendingIntent);
-        nb.setAutoCancel(true);
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(11221, nb.build());
+        notificationManager.notify(666, mBuilder.build());
 
 
     }
