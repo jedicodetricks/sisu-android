@@ -167,7 +167,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 break;
             case R.id.saveButton:
                 if(verifyInputs()) {
-                    saveProfile();    
+                    saveProfile();
                 }
 //                parentActivity.stackReplaceFragment(MoreFragment.class);
 //                parentActivity.swapToBacktionBar("My Profile", null);
