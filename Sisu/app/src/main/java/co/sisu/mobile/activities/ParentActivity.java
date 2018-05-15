@@ -693,4 +693,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public JWTObject getJwtObject() {
         return null;
     }
+
+    public void setRecordObject(Object returnObject) {
+        dataController.setRecordActivities(returnObject);
+    }
+
+    public List<Metric> getRecordObject() {
+        return dataController.getRecordActivities();
+    }
 }
