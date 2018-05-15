@@ -207,6 +207,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private int calculateProgressOnTrack(Metric metric) {
         int positionPercent = 0; //will determine blue
         int goalNum = metric.getGoalNum(); //monthly goal
+        Calendar calendar = Calendar.getInstance();
         switch (timeline) {
             case "day":
                 goalNum = metric.getDailyGoalNum();
@@ -225,7 +226,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         int dayDifference = selectedEndDay - selectedStartDay;
 
         if(timeline.equalsIgnoreCase("week")) { //week
-            int dayOfWeek = Calendar.DAY_OF_WEEK;
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             int weekDifference = 7 - dayOfWeek;
 //            goalNum = goalNum / calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
             if(metric.getCurrentNum() >= goalNum) {
@@ -234,7 +235,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 positionPercent = metric.getPercentComplete(timeline) + 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         } else if(timeline.equalsIgnoreCase("month")) { //month
-            int dayOfMonth = Calendar.DAY_OF_MONTH;
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             int monthDifference = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - dayOfMonth;
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
@@ -243,7 +244,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             }
         } else if(timeline.equalsIgnoreCase("year")) { //year
 //            goalNum = goalNum * 12; //annual goal
-            int dayOfYear = Calendar.DAY_OF_YEAR;
+            int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
             int yearDifference = calendar.getActualMaximum(Calendar.DAY_OF_YEAR) - dayOfYear;
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
@@ -252,12 +253,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             }
         }
         return positionPercent;
-    }
-
-    private List<Metric> initializeMetrics() {
-        List<Metric> activities = parentActivity.getActivitiesObject();
-
-        return activities;
     }
 
     private List<String> initSpinnerArray() {
