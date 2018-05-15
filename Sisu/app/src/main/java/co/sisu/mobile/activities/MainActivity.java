@@ -11,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +49,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initEditText();
         final EditText password = findViewById(R.id.passwordInput);
         password.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    attemptLogin();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
         networkActive = getIntent().getBooleanExtra("Network", true);
 
 //        if(!networkActive) {
