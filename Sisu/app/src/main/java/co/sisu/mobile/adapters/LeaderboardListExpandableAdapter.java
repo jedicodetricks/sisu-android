@@ -64,15 +64,22 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
         TextView score = convertView.findViewById(R.id.leaderboardScore);
         TextView position = convertView.findViewById(R.id.leaderboardPosition);
+        ImageView trophy = convertView.findViewById(R.id.trophyIcon);
+
 
         title.setText(childText.getLabel());
-        subtitle.setText(childText.getLabel());
+        //subtitle.setText(childText.getLabel());
         if(childText.getValue().contains(".")) {
             score.setText(childText.getValue().substring(0, childText.getValue().indexOf('.')));
         } else {
             score.setText(childText.getValue());
         }
         position.setText(childText.getPlace());
+        if(childPosition > 2) {
+            trophy.setVisibility(View.INVISIBLE);
+        } else {
+            trophy.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 

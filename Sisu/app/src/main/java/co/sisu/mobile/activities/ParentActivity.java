@@ -107,6 +107,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
         setContentView(R.layout.activity_parent);
+        parentLoader = findViewById(R.id.parentLoader);
+        parentLoader.setVisibility(View.VISIBLE);
         bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         bar.setDisplayShowCustomEnabled(true);
@@ -119,7 +121,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         initializeActionBar();
         getSupportActionBar().setElevation(0);
-        parentLoader = findViewById(R.id.parentLoader);
         getJwtFromPrefs();
 
         pageTitle.setText("Scoreboard");
