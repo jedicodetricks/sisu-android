@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +39,8 @@ public class DataController {
     private List<Metric> activitiesObject;
     private List<Metric> masterActivitiesObject;
     private List<Metric> scoreboardObject;
+    private List<Metric> recordObject;
+
     private AgentModel agent;
 
     private List<ClientObject> pipelineList;
@@ -104,6 +105,109 @@ public class DataController {
 
     public List<Metric> getScoreboardObject() {
         return scoreboardObject;
+    }
+
+    public void setRecordActivities(Object returnObject) {
+        recordObject = new ArrayList<>();
+        AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
+        ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
+        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
+        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
+
+        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+
+        for(int i = 0; i < counters.length; i++) {
+            if (counters[i].getCoalesce() != null) {
+                counters[i].setName(counters[i].getCoalesce());
+            }
+
+            if (goals != null) {
+                for (AgentGoalsObject ago : goals) {
+                    if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
+
+                        if (ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
+                            closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
+                            contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
+                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else if(ago.getGoal_id().equals("SSGND") || ago.getGoal_id().equals("BSGND")) {
+                            signed.setGoalNum(signed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                        }
+                        else {
+                            counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+                        }
+                    }
+                }
+            }
+
+            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            setMetricThumbnail(metric);
+            switch (counters[i].getActivity_type()) {
+                case "CONTA":
+                    contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
+                    contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(contact);
+                    break;
+                case "BSGND":
+                case "SSGND":
+                    signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
+                    signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(signed);
+                    break;
+                case "BUNDC":
+                case "SUNDC":
+                    contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
+                    contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(contract);
+                    break;
+                case "BCLSD":
+                case "SCLSD":
+                    closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
+                    closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(closed);
+                    break;
+                case "BAPPT":
+                case "SAPPT":
+                    firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
+                    firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
+                    setupMetricGoals(firstAppointment);
+                    break;
+            }
+        }
+
+        recordObject.add(contact);
+        recordObject.add(firstAppointment);
+        recordObject.add(signed);
+        recordObject.add(contract);
+        recordObject.add(closed);
+        for(Metric m : activitiesObject) {
+            switch(m.getType()) {
+                case "CONTA":
+                case "BSGND":
+                case "SSGND":
+                case "BUNDC":
+                case "SUNDC":
+                case "BCLSD":
+                case "SCLSD":
+                case "BAPPT":
+                case "SAPPT":
+                    break;
+                    default:
+                recordObject.add(m);
+            }
+        }
+        recordObject = sortActivitesObjectByWeight(recordObject);
+    }
+
+    public List<Metric> getRecordActivities() {
+        return recordObject;
     }
 
     public void setScoreboardActivities(Object returnObject) {
@@ -259,7 +363,7 @@ public class DataController {
 
         }
 
-        sortActivitesObjectByWeight();
+        activitiesObject = sortActivitesObjectByWeight(activitiesObject);
     }
 
     private void setupMetricGoals(Metric m) {
@@ -269,12 +373,13 @@ public class DataController {
         m.setYearlyGoalNum(goalNum * 12);
     }
 
-    private void sortActivitesObjectByWeight() {
-        Metric[] array = new Metric[activitiesObject.size()];
-        activitiesObject.toArray(array);
+    private List<Metric> sortActivitesObjectByWeight(List<Metric> activities) {
+        Metric[] array = new Metric[activities.size()];
+        activities.toArray(array);
         Arrays.sort(array);
 
-        activitiesObject = new ArrayList<>(Arrays.asList(array));
+        activities = new ArrayList<>(Arrays.asList(array));
+        return activities;
     }
 
     private void setMetricThumbnail(Metric metric) {

@@ -200,8 +200,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private void saveRecords() {
         if(parentActivity.getUpdatedRecords().size() > 0) {
             parentActivity.updateRecordedActivities();
+            parentActivity.showToast("Records Saved");
         }
-        parentActivity.showToast("Record Saved");
+        else {
+            parentActivity.showToast("There are no changes to save");
+        }
+
     }
 
     @Override
@@ -216,21 +220,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             case "1TAPT":
                 recordMetric("appts");
                 break;
-            case "BSGND":
-            case "SSGND":
+            case "SGND":
                 recordMetric("signed");
                 break;
-            case "BUNDC":
-            case "SUNDC":
+            case "UCNTR":
                 recordMetric("contract");
                 break;
-            case "BCLSD":
-            case "SCLSD":
+            case "CLSD":
                 recordMetric("closed");
-                break;
-            case "BAPPT":
-            case "SAPPT":
-                recordMetric("pipeline");
                 break;
         }
     }
@@ -239,11 +236,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
             parentActivity.setActivitiesObject(returnObject);
+            parentActivity.setRecordObject(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    metricList = parentActivity.getActivitiesObject();
+                    metricList = parentActivity.getRecordObject();
                     initializeListView(metricList);
                 }
             });

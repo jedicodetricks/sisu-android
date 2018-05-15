@@ -125,8 +125,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
         initializeButtons();
-        new AsyncTeams(this, agent.getAgent_id(), getJwtObject()).execute();
-        new AsyncClients(this, agent.getAgent_id(), jwtObject).execute();
+        new AsyncTeams(this, agent.getAgent_id(), null).execute();
+        new AsyncClients(this, agent.getAgent_id(), null).execute();
         parentLoader.setVisibility(View.VISIBLE);
     }
 
@@ -691,6 +691,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public JWTObject getJwtObject() {
-        return jwtObject;
+        return null;
+    }
+
+    public void setRecordObject(Object returnObject) {
+        dataController.setRecordActivities(returnObject);
+    }
+
+    public List<Metric> getRecordObject() {
+        return dataController.getRecordActivities();
     }
 }
