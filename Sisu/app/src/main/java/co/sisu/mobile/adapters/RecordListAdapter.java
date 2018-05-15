@@ -90,14 +90,10 @@ public class RecordListAdapter extends BaseAdapter {
         });
 
         if(metric.getType().equals("CONTA") ||
-                metric.getType().equals("BUNDC") ||
-                metric.getType().equals("SUNDC") ||
-                metric.getType().equals("BSGND") ||
-                metric.getType().equals("SSGND") ||
-                metric.getType().equals("SAPPT") ||
-                metric.getType().equals("BAPPT") ||
-                metric.getType().equals("BCLSD") ||
-                metric.getType().equals("SCLSD")) {
+                metric.getType().equals("1TAPT") ||
+                metric.getType().equals("CLSD") ||
+                metric.getType().equals("UCNTR") ||
+                metric.getType().equals("SGND")) {
             rowCounter.setEnabled(false);
         }
 
@@ -118,14 +114,9 @@ public class RecordListAdapter extends BaseAdapter {
                     if(Integer.valueOf(rowCounter.getText().toString()) != metric.getCurrentNum()) {
                         switch(metric.getType()) {
                             case "1TAPT":
-                            case "BSGND":
-                            case "SSGND":
-                            case "BUNDC":
-                            case "SUNDC":
-                            case "BCLSD":
-                            case "SCLSD":
-                            case "BAPPT":
-                            case "SAPPT":
+                            case "CLSD":
+                            case "UCNTR":
+                            case "SGND":
                                 mRecordEventHandler.onClientDirectorClicked(metric);
                                 break;
                             default:
@@ -142,14 +133,9 @@ public class RecordListAdapter extends BaseAdapter {
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
         switch(metric.getType()) {
             case "1TAPT":
-            case "BSGND":
-            case "SSGND":
-            case "BUNDC":
-            case "SUNDC":
-            case "BCLSD":
-            case "SCLSD":
-            case "BAPPT":
-            case "SAPPT":
+            case "CLSD":
+            case "UCNTR":
+            case "SGND":
                 minusButton.setVisibility(View.INVISIBLE);
                 rowCounter.setEnabled(false);
                 break;

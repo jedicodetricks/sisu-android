@@ -82,8 +82,8 @@ public class Metric implements Comparable<Metric>{
                 break;
         }
 
-        percentComplete = (percentComplete / 100);
-        percentComplete = 360 * percentComplete;
+//        percentComplete = (percentComplete / 100);
+//        percentComplete = 360 * percentComplete;
         return (int) percentComplete;
     }
 
