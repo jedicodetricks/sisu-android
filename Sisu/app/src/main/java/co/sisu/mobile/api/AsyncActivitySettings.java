@@ -103,7 +103,7 @@ public class AsyncActivitySettings extends AsyncTask<Void, Void, Void> {
         }
 
 //        Log.d("ASYNC PING IS", "NULL");
-        response.body().close();
+//        response.body().close();
         return null;
     }
 }
