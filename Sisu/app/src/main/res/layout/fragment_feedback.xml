@@ -59,7 +59,7 @@
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:layout_weight="1"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
         android:gravity="left|top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

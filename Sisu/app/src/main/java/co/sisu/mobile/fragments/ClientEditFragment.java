@@ -49,6 +49,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
     String typeSelected;
+    String statusList = "pipeline";
 
     public ClientEditFragment() {
         // Required empty public constructor
@@ -148,24 +149,28 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
         if(!signedDisplay.getText().toString().equals("")) {
             currentClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
+            statusList = "signed";
         }
         else {
             currentClient.setSigned_dt(null);
         }
         if(!contractDisplay.getText().toString().equals("")) {
             currentClient.setUc_dt(getFormattedDate(contractDisplay.getText().toString()));
+            statusList = "contract";
         }
         else {
             currentClient.setUc_dt(null);
         }
         if(!settlementDisplay.getText().toString().equals("")) {
             currentClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
+            statusList = "closed";
         }
         else {
             currentClient.setClosed_dt(null);
         }
         if(deleteClient) {
             currentClient.setStatus("D");
+            statusList = "archived";
         }
     }
 
@@ -616,7 +621,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         //initializeClient();
         loader.setVisibility(View.GONE);
-        parentActivity.navigateToClientList("pipeline", null);
+        parentActivity.navigateToClientList(statusList, null);
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

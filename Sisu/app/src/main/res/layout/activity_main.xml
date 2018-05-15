@@ -77,8 +77,10 @@
             android:backgroundTint="@color/colorCorporateOrange"
             android:ems="10"
             android:hint="Password"
+            android:inputType="text"
             android:maxLines="1"
             android:maxLength="15"
+            android:imeOptions="actionDone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout"/>
