@@ -146,7 +146,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(this);
 
-        if(teamsList != null) {
+        if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
@@ -250,7 +250,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeClientListBar = false;
         activeTitleBar = false;
         addClientChild = "";
-        initializeActionBar();
+
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
@@ -268,18 +268,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
+                initializeActionBar();
                 replaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
                 fragmentTag = "Report";
+                initializeActionBar();
                 replaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
+                initializeActionBar();
                 swapToBacktionBar(fragmentTag, null);
                 replaceFragment(RecordFragment.class);
                 break;
@@ -287,18 +290,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
                 fragmentTag = "Leaderboard";
+                initializeActionBar();
                 replaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
                 fragmentTag = "More";
+                initializeActionBar();
                 replaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
+                initializeActionBar();
                 replaceFragment(ScoreboardFragment.class);
             case R.id.saveButton:
 //                resetToolbarImages("scoreboard");
