@@ -53,7 +53,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     int closedVolume = 0;
     boolean needsProgress;
     boolean pastTimeline;
-    String timeline = "day";
+//    String timeline = "day";
     Spinner spinner;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
@@ -85,7 +85,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
-        spinner.setSelection(4);
+        spinner.setSelection(parentActivity.getTimelineSelection());
         initializeButtons();
         initProgressBars();
         calculateVolumes();
@@ -169,7 +169,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 0:
                         //Today
                         pastTimeline = false;
-                        timeline = "day";
+                        parentActivity.setTimeline("day");
+                        parentActivity.setTimelineSelection(0);
+
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -183,7 +185,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //Last Week
                         needsProgress = false;
                         pastTimeline = true;
-                        timeline = "week";
+                        parentActivity.setTimeline("week");
+                        parentActivity.setTimelineSelection(1);
+
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -199,7 +203,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //This Week
                         needsProgress = true;
                         pastTimeline = false;
-                        timeline = "week";
+                        parentActivity.setTimeline("week");
+                        parentActivity.setTimelineSelection(2);
+
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -214,7 +220,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //Last Month
                         needsProgress = false;
                         pastTimeline = true;
-                        timeline = "month";
+                        parentActivity.setTimeline("month");
+                        parentActivity.setTimelineSelection(3);
+
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -228,7 +236,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //This Month
                         needsProgress = true;
                         pastTimeline = false;
-                        timeline = "month";
+                        parentActivity.setTimeline("month");
+                        parentActivity.setTimelineSelection(4);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = 1;
@@ -241,7 +250,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //Last year
                         needsProgress = false;
                         pastTimeline = true;
-                        timeline = "year";
+                        parentActivity.setTimeline("year");
+                        parentActivity.setTimelineSelection(5);
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -255,7 +265,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         //This year
                         needsProgress = true;
                         pastTimeline = false;
-                        timeline = "year";
+                        parentActivity.setTimeline("year");
+                        parentActivity.setTimelineSelection(6);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
                         selectedStartDay = 1;
@@ -448,11 +459,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
             progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-            progress.setProgressWithAnimation(metric.getPercentComplete(timeline), ANIMATION_DURATION);
+            progress.setProgressWithAnimation(metric.getPercentComplete(parentActivity.getTimeline()), ANIMATION_DURATION);
             currentNumber.setText(String.valueOf(metric.getCurrentNum()));
             int goalNum = 0;
             String displayNum = "0";
-            switch (timeline) {
+            switch (parentActivity.getTimeline()) {
                 case "day":
                     goalNum = metric.getDailyGoalNum();
                     displayNum = String.valueOf(metric.getDailyGoalNum());
@@ -499,7 +510,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         int increment = 0;
         int current = 0;
         calendar = Calendar.getInstance(TimeZone.getDefault());
-        switch (timeline) {
+        switch (parentActivity.getTimeline()) {
             case "week":
                 maximum = 7;
                 current = calendar.get(Calendar.DAY_OF_WEEK);
@@ -555,7 +566,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private void calculateProgressColor(Metric metric, int positionPercent) {
         if(getContext() != null) {
             if(pastTimeline) {
-                if(metric.getPercentComplete(timeline) < 100) {
+                if(metric.getPercentComplete(parentActivity.getTimeline()) < 100) {
                     metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
                 }
                 else {
@@ -563,9 +574,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 }
             }
             else {
-                if (metric.getPercentComplete(timeline) < positionPercent) {
+                if (metric.getPercentComplete(parentActivity.getTimeline()) < positionPercent) {
                     metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
-                } else if (metric.getPercentComplete(timeline) > 99) {
+                } else if (metric.getPercentComplete(parentActivity.getTimeline()) > 99) {
                     metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
                 } else {
                     metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
@@ -579,7 +590,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         int positionPercent = 0; //will determine blue
         int goalNum = metric.getGoalNum(); //monthly goal
         Calendar calendar = Calendar.getInstance();
-        switch (timeline) {
+        switch (parentActivity.getTimeline()) {
             case "day":
                 goalNum = metric.getDailyGoalNum();
                 break;
@@ -594,30 +605,30 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 break;
         }
 
-        if(timeline.equalsIgnoreCase("week")) { //week
+        if(parentActivity.getTimeline().equalsIgnoreCase("week")) { //week
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             positionPercent = (int) (((double)dayOfWeek / (double)calendar.getActualMaximum(Calendar.DAY_OF_WEEK)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
-        } else if(timeline.equalsIgnoreCase("month")) { //month
+        } else if(parentActivity.getTimeline().equalsIgnoreCase("month")) { //month
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             positionPercent = (int) (((double)dayOfMonth / (double)calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
-        } else if(timeline.equalsIgnoreCase("year")) { //year
+        } else if(parentActivity.getTimeline().equalsIgnoreCase("year")) { //year
 //            goalNum = goalNum * 12; //annual goal
             int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
             positionPercent = (int) (((double)dayOfYear / (double)calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         }
         return positionPercent;
