@@ -530,7 +530,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/settlementDateSection"
-                android:text="@string/delete" />
+                android:text="@string/archive" />
 
         </android.support.constraint.ConstraintLayout>
 

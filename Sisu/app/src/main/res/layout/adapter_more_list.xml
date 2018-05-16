@@ -5,8 +5,8 @@
 
     <ImageView
         android:id="@+id/more_list_thumbnail"
-        android:layout_width="@dimen/button_height_normal"
-        android:layout_height="@dimen/button_height_normal"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="6dp"

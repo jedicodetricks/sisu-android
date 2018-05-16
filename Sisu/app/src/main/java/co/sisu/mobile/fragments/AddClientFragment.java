@@ -54,6 +54,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    int counter;
     ParentActivity parentActivity;
     private String currentStatus;
 
@@ -66,6 +67,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        counter = 1;
         initializeButtons();
         initializeForm();
         initializeCalendar();
@@ -291,6 +293,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
             parentActivity.showToast("You may want to add your Settlement Date");
+            if(counter == 1) {
+                isVerified = false;
+                counter+=1;
+            } else {
+                isVerified = true;
+            }
+
         }
         return isVerified;
     }

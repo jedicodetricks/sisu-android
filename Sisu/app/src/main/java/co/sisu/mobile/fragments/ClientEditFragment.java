@@ -50,6 +50,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
     String typeSelected;
     String statusList = "pipeline";
+    int counter;
 
     public ClientEditFragment() {
         // Required empty public constructor
@@ -69,6 +70,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onViewCreated(View view, Bundle savedInstanceState) {
         loader = view.findViewById(R.id.clientLoader);
         parentActivity = (ParentActivity) getActivity();
+        counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
 //        loader.setVisibility(View.VISIBLE);
@@ -323,6 +325,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
             parentActivity.showToast("You may want to add your Settlement Date");
+            if(counter == 1) {
+                isVerified = false;
+                counter+=1;
+            } else {
+                isVerified = true;
+            }
         }
         return isVerified;
     }
