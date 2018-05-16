@@ -50,7 +50,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
         mListView = getView().findViewById(R.id.record_list_view);
         mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        mListView.setDividerHeight(15);
 
         final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer();
 
