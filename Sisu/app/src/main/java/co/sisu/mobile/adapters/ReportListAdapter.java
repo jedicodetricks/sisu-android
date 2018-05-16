@@ -57,7 +57,7 @@ public class ReportListAdapter extends BaseAdapter {
         View rowView = null;
         Metric metric = (Metric) getItem(position);
 
-        if(metric.getType().equals("SCLSD")) {
+        if(metric.getType().equals("SCLSD") && position != getCount() - 1) {
             rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
         }
         else {
