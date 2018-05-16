@@ -231,7 +231,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             listDataHeader.add(leaderBoardSections[i]);
             List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
-                leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
+                if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                    leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
+                }
             }
             listDataChild.put(listDataHeader.get(i), leaderboardItems);
             if(colorCounter == teamColors.length - 1) {
