@@ -50,6 +50,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     int pendingVolume = 0;
     int closedVolume = 0;
     boolean needsProgress;
+    boolean pastTimeline;
     String timeline = "day";
     Spinner spinner;
 
@@ -165,6 +166,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 switch (position) {
                     case 0:
                         //Today
+                        pastTimeline = false;
                         timeline = "day";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -178,6 +180,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 1:
                         //Last Week
                         needsProgress = false;
+                        pastTimeline = true;
                         timeline = "week";
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
@@ -193,6 +196,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 2:
                         //This Week
                         needsProgress = true;
+                        pastTimeline = false;
                         timeline = "week";
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -207,6 +211,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 3:
                         //Last Month
                         needsProgress = false;
+                        pastTimeline = true;
                         timeline = "month";
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -220,6 +225,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 4:
                         //This Month
                         needsProgress = true;
+                        pastTimeline = false;
                         timeline = "month";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -232,6 +238,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 5:
                         //Last year
                         needsProgress = false;
+                        pastTimeline = true;
                         timeline = "year";
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -245,6 +252,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                     case 6:
                         //This year
                         needsProgress = true;
+                        pastTimeline = false;
                         timeline = "year";
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -431,7 +439,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     public void setupProgressBar(Metric metric, CircularProgressBar progress, CircularProgressBar progressMark, TextView currentNumber, TextView goalNumber) {
         if(getContext() != null) {
             final int ANIMATION_DURATION = 1500; // Time in millis
-            final int PROGRESS_MARK = calculateProgressMarkPosition(metric);
+            final int PROGRESS_MARK = calculateProgressMarkPosition();
             calculateProgressColor(metric, PROGRESS_MARK);
             Context context = getContext();
             progress.setColor(metric.getColor());
@@ -462,12 +470,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private int calculateProgressMarkPosition(Metric metric) {
+    private int calculateProgressMarkPosition() {
         int maximum = 0;
         int increment = 0;
         switch (timeline) {
             case "week":
-                maximum = Calendar.DAY_OF_MONTH;
+                maximum = Calendar.DAY_OF_WEEK;
                 increment = 51;
             break;
             case "month":
@@ -481,14 +489,20 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         }
         int current = calendar.get(maximum);
         int position = -90;
-        if(needsProgress) {
-            for(int i = 1; i <= calendar.getActualMaximum(maximum); i++) {
-                position += increment;
-                if(i == current) {
-                    break;
+        if(pastTimeline) {
+            position += 360;
+        }
+        else {
+            if(needsProgress) {
+                for(int i = 1; i <= calendar.getActualMaximum(maximum); i++) {
+                    position += increment;
+                    if(i == current) {
+                        break;
+                    }
                 }
             }
         }
+
         return position;
     }
 
@@ -505,7 +519,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
             }
         }
-
     }
 
     @Override
