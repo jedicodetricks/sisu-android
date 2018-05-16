@@ -4,6 +4,7 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     ProgressBar loader;
     String timeline = "day";
     Spinner spinner;
+    boolean pastTimeline;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -89,6 +91,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 0:
                         //Today
                         timeline = "day";
+                        pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -100,6 +103,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 1:
                         //Last Week
                         timeline = "week";
+                        pastTimeline = true;
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -114,6 +118,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 2:
                         //This Week
                         timeline = "week";
+                        pastTimeline = false;
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -127,6 +132,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 3:
                         //Last Month
                         timeline = "month";
+                        pastTimeline = true;
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -139,6 +145,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 4:
                         //This Month
                         timeline = "month";
+                        pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = 1;
@@ -150,6 +157,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 5:
                         //Last year
                         timeline = "year";
+                        pastTimeline = true;
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -162,6 +170,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     case 6:
                         //This year
                         timeline = "year";
+                        pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
                         selectedStartDay = 1;
@@ -223,33 +232,30 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 break;
         }
 
-        int dayDifference = selectedEndDay - selectedStartDay;
-
         if(timeline.equalsIgnoreCase("week")) { //week
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            int weekDifference = 7 - dayOfWeek;
-//            goalNum = goalNum / calendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
+            positionPercent = (int) (((double)dayOfWeek / (double)calendar.getActualMaximum(Calendar.DAY_OF_WEEK)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getCurrentNum() * weekDifference >= goalNum) {
-                positionPercent = metric.getPercentComplete(timeline) + 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         } else if(timeline.equalsIgnoreCase("month")) { //month
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-            int monthDifference = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - dayOfMonth;
+            positionPercent = (int) (((double)dayOfMonth / (double)calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getCurrentNum() * monthDifference >= goalNum) {
-                positionPercent = metric.getPercentComplete(timeline); //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         } else if(timeline.equalsIgnoreCase("year")) { //year
 //            goalNum = goalNum * 12; //annual goal
             int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-            int yearDifference = calendar.getActualMaximum(Calendar.DAY_OF_YEAR) - dayOfYear;
+            positionPercent = (int) (((double)dayOfYear / (double)calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getCurrentNum() * yearDifference >= goalNum) {
-                positionPercent = metric.getPercentComplete(timeline) + 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         }
         return positionPercent;
@@ -286,12 +292,22 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private void calculateProgressColor(Metric metric, int positionPercent) {
         if(getContext() != null) {
-            if (metric.getPercentComplete(timeline) < positionPercent) {
-                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
-            } else if (metric.getPercentComplete(timeline) > 99){
-                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
-            } else {
-                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
+            if(pastTimeline) {
+                if(metric.getPercentComplete(timeline) < 100) {
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
+                }
+                else {
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+                }
+            }
+            else {
+                if (metric.getPercentComplete(timeline) < positionPercent) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
+                } else if (metric.getPercentComplete(timeline) > 99) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
+                } else {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+                }
             }
         }
 
