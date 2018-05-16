@@ -83,7 +83,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean goalsFinished = false;
     private JWTObject jwtObject;
     private String timeline = "month";
-    private int timelineSelection = 0;
+    private int timelineSelection = 4;
 
     public boolean isRecordSaved() {
         return recordSaved;
