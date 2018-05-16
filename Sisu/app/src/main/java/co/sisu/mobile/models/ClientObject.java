@@ -1,10 +1,12 @@
 package co.sisu.mobile.models;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Brady Groharing on 3/15/2018.
  */
 
-public class ClientObject {
+public class ClientObject implements Comparable<ClientObject>{
 
     private String address_1;
     private String address_2;
@@ -239,5 +241,10 @@ public class ClientObject {
 
     public void setUpdated_ts(String updated_ts) {
         this.updated_ts = updated_ts;
+    }
+
+    @Override
+    public int compareTo(@NonNull ClientObject c) {
+        return (this.getLast_name().compareTo(c.last_name));
     }
 }
