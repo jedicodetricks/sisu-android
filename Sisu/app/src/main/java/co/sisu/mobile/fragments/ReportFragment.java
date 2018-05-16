@@ -302,14 +302,13 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             }
             else {
                 if (metric.getPercentComplete(timeline) < positionPercent) {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
-                } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) <= 99 ) {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
-                } else if (metric.getPercentComplete(timeline) > 99){
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
+                } else if (metric.getPercentComplete(timeline) > 99) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
+                } else {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
                 }
             }
-
         }
 
     }

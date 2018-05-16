@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -473,21 +474,25 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private int calculateProgressMarkPosition() {
         int maximum = 0;
         int increment = 0;
+        int current = 0;
+        calendar = Calendar.getInstance(TimeZone.getDefault());
         switch (timeline) {
             case "week":
-                maximum = Calendar.DAY_OF_WEEK;
+                maximum = 7;
+                current = calendar.get(Calendar.DAY_OF_WEEK);
                 increment = 51;
             break;
             case "month":
                 maximum = Calendar.DAY_OF_MONTH;
+                current = calendar.get(maximum);
                 increment = 12;
             break;
             case "year":
                 maximum = Calendar.DAY_OF_YEAR;
+                current = calendar.get(maximum);
                 increment = 1;
             break;
         }
-        int current = calendar.get(maximum);
         int position = -90;
         if(pastTimeline) {
             position += 360;
@@ -513,10 +518,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             Context context = getContext();
             if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-            } else if (metric.getPercentAroundCircleComplete(timeline) >= positionPercent && metric.getPercentComplete(timeline) <= 99 ) {
-                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
             } else if (metric.getPercentAroundCircleComplete(timeline) > 99){
                 metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+            } else {
+                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
             }
         }
     }
