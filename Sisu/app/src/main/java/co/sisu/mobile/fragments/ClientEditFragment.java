@@ -83,7 +83,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
-        firstNameText.setText(currentClient.getFirst_name().toString());
+
+        firstNameText.setText(currentClient.getFirst_name());
         lastNameText.setText(currentClient.getLast_name());
         transAmount.setText(currentClient.getTrans_amt());
         paidIncome.setText(currentClient.getCommission_amt());
