@@ -66,6 +66,7 @@
     <string name="yearlyTitle">Yearly Goals</string>
 
     <!--Buttons/Links-->
+    <string name="archive">Archive</string>
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
     <string name="forgot_password">Forgot your password?</string>
