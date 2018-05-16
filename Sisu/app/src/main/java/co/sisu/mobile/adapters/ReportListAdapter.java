@@ -93,7 +93,7 @@ public class ReportListAdapter extends BaseAdapter {
                     break;
             }
             if(goalNum.equals("0")) {
-                goalNum = "<1";
+                goalNum = "1";
             }
             if(metric.getType().equals("CONTA") ||
                 metric.getType().equals("BUNDC") ||

@@ -240,7 +240,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
             } else if (metric.getCurrentNum() * monthDifference >= goalNum) {
-                positionPercent = metric.getPercentComplete(timeline) + 1; //setting color for yellow as returning percent will be higher than pacer percent
+                positionPercent = metric.getPercentComplete(timeline); //setting color for yellow as returning percent will be higher than pacer percent
             }
         } else if(timeline.equalsIgnoreCase("year")) { //year
 //            goalNum = goalNum * 12; //annual goal
@@ -288,10 +288,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         if(getContext() != null) {
             if (metric.getPercentComplete(timeline) < positionPercent) {
                 metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
-            } else if (metric.getPercentComplete(timeline) > positionPercent && metric.getPercentComplete(timeline) <= 99 ) {
-                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
             } else if (metric.getPercentComplete(timeline) > 99){
                 metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+            } else {
+                metric.setColor(ContextCompat.getColor(getContext(),R.color.colorYellow));
             }
         }
 
