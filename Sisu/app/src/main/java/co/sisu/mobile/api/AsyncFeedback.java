@@ -70,7 +70,7 @@ public class AsyncFeedback extends AsyncTask<Void, Void, Void> {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/feedback/add-feedback/" + agentId)
+                .url("https://api.sisu.co/api/v1/feedback/add-feedback/" + agentId)
                 .post(body)
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)

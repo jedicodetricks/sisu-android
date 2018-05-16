@@ -108,12 +108,12 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
                         calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 2:
                         //This Week
@@ -122,12 +122,12 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
                         calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 3:
                         //Last Month

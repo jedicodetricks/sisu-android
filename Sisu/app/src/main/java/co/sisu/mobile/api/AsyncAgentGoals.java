@@ -65,7 +65,7 @@ public class AsyncAgentGoals extends AsyncTask<Void, Void, Void> {
         Gson gson = new Gson();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/agent/get-goals/"+ agentId)
+                .url("https://api.sisu.co/api/v1/agent/get-goals/"+ agentId)
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)

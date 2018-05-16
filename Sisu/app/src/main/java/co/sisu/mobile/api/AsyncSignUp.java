@@ -43,7 +43,7 @@ public class AsyncSignUp extends AsyncTask<Void, Void, Void> {
 
         Request request = new Request.Builder()
                 //TODO: I don't think this route is actually correct or it needs some work on the backend.
-                .url("http://staging.sisu.co/api/v1/agent/edit-agent/366")
+                .url("https://api.sisu.co/api/v1/agent/edit-agent/366")
                 .post(body)
                 .addHeader("Authorization", jwt.getJwt())
                 .addHeader("Client-Timestamp", jwt.getTimestamp())

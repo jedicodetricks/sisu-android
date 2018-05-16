@@ -94,7 +94,7 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":0}");
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/v1/agent/activity/" + agentId)
+                    .url("https://api.sisu.co/api/v1/agent/activity/" + agentId)
                     .post(body)
                     .addHeader("Authorization", jwt)
                     .addHeader("Client-Timestamp", timestamp)

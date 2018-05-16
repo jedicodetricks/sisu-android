@@ -187,12 +187,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
                         calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 2:
                         //This Week
@@ -202,12 +202,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
                         calendar.add(Calendar.DAY_OF_WEEK, 6);
                         selectedEndYear = calendar.get(Calendar.YEAR);
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 3:
                         //Last Month
@@ -449,18 +449,40 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progress.setProgressWithAnimation(metric.getPercentComplete(timeline), ANIMATION_DURATION);
             currentNumber.setText(String.valueOf(metric.getCurrentNum()));
+            int goalNum = 0;
+            String displayNum = "0";
             switch (timeline) {
                 case "day":
-                    goalNumber.setText(String.valueOf(metric.getDailyGoalNum()));
+                    goalNum = metric.getDailyGoalNum();
+                    displayNum = String.valueOf(metric.getDailyGoalNum());
+                    if(goalNum == 0) {
+                        displayNum = "1";
+                    }
+                    goalNumber.setText(displayNum);
                     break;
                 case "week":
-                    goalNumber.setText(String.valueOf(metric.getWeeklyGoalNum()));
+                    goalNum = metric.getWeeklyGoalNum();
+                    displayNum = String.valueOf(metric.getWeeklyGoalNum());
+                    if(goalNum == 0) {
+                        displayNum = "1";
+                    }
+                    goalNumber.setText(displayNum);
                     break;
                 case "month":
-                    goalNumber.setText(String.valueOf(metric.getGoalNum()));
+                    goalNum = metric.getGoalNum();
+                    displayNum = String.valueOf(metric.getGoalNum());
+                    if(goalNum == 0) {
+                        displayNum = "1";
+                    }
+                    goalNumber.setText(displayNum);
                     break;
                 case "year":
-                    goalNumber.setText(String.valueOf(metric.getYearlyGoalNum()));
+                    goalNum = metric.getYearlyGoalNum();
+                    displayNum = String.valueOf(metric.getYearlyGoalNum());
+                    if(goalNum == 0) {
+                        displayNum = "1";
+                    }
+                    goalNumber.setText(displayNum);
                     break;
             }
             progressMark.setStartAngle(PROGRESS_MARK);

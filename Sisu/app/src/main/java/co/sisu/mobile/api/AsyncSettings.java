@@ -73,7 +73,7 @@ public class AsyncSettings extends AsyncTask<Void, Void, Void> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/parameter/get-parameters/2/" + agentId)
+                .url("https://api.sisu.co/api/v1/parameter/get-parameters/2/" + agentId)
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)

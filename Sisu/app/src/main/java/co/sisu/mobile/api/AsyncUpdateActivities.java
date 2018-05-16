@@ -82,7 +82,7 @@ public class AsyncUpdateActivities extends AsyncTask<Void, Void, Void> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/v1/agent/activity/" + agentId)
+                    .url("https://api.sisu.co/api/v1/agent/activity/" + agentId)
                     .put(body)
                     .addHeader("Authorization", jwt)
                     .addHeader("Client-Timestamp", timestamp)

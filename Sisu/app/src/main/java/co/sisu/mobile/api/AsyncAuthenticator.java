@@ -86,7 +86,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
 //                        RequestBody body = RequestBody.create(mediaType, "{\"email\":\"Brady.Groharing@sisu.co\",\"password\":\"asdf123\"}");
 
                         Request request = new Request.Builder()
-                                .url("http://staging.sisu.co/api/v1/agent/authenticate")
+                                .url("https://api.sisu.co/api/v1/agent/authenticate")
                                 .post(body)
                                 .addHeader("Authorization", jwt)
                                 .addHeader("Client-Timestamp", timestamp)
@@ -149,7 +149,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
             RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
 
             Request request = new Request.Builder()
-                    .url("http://staging.sisu.co/api/v1/agent/authenticate")
+                    .url("https://api.sisu.co/api/v1/agent/authenticate")
                     .post(body)
                     .addHeader("Authorization", jwt)
                     .addHeader("Client-Timestamp", timestamp)

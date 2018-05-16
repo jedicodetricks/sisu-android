@@ -74,7 +74,7 @@ public class AsyncActivitySettings extends AsyncTask<Void, Void, Void> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities")
+                .url("https://api.sisu.co/api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities")
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)
