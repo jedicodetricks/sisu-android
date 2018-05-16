@@ -74,7 +74,7 @@ public class AsyncProfileImage extends AsyncTask<Void, Void, Void> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/image/3/" + agentId)
+                .url("https://api.sisu.co/api/v1/image/3/" + agentId)
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)

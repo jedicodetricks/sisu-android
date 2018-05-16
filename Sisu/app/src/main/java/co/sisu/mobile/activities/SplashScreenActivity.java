@@ -94,7 +94,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        Log.d("FAILED", "FAILED");
         if(asyncReturnType.equals("Server Ping")) {
             if(!pingRetry) {
                 try {
@@ -110,6 +109,11 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                 intent.putExtra("Network", false);
                 launchActivity();
             }
+        }
+        else if(asyncReturnType.equals("Authenticator")) {
+            intent = new Intent(this, MainActivity.class);
+            intent.putExtra("Network", false);
+            launchActivity();
         }
 
     }

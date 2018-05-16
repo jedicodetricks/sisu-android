@@ -54,7 +54,16 @@ public class ReportListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
+        View rowView = null;
+        Metric metric = (Metric) getItem(position);
+
+        if(metric.getType().equals("SCLSD") && position != getCount() - 1) {
+            rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
+        }
+        else {
+            rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
+        }
+
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.report_list_title);
@@ -70,7 +79,6 @@ public class ReportListAdapter extends BaseAdapter {
 
         ProgressBar progressBar = rowView.findViewById(R.id.progressBar);
 
-        Metric metric = (Metric) getItem(position);
 
         titleTextView.setText(metric.getTitle());
         if(metric.getCurrentNum() < 0) {

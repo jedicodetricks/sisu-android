@@ -68,7 +68,7 @@ public class AsyncTeams extends AsyncTask<Void, Void, Void> {
         Gson gson = new Gson();
 
         Request teamsRequest = new Request.Builder()
-                .url("http://staging.sisu.co/api/v1/agent/get-teams/" + agentId)
+                .url("https://api.sisu.co/api/v1/agent/get-teams/" + agentId)
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", timestamp)

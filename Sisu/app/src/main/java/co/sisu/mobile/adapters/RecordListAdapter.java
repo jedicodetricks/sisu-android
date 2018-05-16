@@ -53,9 +53,17 @@ public class RecordListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
 
+        View rowView = null;
         final Metric metric = (Metric) getItem(position);
+
+        if(metric.getType().equals("CLSD") && position != getCount() - 1) {
+            rowView = mInflater.inflate(R.layout.adapter_record_list_other_hack, parent, false);
+        }
+        else {
+            rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
+        }
+
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.record_list_title);

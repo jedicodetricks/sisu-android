@@ -134,6 +134,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
     public void initializeActionBar() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = findViewById(R.id.action_bar_title);
         teamLetter = findViewById(R.id.team_letter);
@@ -147,6 +149,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         homeButton.setOnClickListener(this);
 
         if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
             teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
@@ -431,7 +434,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
                 backtionTitle = findViewById(R.id.actionBarTitle);
                 if(titleString == null) {
-                    backtionTitle.setText(selectedClient.getFirst_name() + " " + selectedClient.getLast_name());
+                    String displayName = "";
+                    if(selectedClient.getFirst_name() != null) {
+                        displayName += selectedClient.getFirst_name() + " ";
+                    }
+                    if(selectedClient.getLast_name() != null) {
+                        displayName += selectedClient.getLast_name();
+                    }
+                    backtionTitle.setText(displayName);
                 } else {
                     backtionTitle.setText(titleString);
                 }
