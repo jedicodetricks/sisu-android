@@ -17,6 +17,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -231,7 +232,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         fillListViewWithData(currentList);
         total.append("" + calculateTotalCommission());
         clientSearch.clearFocus();
-
+        Collections.sort(currentList);
     }
 
     @Override
