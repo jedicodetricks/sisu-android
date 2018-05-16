@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -441,7 +442,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         if(getContext() != null) {
             final int ANIMATION_DURATION = 1500; // Time in millis
             final int PROGRESS_MARK = calculateProgressMarkPosition();
-            calculateProgressColor(metric, PROGRESS_MARK);
+            calculateProgressColor(metric, calculateProgressOnTrack(metric));
             Context context = getContext();
             progress.setColor(metric.getColor());
             progress.setBackgroundColor(ContextCompat.getColor(context, R.color.colorCorporateGrey));
@@ -533,19 +534,93 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         return position;
     }
 
-    private void calculateProgressColor(Metric metric, int position) {
+//    private void calculateProgressColor(Metric metric, int position) {
+//        if(metric.getType().equals("CONTA")) {
+//            Log.e("YES", "YES");
+//        }
+//        if(getContext() != null) {
+//            position += 90;
+//            int positionPercent = (int) (((double)position/(double)360) * 100);
+//            Context context = getContext();
+//            if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
+//                metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
+//            } else if (metric.getPercentAroundCircleComplete(timeline) > 99){
+//                metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
+//            } else {
+//                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
+//            }
+//        }
+//    }
+
+    private void calculateProgressColor(Metric metric, int positionPercent) {
         if(getContext() != null) {
-            position += 90;
-            int positionPercent = (int) (((double)position/(double)360) * 100);
-            Context context = getContext();
-            if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
-                metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-            } else if (metric.getPercentAroundCircleComplete(timeline) > 99){
-                metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
-            } else {
-                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
+            if(pastTimeline) {
+                if(metric.getPercentComplete(timeline) < 100) {
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
+                }
+                else {
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+                }
+            }
+            else {
+                if (metric.getPercentComplete(timeline) < positionPercent) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
+                } else if (metric.getPercentComplete(timeline) > 99) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
+                } else {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+                }
             }
         }
+
+    }
+
+    private int calculateProgressOnTrack(Metric metric) {
+        int positionPercent = 0; //will determine blue
+        int goalNum = metric.getGoalNum(); //monthly goal
+        Calendar calendar = Calendar.getInstance();
+        switch (timeline) {
+            case "day":
+                goalNum = metric.getDailyGoalNum();
+                break;
+            case "week":
+                goalNum = metric.getWeeklyGoalNum();
+                break;
+            case "month":
+                goalNum = metric.getGoalNum();
+                break;
+            case "year":
+                goalNum = metric.getYearlyGoalNum();
+                break;
+        }
+
+        if(timeline.equalsIgnoreCase("week")) { //week
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            positionPercent = (int) (((double)dayOfWeek / (double)calendar.getActualMaximum(Calendar.DAY_OF_WEEK)) * 100);
+            if(metric.getCurrentNum() >= goalNum) {
+                positionPercent = 100; //hit goal, orange
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            }
+        } else if(timeline.equalsIgnoreCase("month")) { //month
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            positionPercent = (int) (((double)dayOfMonth / (double)calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) * 100);
+            if(metric.getCurrentNum() >= goalNum) {
+                positionPercent = 100; //hit goal, orange
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            }
+        } else if(timeline.equalsIgnoreCase("year")) { //year
+//            goalNum = goalNum * 12; //annual goal
+            int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+            positionPercent = (int) (((double)dayOfYear / (double)calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) * 100);
+            if(metric.getCurrentNum() >= goalNum) {
+                positionPercent = 100; //hit goal, orange
+            } else if (metric.getPercentComplete(timeline) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(timeline) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            }
+        }
+        return positionPercent;
     }
 
     @Override
@@ -606,7 +681,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onEventFailed(Object o, String s) {
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
 
     }
 }
