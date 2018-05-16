@@ -82,7 +82,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private JWTObject jwtObject;
-
+    private String timeline = "month";
+    private int timelineSelection = 4;
 
     public boolean isRecordSaved() {
         return recordSaved;
@@ -717,5 +718,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public List<Metric> getRecordObject() {
         return dataController.getRecordActivities();
+    }
+
+    public String getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(String timeline) {
+        this.timeline = timeline;
+    }
+
+    public int getTimelineSelection() {
+        return timelineSelection;
+    }
+
+    public void setTimelineSelection(int timelineSelection) {
+        this.timelineSelection = timelineSelection;
     }
 }
