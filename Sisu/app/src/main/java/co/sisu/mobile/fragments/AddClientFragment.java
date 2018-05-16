@@ -76,7 +76,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initActionBar() {
         TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
-        TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+        TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
     }
@@ -155,7 +155,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 Log.e("CANCEL", "YES");
                 parentActivity.onBackPressed();
                 break;
-            case R.id.saveButton:
+            case R.id.addClientSaveButton:
                 Log.e("SAVE", "YES");
                 saveClient();
                     //animation of confirmation
