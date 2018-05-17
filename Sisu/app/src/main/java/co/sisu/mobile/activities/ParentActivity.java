@@ -109,7 +109,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         errorFragment = new ErrorMessageFragment();
         setContentView(R.layout.activity_parent);
         parentLoader = findViewById(R.id.parentLoader);
-        parentLoader.setVisibility(View.VISIBLE);
+//        parentLoader.setVisibility(View.VISIBLE);
         bar = getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         bar.setDisplayShowCustomEnabled(true);
@@ -129,7 +129,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id(), null).execute();
         new AsyncClients(this, agent.getAgent_id(), null).execute();
-        parentLoader.setVisibility(View.VISIBLE);
+//        parentLoader.setVisibility(View.VISIBLE);
     }
 
 
@@ -186,7 +186,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    parentLoader.setVisibility(View.GONE);
+//                    parentLoader.setVisibility(View.GONE);
                     resetToolbarImages("scoreboard");
                     replaceFragment(ScoreboardFragment.class);
                 }
