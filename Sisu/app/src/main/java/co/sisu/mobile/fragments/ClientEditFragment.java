@@ -325,8 +325,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             isVerified = false;
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
-            parentActivity.showToast("You may want to add your Settlement Date");
             if(counter == 1) {
+                parentActivity.showToast("You may want to add your Settlement Date");
                 isVerified = false;
                 counter+=1;
             } else {
