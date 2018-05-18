@@ -121,6 +121,12 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void saveSettings() {
         new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities), parentActivity.getJwtObject()).execute();
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.showToast("Activity updates saved");
+            }
+        });
     }
 
     private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
