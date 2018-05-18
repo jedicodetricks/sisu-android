@@ -141,6 +141,7 @@
             android:id="@+id/parentLoader"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            style="@style/ProgressBarStyle"
             android:indeterminateDrawable="@drawable/progress"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -379,7 +379,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
     }
 
     public void navigateToClientList(String tab, String child) {
