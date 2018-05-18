@@ -440,6 +440,7 @@
             android:id="@+id/goalLoader"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            style="@style/ProgressBarStyle"
             android:background="#00000000"
             android:indeterminateDrawable="@drawable/progress"
             app:layout_constraintBottom_toBottomOf="parent"
