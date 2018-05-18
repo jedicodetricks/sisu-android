@@ -77,11 +77,16 @@ public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(response.code() == 200) {
-            callback.onEventCompleted(null, "ForgotPassword");
+        if(response != null) {
+            if(response.code() == 200) {
+                callback.onEventCompleted(null, "Forgot Password");
+            }
+            else {
+                callback.onEventFailed(null, "Forgot Password");
+            }
         }
         else {
-            callback.onEventFailed(null, "Server Ping");
+            callback.onEventFailed(null, "Forgot Password");
         }
 
         response.body().close();

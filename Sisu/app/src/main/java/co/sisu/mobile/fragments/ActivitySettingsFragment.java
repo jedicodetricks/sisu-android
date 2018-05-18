@@ -109,8 +109,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
                 saveSettings();
-                parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToBacktionBar("More", null);
+
                 break;
         }
     }
@@ -121,12 +120,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void saveSettings() {
         new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities), parentActivity.getJwtObject()).execute();
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.showToast("Activity updates saved");
-            }
-        });
+
     }
 
     private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
@@ -160,6 +154,12 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                     initializeListView();
                 }
             });
+        }
+        else if(asyncReturnType.equals("Update Settings")) {
+            parentActivity.popStackReplaceFragment(MoreFragment.class);
+            parentActivity.swapToTitleBar("More");
+            parentActivity.showToast("Activity updates saved");
+
         }
     }
 
