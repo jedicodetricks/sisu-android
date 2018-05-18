@@ -277,7 +277,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         String timePeriod = "AM";
         String[] milTimeSplit = displayTime.split(":");
         int hour = Integer.parseInt(milTimeSplit[0]);
-        if(hour > 12) {
+        if(hour > 11) {
             timePeriod = "PM";
             hour -= 12;
         }
@@ -311,9 +311,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 currentSelectedMinute = selectedMinute;
                 selectedPeriod = "AM";
                 String timePrepend = "";
-                if(selectedHour > 12) {
+                if(selectedHour > 11) {
                     selectedPeriod = "PM";
-                    selectedHour = selectedHour - 12;
+                    if(selectedHour > 12) {
+                        selectedHour = selectedHour - 12;
+                    }
+                } else if(selectedHour == 0) {
+                    selectedHour = 12;
                 }
 
                 if(currentSelectedMinute < 10) {

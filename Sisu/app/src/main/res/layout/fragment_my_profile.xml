@@ -35,6 +35,7 @@
                      />
 
                 <ProgressBar
+                    style="@style/ProgressBarStyle"
                     android:id="@+id/imageLoader"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
