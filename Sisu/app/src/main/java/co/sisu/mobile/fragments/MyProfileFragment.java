@@ -114,13 +114,17 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void fillInAgentInfo() {
+
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 username.setText(agent.getEmail());
                 firstName.setText(agent.getFirst_name());
                 lastName.setText(agent.getLast_name());
-                phone.setText(PhoneNumberUtils.formatNumber(agent.getMobile_phone(), Locale.getDefault().getCountry()));
+                String agentPhone = agent.getMobile_phone();
+                if(agentPhone != null) {
+                    phone.setText(PhoneNumberUtils.formatNumber(agentPhone, Locale.getDefault().getCountry()));
+                }
                 password.setText("***********");
             }
         });
