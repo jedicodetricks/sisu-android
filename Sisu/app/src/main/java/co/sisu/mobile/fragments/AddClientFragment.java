@@ -76,7 +76,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initActionBar() {
         TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
-        TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+        TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
     }
@@ -155,7 +155,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 Log.e("CANCEL", "YES");
                 parentActivity.onBackPressed();
                 break;
-            case R.id.saveButton:
+            case R.id.addClientSaveButton:
                 Log.e("SAVE", "YES");
                 saveClient();
                     //animation of confirmation
@@ -364,46 +364,45 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         Calendar currentTime = Calendar.getInstance();
         Calendar updatedTime = Calendar.getInstance();
 
-        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, settlementDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                activateStatusColor(closedStatus);
-                removeStatusColor(underContractStatus);
-                currentStatus = "closed";
-            }
-            else {
-                removeStatusColor(closedStatus);
-            }
-        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, contractDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                activateStatusColor(underContractStatus);
-                removeStatusColor(signedStatus);
-                currentStatus = "contract";
-            }
-            else {
-                removeStatusColor(underContractStatus);
-            }
-        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, signedDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                activateStatusColor(signedStatus);
-                removeStatusColor(pipelineStatus);
-                currentStatus = "signed";
-            }
-            else {
-                removeStatusColor(signedStatus);
-            }
-        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
+        if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
             getTime(d, updatedTime, appointmentDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
                 activateStatusColor(pipelineStatus);
-                currentStatus = "pipeline";
-            }
-            else {
-                removeStatusColor(pipelineStatus);
             }
         }
+        if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, signedDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
+                activateStatusColor(signedStatus);
+            }
+        }
+        if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, contractDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
+                activateStatusColor(underContractStatus);
+            }
+        }
+        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, settlementDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
+                activateStatusColor(closedStatus);
+            }
+        }
+    }
+
+    private void resetAllStatusColors() {
+        pipelineStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        pipelineStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        underContractStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        underContractStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        closedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        closedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        signedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        signedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
     }
 
     private void getTime(Date d, Calendar updatedTime, TextView displayView) {

@@ -94,7 +94,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         } else if (currentClient.getHome_phone() != null){
             phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getHome_phone(), Locale.getDefault().getCountry()));
         }
-        setStatus();
         emailText.setText(currentClient.getEmail());
 
         String formattedApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_dt());
@@ -106,7 +105,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
-
+        updateStatus();
     }
 
     private String getFormattedDateFromApiReturn(String dateString) {
@@ -494,53 +493,88 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         Calendar currentTime = Calendar.getInstance();
         Calendar updatedTime = Calendar.getInstance();
 
-        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, settlementDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                resetAllStatusColors();
-                activateStatusColor(closedStatus);
-//                removeStatusColor(underContractStatus);
-            }
-            else {
-//                removeStatusColor(closedStatus);
-                resetAllStatusColors();
-            }
-
-        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, contractDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                resetAllStatusColors();
-                activateStatusColor(underContractStatus);
-//                removeStatusColor(signedStatus);
-            }
-            else {
-//                removeStatusColor(underContractStatus);
-                resetAllStatusColors();
-            }
-
-        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
-            getTime(d, updatedTime, signedDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
-                resetAllStatusColors();
-                activateStatusColor(signedStatus);
-//                removeStatusColor(pipelineStatus);
-            }
-            else {
-//                removeStatusColor(signedStatus);
-                resetAllStatusColors();
-            }
-
-        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
+        if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
             getTime(d, updatedTime, appointmentDisplay);
-            if(updatedTime.getTimeInMillis() < currentTime.getTimeInMillis()) {
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
                 activateStatusColor(pipelineStatus);
             }
-            else {
-//                removeStatusColor(pipelineStatus);
+        }
+        if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, signedDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 resetAllStatusColors();
+                activateStatusColor(signedStatus);
+            }
+        }
+        if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, contractDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
+                activateStatusColor(underContractStatus);
+            }
+        }
+        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
+            getTime(d, updatedTime, settlementDisplay);
+            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                resetAllStatusColors();
+                activateStatusColor(closedStatus);
             }
         }
     }
+
+//    private void updateStatus() {
+//        Date d = null;
+//        Calendar currentTime = Calendar.getInstance();
+//        Calendar updatedTime = Calendar.getInstance();
+//
+//        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
+//            getTime(d, updatedTime, settlementDisplay);
+//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+//                resetAllStatusColors();
+//                activateStatusColor(closedStatus);
+////                removeStatusColor(underContractStatus);
+//            }
+//            else {
+////                removeStatusColor(closedStatus);
+//                //resetAllStatusColors();
+//            }
+//
+//        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
+//            getTime(d, updatedTime, contractDisplay);
+//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+//                resetAllStatusColors();
+//                activateStatusColor(underContractStatus);
+////                removeStatusColor(signedStatus);
+//            }
+//            else {
+////                removeStatusColor(underContractStatus);
+//                //resetAllStatusColors();
+//            }
+//
+//        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
+//            getTime(d, updatedTime, signedDisplay);
+//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+//                resetAllStatusColors();
+//                activateStatusColor(signedStatus);
+////                removeStatusColor(pipelineStatus);
+//            }
+//            else {
+////                removeStatusColor(signedStatus);
+//                //resetAllStatusColors();
+//            }
+//
+//        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
+//            getTime(d, updatedTime, appointmentDisplay);
+//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+//                activateStatusColor(pipelineStatus);
+//            }
+//            else {
+////                removeStatusColor(pipelineStatus);
+//                //resetAllStatusColors();
+//            }
+//        }
+//    }
 
     private void getTime(Date d, Calendar updatedTime, TextView displayView) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
