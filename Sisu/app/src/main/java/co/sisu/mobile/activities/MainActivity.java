@@ -184,7 +184,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             AgentModel agent = agentObject.getAgent();
             if (agentObject.getStatus_code().equals("-1")) {
-                showToast("Incorrect username or password");
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loader.setVisibility(View.GONE);
+                        showToast("Incorrect username or password");
+                    }
+                });
             }
             else {
                 this.runOnUiThread(new Runnable() {
