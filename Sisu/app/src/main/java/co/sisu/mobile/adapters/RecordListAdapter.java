@@ -97,12 +97,13 @@ public class RecordListAdapter extends BaseAdapter {
             }
         });
 
-        if(metric.getType().equals("CONTA") ||
-                metric.getType().equals("1TAPT") ||
+        if(metric.getType().equals("1TAPT") ||
                 metric.getType().equals("CLSD") ||
                 metric.getType().equals("UCNTR") ||
                 metric.getType().equals("SGND")) {
             rowCounter.setEnabled(false);
+        } else {
+            rowCounter.setEnabled(true);
         }
 
         rowCounter.addTextChangedListener(new TextWatcher() {
