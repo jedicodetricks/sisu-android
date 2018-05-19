@@ -81,6 +81,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
+    private boolean settingsFinished = false;
     private JWTObject jwtObject;
     private String timeline = "month";
     private int timelineSelection = 4;
@@ -182,7 +183,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished) {
+        if(clientFinished && goalsFinished && settingsFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -567,8 +568,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     initializeTeamBar(dataController.getTeamsObject());
-                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), jwtObject).execute();
-                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), getJwtObject()).execute();
+                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), null).execute();
+                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), null).execute();
                 }
             });
         }
@@ -583,6 +584,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
             SettingsObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
+            settingsFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
             clearUpdatedRecords();

@@ -628,11 +628,66 @@ public class DataController {
     }
 
     public void setSettings(SettingsObject[] settings) {
-
+        int arraySize = settings.length;
+        List<String> existingSettings = new ArrayList<>();
+        List<SettingsObject> newSettings = new ArrayList<>();
         List<SettingsObject> relevantSettings = new ArrayList<>();
-        if(settings.length < 4) {
-            settings = setDefaultSettingsObject(settings);
+
+
+        for (SettingsObject s : settings) {
+            switch (s.getName()) {
+                case "local_timezone":
+                    existingSettings.add("local_timezone");
+                    newSettings.add(s);
+                    break;
+                case "daily_reminder_time":
+                    existingSettings.add("daily_reminder_time");
+                    newSettings.add(s);
+                    break;
+//                    case "lights":
+//                    case "biometrics":
+                case "daily_reminder":
+                    existingSettings.add("daily_reminder");
+                    newSettings.add(s);
+                    break;
+                case "record_activities":
+                    existingSettings.add("record_activities");
+                    newSettings.add(s);
+                    break;
+                default:
+                    newSettings.add(s);
+
+            }
         }
+
+        if(!existingSettings.contains("local_timezone")) {
+            newSettings.add(getDefaultLocalTimezone());
+            arraySize++;
+        }
+
+        if(!existingSettings.contains("daily_reminder_time")) {
+            newSettings.add(getDefaultDailyReminderTime());
+            arraySize++;
+        }
+
+        if(!existingSettings.contains("daily_reminder")) {
+            newSettings.add(getDefaultDailyReminder());
+            arraySize++;
+        }
+
+        if(!existingSettings.contains("record_activities")) {
+            newSettings.add(getDefaultRecordActivities());
+            arraySize++;
+        }
+
+
+//        if(settings.length < 4) {
+//            settings = setDefaultSettingsObject(settings);
+//        }
+        SettingsObject[] array = new SettingsObject[arraySize];
+//        parentActivity.setSettings(settings.toArray(array));
+        settings = newSettings.toArray(array);
+
         for (SettingsObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
@@ -660,6 +715,7 @@ public class DataController {
                         s = setDefaultActivitesSelected();
                     }
                     setupSelectedActivities(s);
+                    break;
             }
 
 
@@ -807,6 +863,22 @@ public class DataController {
         }
 
         this.agent.setAgentGoalsObject(updatedAgentGoalsObject);
+    }
+
+    private SettingsObject getDefaultLocalTimezone() {
+        return new SettingsObject("local_timezone", "N", "", "0");
+    }
+
+    private SettingsObject getDefaultDailyReminderTime() {
+        return new SettingsObject("daily_reminder_time", "N", "11:01", "5");
+    }
+
+    private SettingsObject getDefaultDailyReminder() {
+        return new SettingsObject("daily_reminder", "N", "0", "3");
+    }
+
+    private SettingsObject getDefaultRecordActivities() {
+        return new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
     }
 
     private SettingsObject[] setDefaultSettingsObject(SettingsObject[] settings) {
