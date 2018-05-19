@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String password;
     boolean networkActive = true;
     Button signInButton;
+    ProgressBar loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
         getSupportActionBar().setElevation(0);
+        loader = findViewById(R.id.signInLoader);
         initializeButtons();
         initEditText();
         final EditText password = findViewById(R.id.passwordInput);
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void attemptLogin() {
+        loader.setVisibility(View.VISIBLE);
         final EditText emailAddressEntry = findViewById(R.id.emailInput);
         final EditText passwordEntry = findViewById(R.id.passwordInput);
         emailAddress = emailAddressEntry.getText().toString().replaceAll(" ", "");
@@ -181,7 +185,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             AgentModel agent = agentObject.getAgent();
             if (agentObject.getStatus_code().equals("-1")) {
                 showToast("Incorrect username or password");
-            } else {
+            }
+            else {
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loader.setVisibility(View.GONE);
+                    }
+                });
                 Log.e("AGENT OBJECT", agent.getAgent_id());
                 SaveSharedPreference.setUserId(this, agent.getAgent_id());
                 SaveSharedPreference.setUserName(this, emailAddress);

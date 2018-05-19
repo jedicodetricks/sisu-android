@@ -238,7 +238,7 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/phone_hint"
-                android:maxLength="14"
+                android:maxLength="20"
                 android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

@@ -93,10 +93,10 @@ public class AsyncUpdateActivitySettings extends AsyncTask<Void, Void, Void> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Update Settings");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Update Settings");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Update Settings");
             }
 
             response.body().close();

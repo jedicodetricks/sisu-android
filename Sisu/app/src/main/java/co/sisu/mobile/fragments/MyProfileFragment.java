@@ -235,7 +235,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             new AsyncUpdateProfile(this, parentActivity.getAgentInfo().getAgent_id(), changedFields, parentActivity.getJwtObject()).execute();
         }
         else {
-            parentActivity.showToast("You haven't updated anything.");
+            if(!imageChanged) {
+                parentActivity.showToast("You haven't updated anything.");
+            }
+            else {
+                parentActivity.showToast("Saving profile picture...");
+            }
         }
 
     }
@@ -280,17 +285,17 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                                 matrix, true);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                        if(type.equals("jpeg")) {
+                        if(type.equalsIgnoreCase("jpeg")) {
                             imageFormat = "2";
                             rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                         }
-                        else if(type.equals("png")) {
+                        else if(type.equalsIgnoreCase("png")) {
                             imageFormat = "1";
                             rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
                         }
                         else {
-                            imageFormat = "0";
-                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                            imageFormat = "1";
+                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
                         }
 
                         byte[] b = baos.toByteArray();

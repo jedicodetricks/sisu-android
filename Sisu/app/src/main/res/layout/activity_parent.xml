@@ -58,9 +58,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
             android:contentDescription="leaderboard"
-            app:layout_constraintEnd_toStartOf="@+id/moreView"
-            app:layout_constraintStart_toEndOf="@+id/recordView"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintEnd_toStartOf="@id/moreView"
+            app:layout_constraintStart_toEndOf="@id/recordView"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/leaderboard_icon" />
 
         <ImageView
@@ -72,8 +72,8 @@
             android:layout_marginTop="20dp"
             android:contentDescription="leaderboard"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline16"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintEnd_toStartOf="@id/guideline16"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/more_icon" />
 
         <ImageView
@@ -99,9 +99,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
             android:contentDescription="reports"
-            app:layout_constraintEnd_toStartOf="@+id/recordView"
-            app:layout_constraintStart_toEndOf="@+id/scoreboardView"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintEnd_toStartOf="@id/recordView"
+            app:layout_constraintStart_toEndOf="@id/scoreboardView"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/report_icon" />
 
         <ImageView
