@@ -138,7 +138,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 switchTab = "contract";
                 break;
         }
-        parentActivity.navigateToClientList(switchTab, "record");
+        parentActivity.navigateToClientList(switchTab, null);
     }
 
     private void showDatePickerDialog() {

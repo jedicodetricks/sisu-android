@@ -648,7 +648,14 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Add Client")) {
-            parentActivity.navigateToClientList(currentStatus, null);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.showToast("Client Saved");
+                    parentActivity.onBackPressed();
+                }
+            });
+//            parentActivity.navigateToClientList(currentStatus, null);
         }
     }
 

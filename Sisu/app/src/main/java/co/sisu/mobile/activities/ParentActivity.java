@@ -386,14 +386,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void navigateToClientList(String tab, String child) {
         Fragment fragment = null;
         try {
-            fragment = (Fragment) ClientListFragment.newInstance(tab);
+            fragment = ClientListFragment.newInstance(tab);
         } catch (Exception e) {
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
         swapToClientListBar(child);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+//        Log.e("BACK STACK", String.valueOf(fragmentManager.getBackStackEntryCount()));
+//        for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+//            Log.e("BACKSTACK " + i, String.valueOf(fragmentManager.getBackStackEntryAt(i)));
+//        }
+        if(child !=  null) {
+            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+        }
+        else {
+            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
+        }
+        resetToolbarImages("more");
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
