@@ -255,6 +255,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         activeClientListBar = false;
         activeTitleBar = false;
         addClientChild = "";
+        FragmentManager fm = this.getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
 
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();

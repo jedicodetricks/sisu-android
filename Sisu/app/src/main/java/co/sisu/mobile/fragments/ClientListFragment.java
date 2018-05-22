@@ -91,7 +91,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             addButton.setOnClickListener(this);
         }
         else {
-            addButton.setVisibility(View.GONE);
+//            addButton.setVisibility(View.GONE);
         }
     }
 
