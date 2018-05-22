@@ -48,7 +48,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-    String typeSelected;
+    String typeSelected, clientStatus;
     String statusList = "pipeline";
     int counter;
 
@@ -95,6 +95,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getHome_phone(), Locale.getDefault().getCountry()));
         }
         emailText.setText(currentClient.getEmail());
+        if(currentClient.getStatus() != null) {
+            clientStatus = currentClient.getStatus();
+        }
 
         String formattedApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_dt());
         String formattedSignedDt = getFormattedDateFromApiReturn(currentClient.getSigned_dt());
@@ -520,6 +523,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 resetAllStatusColors();
                 activateStatusColor(closedStatus);
             }
+        }
+        if(clientStatus.equals("D")) {
+            resetAllStatusColors();
+            activateStatusColor(archivedStatus);
         }
     }
 
