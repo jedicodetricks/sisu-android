@@ -37,6 +37,8 @@ import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.controllers.ToolbarManager;
 import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
@@ -68,6 +70,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     View teamBlock;
     DrawerLayout drawerLayout;
     DataController dataController;
+    NavigationManager navigationManager;
+    ToolbarManager toolbarManager;
     ClientObject selectedClient;
     private String fragmentTag;
     List<TeamObject> teamsList;
@@ -82,20 +86,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean settingsFinished = false;
-    private JWTObject jwtObject;
     private String timeline = "month";
     private int timelineSelection = 4;
 
-    public boolean isRecordSaved() {
-        return recordSaved;
-    }
-
-    public void setRecordSaved(boolean recordSaved) {
-        showToast("Parent Saved");
-        this.recordSaved = recordSaved;
-    }
-
-    boolean recordSaved = false;
     int selectedTeam = 0;
     ActionBar bar;
     AgentModel agent;
@@ -105,6 +98,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataController = new DataController();
+        navigationManager = new NavigationManager();
+        toolbarManager = new ToolbarManager();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
@@ -123,7 +118,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         initializeActionBar();
         getSupportActionBar().setElevation(0);
-        getJwtFromPrefs();
 
         pageTitle.setText("Scoreboard");
         fragmentTag = "Scoreboard";
@@ -180,19 +174,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamLetter.setBackgroundColor(teamsList.get(0).getColor());
         }
 
-    }
-
-    private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-//                    parentLoader.setVisibility(View.GONE);
-                    resetToolbarImages("scoreboard");
-                    replaceFragment(ScoreboardFragment.class);
-                }
-            });
-        }
     }
 
     private void initializeButtons(){
@@ -410,6 +391,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         resetToolbarImages("more");
     }
 
+    private void navigateToScoreboard() {
+        if(clientFinished && goalsFinished && settingsFinished) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    resetToolbarImages("scoreboard");
+                    replaceFragment(ScoreboardFragment.class);
+                }
+            });
+        }
+    }
+
     public void stackReplaceFragment(Class fragmentClass) {
         Fragment fragment = null;
         try {
@@ -494,24 +487,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    public void swapToAddClientBar(String child) {
+        resetAllActionBars();
+        activeAddClientBar = true;
+        addClientChild = child;
+        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+    }
+
     private void resetAllActionBars() {
          activeBacktionBar = false;
          activeClientListBar = false;
          activeTitleBar = false;
          activeAddClientBar = false;
-    }
-
-    public AgentModel getAgentInfo() {
-        return agent;
-    }
-
-    public int getSelectedTeamId() {
-        int teamId = -1;
-        if(teamsList != null) {
-            teamId = teamsList.get(selectedTeam).getId();
-
-        }
-        return teamId;
     }
 
     public void logout() {
@@ -632,8 +619,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public List<Metric> getActivitiesObject() {
         return dataController.getActivitiesObject();
     }
-    public List<Metric> getScoreboardObject() { return dataController.getScoreboardObject(); }
 
+    public List<Metric> getScoreboardObject() {
+        return dataController.getScoreboardObject();
+    }
 
     public void setClientsObject(Object returnObject) {
         dataController.setClientListObject(returnObject);
@@ -699,13 +688,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return dataController.getUpdatedRecords();
     }
 
-    public void swapToAddClientBar(String child) {
-        resetAllActionBars();
-        activeAddClientBar = true;
-        addClientChild = child;
-        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-    }
-
     public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
         dataController.setAgentGoals(agentGoalsObject);
     }
@@ -719,10 +701,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
         this.agent = agentModel;
         dataController.setAgent(agentModel);
-    }
-
-    public void getJwtFromPrefs() {
-        jwtObject = new JWTObject(SaveSharedPreference.getJWT(this), SaveSharedPreference.getClientTimestamp(this), SaveSharedPreference.getTransId(this));
     }
 
     public JWTObject getJwtObject() {
@@ -751,5 +729,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setTimelineSelection(int timelineSelection) {
         this.timelineSelection = timelineSelection;
+    }
+
+    public AgentModel getAgentInfo() {
+        return agent;
+    }
+
+    public int getSelectedTeamId() {
+        int teamId = -1;
+        if(teamsList != null) {
+            teamId = teamsList.get(selectedTeam).getId();
+
+        }
+        return teamId;
     }
 }
