@@ -167,10 +167,10 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
             if (response != null) {
                 if (response.code() == 200) {
                     AsyncAgentJsonObject agent = gson.fromJson(responseBody, AsyncAgentJsonObject.class);
-                    callback.onEventCompleted(new JWTObject(jwt, timestamp, transactionID), "JWT");
+                        //                    callback.onEventCompleted(new JWTObject(jwt, timestamp, transactionID), "JWT");
                     callback.onEventCompleted(agent, "Authenticator");
-
-                } else {
+                }
+                else {
                     callback.onEventFailed(null, "Authenticator");
                 }
             } else {

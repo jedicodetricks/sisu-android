@@ -83,6 +83,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
+        if(typeSelected.equals("b")) {
+            changeStatusColor(buyer);
+        } else {
+            changeStatusColor(seller);
+        }
 
         firstNameText.setText(currentClient.getFirst_name());
         lastNameText.setText(currentClient.getLast_name());
@@ -671,10 +676,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         //initializeClient();
         loader.setVisibility(View.GONE);
-        parentActivity.navigateToClientList(statusList, null);
+//        parentActivity.navigateToClientList(statusList, null);
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                parentActivity.onBackPressed();
                 parentActivity.showToast("Client updates saved");
             }
         });
