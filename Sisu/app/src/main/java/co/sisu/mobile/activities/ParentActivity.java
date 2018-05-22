@@ -511,22 +511,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-//        if() { needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-//            new AlertDialog.Builder(this)
-//                    .setIcon(R.drawable.sisu_mark)
-//                    .setTitle("Closing Sisu")
-//                    .setMessage("Are you sure you want to exit?")
-//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-//                        }
-//
-//                    })
-//                    .setNegativeButton("No", null)
-//                    .show();
-//        } else {
+        FragmentManager fragManager = getSupportFragmentManager();
+        if(fragManager.getBackStackEntryCount() < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.sisu_mark)
+                    .setTitle("Closing Sisu")
+                    .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        } else {
             if(activeBacktionBar) {
                 activeBacktionBar = false;
                 if(addClientChild.equals("client")) {
@@ -559,6 +560,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     initializeActionBar();
                 }
             }
+            super.onBackPressed();
         }
     }
 
