@@ -86,7 +86,13 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initAddButton() {
         addButton = parentActivity.findViewById(R.id.addClientButton);
-        addButton.setOnClickListener(this);
+        if(addButton != null) {
+            addButton.setVisibility(View.VISIBLE);
+            addButton.setOnClickListener(this);
+        }
+        else {
+//            addButton.setVisibility(View.GONE);
+        }
     }
 
     private void initSearchBar() {
