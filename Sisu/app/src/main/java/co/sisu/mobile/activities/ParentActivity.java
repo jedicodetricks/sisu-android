@@ -103,7 +103,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataController = new DataController();
-        navigationManager = new NavigationManager();
+        navigationManager = new NavigationManager(this);
         toolbarManager = new ToolbarManager();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
@@ -132,8 +132,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         new AsyncClients(this, agent.getAgent_id(), null).execute();
 //        parentLoader.setVisibility(View.VISIBLE);
     }
-
-
 
     public void initializeActionBar() {
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -199,7 +197,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         moreButton.setOnClickListener(this);
     }
 
-    private void resetToolbarImages(String inputActivity) {
+    public void resetToolbarImages(String inputActivity) {
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
         scoreBoardButton.setImageResource(R.drawable.home_icon);
 
@@ -265,48 +263,43 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
                 initializeActionBar();
-                replaceFragment(ScoreboardFragment.class);
+                navigationManager.replaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
                 fragmentTag = "Report";
                 initializeActionBar();
-                replaceFragment(ReportFragment.class);
+                navigationManager.replaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
                 initializeActionBar();
-                swapToBacktionBar(fragmentTag, null);
-                replaceFragment(RecordFragment.class);
+                navigationManager.swapToBacktionBar(fragmentTag, null);
+                navigationManager.replaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
                 fragmentTag = "Leaderboard";
                 initializeActionBar();
-                replaceFragment(LeaderboardFragment.class);
+                navigationManager.replaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
                 fragmentTag = "More";
                 initializeActionBar();
-                replaceFragment(MoreFragment.class);
+                navigationManager.replaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
                 initializeActionBar();
-                replaceFragment(ScoreboardFragment.class);
-            case R.id.saveButton:
-//                resetToolbarImages("scoreboard");
-//                pageTitle.setText("Scoreboard");
-//                fragmentTag = "Scoreboard";
-//                replaceFragment(ScoreboardFragment.class);
+                navigationManager.replaceFragment(ScoreboardFragment.class);
             default:
                 break;
         }
@@ -362,156 +355,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public void replaceFragment(Class fragmentClass) {
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-    }
-
-    public void navigateToClientList(String tab, String child) {
-        Fragment fragment = null;
-        try {
-            fragment = ClientListFragment.newInstance(tab);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        swapToClientListBar(child);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Log.e("BACK STACK", String.valueOf(fragmentManager.getBackStackEntryCount()));
-//        for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-//            Log.e("BACKSTACK " + i, String.valueOf(fragmentManager.getBackStackEntryAt(i)));
-//        }
-        if(child !=  null) {
-            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
-        }
-        else {
-            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-        }
-        resetToolbarImages("more");
-    }
-
     private void navigateToScoreboard() {
         if(clientFinished && goalsFinished && settingsFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     resetToolbarImages("scoreboard");
-                    replaceFragment(ScoreboardFragment.class);
+                    navigationManager.replaceFragment(ScoreboardFragment.class);
                 }
             });
         }
-    }
-
-    public void stackReplaceFragment(Class fragmentClass) {
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment and adding it to the stack
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
-    }
-
-    public void popStackReplaceFragment(Class fragmentClass) {
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
-    }
-
-
-
-    public void swapToBacktionBar(final String titleString, final String child) {
-        //Get it?! Back action... Backtion!
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                resetAllActionBars();
-                if(child != null) {
-                    addClientChild = child;
-                }
-                activeBacktionBar = true;
-                getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-                backtionTitle = findViewById(R.id.actionBarTitle);
-                if(titleString == null) {
-                    String displayName = "";
-                    if(selectedClient.getFirst_name() != null) {
-                        displayName += selectedClient.getFirst_name() + " ";
-                    }
-                    if(selectedClient.getLast_name() != null) {
-                        displayName += selectedClient.getLast_name();
-                    }
-                    backtionTitle.setText(displayName);
-                } else {
-                    backtionTitle.setText(titleString);
-                }
-            }
-        });
-
-    }
-
-    public void swapToTitleBar(final String titleString) {
-        resetAllActionBars();
-        activeTitleBar = true;
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
-                title = findViewById(R.id.title);
-                title.setText(titleString);
-            }
-        });
-
-    }
-
-    public void swapToClientListBar(String child) {
-        if(child != null) {
-            addClientChild = child;
-        }
-        resetAllActionBars();
-        activeClientListBar = true;
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
-            }
-        });
-    }
-
-    public void swapToAddClientBar(String child) {
-        resetAllActionBars();
-        activeAddClientBar = true;
-        addClientChild = child;
-        getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-    }
-
-    private void resetAllActionBars() {
-         activeBacktionBar = false;
-         activeClientListBar = false;
-         activeTitleBar = false;
-         activeAddClientBar = false;
-    }
-
-    public void logout() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -547,7 +400,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(activeBacktionBar) {
                 activeBacktionBar = false;
                 if(addClientChild.equals("client")) {
-                    swapToClientListBar(null);
+                    navigationManager.swapToClientListBar(null);
                 }
                 else {
                     initializeActionBar();
@@ -557,7 +410,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 activeClientListBar = false;
 
                 if(addClientChild.equals("record")) {
-                    swapToBacktionBar("Record", null);
+                    navigationManager.swapToBacktionBar("Record", null);
                 }
                 else {
                     initializeActionBar();
@@ -570,7 +423,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             else if(activeAddClientBar) {
                 activeAddClientBar = false;
                 if(addClientChild.equals("client")) {
-                    swapToClientListBar(null);
+                    navigationManager.swapToClientListBar(null);
                 }
                 else {
                     initializeActionBar();
@@ -637,11 +490,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.e("FAILURE", asyncReturnType);
         errorFragment.setMessage(asyncReturnType + " cause this failure.");
-        replaceFragment(ErrorMessageFragment.class);
+        navigationManager.replaceFragment(ErrorMessageFragment.class);
 //        if(asyncReturnType.equals("Goals")) {
 //            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
 //        }
     }
+
+
+    // GETTERS AND SETTERS
 
     public void setActivitiesObject(Object returnObject) {
         dataController.setActivitiesObject(returnObject);
@@ -777,5 +633,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         }
         return teamId;
+    }
+
+    public NavigationManager getNavigationManager() {
+        return navigationManager;
     }
 }

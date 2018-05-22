@@ -27,6 +27,7 @@ import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateGoals;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -41,6 +42,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
     ParentActivity parentActivity;
+    NavigationManager navigationManager;
     TextView activityTitle, saveButton;
     private boolean dateSwap;
     private List<EditText> fieldsObject;
@@ -72,6 +74,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         updatedGoals = new HashMap<>();
         initFields();
         initEditText();
@@ -345,8 +348,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             if(!agentUpdating) {
                 updatedGoals = new HashMap<>();
                 parentActivity.showToast("Goals have been updated");
-                parentActivity.stackReplaceFragment(MoreFragment.class);
-                parentActivity.swapToTitleBar("More");
+                navigationManager.stackReplaceFragment(MoreFragment.class);
+                navigationManager.swapToTitleBar("More");
             }
         }
         else if(asyncReturnType.equals("Goals")) {
@@ -362,8 +365,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             agentUpdating = false;
             updatedGoals = new HashMap<>();
             parentActivity.showToast("Goals have been updated");
-            parentActivity.stackReplaceFragment(MoreFragment.class);
-            parentActivity.swapToTitleBar("More");
+            navigationManager.stackReplaceFragment(MoreFragment.class);
+            navigationManager.swapToTitleBar("More");
         }
         else if(asyncReturnType.equals("Get Agent")) {
             AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;

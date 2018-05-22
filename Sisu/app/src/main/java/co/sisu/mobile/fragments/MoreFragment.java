@@ -1,5 +1,6 @@
 package co.sisu.mobile.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,9 +12,11 @@ import android.widget.ListView;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -25,7 +28,8 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
     private ListView mListView;
     DataController dataController;
-    ParentActivity activity;
+    ParentActivity parentActivity;
+    NavigationManager navigationManager;
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -42,7 +46,8 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        activity = (ParentActivity) getActivity();
+        parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         initializeListView();
     }
 
@@ -70,33 +75,40 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
                 break;
             case "Clients":
-                activity.stackReplaceFragment(ClientListFragment.class);
-                activity.swapToClientListBar(null);
+                navigationManager.stackReplaceFragment(ClientListFragment.class);
+                navigationManager.swapToClientListBar(null);
                 break;
             case "My Profile":
-                activity.stackReplaceFragment(MyProfileFragment.class);
-                activity.swapToBacktionBar("My Profile", null);
+                navigationManager.stackReplaceFragment(MyProfileFragment.class);
+                navigationManager.swapToBacktionBar("My Profile", null);
                 break;
             case "Goal Setup":
-                activity.stackReplaceFragment(GoalSetupFragment.class);
-                activity.swapToBacktionBar("Goal Setup", null);
+                navigationManager.stackReplaceFragment(GoalSetupFragment.class);
+                navigationManager.swapToBacktionBar("Goal Setup", null);
                 break;
             case "Activity Settings":
-                activity.stackReplaceFragment(ActivitySettingsFragment.class);
-                activity.swapToBacktionBar("Activity Settings", null);
+                navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
+                navigationManager.swapToBacktionBar("Activity Settings", null);
                 break;
             case "Settings":
-                activity.stackReplaceFragment(SettingsFragment.class);
-                activity.swapToBacktionBar("Settings", null);
+                navigationManager.stackReplaceFragment(SettingsFragment.class);
+                navigationManager.swapToBacktionBar("Settings", null);
                 break;
             case "Feedback":
-                activity.stackReplaceFragment(FeedbackFragment.class);
-                activity.swapToTitleBar("Feedback");
+                navigationManager.stackReplaceFragment(FeedbackFragment.class);
+                navigationManager.swapToTitleBar("Feedback");
                 break;
             case "Logout":
-                activity.logout();
+                logout();
                 SaveSharedPreference.setUserName(getContext(), "");
                 break;
         }
+    }
+
+    public void logout() {
+        Intent intent = new Intent(parentActivity, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        parentActivity.finish();
     }
 }

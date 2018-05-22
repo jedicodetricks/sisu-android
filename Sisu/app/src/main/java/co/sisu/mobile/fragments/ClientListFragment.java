@@ -140,8 +140,9 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
-        parentActivity.stackReplaceFragment(ClientEditFragment.class);
-        parentActivity.swapToBacktionBar(null, "client");
+        // TODO: NAV MANAGER
+//        parentActivity.stackReplaceFragment(ClientEditFragment.class);
+//        parentActivity.swapToBacktionBar(null, "client");
     }
 
     @Override
@@ -165,8 +166,9 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 break;
             case R.id.addClientButton:
                 //navigate to addClient
-                parentActivity.stackReplaceFragment(AddClientFragment.class);
-                parentActivity.swapToAddClientBar("client");
+                // TODO: NAV MANAGER
+//                parentActivity.stackReplaceFragment(AddClientFragment.class);
+//                parentActivity.swapToAddClientBar("client");
                 break;
             case R.id.searchClient:
                 break;

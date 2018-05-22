@@ -25,6 +25,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
 
@@ -39,6 +40,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     int selectedYear, selectedMonth, selectedDay;
     List<Metric> metricList;
     ParentActivity parentActivity;
+    NavigationManager navigationManager;
     Calendar calendar = Calendar.getInstance();
     ProgressBar loader;
 
@@ -61,6 +63,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d, parentActivity.getJwtObject()).execute();
@@ -138,7 +141,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 switchTab = "contract";
                 break;
         }
-        parentActivity.navigateToClientList(switchTab, null);
+        navigationManager.navigateToClientList(switchTab, null);
     }
 
     private void showDatePickerDialog() {

@@ -535,7 +535,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             }
 
         } else {
-            Log.w("TEST", "Warning: activity result not ok");
+            Log.w("TEST", "Warning: parentActivity result not ok");
         }
     }
 

@@ -156,9 +156,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             });
         }
         else if(asyncReturnType.equals("Update Settings")) {
-            parentActivity.popStackReplaceFragment(MoreFragment.class);
-            parentActivity.swapToTitleBar("More");
-            parentActivity.showToast("Activity updates saved");
+            //TODO: NAV MANAGER
+//            parentActivity.popStackReplaceFragment(MoreFragment.class);
+//            parentActivity.swapToTitleBar("More");
+//            parentActivity.showToast("Activity updates saved");
 
         }
     }

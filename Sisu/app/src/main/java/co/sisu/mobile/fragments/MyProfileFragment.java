@@ -47,6 +47,7 @@ import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
@@ -63,6 +64,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     ImageView profileImage;
     ProgressBar imageLoader;
     ParentActivity parentActivity;
+    NavigationManager navigationManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     AgentModel agent;
     private boolean imageChanged;
@@ -88,6 +90,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         agent = parentActivity.getAgentInfo();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
@@ -366,8 +369,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else if(asyncReturnType.equals("Update Profile")) {
             parentActivity.showToast("Your profile has been updated");
-            parentActivity.stackReplaceFragment(MoreFragment.class);
-            parentActivity.swapToTitleBar("More");
+            navigationManager.stackReplaceFragment(MoreFragment.class);
+            navigationManager.swapToTitleBar("More");
         }
         else if(asyncReturnType.equals("Get Agent")) {
             AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
