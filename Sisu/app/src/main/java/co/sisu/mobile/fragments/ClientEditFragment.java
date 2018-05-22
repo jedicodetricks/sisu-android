@@ -83,6 +83,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
+        if(typeSelected.equals("b")) {
+            changeStatusColor(buyer);
+        } else {
+            changeStatusColor(seller);
+        }
 
         firstNameText.setText(currentClient.getFirst_name());
         lastNameText.setText(currentClient.getLast_name());

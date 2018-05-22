@@ -1,5 +1,7 @@
 package co.sisu.mobile.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,10 +11,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -81,6 +85,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean activeAddClientBar = false;
     private String addClientChild = "";
     ProgressBar parentLoader;
+    int backPressed;
 
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -115,6 +120,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
         drawerLayout = findViewById(R.id.drawer_layout);
+        backPressed = 0;
 
         initializeActionBar();
         getSupportActionBar().setElevation(0);
@@ -510,39 +516,68 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        if(activeBacktionBar) {
-            activeBacktionBar = false;
-            if(addClientChild.equals("client")) {
-                swapToClientListBar(null);
-            }
-            else {
-                initializeActionBar();
-            }
-        }
-        else if(activeClientListBar) {
-            activeClientListBar = false;
+        FragmentManager fragManager = getSupportFragmentManager();
+        if(fragManager.getBackStackEntryCount() < 1 && backPressed < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.sisu_mark)
+                    .setTitle("Closing Sisu")
+                    .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
 
-            if(addClientChild.equals("record")) {
-                swapToBacktionBar("Record", null);
+                    })
+                    .setNegativeButton("No", null)
+                    .setOnKeyListener( new Dialog.OnKeyListener() {
+
+                        @Override
+                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                finish();
+                                dialog.dismiss();
+                            }
+                            return true;
+                        }
+                    })
+                    .show();
+        } else {
+            if(activeBacktionBar) {
+                activeBacktionBar = false;
+                if(addClientChild.equals("client")) {
+                    swapToClientListBar(null);
+                }
+                else {
+                    initializeActionBar();
+                }
             }
-            else {
+            else if(activeClientListBar) {
+                activeClientListBar = false;
+
+                if(addClientChild.equals("record")) {
+                    swapToBacktionBar("Record", null);
+                }
+                else {
+                    initializeActionBar();
+                }
+            }
+            else if(activeTitleBar) {
+                activeTitleBar = false;
                 initializeActionBar();
             }
-        }
-        else if(activeTitleBar) {
-            activeTitleBar = false;
-            initializeActionBar();
-        }
-        else if(activeAddClientBar) {
-            activeAddClientBar = false;
-            if(addClientChild.equals("client")) {
-                swapToClientListBar(null);
+            else if(activeAddClientBar) {
+                activeAddClientBar = false;
+                if(addClientChild.equals("client")) {
+                    swapToClientListBar(null);
+                }
+                else {
+                    initializeActionBar();
+                }
             }
-            else {
-                initializeActionBar();
-            }
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     public void showToast(final CharSequence msg){
