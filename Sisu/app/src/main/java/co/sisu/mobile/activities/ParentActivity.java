@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -509,39 +511,56 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        if(activeBacktionBar) {
-            activeBacktionBar = false;
-            if(addClientChild.equals("client")) {
-                swapToClientListBar(null);
-            }
-            else {
-                initializeActionBar();
-            }
-        }
-        else if(activeClientListBar) {
-            activeClientListBar = false;
+        if(this.isTaskRoot() ) {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.sisu_mark)
+                    .setTitle("Closing Sisu")
+                    .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
 
-            if(addClientChild.equals("record")) {
-                swapToBacktionBar("Record", null);
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        } else {
+            if(activeBacktionBar) {
+                activeBacktionBar = false;
+                if(addClientChild.equals("client")) {
+                    swapToClientListBar(null);
+                }
+                else {
+                    initializeActionBar();
+                }
             }
-            else {
+            else if(activeClientListBar) {
+                activeClientListBar = false;
+
+                if(addClientChild.equals("record")) {
+                    swapToBacktionBar("Record", null);
+                }
+                else {
+                    initializeActionBar();
+                }
+            }
+            else if(activeTitleBar) {
+                activeTitleBar = false;
                 initializeActionBar();
             }
-        }
-        else if(activeTitleBar) {
-            activeTitleBar = false;
-            initializeActionBar();
-        }
-        else if(activeAddClientBar) {
-            activeAddClientBar = false;
-            if(addClientChild.equals("client")) {
-                swapToClientListBar(null);
+            else if(activeAddClientBar) {
+                activeAddClientBar = false;
+                if(addClientChild.equals("client")) {
+                    swapToClientListBar(null);
+                }
+                else {
+                    initializeActionBar();
+                }
             }
-            else {
-                initializeActionBar();
-            }
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     public void showToast(final CharSequence msg){
