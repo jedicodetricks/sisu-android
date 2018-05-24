@@ -177,7 +177,7 @@ public class AsyncAuthenticator extends AsyncTask<Void, Void, Void> {
                 callback.onEventFailed(null, "Authenticator");
             }
 
-            response.body().close();
+//            response.body().close();
         } catch (Exception e) {
             e.printStackTrace();
         }

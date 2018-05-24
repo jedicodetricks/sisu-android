@@ -109,7 +109,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
                 saveSettings();
-
                 break;
         }
     }
