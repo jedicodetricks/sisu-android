@@ -14,6 +14,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.TeamBarAdapter;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.TeamObject;
 
 /**
@@ -28,6 +29,9 @@ public class ActionBarManager {
     private ActionBar bar;
     private List<TeamObject> teamsList;
     int selectedTeam = 0;
+    private TextView backtionTitle, title;
+    private ClientObject selectedClient;
+
 
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
@@ -87,6 +91,59 @@ public class ActionBarManager {
         }
     }
 
+    public void swapToSaveAction(final String titleString) {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+                backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                if(titleString == null) {
+                    String displayName = "";
+                    if(selectedClient.getFirst_name() != null) {
+                        displayName += selectedClient.getFirst_name() + " ";
+                    }
+                    if(selectedClient.getLast_name() != null) {
+                        displayName += selectedClient.getLast_name();
+                    }
+                    backtionTitle.setText(displayName);
+                } else {
+                    backtionTitle.setText(titleString);
+                }
+            }
+        });
+
+    }
+
+    public void swapToTitleBar(final String titleString) {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
+                title = parentActivity.findViewById(R.id.title);
+                title.setText(titleString);
+            }
+        });
+
+    }
+
+    public void swapToClientListBar() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+            }
+        });
+    }
+
+    public void swapToAddClientBar() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+            }
+        });
+    }
+
     public void updateTeam(TeamObject team) {
         teamBlock.setBackgroundColor(team.getColor());
         teamLetter.setText(team.getTeamLetter());
@@ -117,5 +174,13 @@ public class ActionBarManager {
 
     public void updateSelectedTeam(int position) {
         selectedTeam = position;
+    }
+
+    public void setSelectedClient(ClientObject selectedClient) {
+        this.selectedClient = selectedClient;
+    }
+
+    public ClientObject getSelectedClient() {
+        return selectedClient;
     }
 }
