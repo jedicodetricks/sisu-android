@@ -666,12 +666,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void navigateToClientList(String tabName){
-        navigationManager.navigateToClientList(tabName, null);
+        navigationManager.navigateToClientList(tabName);
     }
 
     private void launchAddClient() {
         navigationManager.stackReplaceFragment(AddClientFragment.class);
-        navigationManager.swapToAddClientBar("scoreboard");
+//        navigationManager.swapToAddClientBar();
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);

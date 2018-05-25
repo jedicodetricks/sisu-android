@@ -71,7 +71,7 @@ public class NavigationManager {
 
     private void manageActionBar(Class fragmentClass) {
         if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-            swapToAddClientBar(null);
+            swapToAddClientBar();
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
             swapToClientListBar();
@@ -82,10 +82,32 @@ public class NavigationManager {
             sortTitleBar(fragmentClass);
         }
         else {
-            //Backtion Bar
-            swapToBacktionBar("Testing", null);
+            sortSaveActionBar(fragmentClass);
         }
 
+    }
+
+    private void sortSaveActionBar(Class fragmentClass) {
+        if(fragmentClass.getSimpleName().equals("RecordFragment")) {
+            fragmentTag = "Record";
+            swapToSaveAction("Record");
+        }
+        else if(fragmentClass.getSimpleName().equals("MyProfileFragment")) {
+            fragmentTag = "MyProfile";
+            swapToSaveAction("My Profile");
+        }
+        else if(fragmentClass.getSimpleName().equals("GoalSetupFragment")) {
+            fragmentTag = "GoalSetup";
+            swapToSaveAction("Goal Setup");
+        }
+        else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
+            fragmentTag = "ActivitySettings";
+            swapToSaveAction("Activity Settings");
+        }
+        else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
+            fragmentTag = "Settings";
+            swapToSaveAction("Settings");
+        }
     }
 
     private void sortTitleBar(Class fragmentClass) {
@@ -143,7 +165,7 @@ public class NavigationManager {
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
     }
 
-    public void navigateToClientList(String tab, Class child) {
+    public void navigateToClientList(String tab) {
         Fragment fragment = null;
         try {
             fragment = ClientListFragment.newInstance(tab);
@@ -151,16 +173,11 @@ public class NavigationManager {
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
-        backStack.add(child);
+        backStack.add(ClientListFragment.class);
         swapToClientListBar();
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
-        if(child !=  null) {
-            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
-        }
-        else {
-            fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-        }
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
         parentActivity.resetToolbarImages("more");
     }
 
@@ -181,16 +198,11 @@ public class NavigationManager {
 
     // ACTION BARS
 
-    public void swapToBacktionBar(final String titleString, final String child) {
+    public void swapToSaveAction(final String titleString) {
         //Get it?! Back action... Backtion!
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                resetAllActionBars();
-                if(child != null) {
-                    addClientChild = child;
-                }
-                activeBacktionBar = true;
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(titleString == null) {
@@ -211,8 +223,6 @@ public class NavigationManager {
     }
 
     public void swapToTitleBar(final String titleString) {
-        resetAllActionBars();
-        activeTitleBar = true;
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -225,8 +235,6 @@ public class NavigationManager {
     }
 
     public void swapToClientListBar() {
-        resetAllActionBars();
-//        activeClientListBar = true;
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -235,11 +243,13 @@ public class NavigationManager {
         });
     }
 
-    public void swapToAddClientBar(String child) {
-        resetAllActionBars();
-        activeAddClientBar = true;
-        addClientChild = child;
-        parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+    public void swapToAddClientBar() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+            }
+        });
     }
 
     private void resetAllActionBars() {
@@ -278,11 +288,9 @@ public class NavigationManager {
                     .show();
         } else {
             backStack.pop();
+//            Log.e("BACK STACK", String.valueOf(backStack.size()));
+//            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
             replaceFragment(backStack.get(backStack.size() - 1));
-            Log.e("BACK STACK", String.valueOf(backStack.size()));
-//            for(int i = 0; i < backStack.size(); i++) {
-//                Log.e("BACK " + i, backStack.get(i).getSimpleName());
-//            }
         }
     }
 }
