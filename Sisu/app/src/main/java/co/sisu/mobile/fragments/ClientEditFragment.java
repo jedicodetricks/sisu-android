@@ -452,7 +452,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         appointmentClear.setOnClickListener(this);
         exportContact.setOnClickListener(this);
         saveButton = parentActivity.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
+        if(saveButton != null) {
+            saveButton.setOnClickListener(this);
+        }
         buyer = parentActivity.findViewById(R.id.buyerButton);
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);

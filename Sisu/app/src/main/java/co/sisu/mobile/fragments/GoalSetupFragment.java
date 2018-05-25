@@ -92,7 +92,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     private void initSwitchAndButtons() {
         saveButton = parentActivity.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
+        if(saveButton != null) {
+            saveButton.setOnClickListener(this);
+        }
     }
 
     private void setupFieldsWithGoalData() {

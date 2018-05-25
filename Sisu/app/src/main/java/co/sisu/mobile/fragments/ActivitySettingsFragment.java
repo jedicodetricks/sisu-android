@@ -81,7 +81,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void initializeButtons() {
         TextView saveButton = parentActivity.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(this);
+        if(saveButton != null) {
+            saveButton.setOnClickListener(this);
+        }
     }
 
     private void initializeListView() {

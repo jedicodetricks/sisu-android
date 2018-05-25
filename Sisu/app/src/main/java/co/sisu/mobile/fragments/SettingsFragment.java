@@ -77,7 +77,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initNotificationAlarm();
         initSwitches();
         TextView b = parentActivity.findViewById(R.id.saveButton);
-        b.setOnClickListener(this);
+        if(b != null) {
+            b.setOnClickListener(this);
+        }
     }
 
 

@@ -72,7 +72,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         initializeCalendarHandler();
         TextView save = parentActivity.findViewById(R.id.saveButton);
-        save.setOnClickListener(this);
+        if(save != null) {
+            save.setOnClickListener(this);
+        }
     }
 
     private void initializeCalendarHandler() {

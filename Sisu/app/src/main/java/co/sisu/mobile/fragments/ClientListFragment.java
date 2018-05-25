@@ -163,7 +163,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cancelButton:
-                getActivity().onBackPressed();
+                parentActivity.onBackPressed();
                 break;
             case R.id.addClientButton:
                 navigationManager.stackReplaceFragment(AddClientFragment.class);

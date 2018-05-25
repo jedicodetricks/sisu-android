@@ -361,7 +361,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     resetToolbarImages("scoreboard");
-                    navigationManager.replaceFragment(ScoreboardFragment.class);
+                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 }
             });
         }
@@ -369,9 +369,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        FragmentManager fragManager = getSupportFragmentManager();
+//        FragmentManager fragManager = getSupportFragmentManager();
 
-        navigationManager.onBackPressed(fragManager);
+        navigationManager.onBackPressed();
 
 //        if(fragManager.getBackStackEntryCount() < 1 && backPressed < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
 //            AlertDialog dialog = new AlertDialog.Builder(this)
@@ -493,7 +493,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.e("FAILURE", asyncReturnType);
         errorFragment.setMessage(asyncReturnType + " cause this failure.");
-        navigationManager.replaceFragment(ErrorMessageFragment.class);
+        navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
 //        if(asyncReturnType.equals("Goals")) {
 //            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
 //        }

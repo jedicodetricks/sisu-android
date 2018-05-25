@@ -144,7 +144,7 @@ public class NavigationManager {
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
 
     public void clearStackReplaceFragment(Class fragmentClass) {
@@ -177,29 +177,13 @@ public class NavigationManager {
         swapToClientListBar();
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
         parentActivity.resetToolbarImages("more");
     }
-
-//    public void navigateToScoreboard() {
-//        if(clientFinished && goalsFinished && settingsFinished) {
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    parentActivity.resetToolbarImages("scoreboard");
-//                    replaceFragment(ScoreboardFragment.class);
-//                }
-//            });
-//        }
-//    }
-
-
-
 
     // ACTION BARS
 
     public void swapToSaveAction(final String titleString) {
-        //Get it?! Back action... Backtion!
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -259,7 +243,7 @@ public class NavigationManager {
         activeAddClientBar = false;
     }
 
-    public void onBackPressed(FragmentManager fragManager) {
+    public void onBackPressed() {
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
             AlertDialog dialog = new AlertDialog.Builder(parentActivity)
                     .setIcon(R.drawable.sisu_mark)
@@ -288,8 +272,8 @@ public class NavigationManager {
                     .show();
         } else {
             backStack.pop();
-//            Log.e("BACK STACK", String.valueOf(backStack.size()));
-//            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
+            Log.e("BACK STACK", String.valueOf(backStack.size()));
+            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
             replaceFragment(backStack.get(backStack.size() - 1));
         }
     }

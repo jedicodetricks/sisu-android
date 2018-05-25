@@ -139,7 +139,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         profileImage.setOnClickListener(this);
 
         TextView save = parentActivity.findViewById(R.id.saveButton);
-        save.setOnClickListener(this);
+        if(save != null) {
+            save.setOnClickListener(this);
+        }
     }
 
     @Override
