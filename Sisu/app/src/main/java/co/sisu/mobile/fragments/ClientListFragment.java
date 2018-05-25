@@ -26,6 +26,7 @@ import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
@@ -36,6 +37,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     SearchView clientSearch;
     TextView total;
     ParentActivity parentActivity;
+    NavigationManager navigationManager;
     ProgressBar loader;
     List<ClientObject> currentList = new ArrayList<>();
     TabLayout tabLayout;
@@ -70,6 +72,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         initListView();
         initSearchBar();
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         AgentModel agent = parentActivity.getAgentInfo();
         initializeTabView();
         new AsyncClients(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
@@ -140,9 +143,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
-        // TODO: NAV MANAGER
-//        parentActivity.stackReplaceFragment(ClientEditFragment.class);
-//        parentActivity.swapToBacktionBar(null, "client");
+        navigationManager.stackReplaceFragment(ClientEditFragment.class);
     }
 
     @Override
@@ -165,10 +166,8 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 getActivity().onBackPressed();
                 break;
             case R.id.addClientButton:
-                //navigate to addClient
-                // TODO: NAV MANAGER
-//                parentActivity.stackReplaceFragment(AddClientFragment.class);
-//                parentActivity.swapToAddClientBar("client");
+                navigationManager.stackReplaceFragment(AddClientFragment.class);
+                navigationManager.swapToAddClientBar("client");
                 break;
             case R.id.searchClient:
                 break;

@@ -21,6 +21,7 @@ import co.sisu.mobile.adapters.ActivityListAdapter;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.SelectedActivities;
@@ -35,6 +36,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private ListView mListView;
     ParentActivity parentActivity;
+    NavigationManager  navigationManager;
     List<SelectedActivities> selectedActivities;
     ProgressBar loader;
 
@@ -53,6 +55,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
         loader = view.findViewById(R.id.activitySettingsLoader);
         initializeButtons();
 //        initializeListView();
@@ -156,10 +159,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             });
         }
         else if(asyncReturnType.equals("Update Settings")) {
-            //TODO: NAV MANAGER
-//            parentActivity.popStackReplaceFragment(MoreFragment.class);
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
 //            parentActivity.swapToTitleBar("More");
-//            parentActivity.showToast("Activity updates saved");
+            parentActivity.showToast("Activity updates saved");
 
         }
     }

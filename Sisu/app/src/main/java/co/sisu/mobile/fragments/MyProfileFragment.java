@@ -369,8 +369,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else if(asyncReturnType.equals("Update Profile")) {
             parentActivity.showToast("Your profile has been updated");
-            navigationManager.stackReplaceFragment(MoreFragment.class);
-            navigationManager.swapToTitleBar("More");
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
+//            navigationManager.swapToTitleBar("More");
         }
         else if(asyncReturnType.equals("Get Agent")) {
             AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;

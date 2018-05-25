@@ -348,8 +348,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             if(!agentUpdating) {
                 updatedGoals = new HashMap<>();
                 parentActivity.showToast("Goals have been updated");
-                navigationManager.stackReplaceFragment(MoreFragment.class);
-                navigationManager.swapToTitleBar("More");
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+//                navigationManager.swapToTitleBar("More");
             }
         }
         else if(asyncReturnType.equals("Goals")) {
@@ -365,8 +365,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             agentUpdating = false;
             updatedGoals = new HashMap<>();
             parentActivity.showToast("Goals have been updated");
-            navigationManager.stackReplaceFragment(MoreFragment.class);
-            navigationManager.swapToTitleBar("More");
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
+//            navigationManager.swapToTitleBar("More");
         }
         else if(asyncReturnType.equals("Get Agent")) {
             AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;

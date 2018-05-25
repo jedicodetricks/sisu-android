@@ -263,43 +263,43 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
                 initializeActionBar();
-                navigationManager.replaceFragment(ScoreboardFragment.class);
+                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
                 resetToolbarImages("report");
                 pageTitle.setText("Report");
                 fragmentTag = "Report";
                 initializeActionBar();
-                navigationManager.replaceFragment(ReportFragment.class);
+                navigationManager.clearStackReplaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
                 resetToolbarImages("record");
                 pageTitle.setText("Record");
                 fragmentTag = "Record";
                 initializeActionBar();
-                navigationManager.swapToBacktionBar(fragmentTag, null);
-                navigationManager.replaceFragment(RecordFragment.class);
+//                navigationManager.swapToBacktionBar(fragmentTag, null);
+                navigationManager.clearStackReplaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
                 resetToolbarImages("leaderboard");
                 pageTitle.setText("Leaderboard");
                 fragmentTag = "Leaderboard";
                 initializeActionBar();
-                navigationManager.replaceFragment(LeaderboardFragment.class);
+                navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
                 resetToolbarImages("more");
                 pageTitle.setText("More");
                 fragmentTag = "More";
                 initializeActionBar();
-                navigationManager.replaceFragment(MoreFragment.class);
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
                 resetToolbarImages("scoreboard");
                 pageTitle.setText("Scoreboard");
                 fragmentTag = "Scoreboard";
                 initializeActionBar();
-                navigationManager.replaceFragment(ScoreboardFragment.class);
+                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
             default:
                 break;
         }
@@ -370,67 +370,70 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         FragmentManager fragManager = getSupportFragmentManager();
-        if(fragManager.getBackStackEntryCount() < 1 && backPressed < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.sisu_mark)
-                    .setTitle("Closing Sisu")
-                    .setMessage("Are you sure you want to exit?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
 
-                    })
-                    .setNegativeButton("No", null)
-                    .setOnKeyListener( new Dialog.OnKeyListener() {
+        navigationManager.onBackPressed(fragManager);
 
-                        @Override
-                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                finish();
-                                dialog.dismiss();
-                            }
-                            return true;
-                        }
-                    })
-                    .show();
-        } else {
-            if(activeBacktionBar) {
-                activeBacktionBar = false;
-                if(addClientChild.equals("client")) {
-                    navigationManager.swapToClientListBar(null);
-                }
-                else {
-                    initializeActionBar();
-                }
-            }
-            else if(activeClientListBar) {
-                activeClientListBar = false;
-
-                if(addClientChild.equals("record")) {
-                    navigationManager.swapToBacktionBar("Record", null);
-                }
-                else {
-                    initializeActionBar();
-                }
-            }
-            else if(activeTitleBar) {
-                activeTitleBar = false;
-                initializeActionBar();
-            }
-            else if(activeAddClientBar) {
-                activeAddClientBar = false;
-                if(addClientChild.equals("client")) {
-                    navigationManager.swapToClientListBar(null);
-                }
-                else {
-                    initializeActionBar();
-                }
-            }
-            super.onBackPressed();
-        }
+//        if(fragManager.getBackStackEntryCount() < 1 && backPressed < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
+//            AlertDialog dialog = new AlertDialog.Builder(this)
+//                    .setIcon(R.drawable.sisu_mark)
+//                    .setTitle("Closing Sisu")
+//                    .setMessage("Are you sure you want to exit?")
+//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+//                    {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            finish();
+//                        }
+//
+//                    })
+//                    .setNegativeButton("No", null)
+//                    .setOnKeyListener( new Dialog.OnKeyListener() {
+//
+//                        @Override
+//                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+//                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+//                                finish();
+//                                dialog.dismiss();
+//                            }
+//                            return true;
+//                        }
+//                    })
+//                    .show();
+//        } else {
+//            if(activeBacktionBar) {
+//                activeBacktionBar = false;
+//                if(addClientChild.equals("client")) {
+////                    navigationManager.swapToClientListBar(null);
+//                }
+//                else {
+//                    initializeActionBar();
+//                }
+//            }
+//            else if(activeClientListBar) {
+//                activeClientListBar = false;
+//
+//                if(addClientChild.equals("record")) {
+////                    navigationManager.swapToBacktionBar("Record", null);
+//                }
+//                else {
+//                    initializeActionBar();
+//                }
+//            }
+//            else if(activeTitleBar) {
+//                activeTitleBar = false;
+//                initializeActionBar();
+//            }
+//            else if(activeAddClientBar) {
+//                activeAddClientBar = false;
+//                if(addClientChild.equals("client")) {
+//                    navigationManager.swapToClientListBar(null);
+//                }
+//                else {
+//                    initializeActionBar();
+//                }
+//            }
+//            super.onBackPressed();
+//        }
     }
 
     public void showToast(final CharSequence msg){

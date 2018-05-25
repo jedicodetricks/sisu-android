@@ -35,7 +35,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
         pingServer();
     }
 
-    // TODO: 5/8/2018 make parentActivity available here
     private void pingServer() {
         new AsyncServerPing(this).execute();
     }
