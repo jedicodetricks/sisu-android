@@ -124,7 +124,8 @@ public class ActionBarManager {
                 teamLetter = parentActivity.findViewById(R.id.team_letter);
                 teamBlock = parentActivity.findViewById(R.id.action_bar_home);
                 pageTitle.setText(titleString);
-
+                View homeButton= parentActivity.findViewById(R.id.action_bar_home);
+                homeButton.setOnClickListener(parentActivity);
                 if(teamsList != null && titleString.equals("Leaderboard")) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
