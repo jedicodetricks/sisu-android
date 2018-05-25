@@ -1,26 +1,15 @@
 package co.sisu.mobile.activities;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -42,8 +30,6 @@ import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.controllers.ToolbarManager;
-import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -62,7 +48,6 @@ import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
