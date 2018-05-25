@@ -151,7 +151,8 @@ public class NavigationManager {
             backStack.clear();
         }
         backStack.add(fragmentClass);
-        actionBarManager.initializeActionBar(fragmentTag);
+        //TODO: This is supposed to handle the leaderboard so it can show the team bar.
+//        actionBarManager.initializeActionBar(fragmentTag);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
