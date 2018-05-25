@@ -144,14 +144,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         }, selectedYear, selectedMonth, selectedDay);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//        if(leaderboardToggle.isChecked()) {
-//            //Year selected
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("month", "id", "android")).setVisibility(View.GONE);
-//        }
-//        else {
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-//        }
+
         dialog.show();
     }
 

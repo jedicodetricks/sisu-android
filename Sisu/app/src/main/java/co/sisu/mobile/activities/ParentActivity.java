@@ -70,22 +70,9 @@ import co.sisu.mobile.system.SaveSharedPreference;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener {
 
-    TextView pageTitle, teamLetter, backtionTitle, title;
-    View teamBlock;
-    DrawerLayout drawerLayout;
     DataController dataController;
     NavigationManager navigationManager;
-    ToolbarManager toolbarManager;
-    ClientObject selectedClient;
-    private String fragmentTag;
-    List<TeamObject> teamsList;
-    boolean activeBacktionBar = false;
-    boolean activeClientListBar = false;
-    boolean activeTitleBar = false;
-    private boolean activeAddClientBar = false;
-    private String addClientChild = "";
     ProgressBar parentLoader;
-    int backPressed;
 
     String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -94,90 +81,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String timeline = "month";
     private int timelineSelection = 4;
 
-    int selectedTeam = 0;
-    ActionBar bar;
     AgentModel agent;
     ErrorMessageFragment errorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_parent);
+
         dataController = new DataController();
         navigationManager = new NavigationManager(this);
-        toolbarManager = new ToolbarManager();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
-        setContentView(R.layout.activity_parent);
         parentLoader = findViewById(R.id.parentLoader);
-//        parentLoader.setVisibility(View.VISIBLE);
-        bar = getSupportActionBar();
-        bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        bar.setDisplayShowCustomEnabled(true);
-        View customView = getLayoutInflater().inflate(R.layout.action_bar_layout, null);
-        bar.setCustomView(customView);
-        Toolbar parent =(Toolbar) customView.getParent();
-        parent.setContentInsetsAbsolute(0,0);
-        parent.setPaddingRelative(0,0,0,0);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        backPressed = 0;
 
-        initializeActionBar();
-        getSupportActionBar().setElevation(0);
-
-        pageTitle.setText("Scoreboard");
-        fragmentTag = "Scoreboard";
         initializeButtons();
         new AsyncTeams(this, agent.getAgent_id(), null).execute();
         new AsyncClients(this, agent.getAgent_id(), null).execute();
-//        parentLoader.setVisibility(View.VISIBLE);
-    }
-
-    public void initializeActionBar() {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        bar.setCustomView(R.layout.action_bar_layout);
-        pageTitle = findViewById(R.id.action_bar_title);
-        teamLetter = findViewById(R.id.team_letter);
-        teamBlock = findViewById(R.id.action_bar_home);
-
-        View view = getSupportActionBar().getCustomView();
-        if(fragmentTag != null) {
-            pageTitle.setText(fragmentTag);
-        }
-        View homeButton= view.findViewById(R.id.action_bar_home);
-        homeButton.setOnClickListener(this);
-
-        if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-        }
-        else {
-            teamBlock.setVisibility(View.GONE);
-            teamLetter.setVisibility(View.GONE);
-        }
-    }
-
-    private void initializeTeamBar(List<TeamObject> teamsList) {
-        if(teamsList.size() > 0) {
-            ListView mListView = findViewById(R.id.navViewList);
-            mListView.setDivider(null);
-            mListView.setDividerHeight(30);
-
-            this.teamsList = teamsList;
-
-            TeamBarAdapter adapter = new TeamBarAdapter(getBaseContext(), teamsList);
-            mListView.setAdapter(adapter);
-
-            mListView.setOnItemClickListener(this);
-
-            teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-            teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(teamsList.get(0).getColor());
-        }
-
     }
 
     private void initializeButtons(){
@@ -197,49 +118,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         moreButton.setOnClickListener(this);
     }
 
-    public void resetToolbarImages(String inputActivity) {
-        ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
-        scoreBoardButton.setImageResource(R.drawable.home_icon);
-
-        ImageView reportButton = findViewById(R.id.reportView);
-        reportButton.setImageResource(R.drawable.report_icon);
-
-        ImageView recordButton = findViewById(R.id.recordView);
-        recordButton.setImageResource(R.drawable.record_icon);
-
-        ImageView leaderBoardButton = findViewById(R.id.leaderBoardView);
-        leaderBoardButton.setImageResource(R.drawable.leaderboard_icon);
-
-        ImageView moreButton = findViewById(R.id.moreView);
-        moreButton.setImageResource(R.drawable.more_icon);
-
-        switch (inputActivity) {
-            case "scoreboard":
-                scoreBoardButton.setImageResource(R.drawable.home_icon_active);
-                break;
-            case "report":
-                reportButton.setImageResource(R.drawable.report_icon_active);
-                break;
-            case "record":
-                recordButton.setImageResource(R.drawable.record_icon_active);
-                break;
-            case "leaderboard":
-                leaderBoardButton.setImageResource(R.drawable.leaderboard_icon_active);
-                break;
-            case "more":
-                moreButton.setImageResource(R.drawable.more_icon_active);
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     public void onClick(View v) {
-        activeBacktionBar = false;
-        activeClientListBar = false;
-        activeTitleBar = false;
-        addClientChild = "";
         FragmentManager fm = this.getSupportFragmentManager();
         for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
@@ -251,54 +131,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         switch (v.getId()) {
             case R.id.action_bar_home:
-                if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(Gravity.LEFT);
-                }
-                else {
-                    drawerLayout.openDrawer(Gravity.LEFT);
-                }
+                navigationManager.toggleDrawer();
                 break;
             case R.id.scoreboardView:
-                resetToolbarImages("scoreboard");
-                pageTitle.setText("Scoreboard");
-                fragmentTag = "Scoreboard";
-                initializeActionBar();
                 navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
-                resetToolbarImages("report");
-                pageTitle.setText("Report");
-                fragmentTag = "Report";
-                initializeActionBar();
                 navigationManager.clearStackReplaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
-                resetToolbarImages("record");
-                pageTitle.setText("Record");
-                fragmentTag = "Record";
-                initializeActionBar();
-//                navigationManager.swapToBacktionBar(fragmentTag, null);
                 navigationManager.clearStackReplaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
-                resetToolbarImages("leaderboard");
-                pageTitle.setText("Leaderboard");
-                fragmentTag = "Leaderboard";
-                initializeActionBar();
                 navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
                 break;
             case R.id.moreView:
-                resetToolbarImages("more");
-                pageTitle.setText("More");
-                fragmentTag = "More";
-                initializeActionBar();
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
-                resetToolbarImages("scoreboard");
-                pageTitle.setText("Scoreboard");
-                fragmentTag = "Scoreboard";
-                initializeActionBar();
                 navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
             default:
                 break;
@@ -332,12 +182,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-        teamBlock.setBackgroundColor(team.getColor());
-        teamLetter.setText(team.getTeamLetter());
-        teamLetter.setBackgroundColor(team.getColor());
+        navigationManager.updateTeam(team);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
-        selectedTeam = position;
+        navigationManager.updateSelectedTeam(position);
         switch (f.getTag()) {
             case "Scoreboard":
                 ((ScoreboardFragment) f).teamSwap();
@@ -352,7 +200,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 ((LeaderboardFragment) f).teamSwap();
                 break;
         }
-        drawerLayout.closeDrawer(Gravity.LEFT);
+        navigationManager.closeDrawer();
     }
 
     private void navigateToScoreboard() {
@@ -360,7 +208,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    resetToolbarImages("scoreboard");
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 }
             });
@@ -369,71 +216,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-//        FragmentManager fragManager = getSupportFragmentManager();
-
         navigationManager.onBackPressed();
-
-//        if(fragManager.getBackStackEntryCount() < 1 && backPressed < 1) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-//            AlertDialog dialog = new AlertDialog.Builder(this)
-//                    .setIcon(R.drawable.sisu_mark)
-//                    .setTitle("Closing Sisu")
-//                    .setMessage("Are you sure you want to exit?")
-//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            finish();
-//                        }
-//
-//                    })
-//                    .setNegativeButton("No", null)
-//                    .setOnKeyListener( new Dialog.OnKeyListener() {
-//
-//                        @Override
-//                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-//                            if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                                finish();
-//                                dialog.dismiss();
-//                            }
-//                            return true;
-//                        }
-//                    })
-//                    .show();
-//        } else {
-//            if(activeBacktionBar) {
-//                activeBacktionBar = false;
-//                if(addClientChild.equals("client")) {
-////                    navigationManager.swapToClientListBar(null);
-//                }
-//                else {
-//                    initializeActionBar();
-//                }
-//            }
-//            else if(activeClientListBar) {
-//                activeClientListBar = false;
-//
-//                if(addClientChild.equals("record")) {
-////                    navigationManager.swapToBacktionBar("Record", null);
-//                }
-//                else {
-//                    initializeActionBar();
-//                }
-//            }
-//            else if(activeTitleBar) {
-//                activeTitleBar = false;
-//                initializeActionBar();
-//            }
-//            else if(activeAddClientBar) {
-//                activeAddClientBar = false;
-//                if(addClientChild.equals("client")) {
-//                    navigationManager.swapToClientListBar(null);
-//                }
-//                else {
-//                    initializeActionBar();
-//                }
-//            }
-//            super.onBackPressed();
-//        }
     }
 
     public void showToast(final CharSequence msg){
@@ -459,7 +242,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    initializeTeamBar(dataController.getTeamsObject());
+                    navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), null).execute();
                     new AsyncSettings(ParentActivity.this, agent.getAgent_id(), null).execute();
                 }
@@ -494,9 +277,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         Log.e("FAILURE", asyncReturnType);
         errorFragment.setMessage(asyncReturnType + " cause this failure.");
         navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
-//        if(asyncReturnType.equals("Goals")) {
-//            new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId()).execute();
-//        }
+
     }
 
 
@@ -523,11 +304,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setSelectedClient(ClientObject client) {
-        selectedClient = client;
+        navigationManager.setSelectedClient(client);
     }
 
     public ClientObject getSelectedClient() {
-        return selectedClient;
+        return navigationManager.getSelectedClient();
     }
 
     public List<ClientObject> getPipelineList() {
@@ -630,11 +411,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public int getSelectedTeamId() {
-        int teamId = -1;
-        if(teamsList != null) {
-            teamId = teamsList.get(selectedTeam).getId();
-
-        }
+        int teamId = navigationManager.getSelectedTeamId();
         return teamId;
     }
 
