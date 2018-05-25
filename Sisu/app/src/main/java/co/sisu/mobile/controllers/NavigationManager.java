@@ -102,25 +102,20 @@ public class NavigationManager {
     private void sortTitleBar(Class fragmentClass) {
         if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
             fragmentTag = "Feedback";
-            actionBarManager.swapToTitleBar("Feedback");
         }
         else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
             fragmentTag = "More";
-            actionBarManager.swapToTitleBar("More");
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
             fragmentTag = "Scoreboard";
-            actionBarManager.swapToTitleBar("Scoreboard");
         }
         else if(fragmentClass.getSimpleName().equals("ReportFragment")) {
             fragmentTag = "Report";
-            actionBarManager.swapToTitleBar("Report");
         }
         else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
             fragmentTag = "Leaderboard";
-            actionBarManager.swapToTitleBar("Leaderboard");
         }
-
+        actionBarManager.swapToTitleBar(fragmentTag);
         toolbarManager.resetToolbarImages(fragmentTag);
     }
 

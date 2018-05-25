@@ -47,7 +47,7 @@ public class ActionBarManager {
     }
 
     public void initializeActionBar(String fragmentTag) {
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = parentActivity.findViewById(R.id.action_bar_title);
@@ -59,16 +59,16 @@ public class ActionBarManager {
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
 
-        if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-        }
-        else {
-            teamBlock.setVisibility(View.GONE);
-            teamLetter.setVisibility(View.GONE);
-        }
+//        if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
+//            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//            teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+//            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
+//            teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+//        }
+//        else {
+        teamBlock.setVisibility(View.GONE);
+        teamLetter.setVisibility(View.GONE);
+//        }
         parentActivity.getSupportActionBar().setElevation(0);
     }
 
@@ -118,9 +118,26 @@ public class ActionBarManager {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_title_layout);
-                title = parentActivity.findViewById(R.id.title);
-                title.setText(titleString);
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+//                title = parentActivity.findViewById(R.id.title);
+                pageTitle = parentActivity.findViewById(R.id.action_bar_title);
+                teamLetter = parentActivity.findViewById(R.id.team_letter);
+                teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+                pageTitle.setText(titleString);
+
+                if(teamsList != null && titleString.equals("Leaderboard")) {
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                    teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
+                    teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                    teamBlock.setVisibility(View.VISIBLE);
+                    teamLetter.setVisibility(View.VISIBLE);
+                }
+                else {
+                    teamBlock.setVisibility(View.GONE);
+                    teamLetter.setVisibility(View.GONE);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                }
             }
         });
 

@@ -74,6 +74,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         expListView.setGroupIndicator(null);
         initToggle();
         loader.setVisibility(View.VISIBLE);
+
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
     }
@@ -126,26 +127,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
-    }
-
-    private void showDatePickerDialog() {
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                if(year != selectedYear || month != selectedMonth || day != selectedDay) {
-                    updateDisplayDate(year, month, day);
-                    getLeaderboard(selectedYear, selectedMonth + 1);
-                }
-                else {
-                    parentActivity.showToast("You have selected the same time period");
-                }
-
-            }
-        }, selectedYear, selectedMonth, selectedDay);
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        dialog.show();
     }
 
     private void getLeaderboard(int year, int month) {
