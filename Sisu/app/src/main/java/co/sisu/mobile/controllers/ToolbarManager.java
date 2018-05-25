@@ -48,6 +48,9 @@ public class ToolbarManager {
             case "More":
                 moreButton.setImageResource(R.drawable.more_icon_active);
                 break;
+            case "Feedback":
+                moreButton.setImageResource(R.drawable.more_icon_active);
+                break;
         }
     }
 }
