@@ -106,10 +106,6 @@ public class ActionBarManager {
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public List<TeamObject> getTeamList() {
-        return teamsList;
-    }
-
     public int getSelectedTeamId() {
         int teamId = -1;
         if(teamsList != null) {

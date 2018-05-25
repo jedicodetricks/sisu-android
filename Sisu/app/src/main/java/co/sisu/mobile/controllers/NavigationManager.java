@@ -282,10 +282,6 @@ public class NavigationManager {
         actionBarManager.closeDrawer();
     }
 
-    public List<TeamObject> getTeamList() {
-        return actionBarManager.getTeamList();
-    }
-
     public void setSelectedClient(ClientObject selectedClient) {
         this.selectedClient = selectedClient;
     }
