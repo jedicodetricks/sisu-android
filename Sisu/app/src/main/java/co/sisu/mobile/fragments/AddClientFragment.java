@@ -34,6 +34,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
 
 import static android.app.Activity.RESULT_OK;
@@ -48,14 +49,15 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
-    Button signedClear, contractClear, settlementClear, appointmentClear;
-    String typeSelected;
-    int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
-    int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
-    int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
-    int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-    int counter;
-    ParentActivity parentActivity;
+    private Button signedClear, contractClear, settlementClear, appointmentClear;
+    private String typeSelected;
+    private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
+    private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
+    private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
+    private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    private int counter;
+    private ParentActivity parentActivity;
+    private DataController dataController;
     private String currentStatus;
 
     @Override
@@ -67,6 +69,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
         counter = 1;
         initializeButtons();
         initializeForm();
@@ -334,7 +337,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
-        new AsyncAddClient(this, parentActivity.getAgentInfo().getAgent_id(), newClient, parentActivity.getJwtObject()).execute();
+        new AsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient, null).execute();
     }
 
     private String getFormattedDate(String incomingDate) {

@@ -55,19 +55,17 @@ import co.sisu.mobile.models.UpdateActivitiesModel;
 
 public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener {
 
-    DataController dataController;
-    NavigationManager navigationManager;
-    ProgressBar parentLoader;
-
-    String currentSelectedRecordDate = "";
+    private DataController dataController;
+    private NavigationManager navigationManager;
+    private ProgressBar parentLoader;
+    private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean settingsFinished = false;
     private String timeline = "month";
     private int timelineSelection = 4;
-
-    AgentModel agent;
-    ErrorMessageFragment errorFragment;
+    private AgentModel agent;
+    private ErrorMessageFragment errorFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +155,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getJwtObject()).execute();
+        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, null).execute();
     }
 
     @Override
@@ -244,10 +242,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
-            clearUpdatedRecords();
+            dataController.clearUpdatedRecords();
         }
         else if(asyncReturnType.equals("Clients")) {
-            setClientsObject(returnObject);
+            dataController.setClientListObject(returnObject);
             clientFinished = true;
             navigateToScoreboard();
         }
@@ -264,26 +262,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     // GETTERS AND SETTERS
 
-    public void setActivitiesObject(Object returnObject) {
-        dataController.setActivitiesObject(returnObject);
-    }
-
-    public void setScoreboardActivities(Object returnObject) {
-        dataController.setScoreboardActivities(returnObject);
-    }
-
-    public List<Metric> getActivitiesObject() {
-        return dataController.getActivitiesObject();
-    }
-
-    public List<Metric> getScoreboardObject() {
-        return dataController.getScoreboardObject();
-    }
-
-    public void setClientsObject(Object returnObject) {
-        dataController.setClientListObject(returnObject);
-    }
-
     public void setSelectedClient(ClientObject client) {
         navigationManager.setSelectedClient(client);
     }
@@ -292,83 +270,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return navigationManager.getSelectedClient();
     }
 
-    public List<ClientObject> getPipelineList() {
-        return dataController.getPipelineList();
-    }
-
-    public List<ClientObject> getSignedList() {
-        return dataController.getSignedList();
-    }
-
-    public List<ClientObject> getContractList() {
-        return dataController.getContractList();
-    }
-
-    public List<ClientObject> getClosedList() {
-        return dataController.getClosedList();
-    }
-
-    public List<ClientObject> getArchivedList() {
-        return dataController.getArchivedList();
-    }
-
-    public void setRecordUpdated(Metric metric) {
-        dataController.setRecordUpdated(metric);
-    }
-
-    public List<SettingsObject> getSettings() {
-        return dataController.getSettings();
-    }
-
-    public void setSettings(SettingsObject[] settings) {
-        dataController.setSettings(settings);
-    }
-
-    public void clearUpdatedRecords() {
-        dataController.clearUpdatedRecords();
-    }
-
     public void updateSelectedRecordDate(String formattedDate) {
         this.currentSelectedRecordDate = formattedDate;
-    }
-
-    public HashMap<String, SelectedActivities> getActivitiesSelected() {
-        return dataController.getActivitiesSelected();
-    }
-
-    public void setActivitiesSelected(SettingsObject activitiesSelected) {
-        dataController.setActivitiesSelected(activitiesSelected);
-    }
-
-    public List<Metric> getUpdatedRecords() {
-        return dataController.getUpdatedRecords();
-    }
-
-    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
-        dataController.setAgentGoals(agentGoalsObject);
-    }
-
-    public void setAgentIncomeAndReason(AgentModel agentModel) {
-        agent.setDesired_income(agentModel.getDesired_income());
-        agent.setVision_statement(agentModel.getVision_statement());
-    }
-
-    public void setAgent(AgentModel agentModel) {
-        agentModel.setAgentGoalsObject(agent.getAgentGoalsObject());
-        this.agent = agentModel;
-        dataController.setAgent(agentModel);
-    }
-
-    public JWTObject getJwtObject() {
-        return null;
-    }
-
-    public void setRecordObject(Object returnObject) {
-        dataController.setRecordActivities(returnObject);
-    }
-
-    public List<Metric> getRecordObject() {
-        return dataController.getRecordActivities();
     }
 
     public String getTimeline() {
@@ -387,10 +290,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.timelineSelection = timelineSelection;
     }
 
-    public AgentModel getAgentInfo() {
-        return agent;
-    }
-
     public int getSelectedTeamId() {
         int teamId = navigationManager.getSelectedTeamId();
         return teamId;
@@ -398,5 +297,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public NavigationManager getNavigationManager() {
         return navigationManager;
+    }
+
+    public DataController getDataController() {
+        return dataController;
     }
 }

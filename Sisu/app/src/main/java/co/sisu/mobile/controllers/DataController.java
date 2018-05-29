@@ -934,4 +934,9 @@ public class DataController {
         SettingsObject activites = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
         return  activites;
     }
+
+    public void setAgentIncomeAndReason(AgentModel agentModel) {
+        agent.setDesired_income(agentModel.getDesired_income());
+        agent.setVision_statement(agentModel.getVision_statement());
+    }
 }

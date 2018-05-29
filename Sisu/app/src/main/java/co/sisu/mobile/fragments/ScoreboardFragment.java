@@ -29,6 +29,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
@@ -40,6 +41,7 @@ import co.sisu.mobile.utils.CircularProgressBar;
 public class ScoreboardFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     private ParentActivity parentActivity;
+    private DataController dataController;
     private NavigationManager navigationManager;
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
@@ -84,6 +86,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
         loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
@@ -99,7 +102,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             closedVolume = 0;
 
             //Pending
-            List<ClientObject> underContractClients = parentActivity.getContractList();
+            List<ClientObject> underContractClients = dataController.getContractList();
             for(ClientObject co : underContractClients) {
                 pendingVolume += Integer.valueOf(co.getTrans_amt());
             }
@@ -110,7 +113,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
 
             //Closed
-            List<ClientObject> closedClients = parentActivity.getClosedList();
+            List<ClientObject> closedClients = dataController.getClosedList();
             for(ClientObject co : closedClients) {
 
                 if(insideSelectedTimeRange(co.getClosed_dt())) {
@@ -307,7 +310,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getJwtObject()).execute();
+                new AsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, null).execute();
 
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
@@ -680,13 +683,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setScoreboardActivities(returnObject);
-            parentActivity.setActivitiesObject(returnObject);
+            dataController.setScoreboardActivities(returnObject);
+            dataController.setActivitiesObject(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    animateProgressBars(parentActivity.getScoreboardObject());
+                    animateProgressBars(dataController.getScoreboardObject());
                     calculateVolumes();
                 }
             });

@@ -21,6 +21,7 @@ import co.sisu.mobile.adapters.ActivityListAdapter;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
@@ -35,10 +36,11 @@ import co.sisu.mobile.models.UpdateSettingsObject;
 public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
 
     private ListView mListView;
-    ParentActivity parentActivity;
-    NavigationManager  navigationManager;
-    List<SelectedActivities> selectedActivities;
-    ProgressBar loader;
+    private ParentActivity parentActivity;
+    private NavigationManager  navigationManager;
+    private DataController dataController;
+    private List<SelectedActivities> selectedActivities;
+    private ProgressBar loader;
 
     public ActivitySettingsFragment() {
         // Required empty public constructor
@@ -56,16 +58,17 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
         loader = view.findViewById(R.id.activitySettingsLoader);
         initializeButtons();
 //        initializeListView();
         loader.setVisibility(View.VISIBLE);
-        new AsyncActivitySettings(this, parentActivity.getAgentInfo().getAgent_id(), parentActivity.getJwtObject()).execute();
+        new AsyncActivitySettings(this, dataController.getAgent().getAgent_id(), null).execute();
     }
 
     private void setupFieldsWithData() {
         Log.e("SETUP WITH DATA", "YEP");
-        HashMap<String, SelectedActivities> activitiesSelected = parentActivity.getActivitiesSelected();
+        HashMap<String, SelectedActivities> activitiesSelected = dataController.getActivitiesSelected();
         selectedActivities = new ArrayList<>();
 
         for ( String key : activitiesSelected.keySet() ) {
@@ -124,7 +127,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void saveSettings() {
-        new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities), parentActivity.getJwtObject()).execute();
+        new AsyncUpdateActivitySettings(this, createUpdateObject(selectedActivities), null).execute();
 
     }
 
@@ -141,7 +144,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         valueString += "}";
         List<UpdateSettingsObject> list = new ArrayList<>();
         list.add(new UpdateSettingsObject("record_activities", valueString, 7));
-        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), list);
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), list);
         return asyncUpdateSettingsJsonObject;
     }
 
@@ -150,7 +153,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         if(asyncReturnType.equals("Activity Settings")) {
             AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
             SettingsObject settings = settingsJson.getParameter();
-            parentActivity.setActivitiesSelected(settings);
+            dataController.setActivitiesSelected(settings);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

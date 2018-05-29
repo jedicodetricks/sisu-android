@@ -40,18 +40,18 @@ import co.sisu.mobile.models.LeaderboardObject;
  */
 public class LeaderboardFragment extends Fragment implements AsyncServerEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
-    LeaderboardListExpandableAdapter listAdapter;
-    ExpandableListView expListView;
-    List<LeaderboardObject> listDataHeader;
-    HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
-    ProgressBar loader;
-    Calendar calendar = Calendar.getInstance();
-    ParentActivity parentActivity;
-    Switch leaderboardToggle;
-    int selectedYear = 0;
-    int selectedMonth = 0;
-    int selectedDay = 0;
-    int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
+    private LeaderboardListExpandableAdapter listAdapter;
+    private ExpandableListView expListView;
+    private List<LeaderboardObject> listDataHeader;
+    private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
+    private ProgressBar loader;
+    private Calendar calendar = Calendar.getInstance();
+    private ParentActivity parentActivity;
+    private Switch leaderboardToggle;
+    private int selectedYear = 0;
+    private int selectedMonth = 0;
+    private int selectedDay = 0;
+    private int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
     private int colorCounter = 0;
 
     public LeaderboardFragment() {
@@ -151,10 +151,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
             if(leaderboardToggle.isChecked()) {
                 //Year selected
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "", parentActivity.getJwtObject()).execute();
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "", null).execute();
             }
             else {
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth, parentActivity.getJwtObject()).execute();
+                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth, null).execute();
             }
         }
 

@@ -27,9 +27,9 @@ import co.sisu.mobile.system.SaveSharedPreference;
 public class MoreFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView mListView;
-    DataController dataController;
-    ParentActivity parentActivity;
-    NavigationManager navigationManager;
+    private DataController dataController;
+    private ParentActivity parentActivity;
+    private NavigationManager navigationManager;
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -39,7 +39,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        dataController = new DataController();
+
         View toReturn = inflater.inflate(R.layout.activity_more, container, false);
         return toReturn;
 
@@ -48,6 +48,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
         initializeListView();
     }
 

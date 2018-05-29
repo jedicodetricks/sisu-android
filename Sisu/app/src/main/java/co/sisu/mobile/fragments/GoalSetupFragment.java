@@ -27,6 +27,7 @@ import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateGoals;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
@@ -40,10 +41,11 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
  */
 public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
-    EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
-    ParentActivity parentActivity;
-    NavigationManager navigationManager;
-    TextView activityTitle, saveButton;
+    private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private NavigationManager navigationManager;
+    private TextView activityTitle, saveButton;
     private boolean dateSwap;
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
@@ -51,7 +53,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private AgentGoalsObject[] currentGoalsObject;
     private String income = "";
     private String reason = "";
-    ProgressBar loader;
+    private ProgressBar loader;
     private boolean agentUpdating = false;
     private boolean goalsUpdated;
     private boolean agentUpdated;
@@ -75,19 +77,20 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
         updatedGoals = new HashMap<>();
         initFields();
         initEditText();
         initSwitchAndButtons();
         loader = view.findViewById(R.id.goalLoader);
         loader.setVisibility(View.VISIBLE);
-        agent = parentActivity.getAgentInfo();
+        agent = dataController.getAgent();
         goalsUpdated = false;
         agentUpdated = false;
         income = "";
         reason = "";
-        new AsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
-        new AsyncAgent(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
+        new AsyncAgentGoals(this, agent.getAgent_id(), null).execute();
+        new AsyncAgent(this, agent.getAgent_id(), null).execute();
     }
 
     private void initSwitchAndButtons() {
@@ -335,10 +338,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array), parentActivity.getJwtObject()).execute();
+                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array), null).execute();
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    new AsyncUpdateAgent(this, agent.getAgent_id(), income, reason, parentActivity.getJwtObject()).execute();
+                    new AsyncUpdateAgent(this, agent.getAgent_id(), income, reason, null).execute();
                 }
                 break;
         }
@@ -357,7 +360,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         else if(asyncReturnType.equals("Goals")) {
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            parentActivity.setAgentGoals(agentGoalsObject);
+            dataController.setAgentGoals(agentGoalsObject);
             goalsUpdated = true;
             if(agentUpdated) {
                 setupFieldsWithGoalData();
@@ -373,8 +376,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         else if(asyncReturnType.equals("Get Agent")) {
             AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
             AgentModel agentModel = agentJsonObject.getAgent();
-            parentActivity.setAgentIncomeAndReason(agentModel);
-            agent = parentActivity.getAgentInfo();
+            dataController.setAgentIncomeAndReason(agentModel);
+            agent = dataController.getAgent();
             agentUpdated = true;
             if(goalsUpdated) {
                 setupFieldsWithGoalData();

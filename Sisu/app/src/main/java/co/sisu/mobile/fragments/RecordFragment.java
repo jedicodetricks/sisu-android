@@ -25,6 +25,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
@@ -37,12 +38,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
 
     private ListView mListView;
-    int selectedYear, selectedMonth, selectedDay;
-    List<Metric> metricList;
-    ParentActivity parentActivity;
-    NavigationManager navigationManager;
-    Calendar calendar = Calendar.getInstance();
-    ProgressBar loader;
+    private int selectedYear, selectedMonth, selectedDay;
+    private List<Metric> metricList;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private NavigationManager navigationManager;
+    private Calendar calendar = Calendar.getInstance();
+    private ProgressBar loader;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -64,9 +66,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), d, d, parentActivity.getJwtObject()).execute();
+        new AsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, null).execute();
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -178,7 +181,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        new AsyncActivities(this, parentActivity.getAgentInfo().getAgent_id(), formattedDate, formattedDate, parentActivity.getJwtObject()).execute();
+        new AsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, null).execute();
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -203,7 +206,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void saveRecords() {
-        if(parentActivity.getUpdatedRecords().size() > 0) {
+        if(dataController.getUpdatedRecords().size() > 0) {
             parentActivity.updateRecordedActivities();
             parentActivity.showToast("Records Saved");
         }
@@ -215,8 +218,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onNumberChanged(Metric metric, int newNum) {
-                metric.setCurrentNum(newNum);
-                parentActivity.setRecordUpdated(metric);
+        metric.setCurrentNum(newNum);
+        dataController.setRecordUpdated(metric);
     }
 
     @Override
@@ -240,13 +243,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setActivitiesObject(returnObject);
-            parentActivity.setRecordObject(returnObject);
+            dataController.setActivitiesObject(returnObject);
+            dataController.setRecordActivities(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    metricList = parentActivity.getRecordObject();
+                    metricList = dataController.getRecordActivities();
                     initializeListView(metricList);
                 }
             });

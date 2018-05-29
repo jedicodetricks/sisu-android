@@ -33,24 +33,25 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateClients;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
-    ParentActivity parentActivity;
-    ProgressBar loader;
-    ClientObject currentClient;
+    private ParentActivity parentActivity;
+    private ProgressBar loader;
+    private ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
-    Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
-    int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
-    int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
-    int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
-    int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-    String typeSelected, clientStatus;
-    String statusList = "pipeline";
-    int counter;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
+    private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
+    private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
+    private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
+    private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    private String typeSelected, clientStatus;
+    private String statusList = "pipeline";
+    private int counter;
 
     public ClientEditFragment() {
         // Required empty public constructor
@@ -438,7 +439,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void saveClient(){
-        new AsyncUpdateClients(this, currentClient, parentActivity.getJwtObject()).execute();
+        new AsyncUpdateClients(this, currentClient, null).execute();
     }
 
     private void initializeButtons(){
@@ -537,59 +538,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
     }
 
-//    private void updateStatus() {
-//        Date d = null;
-//        Calendar currentTime = Calendar.getInstance();
-//        Calendar updatedTime = Calendar.getInstance();
-//
-//        if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
-//            getTime(d, updatedTime, settlementDisplay);
-//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-//                resetAllStatusColors();
-//                activateStatusColor(closedStatus);
-////                removeStatusColor(underContractStatus);
-//            }
-//            else {
-////                removeStatusColor(closedStatus);
-//                //resetAllStatusColors();
-//            }
-//
-//        } else if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
-//            getTime(d, updatedTime, contractDisplay);
-//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-//                resetAllStatusColors();
-//                activateStatusColor(underContractStatus);
-////                removeStatusColor(signedStatus);
-//            }
-//            else {
-////                removeStatusColor(underContractStatus);
-//                //resetAllStatusColors();
-//            }
-//
-//        } else if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
-//            getTime(d, updatedTime, signedDisplay);
-//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-//                resetAllStatusColors();
-//                activateStatusColor(signedStatus);
-////                removeStatusColor(pipelineStatus);
-//            }
-//            else {
-////                removeStatusColor(signedStatus);
-//                //resetAllStatusColors();
-//            }
-//
-//        } else if(appointmentDisplay.getText().toString().matches(".*\\d+.*")){
-//            getTime(d, updatedTime, appointmentDisplay);
-//            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-//                activateStatusColor(pipelineStatus);
-//            }
-//            else {
-////                removeStatusColor(pipelineStatus);
-//                //resetAllStatusColors();
-//            }
-//        }
-//    }
-
     private void getTime(Date d, Calendar updatedTime, TextView displayView) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
 
@@ -676,7 +624,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        //initializeClient();
         loader.setVisibility(View.GONE);
 //        parentActivity.navigateToClientList(statusList, null);
         parentActivity.runOnUiThread(new Runnable() {
