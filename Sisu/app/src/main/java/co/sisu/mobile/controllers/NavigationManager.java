@@ -97,6 +97,10 @@ public class NavigationManager {
             fragmentTag = "Settings";
             actionBarManager.swapToSaveAction("Settings");
         }
+        else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
+            fragmentTag = "ClientEdit";
+            actionBarManager.swapToSaveAction(null);
+        }
     }
 
     private void sortTitleBar(Class fragmentClass) {
