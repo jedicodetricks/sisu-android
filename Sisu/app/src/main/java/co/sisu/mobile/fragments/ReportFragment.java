@@ -24,6 +24,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
@@ -36,6 +37,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private ListView mListView;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
     private int selectedStartDay = 0;
@@ -67,6 +69,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         initializeListView();
         initializeTimelineSelector();
@@ -212,7 +215,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
                 String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                new AsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, null).execute();
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override

@@ -29,6 +29,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateSettings;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
@@ -51,14 +52,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private String selectedPeriod;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private PendingIntent pendingIntent;
     private List<SettingsObject> settings;
 
     public SettingsFragment() {
         // Required empty public constructor
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +66,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_settings, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -300,7 +301,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
 
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
-        new AsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject, null).execute();
+        apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject);
 
         createNotificationAlarm();
 

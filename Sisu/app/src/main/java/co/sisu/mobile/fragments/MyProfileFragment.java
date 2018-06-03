@@ -47,6 +47,7 @@ import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
@@ -67,6 +68,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
+    private ApiManager apiManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
@@ -94,12 +96,13 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         agent = dataController.getAgent();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
-        new AsyncAgent(this, agent.getAgent_id(), null).execute();
-        new AsyncProfileImage(this, dataController.getAgent().getAgent_id(), null).execute();
+        apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
     }
 
     private void initFields() {
@@ -218,7 +221,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private void saveProfile() {
         if(imageChanged) {
             AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject = new AsyncUpdateProfileImageJsonObject(imageData, dataController.getAgent().getAgent_id(), "3", imageFormat);
-            new AsyncUpdateProfileImage(this, asyncUpdateProfileImageJsonObject, null).execute();
+            apiManager.sendAsyncUpdateProfileImage(this, dataController.getAgent().getAgent_id(), asyncUpdateProfileImageJsonObject);
         }
 
         HashMap<String, String> changedFields = new HashMap<>();
@@ -240,7 +243,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
 
         if(changedFields.size() > 0) {
-            new AsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields, null).execute();
+            apiManager.sendAsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields);
         }
         else {
             if(!imageChanged) {

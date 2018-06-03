@@ -25,6 +25,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -39,6 +40,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     private TextView total;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ProgressBar loader;
     private List<ClientObject> currentList = new ArrayList<>();
@@ -76,9 +78,10 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         AgentModel agent = dataController.getAgent();
         initializeTabView();
-        new AsyncClients(this, agent.getAgent_id(), null).execute();
+        apiManager.sendAsyncClients(this, agent.getAgent_id());
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);

@@ -16,6 +16,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 
 /**
@@ -26,6 +27,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private EditText feedback;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -47,6 +49,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         Button feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
@@ -74,7 +77,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void sendFeedback(String feedback){
-        new AsyncFeedback(this, dataController.getAgent().getAgent_id(), feedback, null).execute();
+        apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), feedback);
     }
 
     @Override

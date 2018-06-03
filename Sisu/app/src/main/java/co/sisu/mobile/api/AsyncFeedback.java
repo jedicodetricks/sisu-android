@@ -19,49 +19,19 @@ import okhttp3.Response;
  * Created by Brady Groharing on 4/21/2018.
  */
 
-public class AsyncFeedback extends AsyncTask<Void, Void, Void> {
-    private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
+public class AsyncFeedback extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     String agentId, feedback;
-//    private JWTObject jwtObject;
 
-    public AsyncFeedback (AsyncServerEventListener cb, String agentId, String feedback, JWTObject jwtObject) {
+    public AsyncFeedback (AsyncServerEventListener cb, String agentId, String feedback) {
         callback = cb;
         this.agentId = agentId;
         this.feedback = feedback;
-//        this.jwtObject = jwtObject;
-    }
-
-    public String getJWT(String transactionID, Calendar time, String timestamp, Calendar expTime) {
-
-        String jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(time.getTime())
-                .setExpiration(expTime.getTime())
-//                .claim("iat", time)
-//                .claim("exp", expTime)
-                .claim("Transaction-Id", transactionID)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-
-        return jwtStr;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-
-        String transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        String timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-        String jwt = getJWT(transactionID, date, timestamp, expDate);
-
+    protected String doInBackground(String... strings) {
         Response response = null;
 
         MediaType mediaType = MediaType.parse("application/json");
@@ -72,9 +42,9 @@ public class AsyncFeedback extends AsyncTask<Void, Void, Void> {
         Request request = new Request.Builder()
                 .url("https://api.sisu.co/api/v1/feedback/add-feedback/" + agentId)
                 .post(body)
-                .addHeader("Authorization", jwt)
-                .addHeader("Client-Timestamp", timestamp)
-                .addHeader("Transaction-Id", transactionID)
+                .addHeader("Authorization", strings[0])
+                .addHeader("Client-Timestamp", strings[1])
+                .addHeader("Transaction-Id", strings[2])
                 .build();
         try {
             response = client.newCall(request).execute();
@@ -85,7 +55,7 @@ public class AsyncFeedback extends AsyncTask<Void, Void, Void> {
             callback.onEventCompleted(null, "Feedback");
         }
         else {
-            callback.onEventFailed(null, "Server Ping");
+            callback.onEventFailed(null, "Feedback");
         }
         response.body().close();
         return null;

@@ -33,12 +33,15 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateClients;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
     private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
     private ProgressBar loader;
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
@@ -71,6 +74,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void onViewCreated(View view, Bundle savedInstanceState) {
         loader = view.findViewById(R.id.clientLoader);
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
@@ -439,7 +444,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void saveClient(){
-        new AsyncUpdateClients(this, currentClient, null).execute();
+        apiManager.sendAsyncUpdateClients(this, dataController.getAgent().getAgent_id(), currentClient);
     }
 
     private void initializeButtons(){

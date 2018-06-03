@@ -18,16 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.api.AsyncAgentGoals;
-import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncSettings;
-import co.sisu.mobile.api.AsyncTeams;
-import co.sisu.mobile.api.AsyncUpdateActivities;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
@@ -42,9 +37,7 @@ import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -57,6 +50,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private DataController dataController;
     private NavigationManager navigationManager;
+    private ApiManager apiManager;
     private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -74,14 +68,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         dataController = new DataController();
         navigationManager = new NavigationManager(this);
+        apiManager = new ApiManager();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
         parentLoader = findViewById(R.id.parentLoader);
 
         initializeButtons();
-        new AsyncTeams(this, agent.getAgent_id(), null).execute();
-        new AsyncClients(this, agent.getAgent_id(), null).execute();
+        apiManager.sendAsyncTeams(this, agent.getAgent_id());
+        apiManager.sendAsyncClients(this, agent.getAgent_id());
     }
 
     private void initializeButtons(){
@@ -155,7 +150,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        new AsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, null).execute();
+        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject);
     }
 
     @Override
@@ -222,8 +217,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    new AsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), null).execute();
-                    new AsyncSettings(ParentActivity.this, agent.getAgent_id(), null).execute();
+                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
+                    apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
             });
         }
@@ -301,5 +296,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public DataController getDataController() {
         return dataController;
+    }
+
+    public ApiManager getApiManager() {
+        return apiManager;
     }
 }

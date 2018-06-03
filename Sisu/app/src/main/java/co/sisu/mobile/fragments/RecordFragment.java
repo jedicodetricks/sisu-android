@@ -25,6 +25,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
@@ -42,6 +43,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private List<Metric> metricList;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private NavigationManager navigationManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
@@ -67,9 +69,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        new AsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, null).execute();
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d);
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -181,7 +184,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        new AsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, null).execute();
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate);
         loader.setVisibility(View.VISIBLE);
     }
 

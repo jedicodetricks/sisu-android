@@ -31,6 +31,8 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
@@ -47,6 +49,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ProgressBar loader;
     private Calendar calendar = Calendar.getInstance();
     private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -69,6 +73,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
@@ -151,10 +157,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
             if(leaderboardToggle.isChecked()) {
                 //Year selected
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "", null).execute();
+                apiManager.sendAsyncLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
             }
             else {
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth, null).execute();
+                apiManager.sendAsyncLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
             }
         }
 

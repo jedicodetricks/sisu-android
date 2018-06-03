@@ -27,8 +27,8 @@ import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
@@ -43,6 +43,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
+    private ApiManager apiManager;
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
     private int selectedStartDay = 0;
@@ -87,6 +88,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
@@ -310,8 +312,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                new AsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, null).execute();
-
+                apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
 

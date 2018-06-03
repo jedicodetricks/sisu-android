@@ -34,6 +34,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.ClientObject;
 
@@ -58,6 +59,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private int counter;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private String currentStatus;
 
     @Override
@@ -70,6 +72,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         counter = 1;
         initializeButtons();
         initializeForm();
@@ -337,7 +340,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
-        new AsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient, null).execute();
+        apiManager.sendAsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient);
     }
 
     private String getFormattedDate(String incomingDate) {

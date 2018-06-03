@@ -15,6 +15,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.MorePageContainer;
@@ -30,6 +31,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private DataController dataController;
     private ParentActivity parentActivity;
     private NavigationManager navigationManager;
+
     public MoreFragment() {
         // Required empty public constructor
     }

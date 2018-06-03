@@ -27,6 +27,7 @@ import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateGoals;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
@@ -44,6 +45,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private ApiManager apiManager;
     private NavigationManager navigationManager;
     private TextView activityTitle, saveButton;
     private boolean dateSwap;
@@ -78,6 +80,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         updatedGoals = new HashMap<>();
         initFields();
         initEditText();
@@ -89,8 +92,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        new AsyncAgentGoals(this, agent.getAgent_id(), null).execute();
-        new AsyncAgent(this, agent.getAgent_id(), null).execute();
+        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
+        apiManager.sendAsyncAgent(this, agent.getAgent_id());
     }
 
     private void initSwitchAndButtons() {
@@ -338,10 +341,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                new AsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array), null).execute();
+                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array));
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    new AsyncUpdateAgent(this, agent.getAgent_id(), income, reason, null).execute();
+                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), income, reason);
                 }
                 break;
         }
