@@ -16,7 +16,7 @@ import okhttp3.Response;
  * Created by Brady Groharing on 3/21/2018.
  */
 
-public class AsyncSignUp extends AsyncTask<Void, Void, Void> {
+public class AsyncSignUp extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     String email, phone, firstName, lastName, password;
     JWTObject jwt;
@@ -33,7 +33,7 @@ public class AsyncSignUp extends AsyncTask<Void, Void, Void> {
 
     //Test: bg@test.com asdf123
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected String doInBackground(String... strings) {
         Response response = null;
 
         MediaType mediaType = MediaType.parse("application/json");

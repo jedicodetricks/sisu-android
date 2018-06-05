@@ -25,65 +25,31 @@ import okhttp3.Response;
  * Created by Brady Groharing on 4/8/2018.
  */
 
-public class AsyncActivities extends AsyncTask<Void, Void, Void> {
-
-    private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
+public class AsyncActivities extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
     private String startDate;
     private String endDate;
-//    private JWTObject jwt;
 
-//    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String agentId, JWTObject jwtObject) {
-//        callback = cb;
-//        this.agentId = agentId;
-//        jwt = jwtObject;
-//    }
-
-    public AsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, JWTObject jwtObject) {
+    public AsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
         callback = cb;
         this.agentId = agentId;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.startDate = formatter.format(startDate);
         this.endDate = formatter.format(endDate);
-//        jwt = jwtObject;
     }
 
-    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String formattedEndTime, JWTObject jwtObject) {
+    public AsyncActivities(AsyncServerEventListener cb, String agent_id, String formattedStartTime, String formattedEndTime) {
         callback = cb;
         this.agentId = agent_id;
         this.startDate = formattedStartTime;
         this.endDate = formattedEndTime;
-//        jwt = jwtObject;
-    }
-
-    public String getJWT(String transactionID, Calendar time, String timestamp, Calendar expTime) {
-
-        String jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(time.getTime())
-                .setExpiration(expTime.getTime())
-                .claim("Transaction-Id", transactionID)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-
-        return jwtStr;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        String transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        String timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-        String jwt = getJWT(transactionID, date, timestamp, expDate);
-
+    protected String doInBackground(String... strings) {
+//        Log.e("PARAMS", strings[0] + " " + strings[1] + " " + strings[2] + " ||END");
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
@@ -96,10 +62,10 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
             Request request = new Request.Builder()
                     .url("https://api.sisu.co/api/v1/agent/activity/" + agentId)
                     .post(body)
-                    .addHeader("Authorization", jwt)
-                    .addHeader("Client-Timestamp", timestamp)
+                    .addHeader("Authorization", strings[0])
+                    .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", transactionID)
+                    .addHeader("Transaction-Id", strings[2])
                     .build();
 
             try {
@@ -119,7 +85,6 @@ public class AsyncActivities extends AsyncTask<Void, Void, Void> {
                 callback.onEventFailed(null, "Activities");
             }
 
-            response.body().close();
         } catch (Exception e) {
             e.printStackTrace();
         }

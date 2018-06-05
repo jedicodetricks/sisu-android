@@ -27,8 +27,10 @@ import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
@@ -38,23 +40,25 @@ import co.sisu.mobile.utils.CircularProgressBar;
  */
 public class ScoreboardFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
-    ParentActivity parentActivity;
-    int selectedStartYear = 0;
-    int selectedStartMonth = 0;
-    int selectedStartDay = 0;
-    int selectedEndYear = 0;
-    int selectedEndMonth = 0;
-    int selectedEndDay = 0;
-    Calendar calendar = Calendar.getInstance();
-    Date selectedStartTime;
-    Date selectedEndTime;
-    ProgressBar loader;
-    int pendingVolume = 0;
-    int closedVolume = 0;
-    boolean needsProgress;
-    boolean pastTimeline;
-//    String timeline = "day";
-    Spinner spinner;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private NavigationManager navigationManager;
+    private ApiManager apiManager;
+    private int selectedStartYear = 0;
+    private int selectedStartMonth = 0;
+    private int selectedStartDay = 0;
+    private int selectedEndYear = 0;
+    private int selectedEndMonth = 0;
+    private int selectedEndDay = 0;
+    private Calendar calendar = Calendar.getInstance();
+    private Date selectedStartTime;
+    private Date selectedEndTime;
+    private ProgressBar loader;
+    private int pendingVolume = 0;
+    private int closedVolume = 0;
+    private boolean needsProgress;
+    private boolean pastTimeline;
+    private Spinner spinner;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -82,6 +86,9 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
@@ -97,7 +104,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             closedVolume = 0;
 
             //Pending
-            List<ClientObject> underContractClients = parentActivity.getContractList();
+            List<ClientObject> underContractClients = dataController.getContractList();
             for(ClientObject co : underContractClients) {
                 pendingVolume += Integer.valueOf(co.getTrans_amt());
             }
@@ -108,7 +115,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
 
             //Closed
-            List<ClientObject> closedClients = parentActivity.getClosedList();
+            List<ClientObject> closedClients = dataController.getClosedList();
             for(ClientObject co : closedClients) {
 
                 if(insideSelectedTimeRange(co.getClosed_dt())) {
@@ -305,8 +312,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                new AsyncActivities(ScoreboardFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getJwtObject()).execute();
-
+                apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
 
@@ -664,12 +670,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void navigateToClientList(String tabName){
-        parentActivity.navigateToClientList(tabName, null);
+        navigationManager.navigateToClientList(tabName);
     }
 
     private void launchAddClient() {
-        parentActivity.stackReplaceFragment(AddClientFragment.class);
-        parentActivity.swapToAddClientBar("scoreboard");
+        navigationManager.stackReplaceFragment(AddClientFragment.class);
+//        navigationManager.swapToAddClientBar();
 //        Intent intent = new Intent(getContext(), AddClientActivity.class);
 //        intent.putExtra("Agent", parentActivity.getAgentInfo());
 //        startActivity(intent);
@@ -678,13 +684,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setScoreboardActivities(returnObject);
-            parentActivity.setActivitiesObject(returnObject);
+            dataController.setScoreboardActivities(returnObject);
+            dataController.setActivitiesObject(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    animateProgressBars(parentActivity.getScoreboardObject());
+                    animateProgressBars(dataController.getScoreboardObject());
                     calculateVolumes();
                 }
             });

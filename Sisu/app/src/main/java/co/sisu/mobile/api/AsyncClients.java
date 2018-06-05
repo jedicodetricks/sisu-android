@@ -20,46 +20,18 @@ import okhttp3.Response;
  * Created by Brady Groharing on 4/8/2018.
  */
 
-public class AsyncClients extends AsyncTask<Void, Void, Void> {
-    private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
+public class AsyncClients extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-//    private JWTObject jwtObject;
 
-    public AsyncClients (AsyncServerEventListener cb, String agentId, JWTObject jwtObject) {
+    public AsyncClients (AsyncServerEventListener cb, String agentId) {
         callback = cb;
         this.agentId = agentId;
-//        this.jwtObject = jwtObject;
-    }
-
-    public String getJWT(String transactionID, Calendar time, String timestamp, Calendar expTime) {
-
-        String jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(time.getTime())
-                .setExpiration(expTime.getTime())
-//                .claim("iat", time)
-//                .claim("exp", expTime)
-                .claim("Transaction-Id", transactionID)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-
-        return jwtStr;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        String transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        String timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-        String jwt = getJWT(transactionID, date, timestamp, expDate);
+    protected String doInBackground(String... strings) {
 
         try {
             Response response = null;
@@ -69,10 +41,10 @@ public class AsyncClients extends AsyncTask<Void, Void, Void> {
             Request request = new Request.Builder()
                     .url("https://api.sisu.co/api/v1/agent/get-clients/" + agentId)
                     .get()
-                    .addHeader("Authorization", jwt)
-                    .addHeader("Client-Timestamp", timestamp)
+                    .addHeader("Authorization", strings[0])
+                    .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", transactionID)
+                    .addHeader("Transaction-Id", strings[2])
                     .build();
 
             try {
