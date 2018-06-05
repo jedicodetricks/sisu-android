@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -72,9 +73,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
-    private EditText username, firstName, lastName, phone, password;
+    private EditText username, firstName, lastName, phone;
     private String imageData, imageFormat;
-    //ProfileObject currentProfile;
+    private Button passwordButton;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -114,11 +115,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         lastName.setOnFocusChangeListener(this);
         phone = getView().findViewById(R.id.profilePhone);
         phone.setOnFocusChangeListener(this);
-        password = getView().findViewById(R.id.profilePassword);
-        password.setOnFocusChangeListener(this);
         profileImage.setVisibility(View.INVISIBLE);
         imageLoader.setVisibility(View.VISIBLE);
-        password.setTransformationMethod(new PasswordTransformationMethod());//this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
     }
 
@@ -134,7 +132,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 if(agentPhone != null) {
                     phone.setText(PhoneNumberUtils.formatNumber(agentPhone, Locale.getDefault().getCountry()));
                 }
-                password.setText("***********");
             }
         });
 
@@ -143,6 +140,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private void initButtons() {
         profileImage = getView().findViewById(R.id.profileImage);
         profileImage.setOnClickListener(this);
+        passwordButton = getView().findViewById(R.id.passwordButton);
+        passwordButton.setOnClickListener(this);
 
         TextView save = parentActivity.findViewById(R.id.saveButton);
         if(save != null) {
@@ -192,6 +191,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 //                parentActivity.stackReplaceFragment(MoreFragment.class);
 //                parentActivity.swapToBacktionBar("My Profile", null);
                 break;
+            case R.id.passwordButton:
+                navigationManager.stackReplaceFragment(ChangePasswordFragment.class);
+                break;
             default:
                 break;
         }
@@ -209,10 +211,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else if(phone.getText().toString().equals("")) {
             parentActivity.showToast("Phone is required");
-            isVerified = false;
-        }
-        else if(password.getText().toString().equals("")) {
-            parentActivity.showToast("Password is required");
             isVerified = false;
         }
         return isVerified;
@@ -237,9 +235,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         if(!phone.getText().toString().equals(agent.getMobile_phone())) {
             changedFields.put("mobile_phone", phone.getText().toString());
-        }
-        if(!password.getText().toString().equals("***********")) {
-            changedFields.put("password", password.getText().toString());
         }
 
         if(changedFields.size() > 0) {

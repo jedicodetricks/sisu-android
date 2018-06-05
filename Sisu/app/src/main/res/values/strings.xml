@@ -115,6 +115,9 @@
     <string name="closed_hint">Closed</string>
     <string name="desired_income_hint">Desired Income</string>
     <string name="goals_reason_hint">Your reason for tracking goals</string>
+    <string name="old_password_hint">Current Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_password_hint">Confirm New Password</string>
 
     <!--Helper Text-->
     <string name="error_message">We had a problem contacting our servers.  Please try again later</string>
@@ -125,6 +128,7 @@
     <string name="settings_help_text">Application settings</string>
     <string name="feedback_help_text">Provide feedback</string>
     <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
+    <string name="change_password_help_text">Please enter your old password and the password you'd like to change to</string>
     <string name="feedback_help_text_top">We are always looking for ways to improve!</string>
     <string name="feedback_help_text_bottom">Let us know how by leaving feedback below!</string>
 

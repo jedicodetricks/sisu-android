@@ -57,7 +57,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean goalsFinished = false;
     private boolean settingsFinished = false;
     private String timeline = "month";
-    private int timelineSelection = 4;
+    private int timelineSelection = 5;
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
 

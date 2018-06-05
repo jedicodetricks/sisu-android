@@ -66,7 +66,7 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
-                fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
+                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment")){
             sortTitleBar(fragmentClass);
         }
         else {
@@ -118,6 +118,9 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
             fragmentTag = "Leaderboard";
+        }
+        else if(fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
+            fragmentTag = "Change Password";
         }
         actionBarManager.swapToTitleBar(fragmentTag);
         toolbarManager.resetToolbarImages(fragmentTag);
