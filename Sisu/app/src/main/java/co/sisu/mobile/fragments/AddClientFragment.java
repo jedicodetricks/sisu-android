@@ -36,6 +36,7 @@ import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 
 import static android.app.Activity.RESULT_OK;
@@ -59,6 +60,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private int counter;
     private ParentActivity parentActivity;
     private DataController dataController;
+    private NavigationManager navigationManager;
     private ApiManager apiManager;
     private String currentStatus;
 
@@ -73,6 +75,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
         counter = 1;
         initializeButtons();
         initializeForm();
@@ -375,6 +378,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 resetAllStatusColors();
                 activateStatusColor(pipelineStatus);
+                currentStatus = "pipeline";
             }
         }
         if(signedDisplay.getText().toString().matches(".*\\d+.*")) {
@@ -382,6 +386,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 resetAllStatusColors();
                 activateStatusColor(signedStatus);
+                currentStatus = "signed";
             }
         }
         if(contractDisplay.getText().toString().matches(".*\\d+.*")) {
@@ -389,6 +394,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 resetAllStatusColors();
                 activateStatusColor(underContractStatus);
+                currentStatus = "contract";
             }
         }
         if(settlementDisplay.getText().toString().matches(".*\\d+.*")) {
@@ -396,6 +402,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 resetAllStatusColors();
                 activateStatusColor(closedStatus);
+                currentStatus = "closed";
             }
         }
     }
@@ -658,7 +665,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 @Override
                 public void run() {
                     parentActivity.showToast("Client Saved");
-                    parentActivity.onBackPressed();
+                    navigationManager.navigateToClientListAndClearStack(currentStatus);
                 }
             });
 //            parentActivity.navigateToClientList(currentStatus, null);

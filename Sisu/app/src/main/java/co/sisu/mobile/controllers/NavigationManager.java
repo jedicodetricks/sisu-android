@@ -150,8 +150,6 @@ public class NavigationManager {
             backStack.clear();
         }
         backStack.add(fragmentClass);
-        //TODO: This is supposed to handle the leaderboard so it can show the team bar.
-//        actionBarManager.initializeActionBar(fragmentTag);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
@@ -166,6 +164,25 @@ public class NavigationManager {
         }
         // Insert the fragment by replacing any existing fragment
         backStack.add(ClientListFragment.class);
+        actionBarManager.swapToClientListBar();
+        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
+
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
+        toolbarManager.resetToolbarImages("More");
+    }
+
+    public void navigateToClientListAndClearStack(String tab) {
+        Fragment fragment = null;
+        try {
+            fragment = ClientListFragment.newInstance(tab);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(backStack.size() > 0) {
+            backStack.clear();
+        }
+        backStack.add(ClientListFragment.class);
+        // Insert the fragment by replacing any existing fragment
         actionBarManager.swapToClientListBar();
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 

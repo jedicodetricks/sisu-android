@@ -173,7 +173,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
                 break;
             case R.id.addClientButton:
                 navigationManager.stackReplaceFragment(AddClientFragment.class);
-//                navigationManager.swapToAddClientBar();
                 break;
             case R.id.searchClient:
                 break;
