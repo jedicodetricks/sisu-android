@@ -25,23 +25,29 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent {
 
     private ListView mListView;
-    String searchText = "";
-    SearchView clientSearch;
-    TextView total;
-    ParentActivity parentActivity;
-    ProgressBar loader;
-    List<ClientObject> currentList = new ArrayList<>();
-    TabLayout tabLayout;
-    static String selectedTab = "pipeline";
+    private String searchText = "";
+    private SearchView clientSearch;
+    private TextView total;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
+    private NavigationManager navigationManager;
+    private ProgressBar loader;
+    private List<ClientObject> currentList = new ArrayList<>();
+    private TabLayout tabLayout;
+    private static String selectedTab = "pipeline";
     private TextView addButton;
-    ConstraintLayout contentView;
+    private ConstraintLayout contentView;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -70,9 +76,12 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         initListView();
         initSearchBar();
         parentActivity = (ParentActivity) getActivity();
-        AgentModel agent = parentActivity.getAgentInfo();
+        navigationManager = parentActivity.getNavigationManager();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
+        AgentModel agent = dataController.getAgent();
         initializeTabView();
-        new AsyncClients(this, agent.getAgent_id(), parentActivity.getJwtObject()).execute();
+        apiManager.sendAsyncClients(this, agent.getAgent_id());
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
@@ -140,8 +149,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
-        parentActivity.stackReplaceFragment(ClientEditFragment.class);
-        parentActivity.swapToBacktionBar(null, "client");
+        navigationManager.stackReplaceFragment(ClientEditFragment.class);
     }
 
     @Override
@@ -161,12 +169,11 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cancelButton:
-                getActivity().onBackPressed();
+                parentActivity.onBackPressed();
                 break;
             case R.id.addClientButton:
-                //navigate to addClient
-                parentActivity.stackReplaceFragment(AddClientFragment.class);
-                parentActivity.swapToAddClientBar("client");
+                navigationManager.stackReplaceFragment(AddClientFragment.class);
+//                navigationManager.swapToAddClientBar();
                 break;
             case R.id.searchClient:
                 break;
@@ -175,7 +182,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        parentActivity.setClientsObject(returnObject);
+        dataController.setClientListObject(returnObject);
 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
@@ -206,33 +213,33 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             switch (selectedTab.toLowerCase()) {
                 case "pipeline":
                     tabLayout.getTabAt(0).select();
-                    currentList = parentActivity.getPipelineList();
+                    currentList = dataController.getPipelineList();
                     break;
                 case "signed":
                     tabLayout.getTabAt(1).select();
-                    currentList = parentActivity.getSignedList();
+                    currentList = dataController.getSignedList();
                     break;
                 case "contract":
                     tabLayout.getTabAt(2).select();
-                    currentList = parentActivity.getContractList();
+                    currentList = dataController.getContractList();
                     break;
                 case "closed":
                     tabLayout.getTabAt(3).select();
-                    currentList = parentActivity.getClosedList();
+                    currentList = dataController.getClosedList();
                     break;
                 case "archived":
                     tabLayout.getTabAt(4).select();
-                    currentList = parentActivity.getArchivedList();
+                    currentList = dataController.getArchivedList();
                     break;
                 default:
                     tabLayout.getTabAt(0).select();
-                    currentList = parentActivity.getPipelineList();
+                    currentList = dataController.getPipelineList();
                     break;
             }
         }
         else {
             tabLayout.getTabAt(0).select();
-            currentList = parentActivity.getPipelineList();
+            currentList = dataController.getPipelineList();
         }
 
         fillListViewWithData(currentList);
@@ -249,23 +256,23 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         }
         switch ((String) tab.getText()) {
             case "Pipeline":
-                currentList = parentActivity.getPipelineList();
+                currentList = dataController.getPipelineList();
                 selectedTab = "pipeline";
                 break;
             case "Signed":
-                currentList = parentActivity.getSignedList();
+                currentList = dataController.getSignedList();
                 selectedTab = "signed";
                 break;
             case "Contract":
-                currentList = parentActivity.getContractList();
+                currentList = dataController.getContractList();
                 selectedTab = "contract";
                 break;
             case "Closed":
-                currentList = parentActivity.getClosedList();
+                currentList = dataController.getClosedList();
                 selectedTab = "closed";
                 break;
             case "Archived":
-                currentList = parentActivity.getArchivedList();
+                currentList = dataController.getArchivedList();
                 selectedTab = "archived";
                 break;
         }

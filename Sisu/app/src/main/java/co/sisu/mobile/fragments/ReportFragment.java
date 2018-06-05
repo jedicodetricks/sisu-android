@@ -24,6 +24,8 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
 
@@ -33,18 +35,19 @@ import co.sisu.mobile.models.Metric;
 public class ReportFragment extends Fragment implements AsyncServerEventListener {
 
     private ListView mListView;
-    ParentActivity parentActivity;
-    int selectedStartYear = 0;
-    int selectedStartMonth = 0;
-    int selectedStartDay = 0;
-    int selectedEndYear = 0;
-    int selectedEndMonth = 0;
-    int selectedEndDay = 0;
-    Calendar calendar = Calendar.getInstance();
-    ProgressBar loader;
-//    String timeline = "day";
-    Spinner spinner;
-    boolean pastTimeline;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
+    private int selectedStartYear = 0;
+    private int selectedStartMonth = 0;
+    private int selectedStartDay = 0;
+    private int selectedEndYear = 0;
+    private int selectedEndMonth = 0;
+    private int selectedEndDay = 0;
+    private Calendar calendar = Calendar.getInstance();
+    private ProgressBar loader;
+    private Spinner spinner;
+    private boolean pastTimeline;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -65,6 +68,8 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         initializeListView();
         initializeTimelineSelector();
@@ -210,7 +215,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
                 String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                new AsyncActivities(ReportFragment.this, parentActivity.getAgentInfo().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getJwtObject()).execute();
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -342,12 +347,12 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activities")) {
-            parentActivity.setActivitiesObject(returnObject);
+            dataController.setActivitiesObject(returnObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
-                    setData(parentActivity.getActivitiesObject());
+                    setData(dataController.getActivitiesObject());
                 }
             });
         }
