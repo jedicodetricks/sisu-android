@@ -3,10 +3,15 @@ package co.sisu.mobile.activities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
@@ -60,10 +65,17 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
         }
         else if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-            AgentModel agent = agentObject.getAgent();
-            intent = new Intent(this, ParentActivity.class);
-            intent.putExtra("Agent", agent);
-            launchActivity();
+            if(agentObject.getStatus_code().equals("-1")) {
+                showToast("Incorrect username or password");
+                intent = new Intent(this, MainActivity.class);
+                launchActivity();
+            }
+            else {
+                AgentModel agent = agentObject.getAgent();
+                intent = new Intent(this, ParentActivity.class);
+                intent.putExtra("Agent", agent);
+                launchActivity();
+            }
         }
 
     }
@@ -114,6 +126,21 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
             intent.putExtra("Network", false);
             launchActivity();
         }
+    }
 
+    public void showToast(final CharSequence msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(SplashScreenActivity.this, msg,Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                TextView text = (TextView) view.findViewById(android.R.id.message);
+                text.setTextColor(Color.WHITE);
+                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
+                view.setBackgroundResource(R.color.colorCorporateOrange);
+                text.setPadding(20, 8, 20, 8);
+                toast.show();
+            }
+        });
     }
 }

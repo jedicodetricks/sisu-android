@@ -51,7 +51,7 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
         else {
             callback.onEventFailed(null, "Server Ping");
         }
-        
+
         return null;
     }
 }
