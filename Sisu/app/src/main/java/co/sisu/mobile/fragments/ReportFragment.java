@@ -94,19 +94,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 switch (position) {
                     case 0:
-                        //Yesterday
-                        parentActivity.setTimeline("day");
-                        parentActivity.setTimelineSelection(0);
-                        pastTimeline = true;
-                        calendar.add(Calendar.DAY_OF_MONTH, -1);
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
-                    case 1:
                         //Today
                         parentActivity.setTimeline("day");
                         parentActivity.setTimelineSelection(0);
@@ -119,7 +106,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                         break;
-                    case 2:
+                    case 1:
                         //Last Week
                         parentActivity.setTimeline("week");
                         parentActivity.setTimelineSelection(1);
@@ -135,7 +122,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 3:
+                    case 2:
                         //This Week
                         parentActivity.setTimeline("week");
                         parentActivity.setTimelineSelection(2);
@@ -150,7 +137,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 4:
+                    case 3:
                         //Last Month
                         parentActivity.setTimeline("month");
                         parentActivity.setTimelineSelection(3);
@@ -164,7 +151,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 5:
+                    case 4:
                         //This Month
                         parentActivity.setTimeline("month");
                         parentActivity.setTimelineSelection(4);
@@ -177,7 +164,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 6:
+                    case 5:
                         //Last year
                         parentActivity.setTimeline("year");
                         parentActivity.setTimelineSelection(5);
@@ -191,7 +178,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = 12;
                         selectedEndDay = 31;
                         break;
-                    case 7:
+                    case 6:
                         //This year
                         parentActivity.setTimeline("year");
                         parentActivity.setTimelineSelection(6);
