@@ -41,5 +41,4 @@ dependencies {
     implementation 'testfairy:testfairy-android-sdk:1.+@aar'
     implementation 'com.github.drawers:SpinnerDatePicker:1.0.6'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
-
 }
