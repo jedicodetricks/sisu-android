@@ -33,6 +33,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -260,53 +263,64 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             case SELECT_PHOTO:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
+                    // start cropping activity for pre-acquired image saved on the device
+                    CropImage.activity(selectedImage)
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .setAspectRatio(1,1)
+                            .setCropShape(CropImageView.CropShape.OVAL)
+                            .setMinCropResultSize(100,100)
+                            .setMaxCropResultSize(600,600)
+                            .start(parentActivity, this);
 
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String filePath = cursor.getString(columnIndex);
-                    cursor.close();
 
-                    int rotateImage = getCameraPhotoOrientation(parentActivity, selectedImage, filePath);
-
-                    final InputStream imageStream;
-                    try {
-                        ContentResolver cR = getContext().getContentResolver();
-                        MimeTypeMap mime = MimeTypeMap.getSingleton();
-                        String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
-                        Log.e("IMAGE TYPE", type);
-
-                        imageStream = getContext().getContentResolver().openInputStream(selectedImage);
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(rotateImage);
-                        final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
-                        Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
-                                matrix, true);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                        if(type.equalsIgnoreCase("jpeg")) {
-                            imageFormat = "2";
-                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-                        }
-                        else if(type.equalsIgnoreCase("png")) {
-                            imageFormat = "1";
-                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-                        }
-                        else {
-                            imageFormat = "1";
-                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-                        }
-
-                        byte[] b = baos.toByteArray();
-                        imageData = Base64.encodeToString(b, Base64.DEFAULT);
-
-                        profileImage.setImageBitmap(rotatedImage);
-                        imageChanged = true;
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+//                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//
+//                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+//                    cursor.moveToFirst();
+//
+//                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                    String filePath = cursor.getString(columnIndex);
+//                    cursor.close();
+//
+//                    int rotateImage = getCameraPhotoOrientation(parentActivity, selectedImage, filePath);
+//
+//                    final InputStream imageStream;
+//                    try {
+//                        ContentResolver cR = getContext().getContentResolver();
+//                        MimeTypeMap mime = MimeTypeMap.getSingleton();
+//                        String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
+//                        Log.e("IMAGE TYPE", type);
+//
+//                        imageStream = getContext().getContentResolver().openInputStream(selectedImage);
+//                        Matrix matrix = new Matrix();
+//                        matrix.postRotate(rotateImage);
+//                        final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
+//                        Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
+//                                matrix, true);
+//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//                        if(type.equalsIgnoreCase("jpeg")) {
+//                            imageFormat = "2";
+//                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+//                        }
+//                        else if(type.equalsIgnoreCase("png")) {
+//                            imageFormat = "1";
+//                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+//                        }
+//                        else {
+//                            imageFormat = "1";
+//                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+//                        }
+//
+//                        byte[] b = baos.toByteArray();
+//                        imageData = Base64.encodeToString(b, Base64.DEFAULT);
+//
+//                        profileImage.setImageBitmap(rotatedImage);
+//                        imageChanged = true;
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
 
                 }
         }

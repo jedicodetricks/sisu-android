@@ -17,6 +17,12 @@
             android:focusableInTouchMode="true"
             tools:context="co.sisu.mobile.fragments.MyProfileFragment">
 
+            <com.theartofdev.edmodo.cropper.CropImageView
+                android:id="@+id/cropImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
             <RelativeLayout
                 android:id="@+id/profileImageLayout"
                 android:layout_width="wrap_content"

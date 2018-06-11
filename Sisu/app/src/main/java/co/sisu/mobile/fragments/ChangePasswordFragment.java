@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
@@ -79,8 +81,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if(v.getId() == R.id.changePasswordSubmitButton) {
             if(areFieldsValid()) {
                 String userName = SaveSharedPreference.getUserName(parentActivity);
-                apiManager.sendAuth(this, dataController.getAgent().getAgent_id(), userName, confirmPassword.getText().toString());
-                //TODO: API calls for password changing.
+                apiManager.sendAuth(this, dataController.getAgent().getAgent_id(), userName, oldPassword.getText().toString());
             }
         }
     }
@@ -102,16 +103,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         return true;
     }
 
-    private boolean arePasswordsTheSame() {
-        if(!newPassword.getText().toString().equals("") && !confirmPassword.getText().toString().equals("")) {
-            if(newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Authenticator")) {
@@ -120,14 +111,21 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 parentActivity.showToast("Incorrect password");
             }
             else {
-                Log.e("COMPLETE", "YES");
-                //TODO: This needs to actually change the password
+                HashMap<String, String> changedFields = new HashMap<>();
+                changedFields.put("password", confirmPassword.getText().toString());
+                apiManager.sendAsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields);
             }
+        }
+        else if(asyncReturnType.equals("Update Profile")) {
+            parentActivity.showToast("Password successfully changed");
+            navigationManager.onBackPressed();
         }
     }
 
     @Override
-    public void onEventFailed(Object o, String s) {
-        //showToast("There was an error sending that request. Please try again.");
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Update Profile")) {
+            parentActivity.showToast("Issue with password change. Please try again later.");
+        }
     }
 }
