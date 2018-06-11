@@ -18,7 +18,7 @@ import okhttp3.Response;
  * Created by Brady Groharing on 4/7/2018.
  */
 
-public class AsyncForgotPassword extends AsyncTask<String, String, String> {
+public class AsyncForgotPassword extends AsyncTask<Void, Void, Void> {
     private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
 
     private AsyncServerEventListener callback;
@@ -46,7 +46,7 @@ public class AsyncForgotPassword extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Void doInBackground(Void... voids) {
 
         String transactionID = UUID.randomUUID().toString();
         Calendar date = Calendar.getInstance();
@@ -68,9 +68,9 @@ public class AsyncForgotPassword extends AsyncTask<String, String, String> {
         Request request = new Request.Builder()
                 .url("https://api.sisu.co/api/v1/forgot-password")
                 .post(body)
-                .addHeader("Authorization", strings[0])
-                .addHeader("Client-Timestamp", strings[1])
-                .addHeader("Transaction-Id", strings[2])
+                .addHeader("Authorization", jwt)
+                .addHeader("Client-Timestamp", timestamp)
+                .addHeader("Transaction-Id", transactionID)
                 .build();
         try {
             response = client.newCall(request).execute();

@@ -59,6 +59,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showToast("Password reset email will be sent");
+            }
+        });
         finish();
     }
 
