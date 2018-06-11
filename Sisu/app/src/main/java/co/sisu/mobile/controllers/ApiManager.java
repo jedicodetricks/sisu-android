@@ -12,6 +12,8 @@ import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
+import co.sisu.mobile.api.AsyncAuthenticator;
+import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
@@ -158,6 +160,11 @@ public class ApiManager {
     public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject) {
         getJWT(agentId);
         new AsyncUpdateSettings(cb, agentId, asyncUpdateSettingsJsonObject).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
+        getJWT(agentId);
+        new AsyncAuthenticatorNEW(cb, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {

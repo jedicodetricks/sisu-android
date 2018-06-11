@@ -1,5 +1,6 @@
 package co.sisu.mobile.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -18,10 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.activities.SplashScreenActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -31,6 +37,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private EditText oldPassword, newPassword, confirmPassword;
     private ParentActivity parentActivity;
+    private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
 
@@ -47,6 +54,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         initUI();
@@ -70,8 +78,9 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         if(v.getId() == R.id.changePasswordSubmitButton) {
             if(areFieldsValid()) {
-                Log.e("SAME", "SAME");
-                //TODO: API call for password changing.
+                String userName = SaveSharedPreference.getUserName(parentActivity);
+                apiManager.sendAuth(this, dataController.getAgent().getAgent_id(), userName, confirmPassword.getText().toString());
+                //TODO: API calls for password changing.
             }
         }
     }
@@ -105,8 +114,16 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        Log.e("COMPLETE", "YES");
-        //TODO: This needs to go back to My Profile
+        if(asyncReturnType.equals("Authenticator")) {
+            AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
+            if(agentObject.getStatus_code().equals("-1")) {
+                parentActivity.showToast("Incorrect password");
+            }
+            else {
+                Log.e("COMPLETE", "YES");
+                //TODO: This needs to actually change the password
+            }
+        }
     }
 
     @Override
