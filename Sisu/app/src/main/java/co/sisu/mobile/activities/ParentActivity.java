@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,7 +61,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private int timelineSelection = 5;
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
-
+    private File internalStorageFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +78,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
+//        internalStorageFile = new File(this.getFilesDir(), "images");
+//        File f = getDir("images", MODE_PRIVATE);
+//        Log.e("f", String.valueOf(f));
+//        for(String s : fileList()) {
+//            Log.e("FILES", s);
+//        }
     }
 
     private void initializeButtons(){

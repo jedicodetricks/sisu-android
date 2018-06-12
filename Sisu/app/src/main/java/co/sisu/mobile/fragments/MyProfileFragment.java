@@ -74,6 +74,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private EditText username, firstName, lastName, phone;
     private String imageData, imageFormat;
     private Button passwordButton;
+    String imageType = "";
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -119,7 +120,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void fillInAgentInfo() {
-
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -186,8 +186,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 if(verifyInputs()) {
                     saveProfile();
                 }
-//                parentActivity.stackReplaceFragment(MoreFragment.class);
-//                parentActivity.swapToBacktionBar("My Profile", null);
                 break;
             case R.id.passwordButton:
                 navigationManager.stackReplaceFragment(ChangePasswordFragment.class);
@@ -246,7 +244,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 parentActivity.showToast("Saving profile picture...");
             }
         }
-
     }
 
     private void launchImageSelector() {
@@ -264,6 +261,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
 
+                    ContentResolver cR = getContext().getContentResolver();
+                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+                    imageType = mime.getExtensionFromMimeType(cR.getType(selectedImage));
+                    Log.e("IMAGE TYPE", imageType);
+
                     // start cropping activity for pre-acquired image saved on the device
                     CropImage.activity(selectedImage)
                             .setGuidelines(CropImageView.Guidelines.ON)
@@ -273,86 +275,46 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                             .setMaxCropResultSize(600,600)
                             .start(parentActivity, this);
 
-
-//                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//                    cursor.moveToFirst();
-//
-//                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                    String filePath = cursor.getString(columnIndex);
-//                    cursor.close();
-//
-//                    int rotateImage = getCameraPhotoOrientation(parentActivity, selectedImage, filePath);
-//
-//                    final InputStream imageStream;
-//                    try {
-//                        ContentResolver cR = getContext().getContentResolver();
-//                        MimeTypeMap mime = MimeTypeMap.getSingleton();
-//                        String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
-//                        Log.e("IMAGE TYPE", type);
-//
-//                        imageStream = getContext().getContentResolver().openInputStream(selectedImage);
-//                        Matrix matrix = new Matrix();
-//                        matrix.postRotate(rotateImage);
-//                        final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
-//                        Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
-//                                matrix, true);
-//                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//
-//                        if(type.equalsIgnoreCase("jpeg")) {
-//                            imageFormat = "2";
-//                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-//                        }
-//                        else if(type.equalsIgnoreCase("png")) {
-//                            imageFormat = "1";
-//                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-//                        }
-//                        else {
-//                            imageFormat = "1";
-//                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-//                        }
-//
-//                        byte[] b = baos.toByteArray();
-//                        imageData = Base64.encodeToString(b, Base64.DEFAULT);
-//
-//                        profileImage.setImageBitmap(rotatedImage);
-//                        imageChanged = true;
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-
                 }
+                break;
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImage = result.getUri();
+                    final InputStream imageStream;
+                    try {
+                        imageStream = getContext().getContentResolver().openInputStream(selectedImage);
+                        final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                        if(imageType.equalsIgnoreCase("jpeg")) {
+                            imageFormat = "2";
+                            bitImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                        }
+                        else if(imageType.equalsIgnoreCase("png")) {
+                            imageFormat = "1";
+                            bitImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                        }
+                        else {
+                            imageFormat = "1";
+                            bitImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                        }
+
+                        byte[] b = baos.toByteArray();
+                        imageData = Base64.encodeToString(b, Base64.DEFAULT);
+
+                        profileImage.setImageBitmap(bitImage);
+                        imageChanged = true;
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
+                break;
         }
-    }
-
-    public int getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath){
-        int rotate = 0;
-        try {
-            context.getContentResolver().notifyChange(imageUri, null);
-            File imageFile = new File(imagePath);
-
-            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = 270;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-            }
-
-//            Log.e("RotateImage", "Exif orientation: " + orientation);
-//            Log.e("RotateImage", "Rotate value: " + rotate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rotate;
     }
 
     private void decodeBase64Image(String data) {
