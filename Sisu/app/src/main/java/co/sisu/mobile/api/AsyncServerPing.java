@@ -16,7 +16,6 @@ import okhttp3.Response;
 
 public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
     private AsyncServerEventListener callback;
-    JWTObject jwt;
 
     public AsyncServerPing (AsyncServerEventListener cb) {
        callback = cb;
@@ -53,8 +52,6 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
             callback.onEventFailed(null, "Server Ping");
         }
 
-//        Log.d("ASYNC PING IS", "NULL");
-        response.body().close();
         return null;
     }
 }

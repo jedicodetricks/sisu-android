@@ -40,6 +40,8 @@ import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.LeaderboardItemsObject;
@@ -50,18 +52,20 @@ import co.sisu.mobile.models.LeaderboardObject;
  */
 public class LeaderboardFragment extends Fragment implements AsyncServerEventListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, com.tsongkha.spinnerdatepicker.DatePickerDialog.OnDateSetListener {
 
-    LeaderboardListExpandableAdapter listAdapter;
-    ExpandableListView expListView;
-    List<LeaderboardObject> listDataHeader;
-    HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
-    ProgressBar loader;
-    Calendar calendar = Calendar.getInstance();
-    ParentActivity parentActivity;
-    Switch leaderboardToggle;
-    int selectedYear = 0;
-    int selectedMonth = 0;
-    int selectedDay = 0;
-    int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
+    private LeaderboardListExpandableAdapter listAdapter;
+    private ExpandableListView expListView;
+    private List<LeaderboardObject> listDataHeader;
+    private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
+    private ProgressBar loader;
+    private Calendar calendar = Calendar.getInstance();
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
+    private Switch leaderboardToggle;
+    private int selectedYear = 0;
+    private int selectedMonth = 0;
+    private int selectedDay = 0;
+    private int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
     private int colorCounter = 0;
 
     public LeaderboardFragment() {
@@ -79,11 +83,14 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
         initToggle();
         loader.setVisibility(View.VISIBLE);
+
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
     }
@@ -144,33 +151,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         }
     }
 
-    private void showDatePickerDialog() {
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                if(year != selectedYear || month != selectedMonth || day != selectedDay) {
-                    updateDisplayDate(year, month, day);
-                    getLeaderboard(selectedYear, selectedMonth + 1);
-                }
-                else {
-                    parentActivity.showToast("You have selected the same time period");
-                }
-
-            }
-        }, selectedYear, selectedMonth, selectedDay);
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//        if(leaderboardToggle.isChecked()) {
-//            //Year selected
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("month", "id", "android")).setVisibility(View.GONE);
-//        }
-//        else {
-//            (dialog.getDatePicker()).findViewById(Resources.getSystem().getIdentifier("day", "id", "android")).setVisibility(View.GONE);
-//        }
-        dialog.show();
-    }
-
     private void getLeaderboard(int year, int month) {
         if(parentActivity.getSelectedTeamId() == -1) {
             parentActivity.runOnUiThread(new Runnable() {
@@ -193,10 +173,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
             if(leaderboardToggle.isChecked()) {
                 //Year selected
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, "", parentActivity.getJwtObject()).execute();
+                apiManager.sendAsyncLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
             }
             else {
-                new AsyncLeaderboardStats(this, formattedTeamId, formattedYear, formattedMonth, parentActivity.getJwtObject()).execute();
+                apiManager.sendAsyncLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
             }
         }
 

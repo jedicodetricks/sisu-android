@@ -29,6 +29,8 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateSettings;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.SettingsObject;
@@ -41,29 +43,30 @@ import static android.content.Context.ALARM_SERVICE;
  */
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
-    Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
-    TextView timeZoneDisplay;
-    ImageView timeSelector;
-    TextView reminderTimeTitle, displayTime, version;
-    int currentSelectedHour, currentSelectedMinute;
-    int alarmId = 1412;
-    String selectedPeriod;
-    ParentActivity parentActivity;
-
+    private Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
+    private TextView timeZoneDisplay;
+    private ImageView timeSelector;
+    private TextView reminderTimeTitle, displayTime, version;
+    private int currentSelectedHour, currentSelectedMinute;
+    private int alarmId = 1412;
+    private String selectedPeriod;
+    private ParentActivity parentActivity;
+    private DataController dataController;
+    private ApiManager apiManager;
     private PendingIntent pendingIntent;
-    List<SettingsObject> settings;
+    private List<SettingsObject> settings;
 
     public SettingsFragment() {
         // Required empty public constructor
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_settings, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -77,7 +80,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         initNotificationAlarm();
         initSwitches();
         TextView b = parentActivity.findViewById(R.id.saveButton);
-        b.setOnClickListener(this);
+        if(b != null) {
+            b.setOnClickListener(this);
+        }
     }
 
 
@@ -88,7 +93,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void fillFieldsWithData() {
-        settings = parentActivity.getSettings();
+        settings = dataController.getSettings();
 
         for (SettingsObject s : settings) {
             Log.e(s.getName(), s.getValue());
@@ -295,8 +300,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
         }
 
-        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(parentActivity.getAgentInfo().getAgent_id()), settingsObjects);
-        new AsyncUpdateSettings(this, parentActivity.getAgentInfo().getAgent_id(), asyncUpdateSettingsJsonObject, parentActivity.getJwtObject()).execute();
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
+        apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject);
 
         createNotificationAlarm();
 
@@ -355,7 +360,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 @Override
                 public void run() {
                     SettingsObject[] array = new SettingsObject[settings.size()];
-                    parentActivity.setSettings(settings.toArray(array));
+                    dataController.setSettings(settings.toArray(array));
                     parentActivity.showToast("Your settings have been updated");
                 }
             });
