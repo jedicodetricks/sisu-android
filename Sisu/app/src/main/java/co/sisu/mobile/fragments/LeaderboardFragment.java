@@ -2,9 +2,14 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +23,9 @@ import android.widget.TextView;
 
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,9 +37,11 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
+import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
+import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 
@@ -76,6 +86,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         loader.setVisibility(View.VISIBLE);
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
+    }
+
+    private void initLeaderBoardImages(String profile) {
+        if(profile != null) {
+            new AsyncLeaderboardImage(this, profile, parentActivity.getJwtObject()).execute();
+        }
     }
 
     private void initToggle() {
@@ -233,6 +249,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
                     leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
+                    initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
                 }
             }
             listDataChild.put(listDataHeader.get(i), leaderboardItems);
@@ -243,6 +260,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 colorCounter++;
             }
         }
+        //i THINK here is where we need to check the cache/run the async call for each profile
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -254,17 +272,24 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
-        LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
-        prepareListData(leaderBoardSections);
-
+        if(asyncReturnType.equals("Leaderboard Image")) {
+            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
+            //cache image data
+            byte[] decodeValue = Base64.decode(profileObject.getData(), Base64.DEFAULT);
+            Bitmap bmp= BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            saveToInternalStorage(bmp, profileObject.getFilename());
+            //set image data to leaderboard object item
+        } else {
+            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
+            LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
+            prepareListData(leaderBoardSections);
+        }
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 loader.setVisibility(View.GONE);
             }
         });
-
     }
 
     @Override
@@ -312,6 +337,28 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         }
         else {
             parentActivity.showToast("You have selected the same time period");
+        }
+    }
+
+    private void saveToInternalStorage(Bitmap bmp, String profile) {
+        ContextWrapper cw = new ContextWrapper(getContext());
+        File directory = cw.getDir("img", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, profile);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

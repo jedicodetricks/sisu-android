@@ -1,6 +1,8 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,6 +65,12 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
 
+        ImageView thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
+        Bitmap bmp = getImageFromCache(childText.getProfile());
+        if(bmp != null) {
+            thumbnail.setImageBitmap(bmp);
+        }
+
         TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
         TextView score = convertView.findViewById(R.id.leaderboardScore);
@@ -68,7 +79,6 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
 
 
         title.setText(childText.getLabel());
-        //subtitle.setText(childText.getLabel());
         if(childText.getValue().contains(".")) {
             score.setText(childText.getValue().substring(0, childText.getValue().indexOf('.')));
         } else {
@@ -140,5 +150,20 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         convertView.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
+    }
+
+    private Bitmap getImageFromCache(String profile) {
+        Bitmap bmp = null;
+        if(profile != null) {
+            try {
+                File f = new File(_context.getDir("img",0), profile);
+                bmp = BitmapFactory.decodeStream(new FileInputStream(f));
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return bmp;
     }
 }

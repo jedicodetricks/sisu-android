@@ -8,6 +8,24 @@ public class LeaderboardItemsObject {
     String label;
     String place;
     String value;
+    String profile;
+    String agent_id;
+
+    public String getAgent_id() {
+        return agent_id;
+    }
+
+    public void setAgent_id(String agent_id) {
+        this.agent_id = agent_id;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
 
     public String getLabel() {
         return label;

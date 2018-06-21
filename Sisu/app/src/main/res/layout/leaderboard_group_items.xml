@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/leaderboard_list_thumbnail"
             android:layout_width="0dp"
             android:layout_height="70dp"
@@ -40,9 +40,9 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:contentDescription="@string/thumbnail"
-            android:scaleType="centerInside"
-            android:src="@drawable/contact_icon"
+            android:src="@drawable/client_icon"
+            app:civ_border_color="#00000000"
+            app:civ_border_width="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintStart_toEndOf="@+id/leaderboardPosition"
@@ -55,26 +55,29 @@
             android:layout_height="56dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
             android:maxLines="2"
             android:scrollHorizontally="false"
             android:textAlignment="textStart"
-            android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="@+id/leaderboard_list_thumbnail"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/leaderboard_list_thumbnail"
+            app:layout_constraintStart_toEndOf="@+id/leaderboard_list_thumbnail"
             app:layout_constraintTop_toTopOf="@+id/leaderboard_list_thumbnail"
-            tools:text="Title" />
+            tools:text="Title"
+            tools:ignore="RtlCompat" />
 
         <TextView
             android:id="@+id/leaderboardItemSubTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
             android:textSize="@dimen/font_small"
             app:layout_constraintBottom_toBottomOf="@+id/leaderboard_list_thumbnail"
-            app:layout_constraintStart_toEndOf="@+id/leaderboard_list_thumbnail"
+            app:layout_constraintStart_toStartOf="@+id/leaderboardItemTitle"
             app:layout_constraintTop_toBottomOf="@+id/leaderboardItemTitle"
             app:layout_constraintVertical_bias="0.0"
             tools:text="Subtitle" />
