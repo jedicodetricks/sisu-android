@@ -1,12 +1,10 @@
 package co.sisu.mobile.fragments;
 
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,8 +34,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
-import co.sisu.mobile.api.AsyncLeaderboardImage;
-import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
@@ -97,7 +92,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void initLeaderBoardImages(String profile) {
         if(profile != null) {
-            new AsyncLeaderboardImage(this, profile, parentActivity.getJwtObject()).execute();
+            apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), profile);
         }
     }
 
@@ -256,7 +251,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
             //cache image data
             byte[] decodeValue = Base64.decode(profileObject.getData(), Base64.DEFAULT);
-            Bitmap bmp= BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            Bitmap bmp = BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
             saveToInternalStorage(bmp, profileObject.getFilename());
             //set image data to leaderboard object item
         } else {
@@ -323,14 +318,19 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private void saveToInternalStorage(Bitmap bmp, String profile) {
         ContextWrapper cw = new ContextWrapper(getContext());
         File directory = cw.getDir("img", Context.MODE_PRIVATE);
+        if(!directory.exists()) {
+            directory.mkdir();
+        }
         // Create imageDir
-        File mypath = new File(directory, profile);
+        File path = new File(directory, profile);
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(mypath);
+            fos = cw.openFileOutput(profile, Context.MODE_PRIVATE);
             // Use the compress method on the BitMap object to write image to the OutputStream
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            if(bmp != null) {
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

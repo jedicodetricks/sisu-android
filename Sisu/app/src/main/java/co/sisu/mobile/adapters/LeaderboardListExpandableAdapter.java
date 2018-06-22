@@ -11,9 +11,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -156,8 +155,9 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         Bitmap bmp = null;
         if(profile != null) {
             try {
-                File f = new File(_context.getDir("img",0), profile);
-                bmp = BitmapFactory.decodeStream(new FileInputStream(f));
+                InputStream is = _context.openFileInput(profile);
+                //File f = new File(_context.getDir("img", Context.MODE_PRIVATE), profile);
+                bmp = BitmapFactory.decodeStream(is);
             }
             catch (FileNotFoundException e)
             {

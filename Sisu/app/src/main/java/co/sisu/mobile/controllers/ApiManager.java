@@ -1,12 +1,10 @@
 package co.sisu.mobile.controllers;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
@@ -14,6 +12,7 @@ import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -27,14 +26,6 @@ import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
-import co.sisu.mobile.fragments.ActivitySettingsFragment;
-import co.sisu.mobile.fragments.AddClientFragment;
-import co.sisu.mobile.fragments.ClientEditFragment;
-import co.sisu.mobile.fragments.FeedbackFragment;
-import co.sisu.mobile.fragments.GoalSetupFragment;
-import co.sisu.mobile.fragments.LeaderboardFragment;
-import co.sisu.mobile.fragments.MyProfileFragment;
-import co.sisu.mobile.fragments.SettingsFragment;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
@@ -138,6 +129,11 @@ public class ApiManager {
     public void sendAsyncLeaderboardYearAndMonth(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear, String formattedMonth) {
         getJWT(agentId);
         new AsyncLeaderboardStats(cb, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, String profile) {
+        getJWT(agentId);
+        new AsyncLeaderboardImage(cb, profile).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncProfileImage(AsyncServerEventListener cb, String agentId) {
