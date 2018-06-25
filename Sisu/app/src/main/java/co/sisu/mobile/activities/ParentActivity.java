@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
@@ -60,6 +62,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private int timelineSelection = 4;
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
+    private FileIO io;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
         parentLoader = findViewById(R.id.parentLoader);
+        io = new FileIO(ParentActivity.this);
 
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
@@ -301,4 +305,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public ApiManager getApiManager() {
         return apiManager;
     }
+
+    public Bitmap getImage(String profile) { return io.getImageFromCache(profile); }
+
+    public void saveImage(Bitmap image, String profile) { io.saveToInternalStorage(image, profile); }
 }

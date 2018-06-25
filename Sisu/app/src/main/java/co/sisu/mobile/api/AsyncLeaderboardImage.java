@@ -1,6 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -54,6 +55,7 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
             if(response.code() == 200) {
                 AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
                     profileObject.setData(String.valueOf(response.body().charStream()));
+                Log.e("Profile", profile);
                     profileObject.setFilename(profile);
                 callback.onEventCompleted(profileObject, "Leaderboard Image");
             }

@@ -2,7 +2,6 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 
@@ -32,13 +30,15 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private int colorCounter = 0;
+    private ParentActivity parentActivity;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
-                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData) {
+                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
         colorCounter = 0;
+        this.parentActivity = parent;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         }
 
         ImageView thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
-        Bitmap bmp = getImageFromCache(childText.getProfile());
+        Bitmap bmp = parentActivity.getImage(childText.getProfile());
         if(bmp != null) {
             thumbnail.setImageBitmap(bmp);
         }
@@ -75,7 +75,6 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         TextView score = convertView.findViewById(R.id.leaderboardScore);
         TextView position = convertView.findViewById(R.id.leaderboardPosition);
         ImageView trophy = convertView.findViewById(R.id.trophyIcon);
-
 
         title.setText(childText.getLabel());
         if(childText.getValue().contains(".")) {
@@ -149,21 +148,5 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         convertView.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
-    }
-
-    private Bitmap getImageFromCache(String profile) {
-        Bitmap bmp = null;
-        if(profile != null) {
-            try {
-                InputStream is = _context.openFileInput(profile);
-                //File f = new File(_context.getDir("img", Context.MODE_PRIVATE), profile);
-                bmp = BitmapFactory.decodeStream(is);
-            }
-            catch (FileNotFoundException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return bmp;
     }
 }
