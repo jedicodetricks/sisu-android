@@ -79,7 +79,6 @@
             android:hint="Password"
             android:inputType="text"
             android:maxLines="1"
-            android:maxLength="15"
             android:imeOptions="actionDone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
