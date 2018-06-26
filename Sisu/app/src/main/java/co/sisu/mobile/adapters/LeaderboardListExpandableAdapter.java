@@ -77,16 +77,18 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         }
 
         thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
-        Log.e("INSIDE ADAPTER", childText.getProfile() + "");
 
-        Bitmap bmp = parentActivity.getImage(childText.getProfile());
+        //This will always be null the first time through
+        Bitmap bmp = childText.getImage();
         if(bmp == null) {
-            thumbnail.setImageBitmap(bmp);
             if(childText.getProfile() != null) {
                 imageName = childText.getProfile();
-                Log.e("CALLING IMAGE", childText.getProfile() + "");
-                new LeaderboardImageTask(thumbnail, agentId).execute(imageName);
-//                apiManager.sendAsyncLeaderboardImage(this, agentId, childText.getProfile());
+                Log.e("CALLING IMAGE", imageName + "");
+                new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);
+            }
+            else {
+                Log.e("THIS SHIT IS NULL", childText.getLabel());
+                //This would be a default image
             }
         }
         else {

@@ -171,7 +171,7 @@ public class ApiManager {
                 .setIssuedAt(date.getTime())
                 .setExpiration(expDate.getTime())
                 .claim("Transaction-Id", transactionID)
-//                .claim("agent_id", agentId)
+                .claim("agent_id", agentId)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
     }

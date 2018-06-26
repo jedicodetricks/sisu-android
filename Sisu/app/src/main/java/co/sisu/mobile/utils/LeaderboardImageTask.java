@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.models.LeaderboardItemsObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.OkHttpClient;
@@ -31,7 +32,8 @@ import okhttp3.Response;
  */
 
 public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
-    private final WeakReference<ImageView> imageViewReference;
+    private ImageView imageView;
+    private LeaderboardItemsObject currentChild;
     private String agentId;
 
     private String secretKey = "33SnhbgJaXFp6fYYd1Ru";
@@ -40,8 +42,9 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
     private String timestamp;
     private String jwtStr;
 
-    public LeaderboardImageTask(ImageView imageView, String agentId) {
-        imageViewReference = new WeakReference<>(imageView);
+    public LeaderboardImageTask(LeaderboardItemsObject currentChild, ImageView imageView, String agentId) {
+        this.imageView = imageView;
+        this.currentChild = currentChild;
         this.agentId = agentId;
     }
 
@@ -53,7 +56,6 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
     private Bitmap downloadBitmap(String profile) {
         Response response = null;
         getJWT();
-        Gson gson = new Gson();
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
@@ -115,6 +117,7 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
                 .setIssuedAt(date.getTime())
                 .setExpiration(expDate.getTime())
                 .claim("Transaction-Id", transactionID)
+                .claim("agent_id", agentId)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
     }
@@ -126,16 +129,18 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
 
-        if (imageViewReference != null) {
-            ImageView imageView = imageViewReference.get();
-            if (imageView != null) {
+        Log.e("IMAGEVIEW REFERENCE", imageView.toString());
+//        if (currentChild.getImage() != null) {
+        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.contact_icon);
+        imageView.setImageDrawable(placeholder);
+//            if (imageView != null) {
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
+                    currentChild.setImage(bitmap);
                 } else {
-                    Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.contact_icon);
                     imageView.setImageDrawable(placeholder);
                 }
-            }
-        }
+//            }
+//        }
     }
 }
