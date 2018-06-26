@@ -308,5 +308,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public Bitmap getImage(String profile) { return io.getImageFromCache(profile); }
 
-    public void saveImage(Bitmap image, String profile) { io.saveToInternalStorage(image, profile); }
+    public void saveImage(byte[] image, String profile) { io.saveToInternalStorage(image, profile); }
 }

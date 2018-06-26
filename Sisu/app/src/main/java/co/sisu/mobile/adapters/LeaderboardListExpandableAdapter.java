@@ -2,7 +2,10 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +18,12 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
-
+import co.sisu.mobile.utils.LeaderboardImageTask;
 /**
  * Created by Brady Groharing on 2/25/2018.
  */
@@ -30,15 +36,21 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private int colorCounter = 0;
+    private ApiManager apiManager;
     private ParentActivity parentActivity;
+    private String agentId;
+    private ImageView thumbnail;
+    private String imageName;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
-                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent) {
+                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
         colorCounter = 0;
         this.parentActivity = parent;
+        this.apiManager = apiManager;
+        this.agentId = agent_id;
     }
 
     @Override
@@ -64,9 +76,20 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
             convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
 
-        ImageView thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
+        thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
+        Log.e("INSIDE ADAPTER", childText.getProfile() + "");
+
         Bitmap bmp = parentActivity.getImage(childText.getProfile());
-        if(bmp != null) {
+        if(bmp == null) {
+            thumbnail.setImageBitmap(bmp);
+            if(childText.getProfile() != null) {
+                imageName = childText.getProfile();
+                Log.e("CALLING IMAGE", childText.getProfile() + "");
+                new LeaderboardImageTask(thumbnail, agentId).execute(imageName);
+//                apiManager.sendAsyncLeaderboardImage(this, agentId, childText.getProfile());
+            }
+        }
+        else {
             thumbnail.setImageBitmap(bmp);
         }
 
@@ -149,4 +172,5 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
     }
+
 }

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
+import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -208,8 +210,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void prepareListData(LeaderboardObject[] leaderBoardSections) {
-        listDataHeader = new ArrayList<LeaderboardObject>();
-        listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
         colorCounter = 0;
 
         for(int i = 0; i < leaderBoardSections.length; i++) {
@@ -221,7 +223,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                     leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
                     if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile() != null) {
                         if(parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()) == null) {
-                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+//                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+                        }
+                        else {
+                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
                         }
                     }
                 }
@@ -238,7 +243,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild, parentActivity);
+                listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild, parentActivity, apiManager, dataController.getAgent().getAgent_id());
                 expListView.setAdapter(listAdapter);
             }
         });
@@ -248,11 +253,17 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Leaderboard Image")) {
             final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
+
             //cache image data
             byte[] decodeValue = Base64.decode(profileObject.getData(), Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-            parentActivity.saveImage(bmp, profileObject.getFilename().toString());
+            Log.e("RETURN DATA", String.valueOf(decodeValue.length));
+//            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(decodeValue);
+//            Bitmap bmp = BitmapFactory.decodeStream(arrayInputStream);
+//            Log.e("SAVING IMAGE", profileObject.getFilename().toString());
+//            Log.e("SAVING BMP", String.valueOf(bmp == null));
+//            parentActivity.saveImage(decodeValue, profileObject.getFilename().toString());
             //set image data to leaderboard object item
+
         } else {
             AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
             LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();

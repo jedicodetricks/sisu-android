@@ -1,11 +1,14 @@
 package co.sisu.mobile.api;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
@@ -53,11 +56,13 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
         }
         if(response != null) {
             if(response.code() == 200) {
-                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
-                    profileObject.setData(String.valueOf(response.body().charStream()));
-                Log.e("Profile", profile);
-                    profileObject.setFilename(profile);
-                callback.onEventCompleted(profileObject, "Leaderboard Image");
+//                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
+                InputStream inputStream = response.body().byteStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                profileObject.setData(String.valueOf(response.body().charStream()));
+//                Log.e("Profile", profileObject.getData().toString() + "");
+//                profileObject.setFilename(profile);
+                callback.onEventCompleted(bitmap, profile);
             }
             else {
                 callback.onEventFailed(null, "Leaderboard Image");

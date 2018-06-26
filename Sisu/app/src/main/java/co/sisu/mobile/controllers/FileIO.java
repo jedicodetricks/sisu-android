@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,20 +25,28 @@ public class FileIO {
     }
 
     public Bitmap getImageFromCache(String profile) {
+        for(String s : context.fileList()) {
+            Log.e("FILE", s);
+        }
+        Log.e("GET FROM CACHE Profile", profile + "");
         Bitmap bmp = null;
         FileInputStream fis = null;
         if(profile != null) {
             try {
                 fis = context.openFileInput(profile);
                 bmp = BitmapFactory.decodeStream(fis);
+                Log.e("BMP", bmp.toString());
             }
             catch (FileNotFoundException e)
             {
                 Log.e("GET IMG ERROR", "file not found");
-                e.printStackTrace();
+                return null;
+//                e.printStackTrace();
             } finally {
                 try {
-                    fis.close();
+                    if(fis != null) {
+                        fis.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -47,16 +56,27 @@ public class FileIO {
     }
 
 
-    public void saveToInternalStorage(Bitmap bmp, String profile) {
+    public void saveToInternalStorage(byte[] bmp, String profile) {
         ContextWrapper cw = new ContextWrapper(context);
 
         FileOutputStream fos = null;
+//        int size = bmp.getByteCount();
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream(size);
         try {
-            fos = cw.openFileOutput(profile, Context.MODE_PRIVATE);
             // Use the compress method on the BitMap object to write image to the OutputStream
             if(bmp != null) {
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//                bmp.compress(Bitmap.CompressFormat.PNG, 100, bos);
+//                byte[] bArr = bos.toByteArray();
+//                bos.flush();
+//                bos.close();
+
+                //YOU WANT THIS PART
+//                fos = cw.openFileOutput(profile, Context.MODE_PRIVATE);
+//                fos.write(bmp);
+//                fos.flush();
+//                fos.close();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
