@@ -66,6 +66,7 @@
     <string name="yearlyTitle">Yearly Goals</string>
 
     <!--Buttons/Links-->
+    <string name="calculate">Calculate</string>
     <string name="archive">Archive</string>
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
@@ -85,6 +86,7 @@
 
 
     <!--Hints-->
+    <string name="percent">%</string>
     <string name="unit_goal_hint">Unit Goal</string>
     <string name="volume_goal_hint">Volume Goal</string>
     <string name="password_hint">Password*</string>

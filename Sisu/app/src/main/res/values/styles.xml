@@ -162,6 +162,11 @@
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:background">@drawable/rounded_button</item>
+    </style>
+
+    <style name="StatusStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:background">@color/colorCorporateGrey</item>
     </style>
 
