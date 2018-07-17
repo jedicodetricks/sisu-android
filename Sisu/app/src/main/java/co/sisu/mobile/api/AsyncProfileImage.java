@@ -26,10 +26,12 @@ public class AsyncProfileImage extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
+    private String url;
 
-    public AsyncProfileImage(AsyncServerEventListener cb, String agentId) {
+    public AsyncProfileImage(AsyncServerEventListener cb, String url, String agentId) {
         callback = cb;
         this.agentId = agentId;
+        this.url = url;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class AsyncProfileImage extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/image/3/" + agentId)
+                .url(url + "api/v1/image/3/" + agentId)
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

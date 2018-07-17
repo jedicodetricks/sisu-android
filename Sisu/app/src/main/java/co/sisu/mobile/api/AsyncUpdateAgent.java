@@ -28,12 +28,14 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
     private String agentId;
     private String income;
     private String reason;
+    private String url;
 
-    public AsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
+    public AsyncUpdateAgent(AsyncServerEventListener cb, String url, String agentId, String income, String reason) {
         callback = cb;
         this.agentId = agentId;
         this.income = income;
         this.reason = reason;
+        this.url = url;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/edit-agent/" + agentId)
+                    .url(url + "api/v1/agent/edit-agent/" + agentId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

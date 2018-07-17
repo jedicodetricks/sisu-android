@@ -67,6 +67,7 @@
 
     <!--Buttons/Links-->
     <string name="archive">Archive</string>
+    <string name="notes">Notes</string>
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
     <string name="forgot_password">Forgot your password?</string>
@@ -96,6 +97,7 @@
     <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Paid Income</string>
+    <string name="add_note">Add Note</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
     <string name="first_name_hint_non_req">First Name</string>

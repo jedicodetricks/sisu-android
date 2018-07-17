@@ -26,13 +26,15 @@ import okhttp3.Response;
 public class AsyncUpdateProfile extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    String agentId;
-    HashMap<String, String> changedFields;
+    private String agentId;
+    private HashMap<String, String> changedFields;
+    private String url;
 
-    public AsyncUpdateProfile(AsyncServerEventListener cb, String agentId, HashMap<String, String> changedFields) {
+    public AsyncUpdateProfile(AsyncServerEventListener cb, String url, String agentId, HashMap<String, String> changedFields) {
         this.callback = cb;
         this.agentId = agentId;
         this.changedFields = changedFields;
+        this.url = url;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class AsyncUpdateProfile extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/edit-agent/"+ agentId)
+                    .url(url + "api/v1/agent/edit-agent/"+ agentId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

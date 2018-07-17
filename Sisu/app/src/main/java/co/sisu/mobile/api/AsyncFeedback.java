@@ -22,12 +22,14 @@ import okhttp3.Response;
 public class AsyncFeedback extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    String agentId, feedback;
+    private String agentId, feedback, url;
 
-    public AsyncFeedback (AsyncServerEventListener cb, String agentId, String feedback) {
+
+    public AsyncFeedback (AsyncServerEventListener cb, String url, String agentId, String feedback) {
         callback = cb;
         this.agentId = agentId;
         this.feedback = feedback;
+        this.url = url;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class AsyncFeedback extends AsyncTask<String, String, String> {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/feedback/add-feedback/" + agentId)
+                .url(url + "api/v1/feedback/add-feedback/" + agentId)
                 .post(body)
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

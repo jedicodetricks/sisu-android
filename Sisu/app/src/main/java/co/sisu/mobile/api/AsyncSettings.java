@@ -24,10 +24,12 @@ import okhttp3.Response;
 public class AsyncSettings extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     private String agentId;
+    private String url;
 
-    public AsyncSettings(AsyncServerEventListener cb, String agentId) {
+    public AsyncSettings(AsyncServerEventListener cb, String url, String agentId) {
         callback = cb;
         this.agentId = agentId;
+        this.url = url;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class AsyncSettings extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/parameter/get-parameters/2/" + agentId)
+                .url(url + "api/v1/parameter/get-parameters/2/" + agentId)
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

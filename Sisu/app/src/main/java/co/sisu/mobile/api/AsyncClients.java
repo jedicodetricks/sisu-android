@@ -24,10 +24,12 @@ public class AsyncClients extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
+    private String url;
 
-    public AsyncClients (AsyncServerEventListener cb, String agentId) {
+    public AsyncClients (AsyncServerEventListener cb, String url, String agentId) {
         callback = cb;
         this.agentId = agentId;
+        this.url = url;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class AsyncClients extends AsyncTask<String, String, String> {
             Gson gson = new Gson();
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/get-clients/" + agentId)
+                    .url(url + "api/v1/agent/get-clients/" + agentId)
                     .get()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

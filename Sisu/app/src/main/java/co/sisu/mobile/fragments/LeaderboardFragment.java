@@ -213,6 +213,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
                     leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
+//                    if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile() != null) {
+//                        Log.e("NOT NULL", leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+//                        if(parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()) == null) {
+////                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+//                        }
+//                        else {
+//                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
+//                        }
+//                    }
                 }
             }
             listDataChild.put(listDataHeader.get(i), leaderboardItems);

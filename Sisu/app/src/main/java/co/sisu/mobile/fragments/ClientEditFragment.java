@@ -47,7 +47,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -438,6 +438,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 updateCurrentClient(true);
                 saveClient();
                 break;
+            case R.id.clientNotesButton:
+                Log.e("Client Notes", "Yes");
             default:
                 break;
         }
@@ -467,6 +469,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         seller.setOnClickListener(this);
         deleteButton = getView().findViewById(R.id.clientDeleteButton);
         deleteButton.setOnClickListener(this);
+        noteButton = getView().findViewById(R.id.clientNotesButton);
+        noteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
