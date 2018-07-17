@@ -16,6 +16,7 @@ import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncGetNotes;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
@@ -27,6 +28,7 @@ import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.api.AsyncUpdateGoals;
+import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
@@ -57,7 +59,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://api.sisu.co/";
+    private String url = "https://beta.sisu.co/";
 //    private String url = "https://9120b2d7-3c40-4ed6-8424-b45f4f26f0e5.mock.pstmn.io/";
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
@@ -195,4 +197,13 @@ public class ApiManager {
                 .compact();
     }
 
+    public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note) {
+        getJWT(agentId);
+        new AsyncUpdateNotes(cb, url, clientId, note).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
+        getJWT(agentId);
+        new AsyncGetNotes(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+    }
 }

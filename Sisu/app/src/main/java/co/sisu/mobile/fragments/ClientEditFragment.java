@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
@@ -42,12 +44,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private NavigationManager navigationManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
+    private ImageView addNoteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -76,6 +80,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
@@ -304,6 +309,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer = getView().findViewById(R.id.buyerButton);
         seller = getView().findViewById(R.id.sellerButton);
         exportContact = getView().findViewById(R.id.exportContactButton);
+        noteText = getView().findViewById(R.id.editNotes);
     }
 
     @Override
@@ -439,7 +445,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 saveClient();
                 break;
             case R.id.clientNotesButton:
-                Log.e("Client Notes", "Yes");
+                navigationManager.stackReplaceFragment(ClientNoteFragment.class);
+                break;
+            case R.id.noteAddView:
+                if(!noteText.getText().toString().equals("")) {
+                    apiManager.addNote(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id(), noteText.getText().toString());
+                }
+                else {
+                    parentActivity.showToast("Please enter text for your note");
+                }
+                break;
             default:
                 break;
         }
@@ -471,6 +486,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         deleteButton.setOnClickListener(this);
         noteButton = getView().findViewById(R.id.clientNotesButton);
         noteButton.setOnClickListener(this);
+        addNoteButton = getView().findViewById(R.id.noteAddView);
+        addNoteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
@@ -633,15 +650,22 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        loader.setVisibility(View.GONE);
+        if(asyncReturnType.equals("Update Notes")) {
+            parentActivity.showToast("Added note");
+            noteText.setText("");
+        }
+        else {
+            loader.setVisibility(View.GONE);
 //        parentActivity.navigateToClientList(statusList, null);
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.onBackPressed();
-                parentActivity.showToast("Client updates saved");
-            }
-        });
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.onBackPressed();
+                    parentActivity.showToast("Client updates saved");
+                }
+            });
+        }
+
     }
 
     @Override
