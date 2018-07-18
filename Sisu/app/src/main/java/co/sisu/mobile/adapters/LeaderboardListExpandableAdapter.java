@@ -80,20 +80,20 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
 
         //This will always be null the first time through
         Bitmap bmp = childText.getImage();
-        if(bmp == null) {
-            if(childText.getProfile() != null) {
-                imageName = childText.getProfile();
-                Log.e("CALLING IMAGE", imageName + "");
-                new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);
-            }
-            else {
-                Log.e("THIS SHIT IS NULL", childText.getLabel());
-                //This would be a default image
-            }
-        }
-        else {
-            thumbnail.setImageBitmap(bmp);
-        }
+//        if(bmp == null) {
+//            if(childText.getProfile() != null) {
+//                imageName = childText.getProfile();
+//                Log.e("CALLING IMAGE", imageName + "");
+//                new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);
+//            }
+//            else {
+//                Log.e("THIS SHIT IS NULL", childText.getLabel());
+//                //This would be a default image
+//            }
+//        }
+//        else {
+//            thumbnail.setImageBitmap(bmp);
+//        }
 
         TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
