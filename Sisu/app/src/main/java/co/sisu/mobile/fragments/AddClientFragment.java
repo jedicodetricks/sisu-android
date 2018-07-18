@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -32,7 +33,6 @@ import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
@@ -159,6 +159,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         Button buyerButton = getView().findViewById(R.id.buyerButton);
         Button sellerButton= getView().findViewById(R.id.sellerButton);
+        Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
+        Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
             case R.id.cancelButton:
                 Log.e("CANCEL", "YES");
@@ -172,15 +174,15 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 break;
             case R.id.buyerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                buyerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
-                sellerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                buyerButton.setBackground(active);
+                sellerButton.setBackground(inactive);
                 sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
                 buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
-                buyerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
-                sellerButton.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                buyerButton.setBackground(inactive);
+                sellerButton.setBackground(active);
                 sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
                 break;
