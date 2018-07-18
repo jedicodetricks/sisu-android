@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,15 +25,13 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
-import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 
 /**
  * Created by bradygroharing on 7/17/18.
  */
 
-public class ClientNoteFragment extends Fragment implements AsyncServerEventListener, AdapterView.OnItemClickListener {
+public class ClientNoteFragment extends Fragment implements AsyncServerEventListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
     private ListView mListView;
     private ParentActivity parentActivity;
@@ -40,6 +39,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ConstraintLayout contentView;
+    private TextView addButton;
 
     public ClientNoteFragment() {
         // Required empty public constructor
@@ -63,13 +63,11 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
-
+        initAddButton();
     }
 
     private void initListView() {
         mListView = getView().findViewById(R.id.note_list_view);
-//        mListView.setDivider(null);
-//        mListView.setDividerHeight(30);
     }
 
     private void fillListViewWithData(List<NotesObject> noteList) {
@@ -80,6 +78,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             mListView.setOnItemClickListener(this);
         }
 
+    }
+
+    private void initAddButton() {
+        addButton = parentActivity.findViewById(R.id.addClientButton);
+        if(addButton != null) {
+            addButton.setVisibility(View.VISIBLE);
+            addButton.setOnClickListener(this);
+        }
+        else {
+//            addButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -105,5 +114,14 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addClientButton:
+                navigationManager.stackReplaceFragment(AddNoteFragment.class);
+                break;
+        }
     }
 }

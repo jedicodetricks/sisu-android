@@ -79,6 +79,7 @@
     <string name="buyer">Buyer</string>
     <string name="seller">Seller</string>
     <string name="submit">Submit</string>
+    <string name="add_note">Add Note</string>
     <string name="clear">Clear</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -97,7 +98,7 @@
     <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Paid Income</string>
-    <string name="add_note">Add Note</string>
+    <string name="logs">Logs</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
     <string name="first_name_hint_non_req">First Name</string>

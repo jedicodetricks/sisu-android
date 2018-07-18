@@ -51,7 +51,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
-    private ImageView addNoteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -124,6 +123,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
+        noteText.setText(currentClient.getNote());
         updateStatus();
     }
 
@@ -161,6 +161,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setUc_dt(null);
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
+        currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -447,14 +448,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.clientNotesButton:
                 navigationManager.stackReplaceFragment(ClientNoteFragment.class);
                 break;
-            case R.id.noteAddView:
-                if(!noteText.getText().toString().equals("")) {
-                    apiManager.addNote(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id(), noteText.getText().toString());
-                }
-                else {
-                    parentActivity.showToast("Please enter text for your note");
-                }
-                break;
             default:
                 break;
         }
@@ -486,8 +479,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         deleteButton.setOnClickListener(this);
         noteButton = getView().findViewById(R.id.clientNotesButton);
         noteButton.setOnClickListener(this);
-        addNoteButton = getView().findViewById(R.id.noteAddView);
-        addNoteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
@@ -650,21 +641,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Update Notes")) {
-            parentActivity.showToast("Added note");
-            noteText.setText("");
-        }
-        else {
-            loader.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
 //        parentActivity.navigateToClientList(statusList, null);
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    parentActivity.onBackPressed();
-                    parentActivity.showToast("Client updates saved");
-                }
-            });
-        }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.onBackPressed();
+                parentActivity.showToast("Client updates saved");
+            }
+        });
 
     }
 

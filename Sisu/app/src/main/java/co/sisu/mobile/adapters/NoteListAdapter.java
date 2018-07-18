@@ -9,7 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -58,10 +62,27 @@ public class NoteListAdapter extends BaseAdapter {
 
         TextView subTitleTextView = rowView.findViewById(R.id.note_list_subtitle);
 
-
         NotesObject noteObject = (NotesObject) getItem(position);
 
-        titleTextView.setText(noteObject.getClient_id());
+        Date d;
+//        Tue, 17 Jul 2018 20:31:00 GMT
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+        String dateString = "";
+
+        Calendar calendar = Calendar.getInstance();
+        try {
+            d = sdf.parse(noteObject.getUpdated_ts());
+            calendar.setTime(d);
+
+            SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+
+            dateString = format1.format(calendar.getTime());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        titleTextView.setText("Note - " + dateString);
         subTitleTextView.setText(noteObject.getNote());
 
         return rowView;

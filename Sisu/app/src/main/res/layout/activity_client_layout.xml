@@ -133,111 +133,63 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <RelativeLayout
-            android:id="@+id/gciLayout"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/gciInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout"
-            >
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/gciInputLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RequiredTextTheme">
+            app:layout_constraintTop_toBottomOf="@id/transAmountInputLayout">
 
-                <EditText
-                    android:id="@+id/editGci"
-                    style="@style/EditTextLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:hint="@string/gci_hint"
-                    android:maxLength="8"
-                    android:inputType="number"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTransAmount" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/gciPercentageButton"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editGci"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="%"
-                android:layout_toEndOf="@id/gciInputLayout"
-                />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/gci_hint"
+                android:maxLength="8"
+                android:inputType="number"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-            <Button
-                android:id="@+id/gciDollarButton"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/gciPercentageButton"
-                android:text="$"
-                />
-        </RelativeLayout>
+        </android.support.design.widget.TextInputLayout>
 
-        <RelativeLayout
-            android:id="@+id/commissionLayout"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/commissionInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/gciLayout">
+            android:layout_marginTop="8dp"
+            android:theme="@style/RequiredTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gciInputLayout">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/commissionInputLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RequiredTextTheme"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editPaidIncome"
-                    style="@style/EditTextLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:hint="@string/commission_hint"
-                    android:maxLength="8"
-                    android:inputType="number"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/comPercentageButton"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editPaidIncome"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="%"
-                android:layout_toEndOf="@id/commissionInputLayout"
-                />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/commission_hint"
+                android:maxLength="8"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <Button
-                android:id="@+id/comDollarButton"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/comPercentageButton"
-                android:text="$"
-                />
-        </RelativeLayout>
+        </android.support.design.widget.TextInputLayout>
+
+
 
 
         <android.support.design.widget.TextInputLayout
@@ -276,7 +228,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commissionLayout">
+            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
 
             <EditText
                 android:id="@+id/editPhone"
@@ -592,55 +544,35 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clientDeleteButton"
+                app:layout_constraintTop_toBottomOf="@id/notesInputLayout"
                 android:text="@string/notes" />
 
-            <RelativeLayout
-                android:id="@+id/notesSection"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/notesInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/clientNotesButton">
+                android:layout_marginTop="8dp"
+                android:theme="@style/RequiredTextTheme"
+                app:layout_constraintTop_toBottomOf="@id/clientDeleteButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/notesInputLayout"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editNotes"
+                    style="@style/EditTextLabelStyle"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:theme="@style/RequiredTextTheme"
-                    app:layout_constraintEnd_toStartOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
-
-                    <EditText
-                        android:id="@+id/editNotes"
-                        style="@style/EditTextLabelStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:ems="10"
-                        android:hint="@string/add_note"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/noteAddView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toEndOf="@id/notesInputLayout"
-                    app:srcCompat="@drawable/add_icon" />
+                    android:ems="10"
+                    android:hint="@string/logs"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            </RelativeLayout>
+            </android.support.design.widget.TextInputLayout>
 
 
         </android.support.constraint.ConstraintLayout>

@@ -144,11 +144,16 @@ public class ActionBarManager {
 
     }
 
-    public void swapToClientListBar() {
+    public void swapToClientListBar(final String title) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+                if(title != null) {
+                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                    pageTitle.setText(title);
+                }
+
             }
         });
     }
