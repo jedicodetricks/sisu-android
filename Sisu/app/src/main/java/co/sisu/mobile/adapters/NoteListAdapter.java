@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.models.NotesObject;
@@ -29,12 +31,14 @@ public class NoteListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<NotesObject> mDataSource;
+    private ClientNoteEvent clientNoteEvent;
 
 
-    public NoteListAdapter(Context context, List<NotesObject> noteList) {
+    public NoteListAdapter(Context context, List<NotesObject> noteList, ClientNoteEvent clientNoteEvent) {
         mContext = context;
         mDataSource = (ArrayList<NotesObject>) noteList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.clientNoteEvent = clientNoteEvent;
     }
 
     @Override
@@ -62,7 +66,27 @@ public class NoteListAdapter extends BaseAdapter {
 
         TextView subTitleTextView = rowView.findViewById(R.id.note_list_subtitle);
 
-        NotesObject noteObject = (NotesObject) getItem(position);
+        ImageView deleteNoteButton = rowView.findViewById(R.id.deleteNoteIcon);
+        ImageView editNoteButton = rowView.findViewById(R.id.editNoteIcon);
+
+
+        final NotesObject noteObject = (NotesObject) getItem(position);
+
+
+        deleteNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clientNoteEvent.deleteButtonClicked(noteObject);
+            }
+        });
+
+        editNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clientNoteEvent.editButtonClicked(noteObject);
+            }
+        });
+
 
         Date d;
 //        Tue, 17 Jul 2018 20:31:00 GMT

@@ -44,6 +44,31 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5596107" />
+
+            <ImageView
+                android:id="@+id/editNoteIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/deleteNoteIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/open_house_icon" />
+
+            <ImageView
+                android:id="@+id/deleteNoteIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/referals_icon" />
+
         </android.support.constraint.ConstraintLayout>
     </RelativeLayout>
 </RelativeLayout>

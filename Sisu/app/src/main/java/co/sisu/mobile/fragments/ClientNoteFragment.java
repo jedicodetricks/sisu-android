@@ -22,6 +22,7 @@ import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.adapters.NoteListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
@@ -31,7 +32,7 @@ import co.sisu.mobile.models.NotesObject;
  * Created by bradygroharing on 7/17/18.
  */
 
-public class ClientNoteFragment extends Fragment implements AsyncServerEventListener, AdapterView.OnItemClickListener, View.OnClickListener {
+public class ClientNoteFragment extends Fragment implements AsyncServerEventListener, View.OnClickListener, ClientNoteEvent {
 
     private ListView mListView;
     private ParentActivity parentActivity;
@@ -72,10 +73,10 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     private void fillListViewWithData(List<NotesObject> noteList) {
         if(getContext() != null) {
-            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList);
+            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this);
             mListView.setAdapter(adapter);
 
-            mListView.setOnItemClickListener(this);
+//            mListView.setOnItemClickListener(this);
         }
 
     }
@@ -111,10 +112,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -123,5 +120,15 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                 navigationManager.stackReplaceFragment(AddNoteFragment.class);
                 break;
         }
+    }
+
+    @Override
+    public void editButtonClicked(NotesObject noteObject) {
+        Log.e("EDIT", "YES");
+    }
+
+    @Override
+    public void deleteButtonClicked(NotesObject noteObject) {
+        Log.e("DELETE", "YES");
     }
 }
