@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -158,11 +160,17 @@ public class ActionBarManager {
         });
     }
 
-    public void swapToAddClientBar() {
+    public void swapToAddClientBar(final String title) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+                if(title != null) {
+                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                    pageTitle.setText(title);
+                    TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
+                    sendButton.setText("Send Slack");
+                }
             }
         });
     }

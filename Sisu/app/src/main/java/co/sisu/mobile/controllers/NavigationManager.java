@@ -58,8 +58,13 @@ public class NavigationManager {
     }
 
     private void manageActionBar(Class fragmentClass) {
-        if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-            actionBarManager.swapToAddClientBar();
+        if(fragmentClass.getSimpleName().equals("AddClientFragment") || fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
+            if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
+                actionBarManager.swapToAddClientBar(null);
+            }
+            else {
+                actionBarManager.swapToAddClientBar("Send Slack Message");
+            }
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
             if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
