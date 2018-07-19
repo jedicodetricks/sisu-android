@@ -20,6 +20,7 @@ import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncSettings;
+import co.sisu.mobile.api.AsyncTeamParameters;
 import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
@@ -209,4 +210,8 @@ public class ApiManager {
     }
 
 
+    public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
+        getJWT(agentId);
+        new AsyncTeamParameters(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
 }

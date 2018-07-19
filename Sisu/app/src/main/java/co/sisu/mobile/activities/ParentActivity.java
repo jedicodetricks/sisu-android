@@ -1,10 +1,7 @@
 package co.sisu.mobile.activities;
 
-import android.content.ContentResolver;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -38,15 +35,15 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
-import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.system.MySMSObserver;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -61,6 +58,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
+    private boolean teamParamFinished = false;
     private boolean settingsFinished = false;
     private String timeline = "month";
     private int timelineSelection = 5;
@@ -176,11 +174,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //This is what goes off when you click a new team.
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
         navigationManager.updateTeam(team);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
         navigationManager.updateSelectedTeam(position);
+        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
         switch (f.getTag()) {
             case "Scoreboard":
                 ((ScoreboardFragment) f).teamSwap();
@@ -199,13 +199,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 }
             });
+            clientFinished = false;
+            goalsFinished = false;
+            settingsFinished = false;
+            teamParamFinished = false;
         }
     }
 
@@ -238,6 +242,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -252,9 +257,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(asyncReturnType.equals("Settings")) {
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
-            SettingsObject[] settings = settingsJson.getParameters();
+            ParameterObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings);
             settingsFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Team Parameters")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            if(settingsJson.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settingsJson.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
@@ -269,6 +286,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
         Log.e("FAILURE", asyncReturnType);
         errorFragment.setMessage(asyncReturnType + " cause this failure.");
         navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);

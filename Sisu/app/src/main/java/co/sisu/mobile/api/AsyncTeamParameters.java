@@ -17,14 +17,14 @@ import okhttp3.Response;
  * Created by Brady Groharing on 4/29/2018.
  */
 
-public class AsyncActivitySettings extends AsyncTask<String, String, String> {
+public class AsyncTeamParameters extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
-    private String agentId;
+    private int teamId;
     private String url;
 
-    public AsyncActivitySettings(AsyncServerEventListener cb, String url, String agentId) {
+    public AsyncTeamParameters(AsyncServerEventListener cb, String url, int teamId) {
         callback = cb;
-        this.agentId = agentId;
+        this.teamId = teamId;
         this.url = url;
     }
 
@@ -41,7 +41,7 @@ public class AsyncActivitySettings extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url + "api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities")
+                .url(url + "api/v1/parameter/edit-parameter/1/"+ teamId +"/slack_url")
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
@@ -52,21 +52,21 @@ public class AsyncActivitySettings extends AsyncTask<String, String, String> {
         try {
             response = client.newCall(request).execute();
             responseBody = response.body().string();
-            Log.e("ACTIVITY SETTINGS", responseBody);
+            Log.e("TEAM PARAMS", responseBody);
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
                 AsyncParameterJsonObject settings = gson.fromJson(responseBody, AsyncParameterJsonObject.class);
-                callback.onEventCompleted(settings, "Activity Settings");
+                callback.onEventCompleted(settings, "Team Parameters");
             }
             else {
-                callback.onEventFailed(null, "Activity Settings");
+                callback.onEventFailed(null, "Team Parameters");
             }
         }
         else {
-            callback.onEventFailed(null, "Activity Settings");
+            callback.onEventFailed(null, "Team Parameters");
         }
 
 //        Log.d("ASYNC PING IS", "NULL");

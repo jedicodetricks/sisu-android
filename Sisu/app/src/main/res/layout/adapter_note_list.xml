@@ -55,7 +55,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/deleteNoteIcon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/open_house_icon" />
+                app:srcCompat="@drawable/team_icon" />
 
             <ImageView
                 android:id="@+id/deleteNoteIcon"
@@ -67,7 +67,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/referals_icon" />
+                app:srcCompat="@drawable/email_icon" />
 
         </android.support.constraint.ConstraintLayout>
     </RelativeLayout>
