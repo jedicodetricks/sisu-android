@@ -15,6 +15,7 @@ import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
+import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGetNotes;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
@@ -197,13 +198,18 @@ public class ApiManager {
                 .compact();
     }
 
-    public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note) {
+    public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         getJWT(agentId);
-        new AsyncUpdateNotes(cb, url, clientId, note).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
         getJWT(agentId);
         new AsyncGetNotes(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void deleteNote(AsyncServerEventListener cb, String agentId, String noteId) {
+        getJWT(agentId);
+        new AsyncDeleteNotes(cb, url, noteId).execute(jwtStr, timestamp, transactionID);
     }
 }

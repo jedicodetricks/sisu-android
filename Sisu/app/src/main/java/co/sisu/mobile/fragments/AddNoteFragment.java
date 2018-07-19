@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -30,7 +31,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private EditText noteText;
-    private Button addNoteButton;
+    private TextView addNoteButton;
 
 
     @Override
@@ -54,17 +55,19 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
 
     private void initForm() {
         noteText = getView().findViewById(R.id.addNoteEditText);
-        addNoteButton = getView().findViewById(R.id.addNoteButton);
-        addNoteButton.setOnClickListener(this);
+        addNoteButton = parentActivity.findViewById(R.id.saveButton);
+        if(addNoteButton != null) {
+            addNoteButton.setOnClickListener(this);
+        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.addNoteButton:
+            case R.id.saveButton:
                 Log.e("ADD", noteText.getText().toString());
                 if(!noteText.getText().toString().equals("")) {
-                    apiManager.addNote(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), noteText.getText().toString());
+                    apiManager.addNote(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), noteText.getText().toString(), "NOTES");
                 }
                 else {
                     parentActivity.showToast("Please enter some text in the note field.");

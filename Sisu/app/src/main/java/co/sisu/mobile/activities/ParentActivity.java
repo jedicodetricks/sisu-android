@@ -1,7 +1,10 @@
 package co.sisu.mobile.activities;
 
+import android.content.ContentResolver;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +45,7 @@ import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.system.MySMSObserver;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -84,7 +88,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        for(String s : fileList()) {
 //            Log.e("FILES", s);
 //        }
+//        testSMSObserver();
     }
+
+//    private void testSMSObserver() {
+//        Log.e("TURNING ON SMS", "THIS IS A TEST");
+//        ContentResolver contentResolver = getContentResolver();
+//        contentResolver.registerContentObserver(Uri.parse("content://sms"), true, new MySMSObserver(new Handler(), this));
+//    }
 
     private void initializeButtons(){
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);

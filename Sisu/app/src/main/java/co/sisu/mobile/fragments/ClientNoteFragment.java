@@ -105,6 +105,10 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                 }
             });
         }
+        else if(asyncReturnType.equals("Delete Notes")) {
+            parentActivity.showToast("Note has been deleted");
+            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
     }
 
     @Override
@@ -129,6 +133,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     @Override
     public void deleteButtonClicked(NotesObject noteObject) {
-        Log.e("DELETE", "YES");
+        apiManager.deleteNote(this, dataController.getAgent().getAgent_id(), noteObject.getId());
     }
 }

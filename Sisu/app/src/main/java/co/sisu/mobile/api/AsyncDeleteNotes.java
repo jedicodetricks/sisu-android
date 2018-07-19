@@ -3,8 +3,6 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -17,20 +15,16 @@ import okhttp3.Response;
  * Created by bradygroharing on 4/25/18.
  */
 
-public class AsyncUpdateNotes extends AsyncTask<String, String, String> {
+public class AsyncDeleteNotes extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private String clientId;
     private String url;
-    private String note;
-    private String noteType;
+    private String noteId;
 
-    public AsyncUpdateNotes(AsyncServerEventListener cb, String url, String clientId, String note, String noteType) {
+    public AsyncDeleteNotes(AsyncServerEventListener cb, String url, String noteId) {
         callback = cb;
-        this.clientId = clientId;
-        this.note = note;
         this.url = url;
-        this.noteType = noteType;
+        this.noteId = noteId;
     }
 
     @Override
@@ -39,14 +33,10 @@ public class AsyncUpdateNotes extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-            String jsonInString = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\"}";
-            Log.e("POST NOTES", jsonInString);
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/client/logs/" + clientId)
-                    .post(body)
+                    .url(url + "api/v1/client/logs/" + noteId)
+                    .delete()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")
@@ -61,12 +51,12 @@ public class AsyncUpdateNotes extends AsyncTask<String, String, String> {
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Update Notes");
+                    callback.onEventCompleted(null, "Delete Notes");
                 } else {
-                    callback.onEventFailed(null, "Update Notes");
+                    callback.onEventFailed(null, "Delete Notes");
                 }
             } else {
-                callback.onEventFailed(null, "Update Notes");
+                callback.onEventFailed(null, "Delete Notes");
             }
 
             response.body().close();

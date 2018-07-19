@@ -167,6 +167,24 @@ public class ActionBarManager {
         });
     }
 
+    public void swapToEditClientBar() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
+                backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                String displayName = "";
+                if(selectedClient.getFirst_name() != null) {
+                    displayName += selectedClient.getFirst_name() + " ";
+                }
+                if(selectedClient.getLast_name() != null) {
+                    displayName += selectedClient.getLast_name();
+                }
+                backtionTitle.setText(displayName);
+            }
+        });
+    }
+
     public void updateTeam(TeamObject team) {
         teamBlock.setBackgroundColor(team.getColor());
         teamLetter.setText(team.getTeamLetter());
@@ -206,4 +224,6 @@ public class ActionBarManager {
     public ClientObject getSelectedClient() {
         return selectedClient;
     }
+
+
 }

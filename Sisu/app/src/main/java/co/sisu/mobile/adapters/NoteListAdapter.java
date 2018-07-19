@@ -106,9 +106,24 @@ public class NoteListAdapter extends BaseAdapter {
             e.printStackTrace();
         }
 
-        titleTextView.setText("Note - " + dateString);
+        titleTextView.setText(noteTypeParser(noteObject.getLog_type_id()) + " - " + dateString);
         subTitleTextView.setText(noteObject.getNote());
 
         return rowView;
+    }
+
+    private String noteTypeParser(String noteType) {
+        switch (noteType) {
+            case "PHONE":
+                return "Phone Call";
+            case "TEXTM":
+                return "Text Message";
+            case "NOTES":
+                return "Note";
+            case "EMAIL":
+                return "Email";
+            default:
+                return "Log";
+        }
     }
 }

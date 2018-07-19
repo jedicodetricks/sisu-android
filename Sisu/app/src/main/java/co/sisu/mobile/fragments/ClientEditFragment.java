@@ -49,7 +49,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
-    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
+    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -441,7 +441,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
                 startActivityForResult(contactIntent, 1);
                 break;
-            case R.id.clientDeleteButton:
+            case R.id.archiveButton:
                 updateCurrentClient(true);
                 saveClient();
                 break;
@@ -471,12 +471,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
+        archiveButton = parentActivity.findViewById(R.id.archiveButton);
+        if(archiveButton != null) {
+            archiveButton.setOnClickListener(this);
+        }
         buyer = parentActivity.findViewById(R.id.buyerButton);
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);
         seller.setOnClickListener(this);
-        deleteButton = getView().findViewById(R.id.clientDeleteButton);
-        deleteButton.setOnClickListener(this);
+//        deleteButton = getView().findViewById(R.id.clientDeleteButton);
+//        deleteButton.setOnClickListener(this);
         noteButton = getView().findViewById(R.id.clientNotesButton);
         noteButton.setOnClickListener(this);
     }
@@ -667,7 +671,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =(InputMethodManager) parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
