@@ -3,6 +3,8 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -15,16 +17,20 @@ import okhttp3.Response;
  * Created by bradygroharing on 4/25/18.
  */
 
-public class AsyncDeleteNotes extends AsyncTask<String, String, String> {
+public class AsyncAddNotes extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
+    private String clientId;
     private String url;
-    private String noteId;
+    private String note;
+    private String noteType;
 
-    public AsyncDeleteNotes(AsyncServerEventListener cb, String url, String noteId) {
+    public AsyncAddNotes(AsyncServerEventListener cb, String url, String clientId, String note, String noteType) {
         callback = cb;
+        this.clientId = clientId;
+        this.note = note;
         this.url = url;
-        this.noteId = noteId;
+        this.noteType = noteType;
     }
 
     @Override
@@ -33,10 +39,14 @@ public class AsyncDeleteNotes extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
+            String jsonInString = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\"}";
+            Log.e("POST NOTES", jsonInString);
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/client/logs/" + noteId)
-                    .delete()
+                    .url(url + "api/v1/client/logs/" + clientId)
+                    .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")
@@ -45,18 +55,18 @@ public class AsyncDeleteNotes extends AsyncTask<String, String, String> {
 
             try {
                 response = client.newCall(request).execute();
-//                Log.e("DELETE NOTES", response.body().string());
+//                Log.e("ADD NOTES", response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Delete Notes");
+                    callback.onEventCompleted(null, "Add Notes");
                 } else {
-                    callback.onEventFailed(null, "Delete Notes");
+                    callback.onEventFailed(null, "Add Notes");
                 }
             } else {
-                callback.onEventFailed(null, "Delete Notes");
+                callback.onEventFailed(null, "Add Notes");
             }
 
             response.body().close();

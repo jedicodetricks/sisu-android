@@ -42,6 +42,7 @@ import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -66,6 +67,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
     private File internalStorageFile;
+    private NotesObject selectedNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,6 +277,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
     // GETTERS AND SETTERS
+
+    public NotesObject getSelectedNote() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NotesObject selectedNote) {
+        this.selectedNote = selectedNote;
+    }
 
     public void setSelectedClient(ClientObject client) {
         navigationManager.setSelectedClient(client);

@@ -19,6 +19,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.NotesObject;
 
 /**
  * Created by bradygroharing on 7/18/18.
@@ -32,6 +33,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     private ApiManager apiManager;
     private EditText noteText;
     private TextView addNoteButton;
+    private boolean isUpdate = false;
 
 
     @Override
@@ -51,6 +53,15 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         initForm();
+        initUpdateOrAdd();
+    }
+
+    private void initUpdateOrAdd() {
+        NotesObject notesObject = parentActivity.getSelectedNote();
+        if(notesObject != null) {
+            noteText.setText(notesObject.getNote());
+            isUpdate = true;
+        }
     }
 
     private void initForm() {
@@ -67,7 +78,13 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
             case R.id.saveButton:
                 Log.e("ADD", noteText.getText().toString());
                 if(!noteText.getText().toString().equals("")) {
-                    apiManager.addNote(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), noteText.getText().toString(), "NOTES");
+                    if(isUpdate) {
+                        NotesObject note = parentActivity.getSelectedNote();
+                        apiManager.updateNote(this, dataController.getAgent().getAgent_id(), note.getId(), noteText.getText().toString(), note.getLog_type_id());
+                    }
+                    else {
+                        apiManager.addNote(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), noteText.getText().toString(), "NOTES");
+                    }
                 }
                 else {
                     parentActivity.showToast("Please enter some text in the note field.");
@@ -83,9 +100,14 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Update Notes")) {
+        if(asyncReturnType.equals("Add Notes")) {
             hideKeyboard(getView());
             parentActivity.showToast("Added note");
+            navigationManager.onBackPressed();
+        }
+        else if(asyncReturnType.equals("Update Notes")) {
+            hideKeyboard(getView());
+            parentActivity.showToast("Updated note");
             navigationManager.onBackPressed();
         }
     }

@@ -3,8 +3,6 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -20,14 +18,14 @@ import okhttp3.Response;
 public class AsyncUpdateNotes extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private String clientId;
+    private String noteId;
     private String url;
     private String note;
     private String noteType;
 
-    public AsyncUpdateNotes(AsyncServerEventListener cb, String url, String clientId, String note, String noteType) {
+    public AsyncUpdateNotes(AsyncServerEventListener cb, String url, String noteId, String note, String noteType) {
         callback = cb;
-        this.clientId = clientId;
+        this.noteId = noteId;
         this.note = note;
         this.url = url;
         this.noteType = noteType;
@@ -45,8 +43,8 @@ public class AsyncUpdateNotes extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/client/logs/" + clientId)
-                    .post(body)
+                    .url(url + "api/v1/client/logs/" + noteId)
+                    .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")

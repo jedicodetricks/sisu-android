@@ -121,6 +121,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addClientButton:
+                parentActivity.setSelectedNote(null);
                 navigationManager.stackReplaceFragment(AddNoteFragment.class);
                 break;
         }
@@ -128,7 +129,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     @Override
     public void editButtonClicked(NotesObject noteObject) {
-        Log.e("EDIT", "YES");
+        parentActivity.setSelectedNote(noteObject);
+        navigationManager.stackReplaceFragment(AddNoteFragment.class);
     }
 
     @Override

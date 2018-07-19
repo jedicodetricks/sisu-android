@@ -181,7 +181,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if (asyncReturnType.equals("Update Notes")) {
+        if (asyncReturnType.equals("Add Notes")) {
 
         }
         else {
