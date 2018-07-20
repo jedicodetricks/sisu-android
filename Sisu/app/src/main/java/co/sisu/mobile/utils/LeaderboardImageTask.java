@@ -7,19 +7,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -31,7 +25,7 @@ import okhttp3.Response;
  * Created by Brady Groharing on 6/25/2018.
  */
 
-public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
+public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap>{
     private ImageView imageView;
     private LeaderboardItemsObject currentChild;
     private String agentId;
@@ -49,11 +43,11 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(String... params) {
+    public Bitmap doInBackground(String... params) {
         return downloadBitmap(params[0]);
     }
 
-    private Bitmap downloadBitmap(String profile) {
+    private Bitmap downloadBitmap(String... strings) {
         Response response = null;
         getJWT();
 
@@ -64,7 +58,7 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/image/" + profile)
+                .url("https://api.sisu.co/api/v1/image/" + strings[0])
                 .get()
                 .addHeader("Authorization", jwtStr)
                 .addHeader("Client-Timestamp", timestamp)
@@ -122,23 +116,19 @@ public class LeaderboardImageTask extends AsyncTask<String, Void, Bitmap> {
                 .compact();
     }
 
-
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        if (isCancelled()) {
-            bitmap = null;
-        }
+    public void onPostExecute(Bitmap bitmap) {
 
         Log.e("IMAGEVIEW REFERENCE", imageView.toString());
 //        if (currentChild.getImage() != null) {
-        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.contact_icon);
+        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.client_icon);
         imageView.setImageDrawable(placeholder);
 //            if (imageView != null) {
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
                     currentChild.setImage(bitmap);
                 } else {
-                    imageView.setImageDrawable(placeholder);
+                    //imageView.setImageDrawable(placeholder);
                 }
 //            }
 //        }

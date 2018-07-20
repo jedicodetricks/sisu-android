@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -306,7 +307,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return apiManager;
     }
 
-    public Bitmap getImage(String profile) { return io.getImageFromCache(profile); }
+    public Bitmap getImage(String profile) { return io.getImage(profile, 1024); }//size here should be cache size i think
 
-    public void saveImage(byte[] image, String profile) { io.saveToInternalStorage(image, profile); }
+    public void saveImage(byte[] image, String profile) { io.addImage(profile, image); }
+
+    public boolean imageExists(Context context,  String id) {
+        return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
+    }
 }

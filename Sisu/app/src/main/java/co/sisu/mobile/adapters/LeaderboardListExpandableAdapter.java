@@ -2,9 +2,7 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +16,11 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.utils.LeaderboardImageTask;
+
 /**
  * Created by Brady Groharing on 2/25/2018.
  */
@@ -75,25 +72,27 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
-
         thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
 
         //This will always be null the first time through
         Bitmap bmp = childText.getImage();
-//        if(bmp == null) {
-//            if(childText.getProfile() != null) {
-//                imageName = childText.getProfile();
-//                Log.e("CALLING IMAGE", imageName + "");
-//                new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);
-//            }
-//            else {
-//                Log.e("THIS SHIT IS NULL", childText.getLabel());
-//                //This would be a default image
-//            }
-//        }
-//        else {
-//            thumbnail.setImageBitmap(bmp);
-//        }
+        if(bmp == null) {
+            imageName = childText.getProfile();
+            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
+                Log.e("CALLING IMAGE", imageName + "");
+                //Bitmap image = parentActivity.getImage(imageName);
+                //if(image != null) {
+                    new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);//this is where setting the image is actually happening, calls-download, then sets in onPost
+                //}
+            }
+            else {
+                Log.e("THIS SHIT IS NULL", childText.getLabel());
+                //This would be a default image
+            }
+        }
+        else {
+            thumbnail.setImageBitmap(bmp);
+        }
 
         TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);

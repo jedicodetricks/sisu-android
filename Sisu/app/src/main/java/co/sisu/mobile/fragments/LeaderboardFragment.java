@@ -1,8 +1,6 @@
 package co.sisu.mobile.fragments;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ExpandableListView expListView;
     private List<LeaderboardObject> listDataHeader;
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
-    private ProgressBar loader;
+    private ProgressBar loader, imageLoader;
     private Calendar calendar = Calendar.getInstance();
     private ParentActivity parentActivity;
     private DataController dataController;
@@ -89,7 +86,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void initLeaderBoardImages(String profile) {
         if(profile != null) {
-            apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), profile);
+            //apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), profile);
+            //new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName); <-if we can get the full list of all peeps and pass them into childText, and remove thumbnail, this could work here
         }
     }
 
@@ -222,12 +220,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
                     leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
                     if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile() != null) {
+                        if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getImage() == null){
+                          initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+                        }
 //                        if(parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()) == null) {
-////                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
+//                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
 //                        }
-//                        else {
-//                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
-//                        }
+                        else {
+                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
+                        }
                     }
                 }
             }
@@ -252,17 +253,24 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Leaderboard Image")) {
-            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
+            if(returnObject != null) {
+                final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
 
-            //cache image data
-            byte[] decodeValue = Base64.decode(profileObject.getData(), Base64.DEFAULT);
-            Log.e("RETURN DATA", String.valueOf(decodeValue.length));
-//            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(decodeValue);
-//            Bitmap bmp = BitmapFactory.decodeStream(arrayInputStream);
-//            Log.e("SAVING IMAGE", profileObject.getFilename().toString());
-//            Log.e("SAVING BMP", String.valueOf(bmp == null));
-//            parentActivity.saveImage(decodeValue, profileObject.getFilename().toString());
-            //set image data to leaderboard object item
+                //cache image data
+                byte[] decodeValue = Base64.decode(profileObject.getData().getBytes(), Base64.URL_SAFE);
+                Log.e("RETURN DATA", String.valueOf(decodeValue.toString()));
+                //ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(decodeValue);
+                //Bitmap bmp = BitmapFactory.decodeByteArray(decodeValue, 0, decodeValue.length);
+                Log.e("SAVING IMAGE", profileObject.getFilename().toString());
+                //Log.e("SAVING BMP", String.valueOf(bmp == null));
+                if(decodeValue != null) {
+                    parentActivity.saveImage(decodeValue, profileObject.getFilename().toString());
+                }
+                //set image data to leaderboard object item
+            } else {
+                //return is null
+                Log.e("RETURN IS NULL", "");
+            }
 
         } else {
             AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;

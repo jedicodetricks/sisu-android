@@ -2,7 +2,6 @@ package co.sisu.mobile.api;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -20,7 +19,7 @@ import okhttp3.Response;
  * Created by Jeff on 6/20/2018.
  */
 
-public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
+public class AsyncLeaderboardImage {
     private AsyncServerEventListener callback;
     private String profile;
 
@@ -29,8 +28,7 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
         this.profile = profile;
     }
 
-    @Override
-    protected String doInBackground(String... strings) {
+    public String execute(String jwt, String time, String trans) {
 
         Response response = null;
         Gson gson = new Gson();
@@ -44,9 +42,9 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
         Request request = new Request.Builder()
                 .url("https://api.sisu.co/api/v1/image/" + profile)
                 .get()
-                .addHeader("Authorization", strings[0])
-                .addHeader("Client-Timestamp", strings[1])
-                .addHeader("Transaction-Id", strings[2])
+                .addHeader("Authorization", jwt)
+                .addHeader("Client-Timestamp", time)
+                .addHeader("Transaction-Id", trans)
                 .build();
         try {
             response = client.newCall(request).execute();
@@ -56,13 +54,16 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
         }
         if(response != null) {
             if(response.code() == 200) {
-//                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
+                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
                 InputStream inputStream = response.body().byteStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                profileObject.setData(String.valueOf(response.body().charStream()));
-//                Log.e("Profile", profileObject.getData().toString() + "");
-//                profileObject.setFilename(profile);
-                callback.onEventCompleted(bitmap, profile);
+                profileObject.setData(String.valueOf(response.body().charStream()));
+                if(bitmap != null) {
+                    Log.e("bmp response", bitmap.toString());
+                }
+
+                profileObject.setFilename(profile);
+                callback.onEventCompleted(profileObject, "Leaderboard Image");
             }
             else {
                 callback.onEventFailed(null, "Leaderboard Image");
