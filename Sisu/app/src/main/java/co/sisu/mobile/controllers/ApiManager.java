@@ -31,6 +31,7 @@ import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -131,9 +132,9 @@ public class ApiManager {
         new AsyncLeaderboardStats(cb, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, String profile) {
+    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
         getJWT(agentId);
-        new AsyncLeaderboardImage(cb, profile).execute(jwtStr, timestamp, transactionID);
+        new AsyncLeaderboardImage(cb, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncProfileImage(AsyncServerEventListener cb, String agentId) {

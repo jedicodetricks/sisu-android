@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
+import co.sisu.mobile.models.LeaderboardAgentModel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,11 +22,11 @@ import okhttp3.Response;
 
 public class AsyncLeaderboardImage {
     private AsyncServerEventListener callback;
-    private String profile;
+    private LeaderboardAgentModel leaderboardAgentModel;
 
-    public AsyncLeaderboardImage(AsyncServerEventListener cb, String profile) {
+    public AsyncLeaderboardImage(AsyncServerEventListener cb, LeaderboardAgentModel leaderboardAgentModel) {
         callback = cb;
-        this.profile = profile;
+        this.leaderboardAgentModel = leaderboardAgentModel;
     }
 
     public String execute(String jwt, String time, String trans) {
@@ -40,7 +41,7 @@ public class AsyncLeaderboardImage {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/image/" + profile)
+                .url("https://api.sisu.co/api/v1/image/" + leaderboardAgentModel.getProfile())
                 .get()
                 .addHeader("Authorization", jwt)
                 .addHeader("Client-Timestamp", time)
@@ -54,16 +55,17 @@ public class AsyncLeaderboardImage {
         }
         if(response != null) {
             if(response.code() == 200) {
-                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
+//                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
                 InputStream inputStream = response.body().byteStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                profileObject.setData(String.valueOf(response.body().charStream()));
+//                profileObject.setData(String.valueOf(response.body().charStream()));
                 if(bitmap != null) {
                     Log.e("bmp response", bitmap.toString());
+                    leaderboardAgentModel.setBitmap(bitmap);
                 }
 
-                profileObject.setFilename(profile);
-                callback.onEventCompleted(profileObject, "Leaderboard Image");
+//                profileObject.setFilename(profile);
+                callback.onEventCompleted(null, "Leaderboard Image");
             }
             else {
                 callback.onEventFailed(null, "Leaderboard Image");

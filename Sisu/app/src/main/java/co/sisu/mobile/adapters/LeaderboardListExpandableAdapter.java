@@ -17,6 +17,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.utils.LeaderboardImageTask;
@@ -30,7 +31,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private Context _context;
     private List<LeaderboardObject> _listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
+    private HashMap<LeaderboardObject, List<LeaderboardAgentModel>> _listDataChild;
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private int colorCounter = 0;
     private ApiManager apiManager;
@@ -40,7 +41,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private String imageName;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
-                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
+                                            HashMap<LeaderboardObject, List<LeaderboardAgentModel>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
@@ -65,7 +66,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final LeaderboardItemsObject childText = (LeaderboardItemsObject) getChild(groupPosition, childPosition);
+        final LeaderboardAgentModel childText = (LeaderboardAgentModel) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -75,20 +76,21 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
 
         //This will always be null the first time through
-        Bitmap bmp = childText.getImage();
+        Bitmap bmp = childText.getBitmap();
         if(bmp == null) {
-            imageName = childText.getProfile();
-            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
-                Log.e("CALLING IMAGE", imageName + "");
-                //Bitmap image = parentActivity.getImage(imageName);
-                //if(image != null) {
-                    new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);//this is where setting the image is actually happening, calls-download, then sets in onPost
-                //}
-            }
-            else {
-                Log.e("THIS SHIT IS NULL", childText.getLabel());
-                //This would be a default image
-            }
+            thumbnail.setImageResource(R.drawable.contact_icon);
+//            imageName = childText.getProfile();
+//            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
+//                Log.e("CALLING IMAGE", imageName + "");
+//                //Bitmap image = parentActivity.getImage(imageName);
+//                //if(image != null) {
+////                    new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);//this is where setting the image is actually happening, calls-download, then sets in onPost
+//                //}
+//            }
+//            else {
+//                Log.e("THIS SHIT IS NULL", childText.getLabel());
+//                //This would be a default image
+//            }
         }
         else {
             thumbnail.setImageBitmap(bmp);
