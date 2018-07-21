@@ -28,7 +28,6 @@ import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateSettings;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NotificationReceiver;
@@ -107,8 +106,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                     break;
                 case "daily_reminder_time":
-                    if(s.getValue().equals("11:01")) {
-                        displayTime.setText("");
+                    if(s.getValue().equals("11:01") || s.getValue().isEmpty()) {
+                        displayTime.setText(formatTimeFrom24H("17:00"));
+                        reminderSwitch.setChecked(true);
+                        updateSettingsObject();
+                        saveSettingsObject();
                     }
                     else {
                         displayTime.setText(formatTimeFrom24H(s.getValue()));
