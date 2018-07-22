@@ -94,9 +94,22 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 switch (position) {
                     case 0:
-                        //Today
+                        //Yesterday
                         parentActivity.setTimeline("day");
                         parentActivity.setTimelineSelection(0);
+                        pastTimeline = true;
+                        calendar.add(Calendar.DAY_OF_MONTH, -1);
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                    case 1:
+                        //Today
+                        parentActivity.setTimeline("day");
+                        parentActivity.setTimelineSelection(1);
                         pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -106,10 +119,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                         break;
-                    case 1:
+                    case 2:
                         //Last Week
                         parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(1);
+                        parentActivity.setTimelineSelection(2);
                         pastTimeline = true;
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
@@ -122,10 +135,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 2:
+                    case 3:
                         //This Week
                         parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(2);
+                        parentActivity.setTimelineSelection(3);
                         pastTimeline = false;
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -137,10 +150,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 3:
+                    case 4:
                         //Last Month
                         parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(3);
+                        parentActivity.setTimelineSelection(4);
                         pastTimeline = true;
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -151,10 +164,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 4:
+                    case 5:
                         //This Month
                         parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(4);
+                        parentActivity.setTimelineSelection(5);
                         pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
@@ -164,10 +177,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 5:
+                    case 6:
                         //Last year
                         parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(5);
+                        parentActivity.setTimelineSelection(6);
                         pastTimeline = true;
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -178,10 +191,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                         selectedEndMonth = 12;
                         selectedEndDay = 31;
                         break;
-                    case 6:
+                    case 7:
                         //This year
                         parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(6);
+                        parentActivity.setTimelineSelection(7);
                         pastTimeline = false;
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -276,6 +289,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private List<String> initSpinnerArray() {
         List<String> spinnerArray = new ArrayList<>();
+        spinnerArray.add("Yesterday");
         spinnerArray.add("Today");
         spinnerArray.add("Last Week");
         spinnerArray.add("This Week");

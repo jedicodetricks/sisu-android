@@ -58,16 +58,29 @@ public class NavigationManager {
     }
 
     private void manageActionBar(Class fragmentClass) {
-        if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-            actionBarManager.swapToAddClientBar();
+        if(fragmentClass.getSimpleName().equals("AddClientFragment") || fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
+            if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
+                actionBarManager.swapToAddClientBar(null);
+            }
+            else {
+                actionBarManager.swapToAddClientBar("Send Slack Message");
+            }
         }
-        else if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
-            actionBarManager.swapToClientListBar();
+        else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
+            if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
+                actionBarManager.swapToClientListBar(null);
+            }
+            else {
+                actionBarManager.swapToClientListBar("Client Notes");
+            }
         }
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
-                fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
+                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
             sortTitleBar(fragmentClass);
+        }
+        else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
+            actionBarManager.swapToEditClientBar();
         }
         else {
             sortSaveActionBar(fragmentClass);
@@ -97,9 +110,9 @@ public class NavigationManager {
             fragmentTag = "Settings";
             actionBarManager.swapToSaveAction("Settings");
         }
-        else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
-            fragmentTag = "ClientEdit";
-            actionBarManager.swapToSaveAction(null);
+        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
+            fragmentTag = "Add Client Note";
+            actionBarManager.swapToSaveAction("Add Client Note");
         }
     }
 
@@ -119,6 +132,12 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
             fragmentTag = "Leaderboard";
         }
+        else if(fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
+            fragmentTag = "Change Password";
+        }
+//        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
+//            fragmentTag = "Add Client Note";
+//        }
         actionBarManager.swapToTitleBar(fragmentTag);
         toolbarManager.resetToolbarImages(fragmentTag);
     }
@@ -164,7 +183,7 @@ public class NavigationManager {
         }
         // Insert the fragment by replacing any existing fragment
         backStack.add(ClientListFragment.class);
-        actionBarManager.swapToClientListBar();
+        actionBarManager.swapToClientListBar(null);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();

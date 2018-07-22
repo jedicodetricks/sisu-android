@@ -6,7 +6,7 @@ package co.sisu.mobile.models;
 
 public class AsyncSettingsJsonObject {
     String count;
-    SettingsObject[] parameters;
+    ParameterObject[] parameters;
     String server_time;
     String status;
     String status_code;
@@ -19,11 +19,11 @@ public class AsyncSettingsJsonObject {
         this.count = count;
     }
 
-    public SettingsObject[] getParameters() {
+    public ParameterObject[] getParameters() {
         return parameters;
     }
 
-    public void setParameters(SettingsObject[] parameters) {
+    public void setParameters(ParameterObject[] parameters) {
         this.parameters = parameters;
     }
 

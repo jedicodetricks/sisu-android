@@ -4,7 +4,7 @@ package co.sisu.mobile.models;
  * Created by bradygroharing on 4/17/18.
  */
 
-public class SettingsObject {
+public class ParameterObject {
     String external_id;
     String external_type_id;
     String name;
@@ -13,7 +13,7 @@ public class SettingsObject {
     String status;
     String value;
 
-    public SettingsObject(String name, String status, String value, String parameter_type_id) {
+    public ParameterObject(String name, String status, String value, String parameter_type_id) {
         this.name = name;
         this.status = status;
         this.value = value;

@@ -26,12 +26,14 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
     private String teamId;
     private String searchYear;
     private String searchMonth;
+    private String url;
 
-    public AsyncLeaderboardStats (AsyncServerEventListener cb, String teamId, String searchYear, String searchMonth) {
+    public AsyncLeaderboardStats (AsyncServerEventListener cb, String url, String teamId, String searchYear, String searchMonth) {
         callback = cb;
         this.teamId = teamId;
         this.searchYear = searchYear;
         this.searchMonth = searchMonth;
+        this.url = url;
     }
 
     @Override
@@ -42,15 +44,15 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
 
-            String url = "https://api.sisu.co/api/v1/team/leaderboards/" + teamId + "/" + searchYear;
+            String requestUrl = url + "api/v1/team/leaderboards/" + teamId + "/" + searchYear;
             if(!searchMonth.equals("")) {
-                url = "https://api.sisu.co/api/v1/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
+                requestUrl = url + "api/v1/team/leaderboards/" + teamId + "/" + searchYear + "/" + searchMonth;
             }
 
-            Log.e("LEADERBOARD URL", url);
+//            Log.e("LEADERBOARD URL", requestUrl);
 
             Request request = new Request.Builder()
-                    .url(url)
+                    .url(requestUrl)
                     .get()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

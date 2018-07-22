@@ -27,12 +27,14 @@ public class AsyncUpdateActivities extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-    AsyncUpdateActivitiesJsonObject updateActivitiesModels;
+    private AsyncUpdateActivitiesJsonObject updateActivitiesModels;
+    private String url;
 
-    public AsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
+    public AsyncUpdateActivities(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
         callback = cb;
         this.agentId = agentId;
         this.updateActivitiesModels = updateActivitiesModels;
+        this.url = url;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class AsyncUpdateActivities extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/activity/" + agentId)
+                    .url(url + "api/v1/agent/activity/" + agentId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

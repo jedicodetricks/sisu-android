@@ -24,6 +24,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String last_name;
     private String lead_type_id;
     private String mobile_phone;
+    private String note;
     private String paid_dt;
     private String postal_code;
     private String signed_dt;
@@ -241,6 +242,14 @@ public class ClientObject implements Comparable<ClientObject>{
 
     public void setUpdated_ts(String updated_ts) {
         this.updated_ts = updated_ts;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override

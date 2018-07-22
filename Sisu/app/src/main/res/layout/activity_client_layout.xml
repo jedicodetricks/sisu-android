@@ -141,7 +141,7 @@
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/transAmountInputLayout">
 
             <EditText
                 android:id="@+id/editGci"
@@ -155,10 +155,9 @@
                 android:hint="@string/gci_hint"
                 android:maxLength="8"
                 android:inputType="number"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTransAmount" />
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -170,7 +169,7 @@
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gciInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/gciInputLayout">
 
             <EditText
                 android:id="@+id/editPaidIncome"
@@ -189,6 +188,9 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
         </android.support.design.widget.TextInputLayout>
+
+
+
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/emailInputLayout"
@@ -226,7 +228,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commissionInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
 
             <EditText
                 android:id="@+id/editPhone"
@@ -520,7 +522,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <Button
-                android:id="@+id/clientDeleteButton"
+                android:id="@+id/clientNotesButton"
                 style="@style/ButtonStyle"
                 android:layout_width="75dp"
                 android:layout_height="40dp"
@@ -529,8 +531,36 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notesInputLayout"
+                android:text="@string/logs" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/notesInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:theme="@style/RequiredTextTheme"
                 app:layout_constraintTop_toBottomOf="@id/settlementDateSection"
-                android:text="@string/archive" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <EditText
+                    android:id="@+id/editNotes"
+                    style="@style/EditTextLabelStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:hint="@string/notes"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </android.support.design.widget.TextInputLayout>
+
 
         </android.support.constraint.ConstraintLayout>
 
@@ -575,6 +605,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.296" />
+
+
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

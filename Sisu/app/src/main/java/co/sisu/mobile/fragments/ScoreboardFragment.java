@@ -174,11 +174,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
                 switch (position) {
                     case 0:
-                        //Today
-                        pastTimeline = false;
+                        //Yesterday
+                        pastTimeline = true;
                         parentActivity.setTimeline("day");
                         parentActivity.setTimelineSelection(0);
-
+                        calendar.add(Calendar.DAY_OF_MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -189,11 +189,26 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         needsProgress = false;
                         break;
                     case 1:
+                        //Today
+                        pastTimeline = false;
+                        parentActivity.setTimeline("day");
+                        parentActivity.setTimelineSelection(1);
+
+                        selectedStartYear = calendar.get(Calendar.YEAR);
+                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                        selectedEndYear = calendar.get(Calendar.YEAR);
+                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                        needsProgress = false;
+                        break;
+                    case 2:
                         //Last Week
                         needsProgress = false;
                         pastTimeline = true;
                         parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(1);
+                        parentActivity.setTimelineSelection(2);
 
                         calendar.add(Calendar.WEEK_OF_YEAR, -1);
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
@@ -206,12 +221,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 2:
+                    case 3:
                         //This Week
                         needsProgress = true;
                         pastTimeline = false;
                         parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(2);
+                        parentActivity.setTimelineSelection(3);
 
                         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -223,12 +238,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
-                    case 3:
+                    case 4:
                         //Last Month
                         needsProgress = false;
                         pastTimeline = true;
                         parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(3);
+                        parentActivity.setTimelineSelection(4);
 
                         calendar.add(Calendar.MONTH, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
@@ -239,12 +254,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 4:
+                    case 5:
                         //This Month
                         needsProgress = true;
                         pastTimeline = false;
                         parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(4);
+                        parentActivity.setTimelineSelection(5);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedStartDay = 1;
@@ -253,12 +268,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
                         selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
-                    case 5:
+                    case 6:
                         //Last year
                         needsProgress = false;
                         pastTimeline = true;
                         parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(5);
+                        parentActivity.setTimelineSelection(6);
                         calendar.add(Calendar.YEAR, -1);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
@@ -268,12 +283,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                         selectedEndMonth = 12;
                         selectedEndDay = 31;
                         break;
-                    case 6:
+                    case 7:
                         //This year
                         needsProgress = true;
                         pastTimeline = false;
                         parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(6);
+                        parentActivity.setTimelineSelection(7);
                         selectedStartYear = calendar.get(Calendar.YEAR);
                         selectedStartMonth = 1;
                         selectedStartDay = 1;
@@ -336,6 +351,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private List<String> initSpinnerArray() {
         List<String> spinnerArray = new ArrayList<>();
+        spinnerArray.add("Yesterday");
         spinnerArray.add("Today");
         spinnerArray.add("Last Week");
         spinnerArray.add("This Week");

@@ -22,10 +22,12 @@ public class AsyncAgentGoals extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
+    private String url;
 
-    public AsyncAgentGoals(AsyncServerEventListener cb, String agentId) {
+    public AsyncAgentGoals(AsyncServerEventListener cb, String url, String agentId) {
         callback = cb;
         this.agentId = agentId;
+        this.url = url;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class AsyncAgentGoals extends AsyncTask<String, String, String> {
         Gson gson = new Gson();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/agent/get-goals/"+ agentId)
+                .url(url + "api/v1/agent/get-goals/"+ agentId)
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

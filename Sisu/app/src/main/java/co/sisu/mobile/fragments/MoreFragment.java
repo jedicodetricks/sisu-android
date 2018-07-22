@@ -101,6 +101,9 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 navigationManager.stackReplaceFragment(FeedbackFragment.class);
 //                navigationManager.swapToTitleBar("Feedback");
                 break;
+            case "Slack":
+                navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                break;
             case "Logout":
                 logout();
                 SaveSharedPreference.setUserName(getContext(), "");

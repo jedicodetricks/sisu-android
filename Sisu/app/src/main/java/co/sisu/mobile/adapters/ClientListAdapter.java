@@ -91,13 +91,13 @@ public class ClientListAdapter extends BaseAdapter {
                 textImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mClientMessagingEvent.onTextClicked(clientObject.getMobile_phone());
+                        mClientMessagingEvent.onTextClicked(clientObject.getMobile_phone(), clientObject);
                     }
                 });
                 phoneImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mClientMessagingEvent.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone());
+                        mClientMessagingEvent.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject);
                     }
                 });
             }
@@ -114,7 +114,7 @@ public class ClientListAdapter extends BaseAdapter {
                 emailImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mClientMessagingEvent.onEmailClicked(clientObject.getEmail());
+                        mClientMessagingEvent.onEmailClicked(clientObject.getEmail(), clientObject);
                     }
                 });
             }

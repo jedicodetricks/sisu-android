@@ -2,7 +2,6 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +17,14 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
-import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
+import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
+import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
-import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
@@ -150,8 +147,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Activity Settings")) {
-            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
-            SettingsObject settings = settingsJson.getParameter();
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            ParameterObject settings = settingsJson.getParameter();
             dataController.setActivitiesSelected(settings);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override

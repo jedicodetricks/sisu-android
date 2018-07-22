@@ -32,7 +32,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
-import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
@@ -51,7 +51,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private DataController dataController;
     private ApiManager apiManager;
     private PendingIntent pendingIntent;
-    private List<SettingsObject> settings;
+    private List<ParameterObject> settings;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -93,7 +93,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private void fillFieldsWithData() {
         settings = dataController.getSettings();
 
-        for (SettingsObject s : settings) {
+        for (ParameterObject s : settings) {
             Log.e(s.getName(), s.getValue());
             switch (s.getName()) {
                 case "local_timezone":
@@ -122,14 +122,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
     }
 
-    private boolean isChecked(SettingsObject s) {
+    private boolean isChecked(ParameterObject s) {
         if(s.getValue().equals("0")) {
             return false;
         }
         return true;
     }
 
-    private String isCheckedBinaryValue(SettingsObject s) {
+    private String isCheckedBinaryValue(ParameterObject s) {
         if(s.getValue().equals("0")) {
             return "1";
         }
@@ -187,7 +187,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     AlarmManager manager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
                     manager.cancel(pendingIntent);
                 }
-                for(SettingsObject so : settings) {
+                for(ParameterObject so : settings) {
                     if(so.getName().equals("daily_reminder")) {
                         so.setValue(isCheckedBinaryValue(so));
                     }
@@ -195,7 +195,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 break;
                 //Keep these, we'll need them for V2
 //            case R.id.lightsSwitch:
-//                for(SettingsObject so : settings) {
+//                for(ParameterObject so : settings) {
 //                    if(so.getName().equals("lights")) {
 //                        so.setValue(isCheckedBinaryValue(so));
 //                    }
@@ -203,7 +203,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 //                Log.d("CHECK LISTENER", "LIGHTS");
 //                break;
 //            case R.id.idSwitch:
-//                for(SettingsObject so : settings) {
+//                for(ParameterObject so : settings) {
 //                    if(so.getName().equals("biometrics")) {
 //                        so.setValue(isCheckedBinaryValue(so));
 //                    }
@@ -232,7 +232,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void updateSettingsObject() {
-        for (SettingsObject s : settings) {
+        for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
                     s.setValue(timeZoneDisplay.getText().toString());
@@ -289,7 +289,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private void saveSettingsObject() {
         List<UpdateSettingsObject> settingsObjects = new ArrayList<>();
 
-        for(SettingsObject so : settings) {
+        for(ParameterObject so : settings) {
             settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
         }
 
@@ -352,7 +352,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    SettingsObject[] array = new SettingsObject[settings.size()];
+                    ParameterObject[] array = new ParameterObject[settings.size()];
                     dataController.setSettings(settings.toArray(array));
                     parentActivity.showToast("Your settings have been updated");
                 }

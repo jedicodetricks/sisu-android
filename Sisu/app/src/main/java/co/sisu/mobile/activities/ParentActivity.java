@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,11 +42,13 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.models.SettingsObject;
+import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 
@@ -62,12 +65,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
+    private boolean teamParamFinished = false;
     private boolean settingsFinished = false;
     private String timeline = "month";
-    private int timelineSelection = 4;
+    private int timelineSelection = 5;
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
     private FileIO io;
+    private File internalStorageFile;
+    private NotesObject selectedNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +92,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
+//        internalStorageFile = new File(this.getFilesDir(), "images");
+//        File f = getDir("images", MODE_PRIVATE);
+//        Log.e("f", String.valueOf(f));
+//        for(String s : fileList()) {
+//            Log.e("FILES", s);
+//        }
+//        testSMSObserver();
     }
+
+//    private void testSMSObserver() {
+//        Log.e("TURNING ON SMS", "THIS IS A TEST");
+//        ContentResolver contentResolver = getContentResolver();
+//        contentResolver.registerContentObserver(Uri.parse("content://sms"), true, new MySMSObserver(new Handler(), this));
+//    }
 
     private void initializeButtons(){
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
@@ -164,11 +183,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //This is what goes off when you click a new team.
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
         navigationManager.updateTeam(team);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
         navigationManager.updateSelectedTeam(position);
+        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
         switch (f.getTag()) {
             case "Scoreboard":
                 ((ScoreboardFragment) f).teamSwap();
@@ -187,13 +208,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 }
             });
+            clientFinished = false;
+            goalsFinished = false;
+            settingsFinished = false;
+            teamParamFinished = false;
         }
     }
 
@@ -226,6 +251,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -240,13 +266,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(asyncReturnType.equals("Settings")) {
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
-            SettingsObject[] settings = settingsJson.getParameters();
+            ParameterObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
-            List<SettingsObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
+            List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
             settingsFinished = true;
             int hour = 0;
             int minute = 0;
-            for (SettingsObject s : newSettings) {
+            for (ParameterObject s : newSettings) {
                 Log.e(s.getName(), s.getValue());
                 switch (s.getName()) {
                     case "daily_reminder_time":
@@ -259,6 +285,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Team Parameters")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            if(settingsJson.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settingsJson.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
@@ -293,6 +331,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
         Log.e("FAILURE", asyncReturnType);
         errorFragment.setMessage(asyncReturnType + " cause this failure.");
         navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
@@ -301,6 +340,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
     // GETTERS AND SETTERS
+
+    public NotesObject getSelectedNote() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NotesObject selectedNote) {
+        this.selectedNote = selectedNote;
+    }
 
     public void setSelectedClient(ClientObject client) {
         navigationManager.setSelectedClient(client);

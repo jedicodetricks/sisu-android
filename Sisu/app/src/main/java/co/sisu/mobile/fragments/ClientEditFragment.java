@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
@@ -42,12 +44,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private NavigationManager navigationManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, gciPercent, incomePercent;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
-    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
+    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -76,6 +79,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
@@ -173,6 +177,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
+        noteText.setText(currentClient.getNote());
         updateStatus();
         //calculatePercentage();
     }
@@ -211,6 +216,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setUc_dt(null);
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
+        currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -363,11 +369,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer = getView().findViewById(R.id.buyerButton);
         seller = getView().findViewById(R.id.sellerButton);
         exportContact = getView().findViewById(R.id.exportContactButton);
-
-//        gci.addTextChangedListener(this);
-//        gciPercent.addTextChangedListener(this);
-//        paidIncome.addTextChangedListener(this);
-//        incomePercent.addTextChangedListener(this);
+        noteText = getView().findViewById(R.id.editNotes);
     }
 
     @Override
@@ -500,9 +502,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
                 startActivityForResult(contactIntent, 1);
                 break;
-            case R.id.clientDeleteButton:
+            case R.id.archiveButton:
                 updateCurrentClient(true);
                 saveClient();
+                break;
+            case R.id.clientNotesButton:
+                navigationManager.stackReplaceFragment(ClientNoteFragment.class);
                 break;
             default:
                 break;
@@ -527,12 +532,18 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
+        archiveButton = parentActivity.findViewById(R.id.archiveButton);
+        if(archiveButton != null) {
+            archiveButton.setOnClickListener(this);
+        }
         buyer = parentActivity.findViewById(R.id.buyerButton);
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);
         seller.setOnClickListener(this);
-        deleteButton = getView().findViewById(R.id.clientDeleteButton);
-        deleteButton.setOnClickListener(this);
+//        deleteButton = getView().findViewById(R.id.clientDeleteButton);
+//        deleteButton.setOnClickListener(this);
+        noteButton = getView().findViewById(R.id.clientNotesButton);
+        noteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
@@ -704,6 +715,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 parentActivity.showToast("Client updates saved");
             }
         });
+
     }
 
     @Override
@@ -726,7 +738,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =(InputMethodManager) parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -27,12 +27,14 @@ public class AsyncUpdateSettings extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-    AsyncUpdateSettingsJsonObject updateSettingsModel;
+    private AsyncUpdateSettingsJsonObject updateSettingsModel;
+    private String url;
 
-    public AsyncUpdateSettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateSettingsModel) {
+    public AsyncUpdateSettings(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateSettingsJsonObject updateSettingsModel) {
         callback = cb;
         this.agentId = agentId;
         this.updateSettingsModel = updateSettingsModel;
+        this.url = url;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class AsyncUpdateSettings extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/parameter/edit-parameter")
+                    .url(url + "api/v1/parameter/edit-parameter")
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
