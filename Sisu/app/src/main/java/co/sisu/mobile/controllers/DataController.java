@@ -69,16 +69,16 @@ public class DataController {
     private void initializeMorePageObject() {
         morePage = new ArrayList<>();
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
-        morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
-        morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
-        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
-        morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
-        morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon_active));
-        morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
+        morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon));
+        morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon));
+        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon));
+        morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon));
+        morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon));
+        morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon));
         if(slackInfo != null) {
             morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
         }
-        morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
+        morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon));
     }
 
     public List<MorePageContainer> getMorePageContainer() {
