@@ -272,6 +272,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             settingsFinished = true;
             int hour = 0;
             int minute = 0;
+            int reminderActive = 0;
             for (ParameterObject s : newSettings) {
                 Log.e(s.getName(), s.getValue());
                 switch (s.getName()) {
@@ -281,10 +282,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         minute = Integer.parseInt(values[1]);
                         Log.e("ALARM TIME", hour + " " + minute);
                         break;
+                    case "daily_reminder":
+                        reminderActive = Integer.parseInt(s.getValue());
                 }
             }
 
-            createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+            if(reminderActive == 1) {
+                createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+            }
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Team Parameters")) {

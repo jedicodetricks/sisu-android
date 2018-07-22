@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.TextView;
 
 import java.util.List;
 import java.util.Stack;
@@ -202,7 +201,7 @@ public class NavigationManager {
         }
         backStack.add(ClientListFragment.class);
         // Insert the fragment by replacing any existing fragment
-        actionBarManager.swapToClientListBar();
+        actionBarManager.swapToClientListBar(tab);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
