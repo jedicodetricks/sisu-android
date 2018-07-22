@@ -25,6 +25,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -64,6 +65,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
     private FileIO io;
+    private CacheManager cacheManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
+
+        cacheManager = CacheManager.getInstance();
     }
 
     private void initializeButtons(){
@@ -313,5 +317,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean imageExists(Context context,  String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
+    }
+
+    public CacheManager getCacheManager() {
+        return cacheManager;
+    }
+
+    public void setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
 }

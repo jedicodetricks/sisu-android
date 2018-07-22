@@ -229,7 +229,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
                     if(!agents.containsKey(currentAgent.getAgent_id())) {
                         agents.put(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                                                                                                        currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
                     }
                 }
             }
@@ -268,27 +268,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
-//                    Log.e("AGENT ID", leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id());
-//                    Log.e("ADDING", agents.get(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id()).getAgent_id() + "|");
                     leaderboardItems.add(agents.get(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id()));
-
-//                    if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile() != null) {
-//                        LeaderboardItemsObject currentAgent = leaderBoardSections[i].getLeaderboardItemsObject()[j];
-//
-//                        if(!agents.containsKey(currentAgent.getAgent_id())) {
-//                            agents.put(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-//                                    currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
-//                        }
-////                        if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getImage() == null){
-////                          initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
-////                        }
-////                        if(parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()) == null) {
-////                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
-////                        }
-////                        else {
-////                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
-////                        }
-//                    }
                 }
             }
 

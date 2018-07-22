@@ -222,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                //TODO: Get rid of this goddamn message.
                 showToast("The server is experiencing issues, please try again later.");
             }
         });

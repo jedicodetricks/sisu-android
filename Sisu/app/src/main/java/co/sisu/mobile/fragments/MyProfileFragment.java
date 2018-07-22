@@ -392,7 +392,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        //TODO: We'll need a counter to make sure this just doesn't loop infinitely
 //        if(asyncReturnType.equals("Profile Image")) {
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
 //        }
