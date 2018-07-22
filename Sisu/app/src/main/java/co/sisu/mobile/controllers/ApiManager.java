@@ -1,5 +1,7 @@
 package co.sisu.mobile.controllers;
 
+import android.content.Context;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +36,8 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Brady Groharing on 6/2/2018.
@@ -46,6 +50,12 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
+    int cacheSize = 10 * 1024 * 1024; // 10MB
+    Cache cache;
+
+    public ApiManager(Context context) {
+        cache = new Cache(context.getCacheDir(), cacheSize);
+    }
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
         getJWT(agentId);
@@ -139,7 +149,7 @@ public class ApiManager {
 
     public void sendAsyncProfileImage(AsyncServerEventListener cb, String agentId) {
         getJWT(agentId);
-        new AsyncProfileImage(cb, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncProfileImage(cb, agentId, cache).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateProfileImage(AsyncServerEventListener cb, String agentId, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {

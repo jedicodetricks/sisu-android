@@ -74,7 +74,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         dataController = new DataController();
         navigationManager = new NavigationManager(this);
-        apiManager = new ApiManager();
+        apiManager = new ApiManager(this);
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
@@ -85,7 +85,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
 
-        cacheManager = CacheManager.getInstance();
+//        cacheManager = CacheManager.getInstance();
     }
 
     private void initializeButtons(){

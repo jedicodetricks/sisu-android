@@ -48,12 +48,14 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import okhttp3.Cache;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -74,6 +76,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private boolean imageChanged;
     private EditText username, firstName, lastName, phone, password;
     private String imageData, imageFormat;
+    private CacheManager cacheManager;
     //ProfileObject currentProfile;
 
     public MyProfileFragment() {
@@ -98,11 +101,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         agent = dataController.getAgent();
+        cacheManager = parentActivity.getCacheManager();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
-        apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+//        Bitmap profilePic = cacheManager.getCacheFile("testImage");
+//        if(profilePic == null) {
+            apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+//        }
     }
 
     private void initFields() {
@@ -355,6 +362,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+//            cacheManager.saveCacheFile("testImage", bmp, "testImage");
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
@@ -366,6 +374,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Profile Image")) {
+            Log.e("GOT THE PIC", "WOOT");
             final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
