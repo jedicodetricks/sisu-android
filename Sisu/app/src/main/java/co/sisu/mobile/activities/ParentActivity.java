@@ -1,6 +1,9 @@
 package co.sisu.mobile.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -237,8 +241,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(asyncReturnType.equals("Settings")) {
             AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
             SettingsObject[] settings = settingsJson.getParameters();
-            dataController.setSettings(settings);
+            dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
+            List<SettingsObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
             settingsFinished = true;
+            int hour = 0;
+            int minute = 0;
+            for (SettingsObject s : newSettings) {
+                Log.e(s.getName(), s.getValue());
+                switch (s.getName()) {
+                    case "daily_reminder_time":
+                        String[] values = s.getValue().split(":");
+                        hour = Integer.parseInt(values[0]);
+                        minute = Integer.parseInt(values[1]);
+                        Log.e("ALARM TIME", hour + " " + minute);
+                        break;
+                }
+            }
+
+            createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
@@ -249,6 +269,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             clientFinished = true;
             navigateToScoreboard();
         }
+    }
+
+    public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
+        if(pendingIntent == null) {
+            Intent myIntent = new Intent(this, NotificationReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(this, 1412, myIntent, 0);
+        }
+        Calendar calendar = Calendar.getInstance();
+        int interval = 1000 * 60 * 60 * 24; // One day
+
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.MINUTE, currentSelectedMinute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
+
+        Log.e("CALENDAR SET", calendar.getTime().toString());
+        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
     }
 
     @Override

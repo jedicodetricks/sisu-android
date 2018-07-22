@@ -35,8 +35,6 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
-import static android.content.Context.ALARM_SERVICE;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -89,6 +87,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
         version = getView().findViewById(R.id.versionLabel);
         version.setText("Version: " + BuildConfig.VERSION_NAME);
+        
     }
 
     private void fillFieldsWithData() {
@@ -106,15 +105,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                     break;
                 case "daily_reminder_time":
-                    if(s.getValue().equals("11:01") || s.getValue().isEmpty()) {
-                        displayTime.setText(formatTimeFrom24H("17:00"));
-                        reminderSwitch.setChecked(true);
-                        updateSettingsObject();
-                        saveSettingsObject();
-                    }
-                    else {
                         displayTime.setText(formatTimeFrom24H(s.getValue()));
-                    }
                     break;
                 //Keep these, we'll need them for V2
 
@@ -305,7 +296,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
         apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject);
 
-        createNotificationAlarm();
+        parentActivity.createNotificationAlarm(currentSelectedHour,currentSelectedMinute,pendingIntent);
 
     }
 
@@ -339,21 +330,21 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         mTimePicker.show();
     }
 
-    private void createNotificationAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        int interval = 1000 * 60 * 60 * 24; // One day
-
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MINUTE, currentSelectedMinute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
-
-        Log.e("CALENDAR SET", calendar.getTime().toString());
-        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
-
-        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
-    }
+//    private void createNotificationAlarm() {
+//        Calendar calendar = Calendar.getInstance();
+//        int interval = 1000 * 60 * 60 * 24; // One day
+//
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.MINUTE, currentSelectedMinute);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
+//
+//        Log.e("CALENDAR SET", calendar.getTime().toString());
+//        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
+//
+//        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+//    }
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {

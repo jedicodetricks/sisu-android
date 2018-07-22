@@ -692,13 +692,13 @@ public class DataController {
             switch (s.getName()) {
                 case "local_timezone":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("");
+                        s.setValue("America/Denver");
                     }
                     relevantSettings.add(s);
                     break;
                 case "daily_reminder_time":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("0");
+                        s.setValue("17:00");
                     }
                     relevantSettings.add(s);
                     break;
@@ -706,7 +706,7 @@ public class DataController {
 //                    case "biometrics":
                 case "daily_reminder":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("11:01");
+                        s.setValue("1");
                     }
                     relevantSettings.add(s);
                     break;
@@ -866,15 +866,15 @@ public class DataController {
     }
 
     private SettingsObject getDefaultLocalTimezone() {
-        return new SettingsObject("local_timezone", "N", "", "0");
+        return new SettingsObject("local_timezone", "N", "America/Denver", "0");
     }
 
     private SettingsObject getDefaultDailyReminderTime() {
-        return new SettingsObject("daily_reminder_time", "N", "11:01", "5");
+        return new SettingsObject("daily_reminder_time", "N", "17:00", "5");
     }
 
     private SettingsObject getDefaultDailyReminder() {
-        return new SettingsObject("daily_reminder", "N", "0", "3");
+        return new SettingsObject("daily_reminder", "N", "1", "3");
     }
 
     private SettingsObject getDefaultRecordActivities() {
