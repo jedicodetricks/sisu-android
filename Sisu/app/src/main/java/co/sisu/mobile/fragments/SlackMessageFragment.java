@@ -79,22 +79,15 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addClientSaveButton:
-                Log.e("ADD", noteText.getText().toString());
-//                if(!noteText.getText().toString().equals("")) {
-//                    if(isUpdate) {
-//                        NotesObject note = parentActivity.getSelectedNote();
-//                        apiManager.updateNote(this, dataController.getAgent().getAgent_id(), note.getId(), noteText.getText().toString(), note.getLog_type_id());
-//                    }
-//                    else {
-//                        apiManager.addNote(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), noteText.getText().toString(), "NOTES");
-//                    }
-//                }
-//                else {
-//                    parentActivity.showToast("Please enter some text in the note field.");
-//                }
+                if(!noteText.getText().toString().equals("")) {
+                    apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
+                }
+                else {
+                    parentActivity.showToast("Please enter some text.");
+                }
                 break;
             case R.id.cancelButton:
-                Log.e("CANCEL", "YES");
+                navigationManager.onBackPressed();
                 break;
         }
     }

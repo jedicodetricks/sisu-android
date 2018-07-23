@@ -1,5 +1,7 @@
 package co.sisu.mobile.controllers;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,9 +111,15 @@ public class ApiManager {
         new AsyncUpdateClients(cb, url, currentClient).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback) {
+    public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
         getJWT(agentId);
-        new AsyncFeedback(cb, url, agentId, feedback).execute(jwtStr, timestamp, transactionID);
+        if(slackUrl != null) {
+            Log.e("GOING TO SLACK", "YES");
+            new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
+        }
+        else {
+            new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
+        }
     }
 
     public void sendAsyncAgent(AsyncServerEventListener cb, String agentId) {
