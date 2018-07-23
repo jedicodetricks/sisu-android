@@ -1,9 +1,9 @@
 package co.sisu.mobile.fragments;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +32,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
-import co.sisu.mobile.models.AsyncProfileImageJsonObject;
+import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 
@@ -56,6 +56,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private int selectedDay = 0;
     private int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
     private int colorCounter = 0;
+    private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
+    private int agentCounter = 0;
+    private LeaderboardObject[] leaderBoardSections;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -84,10 +87,19 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         initializeCalendarHandler();
     }
 
-    private void initLeaderBoardImages(String profile) {
-        if(profile != null) {
-            //apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), profile);
-            //new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName); <-if we can get the full list of all peeps and pass them into childText, and remove thumbnail, this could work here
+    private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {
+        if(leaderboardAgentModel.getProfile() != null) {
+            Bitmap bitmap = parentActivity.getBitmapFromMemCache(leaderboardAgentModel.getProfile());
+            if(bitmap == null) {
+                apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), leaderboardAgentModel);
+            }
+            else {
+                leaderboardAgentModel.setBitmap(bitmap);
+                agentDisplayCounting();
+            }
+        }
+        else {
+            agentDisplayCounting();
         }
     }
 
@@ -207,29 +219,58 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         return spinnerArray;
     }
 
-    private void prepareListData(LeaderboardObject[] leaderBoardSections) {
+    private void prepareListData() {
+
+        for(int i = 0; i < leaderBoardSections.length; i++) {
+
+            for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
+                if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
+
+                    LeaderboardItemsObject currentAgent = leaderBoardSections[i].getLeaderboardItemsObject()[j];
+
+                    if(!agents.containsKey(currentAgent.getAgent_id())) {
+                        agents.put(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
+                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                    }
+                }
+            }
+
+            if(colorCounter == teamColors.length - 1) {
+                colorCounter = 0;
+            }
+            else {
+                colorCounter++;
+            }
+        }
+
+        agentCounter = 0;
+        for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
+        {
+            initLeaderBoardImages(entry.getValue());
+        }
+
+
+    }
+
+    private void displayListData() {
         listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
+        listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
         colorCounter = 0;
 
         for(int i = 0; i < leaderBoardSections.length; i++) {
             leaderBoardSections[i].setColor(teamColors[colorCounter]);
             listDataHeader.add(leaderBoardSections[i]);
             List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
+
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
-                    leaderboardItems.add(leaderBoardSections[i].getLeaderboardItemsObject()[j]);
-//                    if(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile() != null) {
-//                        Log.e("NOT NULL", leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
-//                        if(parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()) == null) {
-////                            initLeaderBoardImages(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile());
-//                        }
-//                        else {
-//                            Log.e("NOT NULL", parentActivity.getImage(leaderBoardSections[i].getLeaderboardItemsObject()[j].getProfile()).toString());
-//                        }
-//                    }
+                    LeaderboardItemsObject item = leaderBoardSections[i].getLeaderboardItemsObject()[j];
+                    LeaderboardAgentModel agent = agents.get(item.getAgent_id());
+                    item.setImage(agent.getBitmap());
+                    leaderboardItems.add(item);
                 }
             }
+
             listDataChild.put(listDataHeader.get(i), leaderboardItems);
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
@@ -238,49 +279,44 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 colorCounter++;
             }
         }
-        //i THINK here is where we need to check the cache/run the async call for each profile
+
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 listAdapter = new LeaderboardListExpandableAdapter(getContext(), listDataHeader, listDataChild, parentActivity, apiManager, dataController.getAgent().getAgent_id());
                 expListView.setAdapter(listAdapter);
+                loader.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void agentDisplayCounting() {
+        if(agentCounter < agents.size() - 1) {
+            agentCounter++;
+        }
+        else {
+            displayListData();
+        }
     }
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Leaderboard Image")) {
-            if(returnObject != null) {
-                final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
-
-                //cache image data
-                byte[] decodeValue = Base64.decode(profileObject.getData().getBytes(), Base64.URL_SAFE);
-                Log.e("RETURN DATA", String.valueOf(decodeValue.toString()));
-                //ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(decodeValue);
-                //Bitmap bmp = BitmapFactory.decodeByteArray(decodeValue, 0, decodeValue.length);
-                Log.e("SAVING IMAGE", profileObject.getFilename().toString());
-                //Log.e("SAVING BMP", String.valueOf(bmp == null));
-                if(decodeValue != null) {
-                    parentActivity.saveImage(decodeValue, profileObject.getFilename().toString());
-                }
-                //set image data to leaderboard object item
-            } else {
-                //return is null
-                Log.e("RETURN IS NULL", "");
+            LeaderboardAgentModel leaderboardAgentModel = (LeaderboardAgentModel) returnObject;
+            if (leaderboardAgentModel.getBitmap() != null) {
+                Log.e("ADDING BITMAP", leaderboardAgentModel.getProfile() + " || " + leaderboardAgentModel.getBitmap());
+                parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
+            agentDisplayCounting();
 
-        } else {
-            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
-            LeaderboardObject[] leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
-            prepareListData(leaderBoardSections);
         }
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loader.setVisibility(View.GONE);
-            }
-        });
+        else if(asyncReturnType.equals("Leaderboard")){
+            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
+            leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
+
+            prepareListData();
+        }
+
     }
 
     @Override

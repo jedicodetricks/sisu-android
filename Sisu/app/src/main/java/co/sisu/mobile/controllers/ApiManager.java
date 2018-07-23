@@ -1,6 +1,7 @@
 package co.sisu.mobile.controllers;
 
 import android.util.Log;
+import android.content.Context;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -39,8 +40,11 @@ import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Brady Groharing on 6/2/2018.
@@ -53,8 +57,13 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://beta.sisu.co/";
-//    private String url = "https://9120b2d7-3c40-4ed6-8424-b45f4f26f0e5.mock.pstmn.io/";
+    private String url = "https://api.sisu.co/";
+    int cacheSize = 10 * 1024 * 1024; // 10MB
+    Cache cache;
+
+    public ApiManager(Context context) {
+        cache = new Cache(context.getCacheDir(), cacheSize);
+    }
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
         getJWT(agentId);
@@ -147,14 +156,14 @@ public class ApiManager {
         new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, String profile) {
+    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
         getJWT(agentId);
-        new AsyncLeaderboardImage(cb, url, profile).execute(jwtStr, timestamp, transactionID);
+        new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncProfileImage(AsyncServerEventListener cb, String agentId) {
         getJWT(agentId);
-        new AsyncProfileImage(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncProfileImage(cb, url, agentId, cache).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateProfileImage(AsyncServerEventListener cb, String agentId, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {

@@ -14,6 +14,8 @@ import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.JWTObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -27,11 +29,13 @@ public class AsyncProfileImage extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     private String agentId;
     private String url;
+    Cache cache;
 
-    public AsyncProfileImage(AsyncServerEventListener cb, String url, String agentId) {
+    public AsyncProfileImage(AsyncServerEventListener cb, String url, String agentId, Cache cache) {
         callback = cb;
         this.agentId = agentId;
         this.url = url;
+        this.cache = cache;
     }
 
     @Override

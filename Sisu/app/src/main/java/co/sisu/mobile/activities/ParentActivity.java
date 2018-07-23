@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -74,6 +76,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private FileIO io;
     private File internalStorageFile;
     private NotesObject selectedNote;
+    private CacheManager cacheManager;
+    private LruCache<String, Bitmap> mMemoryCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         dataController = new DataController();
         navigationManager = new NavigationManager(this);
-        apiManager = new ApiManager();
+        apiManager = new ApiManager(this);
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
@@ -92,13 +96,39 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
-//        internalStorageFile = new File(this.getFilesDir(), "images");
-//        File f = getDir("images", MODE_PRIVATE);
-//        Log.e("f", String.valueOf(f));
-//        for(String s : fileList()) {
-//            Log.e("FILES", s);
-//        }
-//        testSMSObserver();
+
+        // Get max available VM memory, exceeding this amount will throw an
+        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+        // int in its constructor.
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 4;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+    }
+
+
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+        else {
+            Log.e("Key already exists", "Replacing " + key);
+//            mMemoryCache.remove(key);
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
     }
 
 //    private void testSMSObserver() {
@@ -405,5 +435,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean imageExists(Context context,  String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
+    }
+
+    public CacheManager getCacheManager() {
+        return cacheManager;
+    }
+
+    public void setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
 }
