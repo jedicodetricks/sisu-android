@@ -2,8 +2,11 @@ package co.sisu.mobile.controllers;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
+import android.util.LruCache;
 
 import java.io.File;
 
@@ -23,6 +26,10 @@ public class CacheManager {
         File cachDir = getDiskCacheDir(context, DISK_CACHE_SUBDIR);
 //        new InitDiskCacheTask().execute(cacheDir);
     }
+
+    private LruCache<String, Bitmap> mMemoryCache;
+
+
 
 //    class InitDiskCacheTask extends AsyncTask<File, Void, Void> {
 //        @Override

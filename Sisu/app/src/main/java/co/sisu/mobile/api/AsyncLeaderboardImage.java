@@ -65,7 +65,7 @@ public class AsyncLeaderboardImage {
                 }
 
 //                profileObject.setFilename(profile);
-                callback.onEventCompleted(null, "Leaderboard Image");
+                callback.onEventCompleted(leaderboardAgentModel, "Leaderboard Image");
             }
             else {
                 callback.onEventFailed(null, "Leaderboard Image");

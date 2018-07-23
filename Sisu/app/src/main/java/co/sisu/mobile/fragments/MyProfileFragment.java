@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -106,10 +107,16 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         initButtons();
         initFields();
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
-//        Bitmap profilePic = cacheManager.getCacheFile("testImage");
-//        if(profilePic == null) {
+
+        Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
+        if(profilePic == null) {
             apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
-//        }
+        }
+        else {
+            imageLoader.setVisibility(View.GONE);
+            profileImage.setVisibility(View.VISIBLE);
+            profileImage.setImageBitmap(profilePic);
+        }
     }
 
     private void initFields() {
@@ -258,6 +265,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             }
             else {
                 parentActivity.showToast("Saving profile picture...");
+                Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
+                parentActivity.addBitmapToMemoryCache("testImage", bitmap);
             }
         }
 
@@ -358,11 +367,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         return rotate;
     }
 
+
     private void decodeBase64Image(String data) {
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-//            cacheManager.saveCacheFile("testImage", bmp, "testImage");
+            parentActivity.addBitmapToMemoryCache("testImage", bmp);
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
