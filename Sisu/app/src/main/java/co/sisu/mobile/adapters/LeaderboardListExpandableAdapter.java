@@ -105,6 +105,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         }
         else {
             thumbnail.setImageBitmap(bmp);
+            thumbnail.setEnabled(true);
         }
         final View parentView = parentActivity.findViewById(R.id.linearLayout);
 
