@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,12 +49,14 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import okhttp3.Cache;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -74,6 +77,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private boolean imageChanged;
     private EditText username, firstName, lastName, phone, password;
     private String imageData, imageFormat;
+    private CacheManager cacheManager;
     //ProfileObject currentProfile;
 
     public MyProfileFragment() {
@@ -98,11 +102,21 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         agent = dataController.getAgent();
+        cacheManager = parentActivity.getCacheManager();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
-        apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+
+        Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
+        if(profilePic == null) {
+            apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+        }
+        else {
+            imageLoader.setVisibility(View.GONE);
+            profileImage.setVisibility(View.VISIBLE);
+            profileImage.setImageBitmap(profilePic);
+        }
     }
 
     private void initFields() {
@@ -251,6 +265,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             }
             else {
                 parentActivity.showToast("Saving profile picture...");
+                Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
+                parentActivity.addBitmapToMemoryCache("testImage", bitmap);
             }
         }
 
@@ -351,10 +367,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         return rotate;
     }
 
+
     private void decodeBase64Image(String data) {
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            parentActivity.addBitmapToMemoryCache("testImage", bmp);
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
@@ -366,6 +384,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Profile Image")) {
+            Log.e("GOT THE PIC", "WOOT");
             final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -392,7 +411,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        //TODO: We'll need a counter to make sure this just doesn't loop infinitely
 //        if(asyncReturnType.equals("Profile Image")) {
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
 //        }

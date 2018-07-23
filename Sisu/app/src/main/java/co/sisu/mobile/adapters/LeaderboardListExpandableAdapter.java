@@ -23,7 +23,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.models.LeaderboardAgentModel;
+import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 
 /**
@@ -35,7 +35,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private Context _context;
     private List<LeaderboardObject> _listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<LeaderboardObject, List<LeaderboardAgentModel>> _listDataChild;
+    private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private int colorCounter = 0;
     private ApiManager apiManager;
@@ -47,7 +47,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private int mShortAnimationDuration;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
-                                            HashMap<LeaderboardObject, List<LeaderboardAgentModel>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
+                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
@@ -72,7 +72,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
-        final LeaderboardAgentModel childText = (LeaderboardAgentModel) getChild(groupPosition, childPosition);
+        final LeaderboardItemsObject childText = (LeaderboardItemsObject) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -86,7 +86,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         expanded = parentActivity.findViewById(R.id.expanded_image);
 
         //This will always be null the first time through
-        final Bitmap bmp = childText.getBitmap();
+        final Bitmap bmp = childText.getImage();
         if(bmp == null) {
             thumbnail.setImageResource(R.drawable.contact_icon);
             thumbnail.setClickable(false);
