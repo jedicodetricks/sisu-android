@@ -78,7 +78,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         //This will always be null the first time through
         Bitmap bmp = childText.getImage();
         if(bmp == null) {
-            thumbnail.setImageResource(R.drawable.contact_icon);
+            thumbnail.setImageResource(R.drawable.client_icon);
         }
         else {
             thumbnail.setImageBitmap(bmp);
