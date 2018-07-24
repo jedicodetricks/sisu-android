@@ -300,10 +300,10 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
                 // back to their original values.
                 AnimatorSet set = new AnimatorSet();
                 set.play(ObjectAnimator
-                        .ofFloat(expanded, View.X, startBounds.left))
+                        .ofFloat(expanded, View.X, startBounds.left * 2))
                         .with(ObjectAnimator
                                 .ofFloat(expanded,
-                                        View.Y, startBounds.top))
+                                        View.Y, startBounds.top * 2))
                         .with(ObjectAnimator
                                 .ofFloat(expanded,
                                         View.SCALE_X, startScaleFinal))
