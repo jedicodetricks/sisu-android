@@ -40,6 +40,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
+import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
@@ -70,6 +71,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private MyFirebaseMessagingService myFirebaseMessagingService;
     private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -96,6 +98,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController = new DataController();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
+        myFirebaseMessagingService = new MyFirebaseMessagingService();
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
@@ -106,6 +109,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
 
+
+        myFirebaseMessagingService.initFirebase();
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
         // int in its constructor.
@@ -123,6 +128,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         };
     }
+
+
+
 
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -620,4 +628,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
+
 }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "898593831854",
+    "firebase_url": "https://sisu-mobile.firebaseio.com",
+    "project_id": "sisu-mobile",
+    "storage_bucket": "sisu-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898593831854:android:1f0dab2ecdf56f6b",
+        "android_client_info": {
+          "package_name": "co.sisu.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898593831854-l1hl5og962rue7ues89o2hqhp1p2fgdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfCUXL-ctThnu1sM5ZglThD7tFMqGGML0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
