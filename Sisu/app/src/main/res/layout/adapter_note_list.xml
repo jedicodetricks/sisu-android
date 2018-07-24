@@ -47,8 +47,10 @@
 
             <ImageView
                 android:id="@+id/editNoteIcon"
-                android:layout_width="0dp"
+                android:layout_width="34dp"
                 android:layout_height="34dp"
+                android:maxWidth="34dp"
+                android:maxHeight="34dp"
                 android:layout_marginBottom="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
@@ -60,8 +62,10 @@
 
             <ImageView
                 android:id="@+id/deleteNoteIcon"
-                android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:maxWidth="34dp"
+                android:maxHeight="34dp"
                 android:layout_marginBottom="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"

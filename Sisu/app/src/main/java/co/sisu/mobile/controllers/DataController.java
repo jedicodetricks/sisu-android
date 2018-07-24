@@ -620,6 +620,10 @@ public class DataController {
     }
 
     public void setAgent(AgentModel agent) {
+        if(this.agent != null) {
+            AgentGoalsObject[] currentGoals = this.agent.getAgentGoalsObject();
+            agent.setAgentGoalsObject(currentGoals);
+        }
         this.agent = agent;
     }
 

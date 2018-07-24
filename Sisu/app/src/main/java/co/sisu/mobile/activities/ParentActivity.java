@@ -318,6 +318,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             if(reminderActive == 1) {
+                Log.e("SETTING ALARM", "AGAAAAAAIN");
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
             navigateToScoreboard();
@@ -350,12 +351,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             pendingIntent = PendingIntent.getBroadcast(this, 1412, myIntent, 0);
         }
         Calendar calendar = Calendar.getInstance();
+        long currentTimeInMillis = calendar.getTimeInMillis();
         int interval = 1000 * 60 * 60 * 24; // One day
 
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.MINUTE, currentSelectedMinute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
+
+        if(currentTimeInMillis > calendar.getTimeInMillis()) {
+            Log.e("Calendar", "Calendar can't be set in the past");
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
+        }
 
         Log.e("CALENDAR SET", calendar.getTime().toString());
         Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());

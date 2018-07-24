@@ -72,15 +72,17 @@ public class AsyncActivities extends AsyncTask<String, String, String> {
                     .addHeader("Transaction-Id", strings[2])
                     .build();
 
+            String responseBody = "";
             try {
                 response = client.newCall(request).execute();
-//                Log.e("ACTIVITIES", response.body().string());
+                responseBody = response.body().string();
+//                Log.e("ACTIVITIES", responseBody);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    AsyncActivitiesJsonObject activities = gson.fromJson(response.body().charStream(), AsyncActivitiesJsonObject.class);
+                    AsyncActivitiesJsonObject activities = gson.fromJson(responseBody, AsyncActivitiesJsonObject.class);
                     callback.onEventCompleted(activities, "Activities");
                 } else {
                     callback.onEventFailed(null, "Activities");
