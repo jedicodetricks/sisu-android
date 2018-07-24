@@ -426,7 +426,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             // view. Also set the container view's offset as the origin for the
             // bounds, since that's the origin for the positioning animation
             // properties (X, Y).
-            TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
             thumbView.getGlobalVisibleRect(startBounds);
             convertView.getGlobalVisibleRect(finalBounds, globalOffset);
             startBounds.offset(-globalOffset.x, -globalOffset.y);
@@ -517,10 +516,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         // back to their original values.
         AnimatorSet set = new AnimatorSet();
         set.play(ObjectAnimator
-                .ofFloat(expanded, View.X, startBounds.left * 2))
+                .ofFloat(expanded, View.X, startBounds.left))
                 .with(ObjectAnimator
                         .ofFloat(expanded,
-                                View.Y, startBounds.top * 2))
+                                View.Y, startBounds.top))
                 .with(ObjectAnimator
                         .ofFloat(expanded,
                                 View.SCALE_X, startScaleFinal))
