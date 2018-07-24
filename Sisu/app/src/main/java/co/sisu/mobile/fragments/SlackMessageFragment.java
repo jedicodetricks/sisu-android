@@ -81,6 +81,9 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
             case R.id.addClientSaveButton:
                 if(!noteText.getText().toString().equals("")) {
                     apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
+                    parentActivity.showToast("Sending message to your Slack channel.");
+                    hideKeyboard(getView());
+                    navigationManager.onBackPressed();
                 }
                 else {
                     parentActivity.showToast("Please enter some text.");
