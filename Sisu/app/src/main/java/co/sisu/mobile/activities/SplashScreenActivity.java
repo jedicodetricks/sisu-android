@@ -88,12 +88,13 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
 
     private void createNotificationChannel() {
+
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = ("SisuChannel");
             String description = ("SisuNotifications");
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel("420", name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
