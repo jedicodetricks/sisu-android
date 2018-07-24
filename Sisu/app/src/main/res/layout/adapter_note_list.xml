@@ -47,27 +47,29 @@
 
             <ImageView
                 android:id="@+id/editNoteIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintEnd_toStartOf="@id/deleteNoteIcon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/edit_icon" />
 
             <ImageView
                 android:id="@+id/deleteNoteIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="w,1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/open_house_icon" />
+                app:srcCompat="@drawable/delete_icon" />
 
         </android.support.constraint.ConstraintLayout>
     </RelativeLayout>
