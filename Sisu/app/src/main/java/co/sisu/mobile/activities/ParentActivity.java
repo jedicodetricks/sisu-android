@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -23,11 +22,9 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,9 +34,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
@@ -70,7 +65,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
-    private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
@@ -80,10 +74,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private int timelineSelection = 5;
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
-    private FileIO io;
-    private File internalStorageFile;
     private NotesObject selectedNote;
-    private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
@@ -99,8 +90,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         errorFragment = new ErrorMessageFragment();
-        parentLoader = findViewById(R.id.parentLoader);
-        io = new FileIO(ParentActivity.this);
 
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
@@ -604,19 +593,4 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return apiManager;
     }
 
-    public Bitmap getImage(String profile) { return io.getImage(profile, 1024); }//size here should be cache size i think
-
-    public void saveImage(byte[] image, String profile) { io.addImage(profile, image); }
-
-    public boolean imageExists(Context context,  String id) {
-        return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
-    }
-
-    public CacheManager getCacheManager() {
-        return cacheManager;
-    }
-
-    public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
-    }
 }

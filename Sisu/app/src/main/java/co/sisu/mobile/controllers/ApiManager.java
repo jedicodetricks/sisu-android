@@ -44,7 +44,6 @@ import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 
 /**
  * Created by Brady Groharing on 6/2/2018.

@@ -567,24 +567,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         return position;
     }
 
-//    private void calculateProgressColor(Metric metric, int position) {
-//        if(metric.getType().equals("CONTA")) {
-//            Log.e("YES", "YES");
-//        }
-//        if(getContext() != null) {
-//            position += 90;
-//            int positionPercent = (int) (((double)position/(double)360) * 100);
-//            Context context = getContext();
-//            if ((metric.getPercentAroundCircleComplete(timeline)) < positionPercent) {
-//                metric.setColor(ContextCompat.getColor(context,R.color.colorMoonBlue));
-//            } else if (metric.getPercentAroundCircleComplete(timeline) > 99){
-//                metric.setColor(ContextCompat.getColor(context,R.color.colorCorporateOrange));
-//            } else {
-//                metric.setColor(ContextCompat.getColor(context,R.color.colorYellow));
-//            }
-//        }
-//    }
-
     private void calculateProgressColor(Metric metric, int positionPercent) {
         if(getContext() != null) {
             if(pastTimeline) {
@@ -691,10 +673,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         navigationManager.stackReplaceFragment(AddClientFragment.class);
-//        navigationManager.swapToAddClientBar();
-//        Intent intent = new Intent(getContext(), AddClientActivity.class);
-//        intent.putExtra("Agent", parentActivity.getAgentInfo());
-//        startActivity(intent);
     }
 
     @Override
