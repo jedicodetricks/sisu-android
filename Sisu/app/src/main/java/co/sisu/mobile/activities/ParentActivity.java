@@ -83,7 +83,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
     private FileIO io;
-    private File internalStorageFile;
     private NotesObject selectedNote;
     private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
