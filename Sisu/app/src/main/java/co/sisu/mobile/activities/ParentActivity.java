@@ -293,6 +293,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     if(dataController.getTeamsObject().size() > 0) {
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                     }
+                    else {
+                        dataController.setSlackInfo(null);
+                    }
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -314,7 +317,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             int hour = 0;
             int minute = 0;
             int reminderActive = 0;
-            boolean timeError = false;
             for (ParameterObject s : newSettings) {
                 Log.e(s.getName(), s.getValue());
                 switch (s.getName()) {
@@ -325,7 +327,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             minute = Integer.parseInt(values[1]);
                             Log.e("ALARM TIME", hour + " " + minute);
                         } catch(NumberFormatException nfe) {
-                            timeError = true;
+                            hour = 17;
+                            minute = 0;
                         }
 
                         break;
@@ -334,7 +337,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
 
-            if(reminderActive == 1 && !timeError) {
+            if(reminderActive == 1) {
                 Log.e("SETTING ALARM", "AGAAAAAAIN");
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }

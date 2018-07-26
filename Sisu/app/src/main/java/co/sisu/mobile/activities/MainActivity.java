@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         if(asyncReturnType.equals("Authenticator")) {
-            if(authRetry == 3) {
+            if(authRetry == 2) {
                 this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -234,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new AsyncAuthenticator(this, emailAddress, password).execute();
                 authRetry++;
             }
-
         }
         else {
             this.runOnUiThread(new Runnable() {
