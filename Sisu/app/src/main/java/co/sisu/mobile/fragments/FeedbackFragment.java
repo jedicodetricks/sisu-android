@@ -77,7 +77,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void sendFeedback(String feedback){
-        apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), feedback);
+        apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), feedback, null);
     }
 
     @Override

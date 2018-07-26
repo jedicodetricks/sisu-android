@@ -27,12 +27,14 @@ public class AsyncAddClient extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-    ClientObject clientObject;
+    private ClientObject clientObject;
+    private String url;
 
-    public AsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject clientObject) {
+    public AsyncAddClient(AsyncServerEventListener cb, String url, String agentId, ClientObject clientObject) {
         callback = cb;
         this.agentId = agentId;
         this.clientObject = clientObject;
+        this.url = url;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class AsyncAddClient extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/client/edit-client/" + agentId)
+                    .url(url + "api/v1/client/edit-client/" + agentId)
                     .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

@@ -26,11 +26,13 @@ import okhttp3.Response;
 public class AsyncUpdateActivitySettings extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    AsyncUpdateSettingsJsonObject updateSettingsModel;
+    private AsyncUpdateSettingsJsonObject updateSettingsModel;
+    private String url;
 
-    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, AsyncUpdateSettingsJsonObject updateSettingsModel) {
+    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, String url, AsyncUpdateSettingsJsonObject updateSettingsModel) {
         callback = cb;
         this.updateSettingsModel = updateSettingsModel;
+        this.url = url;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class AsyncUpdateActivitySettings extends AsyncTask<String, String, Strin
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/parameter/edit-parameter")
+                    .url(url + "api/v1/parameter/edit-parameter")
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

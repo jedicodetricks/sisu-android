@@ -46,6 +46,7 @@ public class ToolbarManager {
                 leaderBoardButton.setImageResource(R.drawable.leaderboard_icon_active);
                 break;
             case "More":
+            case "Add Client Note":
                 moreButton.setImageResource(R.drawable.more_icon_active);
                 break;
             case "Feedback":

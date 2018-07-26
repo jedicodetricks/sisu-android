@@ -22,11 +22,13 @@ import okhttp3.Response;
 
 public class AsyncTeams extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
-    String agentId;
+    private String agentId;
+    private String url;
 
-    public AsyncTeams (AsyncServerEventListener cb, String agentId) {
+    public AsyncTeams (AsyncServerEventListener cb, String url, String agentId) {
         callback = cb;
         this.agentId = agentId;
+        this.url = url;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class AsyncTeams extends AsyncTask<String, String, String> {
         Gson gson = new Gson();
 
         Request teamsRequest = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/agent/get-teams/" + agentId)
+                .url(url + "api/v1/agent/get-teams/" + agentId)
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

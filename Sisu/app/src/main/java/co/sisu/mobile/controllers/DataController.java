@@ -22,8 +22,8 @@ import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
-import co.sisu.mobile.models.SettingsObject;
 import co.sisu.mobile.models.TeamJsonObject;
 import co.sisu.mobile.models.TeamObject;
 
@@ -49,8 +49,9 @@ public class DataController {
     private List<ClientObject> closedList;
     private List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
-    private List<SettingsObject> settings;
+    private List<ParameterObject> settings;
     private HashMap<String, SelectedActivities> activitiesSelected;
+    private String slackInfo;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -63,10 +64,10 @@ public class DataController {
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
-        initializeMorePageObject();
     }
 
     private void initializeMorePageObject() {
+        morePage = new ArrayList<>();
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
@@ -74,10 +75,16 @@ public class DataController {
         morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
         morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon_active));
         morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
+        if(slackInfo != null) {
+            morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
+        }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
-    public List<MorePageContainer> getMorePageContainer() { return morePage; }
+    public List<MorePageContainer> getMorePageContainer() {
+        initializeMorePageObject();
+        return morePage;
+    }
 
     public void setTeamsObject(Context context, Object returnObject) {
         teamsObject = new ArrayList<>();
@@ -505,16 +512,21 @@ public class DataController {
     }
 
     private void sortIntoList(ClientObject co) {
-        boolean isClosed = false, isContract = false, isSigned = false;
+        boolean isClosed = false, isContract = false, isSigned = false, closedPrevYear = false;
         Date date;
         Calendar currentTime = Calendar.getInstance();
         Calendar updatedTime = Calendar.getInstance();
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
         if(co.getClosed_dt() != null) {
             //Closed List
             date = getFormattedDateFromApiReturn(co.getClosed_dt());
             updatedTime.setTime(date);
             if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
                 isClosed = true;
+            }
+            if(updatedTime.get(Calendar.YEAR) != year) {
+                closedPrevYear = true;
             }
         }
         if(co.getUc_dt() != null) {
@@ -534,7 +546,10 @@ public class DataController {
             }
         }
 
-        if(isClosed) {
+        if (closedPrevYear) {
+            //We'll do nothing with these
+        }
+        else if(isClosed) {
             closedList.add(co);
         }
         else if(isContract) {
@@ -605,6 +620,10 @@ public class DataController {
     }
 
     public void setAgent(AgentModel agent) {
+        if(this.agent != null) {
+            AgentGoalsObject[] currentGoals = this.agent.getAgentGoalsObject();
+            agent.setAgentGoalsObject(currentGoals);
+        }
         this.agent = agent;
     }
 
@@ -627,14 +646,14 @@ public class DataController {
         return updatedRecords;
     }
 
-    public void setSettings(SettingsObject[] settings) {
+    public void setSettings(ParameterObject[] settings) {
         int arraySize = settings.length;
         List<String> existingSettings = new ArrayList<>();
-        List<SettingsObject> newSettings = new ArrayList<>();
-        List<SettingsObject> relevantSettings = new ArrayList<>();
+        List<ParameterObject> newSettings = new ArrayList<>();
+        List<ParameterObject> relevantSettings = new ArrayList<>();
 
 
-        for (SettingsObject s : settings) {
+        for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
                     existingSettings.add("local_timezone");
@@ -684,21 +703,21 @@ public class DataController {
 //        if(settings.length < 4) {
 //            settings = setDefaultSettingsObject(settings);
 //        }
-        SettingsObject[] array = new SettingsObject[arraySize];
+        ParameterObject[] array = new ParameterObject[arraySize];
 //        parentActivity.setSettings(settings.toArray(array));
         settings = newSettings.toArray(array);
 
-        for (SettingsObject s : settings) {
+        for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("");
+                        s.setValue("America/Denver");
                     }
                     relevantSettings.add(s);
                     break;
                 case "daily_reminder_time":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("0");
+                        s.setValue("17:00");
                     }
                     relevantSettings.add(s);
                     break;
@@ -706,7 +725,7 @@ public class DataController {
 //                    case "biometrics":
                 case "daily_reminder":
                     if(s.getValue().equals("{}")) {
-                        s.setValue("11:01");
+                        s.setValue("1");
                     }
                     relevantSettings.add(s);
                     break;
@@ -723,7 +742,7 @@ public class DataController {
         }
     }
 
-    private void setupSelectedActivities(SettingsObject s) {
+    private void setupSelectedActivities(ParameterObject s) {
         activitiesSelected = new HashMap<>();
         if(s != null) {
             String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
@@ -754,7 +773,7 @@ public class DataController {
 
     }
 
-    public List<SettingsObject> getSettings() {
+    public List<ParameterObject> getSettings() {
         return settings;
     }
 
@@ -766,7 +785,7 @@ public class DataController {
         return activitiesSelected;
     }
 
-    public void setActivitiesSelected(SettingsObject activitiesSelected) {
+    public void setActivitiesSelected(ParameterObject activitiesSelected) {
         if(activitiesSelected == null || activitiesSelected.getValue().equals("{}")) {
             activitiesSelected = setDefaultActivitesSelected();
         }
@@ -865,27 +884,27 @@ public class DataController {
         this.agent.setAgentGoalsObject(updatedAgentGoalsObject);
     }
 
-    private SettingsObject getDefaultLocalTimezone() {
-        return new SettingsObject("local_timezone", "N", "", "0");
+    private ParameterObject getDefaultLocalTimezone() {
+        return new ParameterObject("local_timezone", "N", "America/Denver", "0");
     }
 
-    private SettingsObject getDefaultDailyReminderTime() {
-        return new SettingsObject("daily_reminder_time", "N", "11:01", "5");
+    private ParameterObject getDefaultDailyReminderTime() {
+        return new ParameterObject("daily_reminder_time", "N", "17:00", "5");
     }
 
-    private SettingsObject getDefaultDailyReminder() {
-        return new SettingsObject("daily_reminder", "N", "0", "3");
+    private ParameterObject getDefaultDailyReminder() {
+        return new ParameterObject("daily_reminder", "N", "1", "3");
     }
 
-    private SettingsObject getDefaultRecordActivities() {
-        return new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
+    private ParameterObject getDefaultRecordActivities() {
+        return new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
     }
 
-    private SettingsObject[] setDefaultSettingsObject(SettingsObject[] settings) {
+    private ParameterObject[] setDefaultSettingsObject(ParameterObject[] settings) {
         List<String> addedSettings = new ArrayList<>();
-        SettingsObject[] updatedSettings = new SettingsObject[4];
+        ParameterObject[] updatedSettings = new ParameterObject[4];
 
-        for (SettingsObject s : settings) {
+        for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
                     addedSettings.add("local_timezone");
@@ -909,34 +928,42 @@ public class DataController {
 
 
         if(!addedSettings.contains("local_timezone")) {
-            updatedSettings[0] = (new SettingsObject("local_timezone", "N", "", "0"));
+            updatedSettings[0] = (new ParameterObject("local_timezone", "N", "", "0"));
         }
 
         if(!addedSettings.contains("daily_reminder_time")) {
-            updatedSettings[1] = (new SettingsObject("daily_reminder_time", "N", "11:01", "5"));
+            updatedSettings[1] = (new ParameterObject("daily_reminder_time", "N", "11:01", "5"));
 
         }
 
         if(!addedSettings.contains("daily_reminder")) {
-            updatedSettings[2] = (new SettingsObject("daily_reminder", "N", "0", "3"));
+            updatedSettings[2] = (new ParameterObject("daily_reminder", "N", "0", "3"));
 
         }
 
         if(!addedSettings.contains("record_activities")) {
-            updatedSettings[3] = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+            updatedSettings[3] = (new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
 
         }
 
         return updatedSettings;
     }
 
-    private SettingsObject setDefaultActivitesSelected() {
-        SettingsObject activites = (new SettingsObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
+    private ParameterObject setDefaultActivitesSelected() {
+        ParameterObject activites = (new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
         return  activites;
     }
 
     public void setAgentIncomeAndReason(AgentModel agentModel) {
         agent.setDesired_income(agentModel.getDesired_income());
         agent.setVision_statement(agentModel.getVision_statement());
+    }
+
+    public void setSlackInfo(String slackInfo) {
+        this.slackInfo = slackInfo;
+    }
+
+    public String getSlackInfo() {
+        return slackInfo;
     }
 }

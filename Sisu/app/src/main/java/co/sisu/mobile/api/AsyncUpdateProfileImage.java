@@ -26,11 +26,13 @@ import okhttp3.Response;
 public class AsyncUpdateProfileImage extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    AsyncUpdateProfileImageJsonObject updateProfileImageModel;
+    private AsyncUpdateProfileImageJsonObject updateProfileImageModel;
+    private String url;
 
-    public AsyncUpdateProfileImage(AsyncServerEventListener cb, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
+    public AsyncUpdateProfileImage(AsyncServerEventListener cb, String url, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
         this.callback = cb;
         this.updateProfileImageModel = asyncUpdateProfileImageJsonObject;
+        this.url = url;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class AsyncUpdateProfileImage extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/image")
+                    .url(url + "api/v1/image")
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

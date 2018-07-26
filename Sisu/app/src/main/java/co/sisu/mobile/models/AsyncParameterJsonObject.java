@@ -4,18 +4,18 @@ package co.sisu.mobile.models;
  * Created by Brady Groharing on 4/29/2018.
  */
 
-public class AsyncActivitySettingsJsonObject {
+public class AsyncParameterJsonObject {
 
-    SettingsObject parameter;
+    ParameterObject parameter;
     String server_time;
     String status;
     String status_code;
 
-    public SettingsObject getParameter() {
+    public ParameterObject getParameter() {
         return parameter;
     }
 
-    public void setParameter(SettingsObject parameter) {
+    public void setParameter(ParameterObject parameter) {
         this.parameter = parameter;
     }
 

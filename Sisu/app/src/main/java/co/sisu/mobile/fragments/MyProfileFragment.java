@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,10 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,18 +46,16 @@ import java.util.Locale;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncAgent;
-import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateProfile;
-import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import okhttp3.Cache;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,8 +74,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
-    private EditText username, firstName, lastName, phone, password;
+    private EditText username, firstName, lastName, phone;
     private String imageData, imageFormat;
+    private Button passwordButton;
+    String imageType = "";
+    private CacheManager cacheManager;
     //ProfileObject currentProfile;
 
     public MyProfileFragment() {
@@ -98,11 +103,21 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         agent = dataController.getAgent();
+        cacheManager = parentActivity.getCacheManager();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
-        apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+
+        Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
+        if(profilePic == null) {
+            apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+        }
+        else {
+            imageLoader.setVisibility(View.GONE);
+            profileImage.setVisibility(View.VISIBLE);
+            profileImage.setImageBitmap(profilePic);
+        }
     }
 
     private void initFields() {
@@ -114,16 +129,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         lastName.setOnFocusChangeListener(this);
         phone = getView().findViewById(R.id.profilePhone);
         phone.setOnFocusChangeListener(this);
-        password = getView().findViewById(R.id.profilePassword);
-        password.setOnFocusChangeListener(this);
         profileImage.setVisibility(View.INVISIBLE);
         imageLoader.setVisibility(View.VISIBLE);
-        password.setTransformationMethod(new PasswordTransformationMethod());//this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
     }
 
     private void fillInAgentInfo() {
-
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -134,7 +145,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 if(agentPhone != null) {
                     phone.setText(PhoneNumberUtils.formatNumber(agentPhone, Locale.getDefault().getCountry()));
                 }
-                password.setText("***********");
             }
         });
 
@@ -143,6 +153,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private void initButtons() {
         profileImage = getView().findViewById(R.id.profileImage);
         profileImage.setOnClickListener(this);
+        passwordButton = getView().findViewById(R.id.passwordButton);
+        passwordButton.setOnClickListener(this);
 
         TextView save = parentActivity.findViewById(R.id.saveButton);
         if(save != null) {
@@ -189,8 +201,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 if(verifyInputs()) {
                     saveProfile();
                 }
-//                parentActivity.stackReplaceFragment(MoreFragment.class);
-//                parentActivity.swapToBacktionBar("My Profile", null);
+                break;
+            case R.id.passwordButton:
+                navigationManager.stackReplaceFragment(ChangePasswordFragment.class);
                 break;
             default:
                 break;
@@ -209,10 +222,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else if(phone.getText().toString().equals("")) {
             parentActivity.showToast("Phone is required");
-            isVerified = false;
-        }
-        else if(password.getText().toString().equals("")) {
-            parentActivity.showToast("Password is required");
             isVerified = false;
         }
         return isVerified;
@@ -238,9 +247,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(!phone.getText().toString().equals(agent.getMobile_phone())) {
             changedFields.put("mobile_phone", phone.getText().toString());
         }
-        if(!password.getText().toString().equals("***********")) {
-            changedFields.put("password", password.getText().toString());
-        }
 
         if(changedFields.size() > 0) {
             apiManager.sendAsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields);
@@ -251,9 +257,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             }
             else {
                 parentActivity.showToast("Saving profile picture...");
+                Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
+                parentActivity.addBitmapToMemoryCache("testImage", bitmap);
             }
         }
-
     }
 
     private void launchImageSelector() {
@@ -270,91 +277,69 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             case SELECT_PHOTO:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
+                    ContentResolver cR = getContext().getContentResolver();
+                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+                    imageType = mime.getExtensionFromMimeType(cR.getType(selectedImage));
+                    Log.e("IMAGE TYPE", imageType);
 
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String filePath = cursor.getString(columnIndex);
-                    cursor.close();
+                    // start cropping activity for pre-acquired image saved on the device
+                    CropImage.activity(selectedImage)
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .setAspectRatio(1,1)
+                            .setCropShape(CropImageView.CropShape.OVAL)
+                            .setMinCropResultSize(100,100)
+                            .setMaxCropResultSize(600,600)
+                            .start(parentActivity, this);
 
-                    int rotateImage = getCameraPhotoOrientation(parentActivity, selectedImage, filePath);
-
+                }
+                break;
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImage = result.getUri();
                     final InputStream imageStream;
                     try {
-                        ContentResolver cR = getContext().getContentResolver();
-                        MimeTypeMap mime = MimeTypeMap.getSingleton();
-                        String type = mime.getExtensionFromMimeType(cR.getType(selectedImage));
-                        Log.e("IMAGE TYPE", type);
-
                         imageStream = getContext().getContentResolver().openInputStream(selectedImage);
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(rotateImage);
                         final Bitmap bitImage = BitmapFactory.decodeStream(imageStream);
-                        Bitmap rotatedImage = Bitmap.createBitmap(bitImage, 0, 0, bitImage.getWidth(), bitImage.getHeight(),
-                                matrix, true);
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                        if(type.equalsIgnoreCase("jpeg")) {
+                        if(imageType.equalsIgnoreCase("jpeg")) {
                             imageFormat = "2";
-                            rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                            bitImage.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
                         }
-                        else if(type.equalsIgnoreCase("png")) {
+                        else if(imageType.equalsIgnoreCase("png")) {
                             imageFormat = "1";
-                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                            bitImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
                         }
                         else {
                             imageFormat = "1";
-                            rotatedImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                            bitImage.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
                         }
 
                         byte[] b = baos.toByteArray();
                         imageData = Base64.encodeToString(b, Base64.DEFAULT);
 
-                        profileImage.setImageBitmap(rotatedImage);
+                        profileImage.setImageBitmap(bitImage);
                         imageChanged = true;
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
 
+
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
                 }
+                break;
         }
     }
 
-    public int getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath){
-        int rotate = 0;
-        try {
-            context.getContentResolver().notifyChange(imageUri, null);
-            File imageFile = new File(imagePath);
-
-            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotate = 270;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotate = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotate = 90;
-                    break;
-            }
-
-//            Log.e("RotateImage", "Exif orientation: " + orientation);
-//            Log.e("RotateImage", "Rotate value: " + rotate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rotate;
-    }
 
     private void decodeBase64Image(String data) {
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
+            parentActivity.addBitmapToMemoryCache("testImage", bmp);
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
@@ -366,6 +351,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Profile Image")) {
+            Log.e("GOT THE PIC", "WOOT");
             final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -392,7 +378,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        //TODO: We'll need a counter to make sure this just doesn't loop infinitely
 //        if(asyncReturnType.equals("Profile Image")) {
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
 //        }

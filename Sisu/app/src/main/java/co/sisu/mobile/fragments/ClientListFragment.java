@@ -23,7 +23,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
-import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
@@ -181,16 +180,22 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        dataController.setClientListObject(returnObject);
+        if (asyncReturnType.equals("Add Notes")) {
 
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loader.setVisibility(View.GONE);
-                selectTab(selectedTab);
-                fillListViewWithData(currentList);
-            }
-        });
+        }
+        else {
+            dataController.setClientListObject(returnObject);
+
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                    selectTab(selectedTab);
+                    fillListViewWithData(currentList);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -288,21 +293,24 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onTabReselected(TabLayout.Tab tab) {}
 
     @Override
-    public void onPhoneClicked(String number) {
+    public void onPhoneClicked(String number, ClientObject client) {
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "PHONE");
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + number));
         startActivity(intent);
     }
 
     @Override
-    public void onTextClicked(String number) {
+    public void onTextClicked(String number, ClientObject client) {
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "TEXTM");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
         startActivity(intent);
     }
 
     @Override
-    public void onEmailClicked(String email) {
+    public void onEmailClicked(String email, ClientObject client) {
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), email, "EMAIL");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});

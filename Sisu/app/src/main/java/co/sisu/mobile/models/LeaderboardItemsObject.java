@@ -1,5 +1,7 @@
 package co.sisu.mobile.models;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Brady Groharing on 4/8/2018.
  */
@@ -10,6 +12,7 @@ public class LeaderboardItemsObject {
     String value;
     String profile;
     String agent_id;
+    Bitmap image;
 
     public String getAgent_id() {
         return agent_id;
@@ -49,5 +52,13 @@ public class LeaderboardItemsObject {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }

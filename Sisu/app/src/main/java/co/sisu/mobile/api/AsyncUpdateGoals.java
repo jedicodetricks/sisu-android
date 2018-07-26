@@ -27,12 +27,14 @@ public class AsyncUpdateGoals extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String agentId;
-    AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
+    private AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
+    private String url;
 
-    public AsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject) {
+    public AsyncUpdateGoals(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject) {
         callback = cb;
         this.agentId = agentId;
         this.updateAgentGoalsJsonObject = updateAgentGoalsJsonObject;
+        this.url = url;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class AsyncUpdateGoals extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/goal/" + agentId)
+                    .url(url + "api/v1/agent/goal/" + agentId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -144,20 +146,49 @@ public class ActionBarManager {
 
     }
 
-    public void swapToClientListBar() {
+    public void swapToClientListBar(final String title) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+                if(title != null) {
+                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                    pageTitle.setText(title);
+                }
+
             }
         });
     }
 
-    public void swapToAddClientBar() {
+    public void swapToAddClientBar(final String title) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+                if(title != null) {
+                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                    pageTitle.setText(title);
+                    TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
+                    sendButton.setText("Send Slack");
+                }
+            }
+        });
+    }
+
+    public void swapToEditClientBar() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
+                backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                String displayName = "";
+                if(selectedClient.getFirst_name() != null) {
+                    displayName += selectedClient.getFirst_name() + " ";
+                }
+                if(selectedClient.getLast_name() != null) {
+                    displayName += selectedClient.getLast_name();
+                }
+                backtionTitle.setText(displayName);
             }
         });
     }
@@ -201,4 +232,6 @@ public class ActionBarManager {
     public ClientObject getSelectedClient() {
         return selectedClient;
     }
+
+
 }

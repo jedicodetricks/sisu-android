@@ -49,7 +49,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
     private Button signedClear, contractClear, settlementClear, appointmentClear;
     private String typeSelected;
@@ -153,6 +153,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
         closedStatus = getView().findViewById(R.id.closedButton);
+        noteText = getView().findViewById(R.id.editNotes);
     }
 
     @Override
@@ -326,6 +327,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         newClient.setGross_commission_amt(gci.getText().toString().equals("") ? null : gci.getText().toString());
         newClient.setMobile_phone(phoneText.getText().toString().equals("") ? null : phoneText.getText().toString());
         newClient.setEmail(emailText.getText().toString().equals("") ? null : emailText.getText().toString());
+        newClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
         newClient.setAppt_dt(null);
         newClient.setSigned_dt(null);
         newClient.setUc_dt(null);

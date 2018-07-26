@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,9 +34,9 @@ import java.util.Locale;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
@@ -42,12 +44,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private NavigationManager navigationManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
-    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton;
+    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -76,6 +79,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
@@ -87,12 +91,66 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         loader.setVisibility(View.GONE);
     }
 
+//    private void calculatePercentage() {
+//        int dollar;
+//        float percent;
+//        Log.e("CALCULATING", "");
+//        if(!transAmount.getText().toString().isEmpty() && !gciPercent.getText().toString().isEmpty()) {
+//            percent = Float.parseFloat(gciPercent.getText().toString());
+//            convertPercentToDollar(percent, gci);
+//        } else {
+//            if(!gci.getText().toString().isEmpty() && !gciPercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(gci.getText().toString());
+//                convertDollarToPercent(dollar * 100f, gciPercent);
+//            }
+//        }
+//        if(!transAmount.getText().toString().isEmpty() && !incomePercent.getText().toString().isEmpty()) {
+//            percent = Float.parseFloat(incomePercent.getText().toString());
+//            convertPercentToDollar(percent, paidIncome);
+//        } else {
+//            if(!paidIncome.getText().toString().isEmpty() && !incomePercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(paidIncome.getText().toString());
+//                convertDollarToPercent(dollar * 100f, incomePercent);
+//            }
+//        }
+//    }
+//
+//    private void convertPercentToDollar(float percent, EditText dollarText) {
+//        float dollar;
+//        int transTotal = Integer.parseInt(transAmount.getText().toString());
+//        if(transTotal != 0 && percent <= 100 && percent > 0) {
+//            dollar = percent * transTotal;
+//            if(dollar <= transTotal && dollar > 0) {
+//                dollarText.setText(dollar + "");//String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
+//            }
+//        }
+//    }
+//
+//    private void convertDollarToPercent(float dollar, EditText percentText) {
+//        float percent;
+//        int transTotal = Integer.parseInt(transAmount.getText().toString());
+//        if(transTotal != 0 && dollar <= transTotal && dollar > 0) {
+//            percent = dollar / transTotal;
+//            if(percent <= 100 && percent > 0) {
+//                percentText.setText(String.valueOf(percent).substring(0,String.valueOf(percent).indexOf('.')));
+//            } else {
+//                //might be an error in user input
+//            }
+//        } else {
+//            parentActivity.showToast("Please enter a transaction amount first");
+//        }
+//    }
+
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
         if(typeSelected.equals("b")) {
-            changeStatusColor(buyer);
+            Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
+            buyer.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+            buyer.setBackground(active);
         } else {
-            changeStatusColor(seller);
+            Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
+            seller.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+            seller.setBackground(active);
         }
 
         firstNameText.setText(currentClient.getFirst_name());
@@ -119,7 +177,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
+        noteText.setText(currentClient.getNote());
         updateStatus();
+        //calculatePercentage();
     }
 
     private String getFormattedDateFromApiReturn(String dateString) {
@@ -156,6 +216,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setUc_dt(null);
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
+        currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -296,6 +357,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         paidIncome.setOnFocusChangeListener(this);
         gci = getView().findViewById(R.id.editGci);
         gci.setOnFocusChangeListener(this);
+//        gciPercent = getView().findViewById(R.id.editGciPercent);
+//        gciPercent.setOnFocusChangeListener(this);
+//        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
+//        incomePercent.setOnFocusChangeListener(this);
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -304,6 +369,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer = getView().findViewById(R.id.buyerButton);
         seller = getView().findViewById(R.id.sellerButton);
         exportContact = getView().findViewById(R.id.exportContactButton);
+        noteText = getView().findViewById(R.id.editNotes);
     }
 
     @Override
@@ -351,18 +417,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onClick(View v) {
+        Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
+        Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
             case R.id.buyerButton:
                 buyer.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                buyer.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
-                seller.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+                buyer.setBackground(active);
+                seller.setBackground(inactive);
                 seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
                 buyer.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
-                buyer.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
-                seller.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+                buyer.setBackground(inactive);
+                seller.setBackground(active);
                 seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
                 break;
@@ -434,9 +502,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
                 startActivityForResult(contactIntent, 1);
                 break;
-            case R.id.clientDeleteButton:
+            case R.id.archiveButton:
                 updateCurrentClient(true);
                 saveClient();
+                break;
+            case R.id.clientNotesButton:
+                navigationManager.stackReplaceFragment(ClientNoteFragment.class);
                 break;
             default:
                 break;
@@ -461,12 +532,18 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
+        archiveButton = parentActivity.findViewById(R.id.archiveButton);
+        if(archiveButton != null) {
+            archiveButton.setOnClickListener(this);
+        }
         buyer = parentActivity.findViewById(R.id.buyerButton);
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);
         seller.setOnClickListener(this);
-        deleteButton = getView().findViewById(R.id.clientDeleteButton);
-        deleteButton.setOnClickListener(this);
+//        deleteButton = getView().findViewById(R.id.clientDeleteButton);
+//        deleteButton.setOnClickListener(this);
+        noteButton = getView().findViewById(R.id.clientNotesButton);
+        noteButton.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
@@ -638,6 +715,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 parentActivity.showToast("Client updates saved");
             }
         });
+
     }
 
     @Override
@@ -651,10 +729,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(!hasFocus) {
             hideKeyboard(v);
         }
+//        if(v.getId() == R.id.editGci && !gci.getText().toString().isEmpty() ||
+//                v.getId() == R.id.editGciPercent && !gciPercent.getText().toString().isEmpty() ||
+//                v.getId() == R.id.editPaidIncome && !paidIncome.getText().toString().isEmpty() ||
+//                v.getId() == R.id.editPaidIncomePercent && !incomePercent.getText().toString().isEmpty()) {
+//            calculatePercentage();
+//        }
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =(InputMethodManager) parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

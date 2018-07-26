@@ -68,6 +68,7 @@
     <!--Buttons/Links-->
     <string name="calculate">Calculate</string>
     <string name="archive">Archive</string>
+    <string name="notes">Notes</string>
     <string name="forgot_password_sike">Already know your password?</string>
     <string name="create_account_sike">Already have an account?</string>
     <string name="forgot_password">Forgot your password?</string>
@@ -79,6 +80,7 @@
     <string name="buyer">Buyer</string>
     <string name="seller">Seller</string>
     <string name="submit">Submit</string>
+    <string name="add_note">Add Note</string>
     <string name="clear">Clear</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -98,6 +100,7 @@
     <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount</string>
     <string name="commission_hint">Paid Income</string>
+    <string name="logs">Logs</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
     <string name="first_name_hint_non_req">First Name</string>
@@ -117,6 +120,9 @@
     <string name="closed_hint">Closed</string>
     <string name="desired_income_hint">Desired Income</string>
     <string name="goals_reason_hint">Your reason for tracking goals</string>
+    <string name="old_password_hint">Current Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_password_hint">Confirm New Password</string>
 
     <!--Helper Text-->
     <string name="error_message">We had a problem contacting our servers.  Please try again later</string>
@@ -127,6 +133,7 @@
     <string name="settings_help_text">Application settings</string>
     <string name="feedback_help_text">Provide feedback</string>
     <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
+    <string name="change_password_help_text">Please enter your old password and the password you'd like to change to</string>
     <string name="feedback_help_text_top">We are always looking for ways to improve!</string>
     <string name="feedback_help_text_bottom">Let us know how by leaving feedback below!</string>
 

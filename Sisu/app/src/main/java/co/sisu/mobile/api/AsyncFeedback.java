@@ -1,6 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -22,12 +23,16 @@ import okhttp3.Response;
 public class AsyncFeedback extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    String agentId, feedback;
+    private String agentId, feedback, url;
+    private boolean isSlackCall;
 
-    public AsyncFeedback (AsyncServerEventListener cb, String agentId, String feedback) {
+
+    public AsyncFeedback (AsyncServerEventListener cb, String url, String agentId, String feedback, boolean isSlackCall) {
         callback = cb;
         this.agentId = agentId;
         this.feedback = feedback;
+        this.url = url;
+        this.isSlackCall = isSlackCall;
     }
 
     @Override
@@ -38,14 +43,28 @@ public class AsyncFeedback extends AsyncTask<String, String, String> {
         RequestBody body = RequestBody.create(mediaType, "{\"feedback\":\"" + feedback +"\"}");
 
         OkHttpClient client = new OkHttpClient();
+        String fullUrl = url + "api/v1/feedback/add-feedback/" + agentId;
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/feedback/add-feedback/" + agentId)
+                .url(fullUrl)
                 .post(body)
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
                 .addHeader("Transaction-Id", strings[2])
                 .build();
+
+        if(isSlackCall) {
+            fullUrl = url;
+            body = RequestBody.create(mediaType, "{\"text\":\"" + feedback +"\"}");
+            request = new Request.Builder()
+                    .url(fullUrl)
+                    .post(body)
+                    .build();
+        }
+
+        Log.e("FULL URL", url);
+
+
         try {
             response = client.newCall(request).execute();
         } catch (IOException e) {

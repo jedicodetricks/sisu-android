@@ -1,11 +1,18 @@
 package co.sisu.mobile.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +22,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 
@@ -30,15 +38,23 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
     int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
     private int colorCounter = 0;
+    private ApiManager apiManager;
     private ParentActivity parentActivity;
+    private String agentId;
+    private ImageView thumbnail, expanded;
+    private String imageName;
+    private Animator mCurrentAnimator;
+    private int mShortAnimationDuration;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
-                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent) {
+                                            HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
         colorCounter = 0;
         this.parentActivity = parent;
+        this.apiManager = apiManager;
+        this.agentId = agent_id;
     }
 
     @Override
@@ -63,12 +79,42 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.leaderboard_group_items, null);
         }
+        thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
 
-        ImageView thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
-        Bitmap bmp = parentActivity.getImage(childText.getProfile());
-        if(bmp != null) {
-            thumbnail.setImageBitmap(bmp);
+
+//        mShortAnimationDuration = parentActivity.getResources().getInteger(android.R.integer.config_shortAnimTime);
+//        expanded = parentActivity.findViewById(R.id.expanded_image);
+
+        //This will always be null the first time through
+        final Bitmap bmp = childText.getImage();
+        if(bmp == null) {
+            thumbnail.setImageResource(R.drawable.client_icon);
+            thumbnail.setEnabled(false);
+//            imageName = childText.getProfile();
+//            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
+//                Log.e("CALLING IMAGE", imageName + "");
+//                //Bitmap image = parentActivity.getImage(imageName);
+//                //if(image != null) {
+////                    new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);//this is where setting the image is actually happening, calls-download, then sets in onPost
+//                //}
+//            }
+//            else {
+//                Log.e("THIS SHIT IS NULL", childText.getLabel());
+//                //This would be a default image
+//            }
         }
+        else {
+            thumbnail.setImageBitmap(bmp);
+            thumbnail.setEnabled(true);
+        }
+        final View parentView = parentActivity.findViewById(R.id.linearLayout);
+
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentActivity.zoomImageFromThumb(parentView, thumbnail, bmp);
+            }
+        });
 
         TextView title = convertView.findViewById(R.id.leaderboardItemTitle);
         TextView subtitle = convertView.findViewById(R.id.leaderboardItemSubTitle);
@@ -149,4 +195,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         lblListHeader.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
         thumb.setBackgroundColor(ContextCompat.getColor(_context, headerColor));
     }
+
+
+
 }
