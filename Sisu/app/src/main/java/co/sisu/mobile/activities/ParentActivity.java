@@ -290,7 +290,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    if(dataController.getTeamsObject().size() > 0) {
+                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    }
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -312,21 +314,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             int hour = 0;
             int minute = 0;
             int reminderActive = 0;
+            boolean timeError = false;
             for (ParameterObject s : newSettings) {
                 Log.e(s.getName(), s.getValue());
                 switch (s.getName()) {
                     case "daily_reminder_time":
                         String[] values = s.getValue().split(":");
-                        hour = Integer.parseInt(values[0]);
-                        minute = Integer.parseInt(values[1]);
-                        Log.e("ALARM TIME", hour + " " + minute);
+                        try{
+                            hour = Integer.parseInt(values[0]);
+                            minute = Integer.parseInt(values[1]);
+                            Log.e("ALARM TIME", hour + " " + minute);
+                        } catch(NumberFormatException nfe) {
+                            timeError = true;
+                        }
+
                         break;
                     case "daily_reminder":
                         reminderActive = Integer.parseInt(s.getValue());
                 }
             }
 
-            if(reminderActive == 1) {
+            if(reminderActive == 1 && !timeError) {
                 Log.e("SETTING ALARM", "AGAAAAAAIN");
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
