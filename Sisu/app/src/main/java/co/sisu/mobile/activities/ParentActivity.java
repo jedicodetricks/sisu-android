@@ -334,7 +334,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                         break;
                     case "daily_reminder":
-                        reminderActive = Integer.parseInt(s.getValue());
+                        try{
+                            reminderActive = Integer.parseInt(s.getValue());
+
+                        } catch(NumberFormatException nfe) {
+                            reminderActive = 1;
+                        }
                 }
             }
 
