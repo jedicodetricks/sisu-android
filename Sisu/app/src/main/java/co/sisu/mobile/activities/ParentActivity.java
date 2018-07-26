@@ -294,6 +294,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                     }
                     else {
+                        teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
