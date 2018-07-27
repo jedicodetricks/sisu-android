@@ -90,13 +90,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         loader.setVisibility(View.GONE);
     }
 
-    private void calculatePercentage(EditText editPercent, EditText editDollar) {
-        int dollar;
+    private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
         float percent;
-        Log.e("CALCULATING", "");
         if(!transAmount.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
             percent = Float.parseFloat(editPercent.getText().toString());
-            convertPercentToDollar(percent / 100f, editDollar);
+            convertPercentToDollar(percent / 100f, editDollar, transAmount);
         } else {
             parentActivity.showToast(getText(R.string.percent_help_text));
 //            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
@@ -106,29 +104,28 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
     }
 
-    private void convertPercentToDollar(float percent, EditText dollarText) {
+    private void calculateGciPercentage(EditText editPercent, EditText editDollar) {
+        float percent;
+        if(!gci.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+            percent = Float.parseFloat(editPercent.getText().toString());
+            convertPercentToDollar(percent / 100f, editDollar, gci);
+        } else {
+            parentActivity.showToast("GCI and Percent Required");
+//            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(editDollar.getText().toString());
+//                convertDollarToPercent(dollar * 100f, editPercent);
+//            }
+        }
+    }
+
+    private void convertPercentToDollar(float percent, EditText dollarText, EditText parent) {
         float dollar;
-        int transTotal = Integer.parseInt(transAmount.getText().toString());
+        int transTotal = Integer.parseInt(parent.getText().toString());
         if(transTotal != 0 && percent <= 100 && percent > 0) {
             dollar = percent * transTotal;
             if(dollar <= transTotal && dollar > 0) {
                 dollarText.setText(String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
             }
-        }
-    }
-
-    private void convertDollarToPercent(float dollar, EditText percentText) {
-        float percent;
-        int transTotal = Integer.parseInt(transAmount.getText().toString());
-        if(transTotal != 0 && dollar <= transTotal && dollar > 0) {
-            percent = dollar / transTotal;
-            if(percent <= 100 && percent > 0) {
-                percentText.setText(String.valueOf(percent).substring(0,String.valueOf(percent).indexOf('.')));
-            } else {
-                //might be an error in user input
-            }
-        } else {
-            parentActivity.showToast("Please enter a transaction amount first");
         }
     }
 
@@ -426,14 +423,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
-                calculateGciPercent.setBackground(active);
-                calculateGciPercent.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
-                calculatePercentage(gciPercent, gci);
+                calculateTransPercentage(gciPercent, gci);
                 break;
             case R.id.calculateIncomePercent:
-                calculateIncomePercent.setBackground(active);
-                calculateIncomePercent.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
-                calculatePercentage(incomePercent, paidIncome);
+                calculateGciPercentage(incomePercent, paidIncome);
                 break;
             case R.id.saveButton://notify of success update api
                 if(verifyInputFields()) {
