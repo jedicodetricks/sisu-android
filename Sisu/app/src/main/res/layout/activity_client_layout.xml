@@ -25,6 +25,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@string/export_contact"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -185,6 +186,19 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <Button
+            android:id="@+id/calculateGciPercent"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/calculate"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@id/paidIncomePercentLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/transAmountInputLayout" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/commissionInputLayout"
             android:layout_width="0dp"
@@ -240,6 +254,19 @@
                 android:textAlignment="textEnd" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/calculateIncomePercent"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/calculate"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@id/phoneInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gciPercentLayout" />
 
         <!---->
 
@@ -681,8 +708,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:text="@string/buyer"
             android:clickable="true"
+            android:text="@string/buyer"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/exportContactButton" />
@@ -695,8 +723,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:text="@string/seller"
             android:clickable="true"
+            android:text="@string/seller"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/exportContactButton" />
@@ -747,20 +776,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="32dp"
             android:text="@string/percent"
             app:layout_constraintBottom_toBottomOf="@+id/gciPercentLayout"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/calculateGciPercent" />
 
         <TextView
             android:id="@+id/percentSign2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="32dp"
             android:text="@string/percent"
             app:layout_constraintBottom_toBottomOf="@+id/paidIncomePercentLayout"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/calculateIncomePercent" />
 
         <TextView
             android:id="@+id/dollarSign"

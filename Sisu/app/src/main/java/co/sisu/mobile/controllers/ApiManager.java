@@ -1,7 +1,7 @@
 package co.sisu.mobile.controllers;
 
-import android.util.Log;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +11,7 @@ import java.util.UUID;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
+import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
@@ -30,7 +31,6 @@ import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.api.AsyncUpdateGoals;
-import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
@@ -44,7 +44,6 @@ import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 
 /**
  * Created by Brady Groharing on 6/2/2018.
@@ -57,7 +56,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://api.sisu.co/";
+    private String url = "https://beta.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 

@@ -133,9 +133,10 @@
     <string name="settings_help_text">Application settings</string>
     <string name="feedback_help_text">Provide feedback</string>
     <string name="forgot_password_help_text">Enter your Sisu email address below to receive a password reset email</string>
-    <string name="change_password_help_text">Please enter your old password and the password you'd like to change to</string>
+    <string name="change_password_help_text">Please enter your old password and the password you\'d like to change to</string>
     <string name="feedback_help_text_top">We are always looking for ways to improve!</string>
     <string name="feedback_help_text_bottom">Let us know how by leaving feedback below!</string>
+    <string name="percent_help_text">Transaction and Percentage Required</string>
 
     <!--temp strings-->
     <string name="record_date">March 23, 2018</string>

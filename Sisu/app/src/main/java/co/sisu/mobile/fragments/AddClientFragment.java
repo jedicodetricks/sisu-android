@@ -49,9 +49,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
-    private Button signedClear, contractClear, settlementClear, appointmentClear;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -88,6 +88,48 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
+    }
+
+    private void calculatePercentage(EditText editPercent, EditText editDollar) {
+        int dollar;
+        float percent;
+        Log.e("CALCULATING", "");
+        if(!transAmount.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+            percent = Float.parseFloat(editPercent.getText().toString());
+            convertPercentToDollar(percent / 100f, editDollar);
+        } else {
+            parentActivity.showToast(getText(R.string.percent_help_text));
+//            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(editDollar.getText().toString());
+//                convertDollarToPercent(dollar * 100f, editPercent);
+//            }
+        }
+    }
+
+    private void convertPercentToDollar(float percent, EditText dollarText) {
+        float dollar;
+        int transTotal = Integer.parseInt(transAmount.getText().toString());
+        if(transTotal != 0 && percent <= 100 && percent > 0) {
+            dollar = percent * transTotal;
+            if(dollar <= transTotal && dollar > 0) {
+                dollarText.setText(String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
+            }
+        }
+    }
+
+    private void convertDollarToPercent(float dollar, EditText percentText) {
+        float percent;
+        int transTotal = Integer.parseInt(transAmount.getText().toString());
+        if(transTotal != 0 && dollar <= transTotal && dollar > 0) {
+            percent = dollar / transTotal;
+            if(percent <= 100 && percent > 0) {
+                percentText.setText(String.valueOf(percent).substring(0,String.valueOf(percent).indexOf('.')));
+            } else {
+                //might be an error in user input
+            }
+        } else {
+            parentActivity.showToast("Please enter a transaction amount first");
+        }
     }
 
     private void initializeCalendar() {
@@ -149,6 +191,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         paidIncome.setOnFocusChangeListener(this);
         gci = getView().findViewById(R.id.editGci);
         gci.setOnFocusChangeListener(this);
+        gciPercent = getView().findViewById(R.id.editGciPercent);
+        gciPercent.setOnFocusChangeListener(this);
+        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
+        incomePercent.setOnFocusChangeListener(this);
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -186,6 +232,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 sellerButton.setBackground(active);
                 sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
+                break;
+            case R.id.calculateGciPercent:
+                calculatePercentage(gciPercent, gci);
+                break;
+            case R.id.calculateIncomePercent:
+                calculatePercentage(incomePercent, paidIncome);
                 break;
             case R.id.importContactButton:
                 //do stuff for import
@@ -575,6 +627,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         settlementClear.setOnClickListener(this);
         appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
+        calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
+        calculateGciPercent.setOnClickListener(this);
+        calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
+        calculateIncomePercent.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {
