@@ -89,7 +89,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         final Bitmap bmp = childText.getImage();
         if(bmp == null) {
             thumbnail.setImageResource(R.drawable.client_icon);
-            thumbnail.setEnabled(false);
+            thumbnail.setEnabled(true);
 //            imageName = childText.getProfile();
 //            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
 //                Log.e("CALLING IMAGE", imageName + "");
@@ -109,10 +109,12 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         }
         final View parentView = parentActivity.findViewById(R.id.linearLayout);
 
+
+        //TODO: This is going to have to pop if they have a pic or not.
         thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.zoomImageFromThumb(parentView, thumbnail, bmp);
+                parentActivity.zoomImageFromThumb(parentView, thumbnail, bmp, childText);
             }
         });
 
