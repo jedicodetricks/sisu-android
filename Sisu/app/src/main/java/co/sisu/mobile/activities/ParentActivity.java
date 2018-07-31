@@ -301,7 +301,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    if(dataController.getTeamsObject().size() > 0) {
+                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    }
+                    else {
+                        teamParamFinished = true;
+                        dataController.setSlackInfo(null);
+                    }
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -346,11 +352,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 switch (s.getName()) {
                     case "daily_reminder_time":
                         String[] values = s.getValue().split(":");
-                        hour = Integer.parseInt(values[0]);
-                        minute = Integer.parseInt(values[1]);
+                        try{
+                            hour = Integer.parseInt(values[0]);
+                            minute = Integer.parseInt(values[1]);
+                            Log.e("ALARM TIME", hour + " " + minute);
+                        } catch(NumberFormatException nfe) {
+                            hour = 17;
+                            minute = 0;
+                        }
                         break;
                     case "daily_reminder":
-                        reminderActive = Integer.parseInt(s.getValue());
+                        try{
+                            reminderActive = Integer.parseInt(s.getValue());
+
+                        } catch(NumberFormatException nfe) {
+                            reminderActive = 1;
+                        }
                 }
             }
 

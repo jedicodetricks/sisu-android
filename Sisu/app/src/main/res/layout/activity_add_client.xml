@@ -22,9 +22,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:drawableLeft="@drawable/import_contacts_icon_active"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:text="@string/import_contact"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -135,12 +136,13 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/gciInputLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:theme="@style/RequiredTextTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toEndOf="@id/dollarSign"
             app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
 
             <EditText
@@ -149,27 +151,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/gci_hint"
-                android:maxLength="8"
                 android:inputType="number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTransAmount" />
+                android:maxLength="8" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/commissionInputLayout"
-            android:layout_width="match_parent"
+            android:id="@+id/gciPercentLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:theme="@style/RequiredTextTheme"
+            app:layout_constraintEnd_toStartOf="@+id/percentSign"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
+
+            <EditText
+                android:id="@+id/editGciPercent"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textAlignment="textEnd" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/calculateGciPercent"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/calculate"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@id/paidIncomePercentLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/transAmountInputLayout" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/commissionInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/RequiredTextTheme"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toEndOf="@id/dollarSign2"
             app:layout_constraintTop_toBottomOf="@+id/gciInputLayout">
 
             <EditText
@@ -178,17 +214,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/commission_hint"
-                android:maxLength="8"
                 android:inputType="number"
+                android:maxLength="8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </android.support.design.widget.TextInputLayout>
+
+
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/paidIncomePercentLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/RequiredTextTheme"
+            app:layout_constraintEnd_toStartOf="@+id/percentSign2"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/gciInputLayout">
+
+            <EditText
+                android:id="@+id/editPaidIncomePercent"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textAlignment="textEnd" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/calculateIncomePercent"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/calculate"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@id/phoneInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gciPercentLayout" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/emailInputLayout"
@@ -553,6 +629,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             android:text="@string/buyer"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
@@ -566,9 +643,78 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             android:text="@string/seller"
+            android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/importContactButton" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="="
+            app:layout_constraintBottom_toBottomOf="@+id/gciPercentLayout"
+            app:layout_constraintEnd_toStartOf="@+id/gciPercentLayout"
+            app:layout_constraintStart_toEndOf="@+id/gciInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/gciPercentLayout" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="="
+            app:layout_constraintBottom_toBottomOf="@+id/paidIncomePercentLayout"
+            app:layout_constraintEnd_toStartOf="@+id/paidIncomePercentLayout"
+            app:layout_constraintStart_toEndOf="@+id/commissionInputLayout"
+            app:layout_constraintTop_toTopOf="@+id/paidIncomePercentLayout" />
+
+        <TextView
+            android:id="@+id/percentSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/percent"
+            app:layout_constraintBottom_toBottomOf="@+id/gciPercentLayout"
+            app:layout_constraintEnd_toStartOf="@id/calculateGciPercent" />
+
+        <TextView
+            android:id="@+id/percentSign2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/percent"
+            app:layout_constraintBottom_toBottomOf="@+id/paidIncomePercentLayout"
+            app:layout_constraintEnd_toStartOf="@id/calculateIncomePercent" />
+
+        <TextView
+            android:id="@+id/dollarSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="$"
+            app:layout_constraintBottom_toBottomOf="@+id/gciInputLayout"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/dollarSign2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:text="$"
+            app:layout_constraintBottom_toBottomOf="@+id/commissionInputLayout"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

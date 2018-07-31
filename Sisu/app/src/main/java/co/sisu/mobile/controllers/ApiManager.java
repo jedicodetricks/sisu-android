@@ -1,7 +1,7 @@
 package co.sisu.mobile.controllers;
 
-import android.util.Log;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +12,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
+import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncAddFirebaseDevice;
 import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
@@ -34,7 +35,6 @@ import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateClients;
 import co.sisu.mobile.api.AsyncUpdateFirebaseDevice;
 import co.sisu.mobile.api.AsyncUpdateGoals;
-import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;

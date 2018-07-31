@@ -219,12 +219,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showToast("The server experienced an issue, please try again.");
+
+        if(asyncReturnType.equals("Authenticator")) {
+            if(authRetry == 2) {
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast("The server is experiencing issues. Please try again later.");
+                    }
+                });
             }
-        });
+            else {
+                new AsyncAuthenticator(this, emailAddress, password).execute();
+                authRetry++;
+            }
+        }
+        else {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showToast("The server experienced an issue, please try again.");
+                }
+            });
+        }
+
     }
 
 }
