@@ -37,27 +37,40 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
         super.onCreate(savedInstanceState);
 
         loaded = false;
-        pingServer();
+//        pingServer();
+        login();
     }
 
     private void pingServer() {
         new AsyncServerPing(this).execute();
     }
 
+    private void login() {
+        if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
+            intent = new Intent(this, MainActivity.class);
+            launchActivity();
+        }
+        else {
+            String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
+            String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
+            new AsyncAuthenticator(this, userName, userPassword).execute();
+        }
+    }
+
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Server Ping")) {
-            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
-                intent = new Intent(this, MainActivity.class);
-                launchActivity();
-            }
-            else {
-                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
-                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
-                new AsyncAuthenticator(this, userName, userPassword).execute();
-            }
-        }
-        else if(asyncReturnType.equals("JWT")) {
+//        if(asyncReturnType.equals("Server Ping")) {
+//            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
+//                intent = new Intent(this, MainActivity.class);
+//                launchActivity();
+//            }
+//            else {
+//                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
+//                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
+//                new AsyncAuthenticator(this, userName, userPassword).execute();
+//            }
+//        }
+        if(asyncReturnType.equals("JWT")) {
             JWTObject jwt = (JWTObject) returnObject;
             SaveSharedPreference.setJWT(this, jwt.getJwt());
             SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
@@ -88,12 +101,13 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
 
     private void createNotificationChannel() {
+
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = ("SisuChannel");
             String description = ("SisuNotifications");
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel("420", name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance

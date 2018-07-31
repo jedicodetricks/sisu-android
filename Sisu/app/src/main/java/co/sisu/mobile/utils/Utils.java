@@ -1,5 +1,6 @@
 package co.sisu.mobile.utils;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -23,7 +24,7 @@ public class Utils {
     public static NotificationManager mManager;
 
     @SuppressWarnings("static-access")
-    public static void generateNotification(Context context) {
+    public static void generateNotification(Context context, String title, String text) {
 
         Intent intent = new Intent(context, SplashScreenActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -31,9 +32,10 @@ public class Utils {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "420")
                 .setSmallIcon(R.drawable.sisu_mark)
-                .setContentTitle("Sisu")
-                .setContentText("Reminder: Enter your numbers for today!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 

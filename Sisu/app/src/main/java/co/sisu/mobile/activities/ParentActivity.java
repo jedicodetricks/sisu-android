@@ -40,6 +40,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
+import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
@@ -50,16 +51,19 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -70,6 +74,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private MyFirebaseMessagingService myFirebaseMessagingService;
     private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
@@ -81,12 +86,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private AgentModel agent;
     private ErrorMessageFragment errorFragment;
     private FileIO io;
-    private File internalStorageFile;
     private NotesObject selectedNote;
     private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
+    private FirebaseDeviceObject currentDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager = new ApiManager(this);
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
+        apiManager.getFirebaseDevices(this, agent.getAgent_id());
+
         errorFragment = new ErrorMessageFragment();
         parentLoader = findViewById(R.id.parentLoader);
         io = new FileIO(ParentActivity.this);
@@ -105,6 +112,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
+
 
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
@@ -123,6 +131,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         };
     }
+
+
+
 
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -296,6 +307,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
             });
         }
+        else if(asyncReturnType.equals("Get Firebase Device")) {
+            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;
+            FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
+            String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
+
+            for(FirebaseDeviceObject fdo : devices) {
+                if(fdo.getDevice_id().equals(firebaseDeviceId)) {
+                    Log.e("Current Device", fdo.getDevice_id());
+                    currentDevice = fdo;
+                }
+            }
+            myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+
+            if(firebaseDeviceId.equals("")) {
+                myFirebaseMessagingService.initFirebase();
+            }
+
+        }
         else if(asyncReturnType.equals("Goals")) {
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
@@ -319,7 +348,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         String[] values = s.getValue().split(":");
                         hour = Integer.parseInt(values[0]);
                         minute = Integer.parseInt(values[1]);
-                        Log.e("ALARM TIME", hour + " " + minute);
                         break;
                     case "daily_reminder":
                         reminderActive = Integer.parseInt(s.getValue());
@@ -327,7 +355,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             if(reminderActive == 1) {
-                Log.e("SETTING ALARM", "AGAAAAAAIN");
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
             navigateToScoreboard();
@@ -619,4 +646,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
+
 }

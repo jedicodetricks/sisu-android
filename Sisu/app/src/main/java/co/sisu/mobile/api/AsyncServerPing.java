@@ -31,7 +31,7 @@ public class AsyncServerPing extends AsyncTask<Void, Void, Void> {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://api.sisu.co/api/v1/ping")
+                .url("https://beta.sisu.co/api/v1/ping")
                 .get()
                 .build();
         try {

@@ -25,12 +25,13 @@ import okhttp3.Response;
 
 public class AsyncAuthenticatorNEW extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
-    private String email, password;
+    private String email, password, url;
 
-    public AsyncAuthenticatorNEW(AsyncServerEventListener cb, String email, String password) {
+    public AsyncAuthenticatorNEW(AsyncServerEventListener cb, String url, String email, String password) {
         this.callback = cb;
         this.email = email;
         this.password = password;
+        this.url = url;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class AsyncAuthenticatorNEW extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, "{\"email\":\""+ email +"\",\"password\":\""+ password +"\"}");
 
             Request request = new Request.Builder()
-                    .url("https://api.sisu.co/api/v1/agent/authenticate")
+                    .url(url + "/api/v1/agent/authenticate")
                     .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
