@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -13,17 +14,30 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/24/18.
  */
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class MyFirebaseMessagingService extends FirebaseMessagingService implements AsyncServerEventListener {
 
     private Context context;
+    private ApiManager apiManager;
+    private AgentModel agent;
+    private FirebaseDeviceObject currentDevice;
 
     public MyFirebaseMessagingService() {
+    }
+
+    public MyFirebaseMessagingService(ApiManager apiManager, AgentModel agent, Context context, FirebaseDeviceObject currentDevice) {
+        this.apiManager = apiManager;
+        this.agent = agent;
+        this.context = context;
+        this.currentDevice = currentDevice;
     }
 
     public void initFirebase() {
@@ -40,9 +54,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String token = task.getResult().getToken();
 
                 // Log and toast
-//                String msg = getString(R.string.msg_token_fmt, token);
+                apiManager.sendFirebaseToken(MyFirebaseMessagingService.this, context, agent, token);
                 Log.e("Firebase TOKEN", token);
-//                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,10 +107,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.e("Firebase", "Refreshed token: " + token);
-
+        apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
 //        sendRegistrationToServer(token);
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, String asyncReturnType) {
+
     }
 }

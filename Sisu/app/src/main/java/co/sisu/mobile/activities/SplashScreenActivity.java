@@ -37,27 +37,40 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
         super.onCreate(savedInstanceState);
 
         loaded = false;
-        pingServer();
+//        pingServer();
+        login();
     }
 
     private void pingServer() {
         new AsyncServerPing(this).execute();
     }
 
+    private void login() {
+        if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
+            intent = new Intent(this, MainActivity.class);
+            launchActivity();
+        }
+        else {
+            String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
+            String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
+            new AsyncAuthenticator(this, userName, userPassword).execute();
+        }
+    }
+
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Server Ping")) {
-            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
-                intent = new Intent(this, MainActivity.class);
-                launchActivity();
-            }
-            else {
-                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
-                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
-                new AsyncAuthenticator(this, userName, userPassword).execute();
-            }
-        }
-        else if(asyncReturnType.equals("JWT")) {
+//        if(asyncReturnType.equals("Server Ping")) {
+//            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
+//                intent = new Intent(this, MainActivity.class);
+//                launchActivity();
+//            }
+//            else {
+//                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
+//                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
+//                new AsyncAuthenticator(this, userName, userPassword).execute();
+//            }
+//        }
+        if(asyncReturnType.equals("JWT")) {
             JWTObject jwt = (JWTObject) returnObject;
             SaveSharedPreference.setJWT(this, jwt.getJwt());
             SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
