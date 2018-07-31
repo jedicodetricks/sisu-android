@@ -32,13 +32,12 @@ import co.sisu.mobile.system.SaveSharedPreference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
 
-    String emailAddress;
-    String password;
-    boolean networkActive = true;
-    Button signInButton;
-    ProgressBar loader;
-    int authRetry = 0;
-
+    private String emailAddress;
+    private String password;
+    private boolean networkActive = true;
+    private Button signInButton;
+    private ProgressBar loader;
+    private AgentModel agent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-            AgentModel agent = agentObject.getAgent();
+            agent = agentObject.getAgent();
             if (agentObject.getStatus_code().equals("-1")) {
                 this.runOnUiThread(new Runnable() {
                     @Override

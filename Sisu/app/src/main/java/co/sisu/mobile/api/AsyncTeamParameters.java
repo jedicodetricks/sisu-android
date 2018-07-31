@@ -52,7 +52,7 @@ public class AsyncTeamParameters extends AsyncTask<String, String, String> {
         try {
             response = client.newCall(request).execute();
             responseBody = response.body().string();
-            Log.e("TEAM PARAMS", responseBody);
+//            Log.e("TEAM PARAMS", responseBody);
         } catch (IOException e) {
             e.printStackTrace();
         }

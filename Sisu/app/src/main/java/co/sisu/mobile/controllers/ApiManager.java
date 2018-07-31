@@ -8,16 +8,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncAddNotes;
+import co.sisu.mobile.api.AsyncAddFirebaseDevice;
 import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
@@ -30,16 +33,19 @@ import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateClients;
+import co.sisu.mobile.api.AsyncUpdateFirebaseDevice;
 import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -182,7 +188,7 @@ public class ApiManager {
 
     public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
         getJWT(agentId);
-        new AsyncAuthenticatorNEW(cb, email, password).execute(jwtStr, timestamp, transactionID);
+        new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {
@@ -229,5 +235,22 @@ public class ApiManager {
     public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
         getJWT(agentId);
         new AsyncTeamParameters(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
+        getJWT(agent.getAgent_id());
+        new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
+
+    }
+
+    public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
+        getJWT(agent.getAgent_id());
+        new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
+
+    }
+
+    public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
+        getJWT(agentId);
+        new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 }
