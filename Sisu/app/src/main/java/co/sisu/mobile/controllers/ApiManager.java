@@ -8,12 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
-import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncAddFirebaseDevice;
+import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
@@ -62,7 +61,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://beta.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
