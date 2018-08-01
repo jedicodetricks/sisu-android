@@ -150,6 +150,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
             ParameterObject settings = settingsJson.getParameter();
             dataController.setActivitiesSelected(settings);
+
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

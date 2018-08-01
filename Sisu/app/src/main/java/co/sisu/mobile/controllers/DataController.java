@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -564,17 +565,6 @@ public class DataController {
         }
     }
 
-//    private void getTime(Date d, Calendar updatedTime, TextView displayView) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-//
-//        try {
-//            d = sdf.parse(displayView.getText().toString());
-//            updatedTime.setTime(d);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private Date getFormattedDateFromApiReturn(String dateString) {
         dateString = dateString.replace("00:00:00 GMT", "");
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
@@ -589,11 +579,6 @@ public class DataController {
 //        SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
         return calendar.getTime();
     }
-
-//    public void setSelectedClientObject(Object returnObject) {
-//        //AsyncClientJsonObject clientObject = (AsyncClientJsonObject) returnObject;
-//        //do some type of client update api call here and possibly add to a list like above
-//    }
 
     public List<ClientObject> getPipelineList() {
         return pipelineList;
@@ -704,7 +689,7 @@ public class DataController {
 //            settings = setDefaultSettingsObject(settings);
 //        }
         ParameterObject[] array = new ParameterObject[arraySize];
-//        parentActivity.setSettings(settings.toArray(array));
+
         settings = newSettings.toArray(array);
 
         for (ParameterObject s : settings) {
@@ -767,10 +752,35 @@ public class DataController {
                             continue;
                         }
                     }
+                    else {
+//                        This is to reconcile the object to make sure it's got the new stuff in it.
+                        if (isSelectableActivity(m.getType())) {
+                            Log.e("PUTTING", m.getTitle());
+                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
+                        }
+                    }
                 }
             }
         }
 
+    }
+
+    public boolean isSelectableActivity(String type) {
+
+        switch (type) {
+            case "CONTA":
+            case "BAPPT":
+            case "SAPPT":
+            case "BSGND":
+            case "SSGND":
+            case "BUNDC":
+            case "SUNDC":
+            case "BCLSD":
+            case "SCLSD":
+                return false;
+        }
+
+        return true;
     }
 
     public List<ParameterObject> getSettings() {
