@@ -108,7 +108,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     @Override
     public void onNewToken(String token) {
         Log.e("Firebase", "Refreshed token: " + token);
-        apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
+        if(apiManager != null) {
+            apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
+        }
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
