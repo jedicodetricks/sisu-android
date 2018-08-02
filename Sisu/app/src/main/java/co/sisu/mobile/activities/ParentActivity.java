@@ -329,6 +329,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(firebaseDeviceId.equals("")) {
                 myFirebaseMessagingService.initFirebase();
             }
+            else {
+                myFirebaseMessagingService.refreshToken();
+            }
+
 
         }
         else if(asyncReturnType.equals("Goals")) {
