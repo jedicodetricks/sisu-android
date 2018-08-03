@@ -327,9 +327,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
             if(firebaseDeviceId.equals("")) {
+                Log.e("FIRBASE", "HAS AN ID");
+                myFirebaseMessagingService.initFirebase();
+            }
+            else if(currentDevice == null) {
+                Log.e("FIRBASE", "NO CURRENT DEVICE");
                 myFirebaseMessagingService.initFirebase();
             }
             else {
+                Log.e("FIRBASE", "ELSE STATEMENT");
                 myFirebaseMessagingService.refreshToken();
             }
 
