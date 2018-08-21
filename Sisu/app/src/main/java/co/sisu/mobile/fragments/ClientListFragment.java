@@ -1,12 +1,16 @@
 package co.sisu.mobile.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +20,16 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.woxthebox.draglistview.DragItem;
+import com.woxthebox.draglistview.DragListView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.adapters.ClientItemAdapter;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -31,9 +39,9 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 
-public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent {
+public class ClientListFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener {
 
-    private ListView mListView;
+    private DragListView mListView;
     private String searchText = "";
     private SearchView clientSearch;
     private TextView total;
@@ -118,17 +126,30 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initListView() {
         mListView = getView().findViewById(R.id.clientListView);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        mListView.setDragListListener(this);
+        mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
+        mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
+//        mListView.setDivider(null);
+//        mListView.setDividerHeight(30);
         total = getView().findViewById(R.id.total);
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
+        ArrayList mItemArray = new ArrayList<>();
         if(getContext() != null) {
-            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
-            mListView.setAdapter(adapter);
+            for(int i = 0; i < metricList.size(); i++) {
+                mItemArray.add(new Pair<>((long) i, metricList.get(i)));
+            }
+//            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+//            mListView.setAdapter(adapter);
 
-            mListView.setOnItemClickListener(this);
+            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
+            mListView.setAdapter(clientItemAdapter, true);
+            mListView.setCanDragHorizontally(false);
+//            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
+            mListView.setCustomDragItem(null);
+
+//            mListView.setOnItemClickListener(this);
         }
 
     }
@@ -142,13 +163,6 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
             }
             fillListViewWithData(sortedList);
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
-        parentActivity.setSelectedClient(selectedClient);
-        navigationManager.stackReplaceFragment(ClientEditFragment.class);
     }
 
     @Override
@@ -256,7 +270,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     public void onTabSelected(TabLayout.Tab tab) {
         total.setText("Total: $");
         if(mListView != null) {
-            mListView.setAdapter(null);
+//            mListView.setAdapter(null);
         }
         switch ((String) tab.getText()) {
             case "Pipeline":
@@ -316,4 +330,44 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         intent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});
         startActivity(intent);
     }
+
+    @Override
+    public void onItemClicked(ClientObject selectedClient) {
+        parentActivity.setSelectedClient(selectedClient);
+        navigationManager.stackReplaceFragment(ClientEditFragment.class);
+    }
+
+    @Override
+    public void onItemDragStarted(int position) {
+        parentActivity.showToast("Start - position: " + position);
+    }
+
+    @Override
+    public void onItemDragging(int itemPosition, float x, float y) {
+
+    }
+
+    @Override
+    public void onItemDragEnded(int fromPosition, int toPosition) {
+        if (fromPosition != toPosition) {
+            parentActivity.showToast("End - position: " + toPosition);
+
+        }
+    }
+
+    private static class MyDragItem extends DragItem {
+
+        MyDragItem(Context context, int layoutId) {
+            super(context, layoutId);
+        }
+
+        @Override
+        public void onBindDragView(View clickedView, View dragView) {
+            CharSequence text = ((TextView) clickedView.findViewById(R.id.text)).getText();
+            ((TextView) dragView.findViewById(R.id.text)).setText(text);
+            dragView.findViewById(R.id.item_layout).setBackgroundColor(dragView.getResources().getColor(R.color.colorCorporateOrange));
+        }
+    }
 }
+
+
