@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorAlmostBlack"
-    style="@style/ActionBar">
+    style="@style/DarkActionBar">
 
     <View
         android:id="@+id/action_bar_home"

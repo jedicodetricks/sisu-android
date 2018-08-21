@@ -108,10 +108,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         displayTime.setText(formatTimeFrom24H(s.getValue()));
                     break;
                 //Keep these, we'll need them for V2
-
-//                case "lights":
-//                    lightsSwitch.setChecked(isChecked(s));
-//                    break;
+                case "lights":
+                    lightsSwitch.setChecked(isChecked(s));
+                    break;
 //                case "biometrics":
 //                    idSwitch.setChecked(isChecked(s));
 //                    break;
@@ -165,14 +164,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         //Keep these, we'll need them for V2
 
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
-//        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
+        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
 //        idSwitch = getView().findViewById(R.id.idSwitch);
 
         fillFieldsWithData();
 
         //idSwitch.setOnCheckedChangeListener(this);
         reminderSwitch.setOnCheckedChangeListener(this);
-        //lightsSwitch.setOnCheckedChangeListener(this);
+        lightsSwitch.setOnCheckedChangeListener(this);
 
 
     }
@@ -194,14 +193,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 }
                 break;
                 //Keep these, we'll need them for V2
-//            case R.id.lightsSwitch:
-//                for(ParameterObject so : settings) {
-//                    if(so.getName().equals("lights")) {
-//                        so.setValue(isCheckedBinaryValue(so));
-//                    }
-//                }
-//                Log.d("CHECK LISTENER", "LIGHTS");
-//                break;
+            case R.id.lightsSwitch:
+                activateLights(isChecked);
+                for(ParameterObject so : settings) {
+                    if(so.getName().equals("lights")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
+
+                Log.d("LIGHTS", "CHECK");
+                break;
 //            case R.id.idSwitch:
 //                for(ParameterObject so : settings) {
 //                    if(so.getName().equals("biometrics")) {
@@ -213,6 +214,19 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
 
 
+    }
+
+    private void activateLights(Boolean isChecked) {
+        //NavigationManager navigationManager = parentActivity.getNavigationManager();
+        if(isChecked) {
+            parentActivity.setTheme(R.style.LightTheme);
+        } else {
+            parentActivity.setTheme(R.style.DarkTheme);
+        }
+        final android.support.v4.app.FragmentTransaction ft = parentActivity.getSupportFragmentManager().beginTransaction();
+        ft.replace(this.getId(), this).commit();
+//        navigationManager.stackReplaceFragment(SettingsFragment.class);
+//        navigationManager.onBackPressed();
     }
 
     @Override
