@@ -226,7 +226,7 @@ public class DataController {
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric signed = new Metric("BB Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric("Buyers Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
 
@@ -975,5 +975,14 @@ public class DataController {
 
     public String getSlackInfo() {
         return slackInfo;
+    }
+
+    public Metric getContactsMetric() {
+        for (Metric m : recordObject) {
+            if(m.getType().equalsIgnoreCase("CONTA")) {
+                return m;
+            }
+        }
+        return null;
     }
 }

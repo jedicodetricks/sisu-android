@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +32,8 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.Metric;
+import okhttp3.Cache;
 
 public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent {
 
@@ -292,8 +296,17 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onTabReselected(TabLayout.Tab tab) {}
 
+    private void addOneToContacts() {
+        Metric contactMetric = dataController.getContactsMetric();
+        contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
+        dataController.setRecordUpdated(contactMetric);
+        parentActivity.updateRecordedActivities();
+        parentActivity.showToast("+1 to your contacts");
+    }
+
     @Override
     public void onPhoneClicked(String number, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "PHONE");
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + number));
@@ -302,6 +315,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onTextClicked(String number, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "TEXTM");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
@@ -310,6 +324,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEmailClicked(String email, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), email, "EMAIL");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
