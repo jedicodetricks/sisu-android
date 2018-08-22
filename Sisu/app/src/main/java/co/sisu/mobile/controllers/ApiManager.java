@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
@@ -21,6 +22,7 @@ import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
+import co.sisu.mobile.api.AsyncGetTeamColorScheme;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
@@ -61,7 +63,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://beta.sisu.co/";
+    private String url = "http://staging.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -251,5 +253,11 @@ public class ApiManager {
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
         getJWT(agentId);
         new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
+        getJWT(agentId);
+        new AsyncGetTeamColorScheme(cb, url, selectedTeamId).execute(jwtStr, timestamp, transactionID);
+
     }
 }

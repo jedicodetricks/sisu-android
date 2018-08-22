@@ -11,12 +11,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
@@ -27,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,6 +41,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
@@ -55,12 +59,14 @@ import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -74,6 +80,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
     private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
@@ -81,6 +88,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
     private boolean settingsFinished = false;
+    private boolean colorSchemeFinished = false;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
@@ -99,6 +107,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_parent);
 
         dataController = new DataController();
+        colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
         agent = getIntent().getParcelableExtra("Agent");
@@ -130,10 +139,30 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 return bitmap.getByteCount() / 1024;
             }
         };
+
     }
 
+    private void setActivityColors() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("SETTING COLORS", "PARENT ACTIVITY");
+                ConstraintLayout layout = findViewById(R.id.parentLayout);
+                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+
+                Drawable drawable = getResources().getDrawable(R.drawable.more_icon).mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.colorMoonBlue), PorterDuff.Mode.SRC_ATOP);
+
+                ImageView moreView = findViewById(R.id.moreView);
+                moreView.setImageDrawable(drawable);
+            }
+        });
 
 
+    }
 
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -258,7 +287,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -269,6 +298,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             goalsFinished = false;
             settingsFinished = false;
             teamParamFinished = false;
+            colorSchemeFinished = false;
         }
     }
 
@@ -302,6 +332,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
+                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                     }
                     else {
@@ -387,6 +418,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             teamParamFinished = true;
             navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme);
+            setActivityColors();
+            colorSchemeFinished = true;
         }
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
@@ -664,4 +702,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.cacheManager = cacheManager;
     }
 
+    public ColorSchemeManager getColorSchemeManager() {
+        return colorSchemeManager;
+    }
 }

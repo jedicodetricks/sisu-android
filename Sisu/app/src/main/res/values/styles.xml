@@ -11,7 +11,6 @@
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="android:background">@color/colorAlmostBlack</item>
         <item name="colorPrimary">@color/colorAlmostBlack</item>
         <item name="android:popupBackground">@color/transparent</item>
 
@@ -199,7 +198,6 @@
     </style>
 
     <style name="ToolBar">
-        <item name="android:background">@color/colorDarkGrey</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/colorLabelText</item>

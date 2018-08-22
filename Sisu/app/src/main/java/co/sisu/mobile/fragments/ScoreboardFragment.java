@@ -2,7 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -29,6 +31,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
@@ -44,6 +47,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
     private int selectedStartDay = 0;
@@ -59,6 +63,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private boolean needsProgress;
     private boolean pastTimeline;
     private Spinner spinner;
+    private CircularProgressBar contact, appointments, signed, listing, underContract, closed;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -89,6 +94,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
 
         initializeTimelineSelector();
@@ -96,6 +102,58 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeButtons();
         initProgressBars();
         calculateVolumes();
+        testColorSchemes();
+    }
+
+    private void testColorSchemes() {
+        ConstraintLayout layout = getView().findViewById(R.id.scoreboard_fragment_parent);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
+        TextView contactsProgressText = getView().findViewById(R.id.contactsProgressText);
+        contactsProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView appointmentsProgressText = getView().findViewById(R.id.appointmentsProgressText);
+        appointmentsProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView bbSignedProgressText = getView().findViewById(R.id.bbSignedProgressText);
+        bbSignedProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView listingsTakenProgressText = getView().findViewById(R.id.listingsTakenProgressText);
+        listingsTakenProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView underContractProgressText = getView().findViewById(R.id.underContractProgressText);
+        underContractProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView closedProgressText = getView().findViewById(R.id.closedProgressText);
+        closedProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+        pendingVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+        TextView pendingVolumeLabel = getView().findViewById(R.id.pendingVolumeLabel);
+        pendingVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        TextView closedVolumeLabel = getView().findViewById(R.id.closedVolumeLabel);
+        closedVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+
+        contactsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+        contactsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        contactsGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+//        spinner.setBackgroundResource(colorSchemeManager.getAppBackground());
+        spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+//        spinner.setBackgroundColor(colorSchemeManager.getAppBackground());
     }
 
     private void calculateVolumes() {
@@ -383,22 +441,22 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         ImageView addButton = getView().findViewById(R.id.addView);
         addButton.setOnClickListener(this);
 
-        CircularProgressBar contact = getView().findViewById(R.id.contactsProgressMark);
+        contact = getView().findViewById(R.id.contactsProgressMark);
         contact.setOnClickListener(this);
 
-        CircularProgressBar appointments = getView().findViewById(R.id.appointmentsProgressMark);
+        appointments = getView().findViewById(R.id.appointmentsProgressMark);
         appointments.setOnClickListener(this);
 
-        CircularProgressBar signed = getView().findViewById(R.id.bbSignedProgressMark);
+        signed = getView().findViewById(R.id.bbSignedProgressMark);
         signed.setOnClickListener(this);
 
-        CircularProgressBar listing = getView().findViewById(R.id.listingsTakenProgressMark);
+        listing = getView().findViewById(R.id.listingsTakenProgressMark);
         listing.setOnClickListener(this);
 
-        CircularProgressBar underContract = getView().findViewById(R.id.underContractProgressMark);
+        underContract = getView().findViewById(R.id.underContractProgressMark);
         underContract.setOnClickListener(this);
 
-        CircularProgressBar closed = getView().findViewById(R.id.closedProgressMark);
+        closed = getView().findViewById(R.id.closedProgressMark);
         closed.setOnClickListener(this);
     }
 

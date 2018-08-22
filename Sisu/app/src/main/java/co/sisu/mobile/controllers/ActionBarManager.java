@@ -1,9 +1,12 @@
 package co.sisu.mobile.controllers;
 
+import android.graphics.drawable.ColorDrawable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
@@ -25,6 +28,7 @@ import co.sisu.mobile.models.TeamObject;
 
 public class ActionBarManager {
     private ParentActivity parentActivity;
+    private ColorSchemeManager colorSchemeManager;
     private TextView pageTitle, teamLetter;
     private View teamBlock;
     private DrawerLayout drawerLayout;
@@ -37,6 +41,7 @@ public class ActionBarManager {
 
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
         bar = parentActivity.getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         bar.setDisplayShowCustomEnabled(true);
@@ -122,6 +127,11 @@ public class ActionBarManager {
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
 //                title = parentActivity.findViewById(R.id.title);
+                Log.e("TITLE BAR", "COLOR?!?!");
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                ConstraintLayout layout = parentActivity.findViewById(R.id.action_bar_parent);
+//                layout.setBackgroundColor(parentActivity.getResources().getColor(R.color.colorClay));
+
                 pageTitle = parentActivity.findViewById(R.id.action_bar_title);
                 teamLetter = parentActivity.findViewById(R.id.team_letter);
                 teamBlock = parentActivity.findViewById(R.id.action_bar_home);
