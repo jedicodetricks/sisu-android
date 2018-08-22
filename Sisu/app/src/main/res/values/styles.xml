@@ -13,10 +13,15 @@
         <item name="contentInsetEnd">0dp</item>
         <item name="android:background">@color/colorAlmostBlack</item>
         <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="android:popupBackground">@color/transparent</item>
 
         <item name="colorAccent">@color/colorCorporateOrange</item>
         <item name="android:colorForeground">@color/colorWhite</item>
         <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -38,6 +43,10 @@
         <item name="android:statusBarColor">@color/colorWhite</item>
         <item name="android:textColorSecondaryInverse">@android:color/black</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar">

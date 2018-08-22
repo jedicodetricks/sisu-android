@@ -15,4 +15,6 @@
     <color name="colorYellow">#f9a21a</color>
     <color name="colorMoonBlue">#0098ce</color>
     <color name="colorDarkBlue">#193056</color>
+
+    <color name="transparent">#00000000</color>
 </resources>
