@@ -1,6 +1,7 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -12,6 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,12 +86,27 @@ public class RecordListAdapter extends BaseAdapter {
         final EditText rowCounter = rowView.findViewById(R.id.rowCounter);
 
         ImageView minusButton = rowView.findViewById(R.id.minusButton);
-//        Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
-//        minusDrawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
-//        minusButton.setImageDrawable(minusDrawable);
+        Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
+        minusDrawable.setTint(colorSchemeManager.getIconActive());
+        minusButton.setImageDrawable(minusDrawable);
+
+        VectorChildFinder vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, minusButton);
+        for (int i = 0; i < 7; i++) {
+            String pathName = "orange_area" + (i + 1);
+            VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
+            path.setFillColor(colorSchemeManager.getIconActive());
+            path.setStrokeColor(colorSchemeManager.getIconActive());
+        }
+
+        minusButton.invalidate();
+
 
         ImageView plusButton = rowView.findViewById(R.id.plusButton);
-
+        VectorChildFinder plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, plusButton);
+        VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getIconActive());
+        plusPath.setStrokeColor(colorSchemeManager.getIconActive());
+        plusButton.invalidate();
 
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override

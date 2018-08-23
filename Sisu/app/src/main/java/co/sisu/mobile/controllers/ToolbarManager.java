@@ -47,7 +47,7 @@ public class ToolbarManager {
         moreButton.setImageDrawable(drawable);
 
         switch (inputActivity) {
-            case "Sales Scoreboard":
+            case "Scoreboard":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
                 drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
                 scoreBoardButton.setImageDrawable(drawable);

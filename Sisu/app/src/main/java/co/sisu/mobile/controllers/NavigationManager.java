@@ -123,7 +123,7 @@ public class NavigationManager {
             fragmentTag = "More";
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
-            fragmentTag = "Sales Scoreboard";
+            fragmentTag = "Scoreboard";
         }
         else if(fragmentClass.getSimpleName().equals("ReportFragment")) {
             fragmentTag = "Report";
