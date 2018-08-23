@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -15,6 +16,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.wooplr.spotlight.SpotlightView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +33,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 public class ClientListFragment extends Fragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent {
 
@@ -85,6 +89,35 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
         initAddButton();
+
+//        new GuideView.Builder(view.getContext())
+//                .setTitle("New Feature")
+//                .setContentText("Hey, check out this new shit we added\nYou can save people now or something\nRate our app 5 stars..... Or else")
+//                .setTargetView(parentActivity.findViewById(R.id.addClientButton))
+//                .setDismissType(GuideView.DismissType.outside) //optional - default dismissible by TargetView
+//                .build()
+//                .show();
+
+        new SpotlightView.Builder(parentActivity)
+                .introAnimationDuration(400)
+                .enableRevealAnimation(true)
+                .performClick(true)
+                .fadeinTextDuration(400)
+                .headingTvColor(Color.parseColor("#eb273f"))
+                .headingTvSize(32)
+                .headingTvText("New Feature")
+                .subHeadingTvColor(Color.parseColor("#ffffff"))
+                .subHeadingTvSize(16)
+                .subHeadingTvText("Hey, check out this new shit we added\nYou can save people now or something\nRate our app 5 stars..... Or else.")
+                .maskColor(Color.parseColor("#dc000000"))
+                .target(parentActivity.findViewById(R.id.addClientButton))
+                .lineAnimDuration(400)
+                .lineAndArcColor(Color.parseColor("#eb273f"))
+                .dismissOnTouch(true)
+                .dismissOnBackPress(true)
+                .enableDismissAfterShown(true)
+                .usageId("123456") //UNIQUE ID
+                .show();
 
         //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
