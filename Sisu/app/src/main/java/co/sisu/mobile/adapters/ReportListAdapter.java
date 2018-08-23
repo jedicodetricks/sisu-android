@@ -3,6 +3,10 @@ package co.sisu.mobile.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -28,12 +33,14 @@ public class ReportListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<Metric> mDataSource;
     private String timeline;
+    private ColorSchemeManager colorSchemeManager;
 
-    public ReportListAdapter(Context context, List<Metric> items, String timeline) {
+    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.timeline = timeline;
+        this.colorSchemeManager = colorSchemeManager;
     }
 
     @Override
@@ -59,6 +66,8 @@ public class ReportListAdapter extends BaseAdapter {
 
         if(metric.getType().equals("SCLSD") && position != getCount() - 1) {
             rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
+            TextView otherText = rowView.findViewById(R.id.otherText);
+            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
         }
         else {
             rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
@@ -67,18 +76,18 @@ public class ReportListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.report_list_title);
-
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         // Get subtitle element
         TextView subtitleTextView = rowView.findViewById(R.id.report_list_subtitle);
-
+        subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         // Get percentage text element
         TextView percentageTextView = rowView.findViewById(R.id.report_percentage_text);
-
+        percentageTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.report_list_thumbnail);
 
         ProgressBar progressBar = rowView.findViewById(R.id.progressBar);
-
+        progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(rowView.getResources().getColor(R.color.colorCorporateGrey)));
 
         titleTextView.setText(metric.getTitle());
         if(metric.getCurrentNum() < 0) {
@@ -126,7 +135,9 @@ public class ReportListAdapter extends BaseAdapter {
                 progressBar.setVisibility(View.INVISIBLE);
             }
         }
-        thumbnailImageView.setImageResource(metric.getThumbnailId());
+        Drawable drawable = rowView.getResources().getDrawable(metric.getThumbnailId()).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        thumbnailImageView.setImageDrawable(drawable);
 
         return rowView;
     }

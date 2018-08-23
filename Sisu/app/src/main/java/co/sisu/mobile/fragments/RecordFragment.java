@@ -26,6 +26,7 @@ import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
@@ -45,6 +46,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
 
@@ -70,6 +72,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d);
@@ -127,7 +130,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager);
             mListView.setAdapter(adapter);
         }
 

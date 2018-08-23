@@ -80,6 +80,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
+        expListView.setDividerHeight(0);
         initToggle();
         loader.setVisibility(View.VISIBLE);
 

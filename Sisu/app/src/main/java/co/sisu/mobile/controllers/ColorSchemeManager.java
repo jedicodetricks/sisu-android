@@ -14,6 +14,29 @@ public class ColorSchemeManager {
     private int appBackground;
     private int toolbarBackground;
     private int actionbarBackground;
+    private int buttonText;
+    private int buttonSelected;
+    private int buttonBorder;
+    private int buttonBackground;
+    private int actionbarText;
+    private int toolbarText;
+    private int normalTextColor;
+    private int lighterTextColor;
+    private int darkerTextColor;
+    private int menuBackground;
+    private int menuText;
+    private int menuSelected;
+    private int spinnerText;
+    private int progressBackground;
+    private String logo;
+    private int segmentSelected;
+    private int menuSelectedText;
+    private int segmentLine;
+    private int line;
+    private int segmentBackground;
+    private int spinnerBackground;
+    private String icon;
+
 
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme) {
@@ -35,6 +58,18 @@ public class ColorSchemeManager {
                     break;
                 case "topbar_background":
                     actionbarBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "normal_text":
+                    normalTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "lighter_text":
+                    lighterTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "darker_text":
+                    darkerTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "topbar_text":
+                    actionbarText = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
 
             }
@@ -60,5 +95,21 @@ public class ColorSchemeManager {
 
     public int getActionbarBackground() {
         return actionbarBackground;
+    }
+
+    public int getNormalTextColor() {
+        return normalTextColor;
+    }
+
+    public int getLighterTextColor() {
+        return lighterTextColor;
+    }
+
+    public int getDarkerTextColor() {
+        return darkerTextColor;
+    }
+
+    public int getActionbarText() {
+        return actionbarText;
     }
 }

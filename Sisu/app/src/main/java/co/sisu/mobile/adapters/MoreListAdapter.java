@@ -1,6 +1,8 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.MorePageContainer;
 
 /**
@@ -23,11 +26,13 @@ public class MoreListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<MorePageContainer> mDataSource;
+    private ColorSchemeManager colorSchemeManager;
 
-    public MoreListAdapter(Context context, List<MorePageContainer> items) {
+    public MoreListAdapter(Context context, List<MorePageContainer> items, ColorSchemeManager colorSchemeManager) {
         mContext = context;
         mDataSource = (ArrayList<MorePageContainer>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.colorSchemeManager = colorSchemeManager;
     }
 
     @Override
@@ -52,8 +57,9 @@ public class MoreListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.more_list_title);
-
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         TextView subTitleTextView = rowView.findViewById(R.id.more_list_subtitle);
+        subTitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);
@@ -67,7 +73,10 @@ public class MoreListAdapter extends BaseAdapter {
 
         titleTextView.setText(morePageContainer.getTitle());
         subTitleTextView.setText(morePageContainer.getSubTitle());
-        thumbnailImageView.setImageResource(morePageContainer.getThumbnailId());
+        Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        thumbnailImageView.setImageDrawable(drawable);
+//        thumbnailImageView.setImageResource(morePageContainer.getThumbnailId());
 
 
         return rowView;

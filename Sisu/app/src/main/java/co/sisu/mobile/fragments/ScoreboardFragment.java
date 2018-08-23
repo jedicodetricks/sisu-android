@@ -102,33 +102,50 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeButtons();
         initProgressBars();
         calculateVolumes();
-        testColorSchemes();
+        setupColorScheme();
     }
 
-    private void testColorSchemes() {
+    private void setupColorScheme() {
         ConstraintLayout layout = getView().findViewById(R.id.scoreboard_fragment_parent);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
         TextView contactsProgressText = getView().findViewById(R.id.contactsProgressText);
         contactsProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        contactsProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView appointmentsProgressText = getView().findViewById(R.id.appointmentsProgressText);
         appointmentsProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView bbSignedProgressText = getView().findViewById(R.id.bbSignedProgressText);
         bbSignedProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView listingsTakenProgressText = getView().findViewById(R.id.listingsTakenProgressText);
         listingsTakenProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView underContractProgressText = getView().findViewById(R.id.underContractProgressText);
         underContractProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView closedProgressText = getView().findViewById(R.id.closedProgressText);
         closedProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         pendingVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        pendingVolumeDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         closedVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedVolumeDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         TextView pendingVolumeLabel = getView().findViewById(R.id.pendingVolumeLabel);
         pendingVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        pendingVolumeLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         TextView closedVolumeLabel = getView().findViewById(R.id.closedVolumeLabel);
         closedVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedVolumeLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
 
 
         contactsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
@@ -139,21 +156,37 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
 
         contactsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        contactsCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
         contactsGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        appointmentsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        appointmentsGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        bbSignedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        bbSignedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        listingsTakenCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        listingsTakenGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        underContractCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        contactsGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-//        spinner.setBackgroundResource(colorSchemeManager.getAppBackground());
+        appointmentsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        appointmentsGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        appointmentsGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        bbSignedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bbSignedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        bbSignedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        listingsTakenCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        listingsTakenGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        listingsTakenGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        underContractCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        underContractGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        closedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
-//        spinner.setBackgroundColor(colorSchemeManager.getAppBackground());
     }
 
     private void calculateVolumes() {

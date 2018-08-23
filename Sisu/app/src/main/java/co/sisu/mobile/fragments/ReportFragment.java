@@ -25,6 +25,7 @@ import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.Metric;
 
@@ -38,6 +39,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
     private int selectedStartDay = 0;
@@ -70,6 +72,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         initializeListView();
         initializeTimelineSelector();
@@ -239,7 +242,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private int calculateProgressOnTrack(Metric metric) {
-
         int positionPercent = 0; //will determine blue
         int goalNum = metric.getGoalNum(); //monthly goal
         Calendar calendar = Calendar.getInstance();
@@ -341,7 +343,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private void initializeListView() {
-
         mListView = getView().findViewById(R.id.report_list_view);
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
@@ -352,7 +353,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
             }
-            ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, parentActivity.getTimeline());
+            ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, parentActivity.getTimeline(), colorSchemeManager);
             mListView.setAdapter(adapter);
         }
 
