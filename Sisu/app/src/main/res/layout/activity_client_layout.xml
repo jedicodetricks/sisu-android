@@ -180,8 +180,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="number"
-                android:maxLength="2"
+                android:inputType="numberDecimal"
+                android:maxLength="4"
                 android:textAlignment="textEnd" />
 
         </android.support.design.widget.TextInputLayout>
@@ -249,8 +249,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="number"
-                android:maxLength="2"
+                android:inputType="numberDecimal"
+                android:maxLength="4"
                 android:textAlignment="textEnd" />
 
         </android.support.design.widget.TextInputLayout>
