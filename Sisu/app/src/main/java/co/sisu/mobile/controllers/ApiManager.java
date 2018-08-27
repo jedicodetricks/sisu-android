@@ -200,7 +200,7 @@ public class ApiManager {
 
         Calendar expDate = Calendar.getInstance();
         expDate.add(Calendar.DATE, 1);
-
+        //TODO: The issuer needs to be unique
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)
                 .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
@@ -210,6 +210,10 @@ public class ApiManager {
                 .claim("agent_id", agentId)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
+
+        Log.e("Trans-Id", transactionID);
+        Log.e("JWT", jwtStr);
+        Log.e("Timestamp", timestamp);
     }
 
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {

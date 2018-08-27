@@ -40,8 +40,10 @@ public class ColorSchemeManager {
 
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme) {
-        //TODO: Loop through and set all the color shit
+        //TODO: Missing icon and logo
 
+
+        
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
                 case "icon_selected":
@@ -70,6 +72,54 @@ public class ColorSchemeManager {
                     break;
                 case "topbar_text":
                     actionbarText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "button_text":
+                    buttonText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "button_selected":
+                    buttonSelected = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "button_border":
+                    buttonBorder = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "button_background":
+                    buttonBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "bottombar_text":
+                    toolbarText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "menu_background":
+                    menuBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "menu_text":
+                    menuText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "menu_selected":
+                    menuSelected = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "spinner_text":
+                    spinnerText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "spinner_background":
+                    spinnerBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "progress_background":
+                    progressBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "segment_selected":
+                    segmentSelected = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "menu_selected_text":
+                    menuSelectedText = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "segment_line":
+                    segmentLine = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "segment_background":
+                    segmentBackground = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "line":
+                    line = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
 
             }
@@ -111,5 +161,77 @@ public class ColorSchemeManager {
 
     public int getActionbarText() {
         return actionbarText;
+    }
+
+    public int getButtonText() {
+        return buttonText;
+    }
+
+    public int getButtonSelected() {
+        return buttonSelected;
+    }
+
+    public int getButtonBorder() {
+        return buttonBorder;
+    }
+
+    public int getButtonBackground() {
+        return buttonBackground;
+    }
+
+    public int getToolbarText() {
+        return toolbarText;
+    }
+
+    public int getMenuBackground() {
+        return menuBackground;
+    }
+
+    public int getMenuText() {
+        return menuText;
+    }
+
+    public int getMenuSelected() {
+        return menuSelected;
+    }
+
+    public int getSpinnerText() {
+        return spinnerText;
+    }
+
+    public int getProgressBackground() {
+        return progressBackground;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public int getSegmentSelected() {
+        return segmentSelected;
+    }
+
+    public int getMenuSelectedText() {
+        return menuSelectedText;
+    }
+
+    public int getSegmentLine() {
+        return segmentLine;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getSegmentBackground() {
+        return segmentBackground;
+    }
+
+    public int getSpinnerBackground() {
+        return spinnerBackground;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }
