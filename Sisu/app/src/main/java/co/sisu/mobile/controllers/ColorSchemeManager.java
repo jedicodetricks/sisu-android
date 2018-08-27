@@ -43,7 +43,7 @@ public class ColorSchemeManager {
         //TODO: Missing icon and logo
 
 
-        
+
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
                 case "icon_selected":
