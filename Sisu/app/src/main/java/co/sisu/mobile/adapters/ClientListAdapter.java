@@ -1,6 +1,9 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.ClientObject;
 
 /**
@@ -24,12 +28,16 @@ public class ClientListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<ClientObject> mDataSource;
     private ClientMessagingEvent mClientMessagingEvent;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView titleTextView, subtitleTextView;
+    private ImageView textImage, phoneImage, emailImage;
 
-    public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent) {
+    public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent, ColorSchemeManager colorSchemeManager) {
         mContext = context;
         mDataSource = (ArrayList<ClientObject>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mClientMessagingEvent = clientMessagingEvent;
+        this.colorSchemeManager = colorSchemeManager;
     }
 
     @Override
@@ -61,15 +69,15 @@ public class ClientListAdapter extends BaseAdapter {
         }
 
         // Get title element
-        TextView titleTextView = rowView.findViewById(R.id.client_list_title);
+        titleTextView = rowView.findViewById(R.id.client_list_title);
 
         // Get subtitle element
-        TextView subtitleTextView = rowView.findViewById(R.id.client_list_subtitle);
+        subtitleTextView = rowView.findViewById(R.id.client_list_subtitle);
 
         //Get the images
-        ImageView textImage = rowView.findViewById(R.id.leftButton);
-        ImageView phoneImage = rowView.findViewById(R.id.centerButton);
-        ImageView emailImage = rowView.findViewById(R.id.rightButton);
+        textImage = rowView.findViewById(R.id.leftButton);
+        phoneImage = rowView.findViewById(R.id.centerButton);
+        emailImage = rowView.findViewById(R.id.rightButton);
 
         if(clientObject.getHome_phone() == null) {
             phoneImage.setVisibility(View.INVISIBLE);
@@ -134,6 +142,25 @@ public class ClientListAdapter extends BaseAdapter {
 //        String splitString = clientObject.getCommission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
         subtitleTextView.setText("$" + clientObject.getCommission_amt());
 
+
+        setColorScheme(rowView);
         return rowView;
+    }
+
+    private void setColorScheme(View rowView) {
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        Drawable drawable = rowView.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        textImage.setImageDrawable(drawable);
+
+        drawable = rowView.getResources().getDrawable(R.drawable.email_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        emailImage.setImageDrawable(drawable);
+
+        drawable = rowView.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        phoneImage.setImageDrawable(drawable);
     }
 }

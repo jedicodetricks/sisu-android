@@ -42,8 +42,6 @@ public class ColorSchemeManager {
     public void setColorScheme(TeamColorSchemeObject[] colorScheme) {
         //TODO: Missing icon and logo
 
-
-
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
                 case "icon_selected":
@@ -121,7 +119,6 @@ public class ColorSchemeManager {
                 case "line":
                     line = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
-
             }
 
         }

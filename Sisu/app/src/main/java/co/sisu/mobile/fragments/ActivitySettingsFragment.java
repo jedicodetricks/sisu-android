@@ -1,5 +1,6 @@
 package co.sisu.mobile.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
@@ -38,6 +40,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private NavigationManager  navigationManager;
     private ApiManager apiManager;
     private DataController dataController;
+    private ColorSchemeManager colorSchemeManager;
     private List<SelectedActivities> selectedActivities;
     private ProgressBar loader;
 
@@ -59,6 +62,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = view.findViewById(R.id.activitySettingsLoader);
         initializeButtons();
 //        initializeListView();
@@ -93,7 +97,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
 //        final List<SelectedActivities> activitiesContainerList = parentActivity.getActivitiesObject();
 
-        ActivityListAdapter adapter = new ActivityListAdapter(getContext(), selectedActivities);
+        ActivityListAdapter adapter = new ActivityListAdapter(getContext(), selectedActivities, colorSchemeManager);
         mListView.setAdapter(adapter);
 
 //        mListView.setOnItemClickListener(this);
