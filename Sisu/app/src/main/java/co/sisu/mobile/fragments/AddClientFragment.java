@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +27,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,6 +38,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.ClientObject;
@@ -63,6 +67,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private String currentStatus;
+    private ColorSchemeManager colorSchemeManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,11 +81,35 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         counter = 1;
         initializeButtons();
         initializeForm();
         initializeCalendar();
         initActionBar();
+        setupColorScheme();
+    }
+
+    private void setupColorScheme() {
+        TextInputLayout layout = getView().findViewById(R.id.firstNameInputLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+        setInputTextLayoutColor(layout, colorSchemeManager.getIconActive());
+    }
+
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
+        try {
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            //Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initActionBar() {
