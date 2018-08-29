@@ -133,14 +133,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         username.setTextColor(colorSchemeManager.getDarkerTextColor());
 
 
-//        usernameLayout.setHintTextAppearance(R.color.colorAlmostBlack);
-//        setUpperHintColor(colorSchemeManager.getIconActive());
         firstName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        firstName.setHintTextColor(colorSchemeManager.getIconActive());
         lastName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lastName.setHintTextColor(colorSchemeManager.getIconActive());
         phone.setTextColor(colorSchemeManager.getDarkerTextColor());
-        phone.setHintTextColor(colorSchemeManager.getIconActive());
 //        passwordButton.setBackgroundColor(colorSchemeManager.getButtonBackground());
 //        passwordButton.setTextColor(colorSchemeManager.getButtonText());
 //        passwordButton.setHighlightColor(colorSchemeManager.getButtonSelected());
@@ -150,25 +145,25 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         firstName.setBackgroundTintList(colorStateList);
         lastName.setBackgroundTintList(colorStateList);
         phone.setBackgroundTintList(colorStateList);
+
+        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
     }
 
-    private void setUpperHintColor(int color) {
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
         try {
-            Field field = usernameLayout.getClass().getDeclaredField("mFocusedTextColor ");
-            field.setAccessible(true);
-            int[][] states = new int[][]{
-                    new int[]{}
-            };
-            int[] colors = new int[]{
-                    color
-            };
-            ColorStateList myList = new ColorStateList(states, colors);
-            field.set(usernameLayout, myList);
+            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
 
-            Method method = usernameLayout.getClass().getDeclaredMethod("updateLabelState", boolean.class);
-            method.setAccessible(true);
-            method.invoke(usernameLayout, true);
+            //Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
 
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
         } catch (Exception e) {
             e.printStackTrace();
         }
