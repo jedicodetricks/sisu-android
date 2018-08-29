@@ -181,9 +181,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         profileImage.setVisibility(View.INVISIBLE);
         imageLoader.setVisibility(View.VISIBLE);
         usernameLayout = getView().findViewById(R.id.profileUsernameLayout);
-        firstNameLayout = getView().findViewById(R.id.firstNameInputLayout);
-        lastNameLayout = getView().findViewById(R.id.lastNameInputLayout);
-        phoneLayout = getView().findViewById(R.id.phoneInputLayout);
+        firstNameLayout = getView().findViewById(R.id.profileFirstNameLayout);
+        lastNameLayout = getView().findViewById(R.id.profileLastNameLayout);
+        phoneLayout = getView().findViewById(R.id.profilePhoneLayout);
 
     }
 
