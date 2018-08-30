@@ -1,7 +1,9 @@
 package co.sisu.mobile.fragments;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateAgent;
 import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
@@ -47,10 +51,13 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
-    private TextView activityTitle, saveButton;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView activityTitle, goalsLabel, saveButton;
     private boolean dateSwap;
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
+    private TextInputLayout desiredIncomeLayout, trackingReasonsLayout, sClosedLayout, bClosedLayout, bAppointmentsLayout, sAppointmentsLayout, bSignedLayout, sSignedLayout,
+                            bContractLayout, sContractLayout, contactsLayout;
     private AgentModel agent;
     private AgentGoalsObject[] currentGoalsObject;
     private String income = "";
@@ -81,6 +88,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         updatedGoals = new HashMap<>();
         initFields();
         initEditText();
@@ -94,6 +102,54 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         reason = "";
         apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        desiredIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
+        trackingReasons.setTextColor(colorSchemeManager.getDarkerTextColor());
+        contacts.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bContract.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sContract.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
+        activityTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        goalsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
+    }
+
+
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
+        try {
+//            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+//            Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initSwitchAndButtons() {
@@ -208,6 +264,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sClosed.addTextChangedListener(this);
         fieldsObject.add(sClosed);
         activityTitle = getView().findViewById(R.id.activityTitle);
+        goalsLabel = getView().findViewById(R.id.goalsLabel);
+
+        desiredIncomeLayout = getView().findViewById(R.id.desiredIncomeLayout);
+        trackingReasonsLayout = getView().findViewById(R.id.goalsReasonLayout);
+        sClosedLayout = getView().findViewById(R.id.sellersClosedLayout);
+        bClosedLayout = getView().findViewById(R.id.buyersClosedLayout);
+        bAppointmentsLayout = getView().findViewById(R.id.buyerApptsLayout);
+        sAppointmentsLayout = getView().findViewById(R.id.sellerApptsLayout);
+        bSignedLayout = getView().findViewById(R.id.signedBuyersLayout);
+        sSignedLayout = getView().findViewById(R.id.signedSellersLayout);
+        bContractLayout = getView().findViewById(R.id.buyersUnderContractLayout);
+        sContractLayout = getView().findViewById(R.id.sellersUnderContractLayout);
+        contactsLayout = getView().findViewById(R.id.contactsLayout);
 
         //unitGoal = getView().findViewById(R.id.unitGoal);
         //volumeGoal = getView().findViewById(R.id.volumeGoal);

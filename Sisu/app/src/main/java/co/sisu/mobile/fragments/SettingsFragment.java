@@ -6,9 +6,12 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
@@ -41,15 +45,15 @@ import co.sisu.mobile.models.UpdateSettingsObject;
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     private Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
-    private TextView timeZoneDisplay;
     private ImageView timeSelector;
-    private TextView reminderTimeTitle, displayTime, version;
+    private TextView reminderTimeTitle, displayTime, version, timeZoneDisplay, reminderLabel, lightsLabel, timeZoneTitle;
     private int currentSelectedHour, currentSelectedMinute;
     private int alarmId = 1412;
     private String selectedPeriod;
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private PendingIntent pendingIntent;
     private List<ParameterObject> settings;
 
@@ -61,9 +65,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parentActivity = (ParentActivity) getActivity();
-        dataController = parentActivity.getDataController();
-        apiManager = parentActivity.getApiManager();
+
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_settings, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -72,6 +74,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         initAdditionalFields();
         initTimeSelector();
         initNotificationAlarm();
@@ -80,6 +86,39 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         if(b != null) {
             b.setOnClickListener(this);
         }
+
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+
+        reminderTimeTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        displayTime.setTextColor(colorSchemeManager.getDarkerTextColor());
+        version.setTextColor(colorSchemeManager.getDarkerTextColor());
+        timeZoneDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        reminderLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        lightsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        timeZoneTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(reminderSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(reminderSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
 
@@ -87,7 +126,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
         version = getView().findViewById(R.id.versionLabel);
         version.setText("Version: " + BuildConfig.VERSION_NAME + " | Build: " + BuildConfig.VERSION_CODE);
-        
+        reminderLabel = getView().findViewById(R.id.reminderLabel);
+        lightsLabel = getView().findViewById(R.id.lightsLabel);
+        timeZoneTitle = getView().findViewById(R.id.timeZoneTitle);
     }
 
     private void fillFieldsWithData() {

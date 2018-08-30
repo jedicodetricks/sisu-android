@@ -11,7 +11,9 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -154,12 +156,13 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
         try {
-            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+//            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
             Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
             fDefaultTextColor.setAccessible(true);
             fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
 
-            //Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+//            Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
 
             Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
             fFocusedTextColor.setAccessible(true);

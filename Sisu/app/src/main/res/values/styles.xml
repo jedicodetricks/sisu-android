@@ -14,7 +14,7 @@
         <item name="colorPrimary">@color/colorAlmostBlack</item>
         <item name="android:popupBackground">@color/transparent</item>
 
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorWhite</item>
         <item name="android:statusBarColor">@color/colorAlmostBlack</item>
 
@@ -34,7 +34,7 @@
 
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <!--<item name="colorAccent">@color/colorCorporateOrange</item>-->
         <item name="android:textColorPrimary">@color/colorCorporateGrey</item>
         <item name="android:colorForeground">@color/colorAlmostBlack</item>
         <item name="android:colorBackground">@android:color/white</item>
@@ -102,8 +102,8 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="colorControlNormal">@color/colorLightGrey</item>
-        <item name="colorControlActivated">@color/colorLightGrey</item>
-        <item name="colorControlHighlight">@color/colorCorporateOrange</item>
+        <!--<item name="colorControlActivated">@color/colorLightGrey</item>-->
+        <!--<item name="colorControlHighlight">@color/colorCorporateOrange</item>-->
     </style>
 
     <style name="RequiredTextTheme" parent="ThemeOverlay.AppCompat">
