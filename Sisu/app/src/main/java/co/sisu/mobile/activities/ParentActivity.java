@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,7 +42,6 @@ import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -84,7 +82,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
-    private ErrorMessageFragment errorFragment;
     private FileIO io;
     private NotesObject selectedNote;
     private CacheManager cacheManager;
@@ -105,7 +102,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
-        errorFragment = new ErrorMessageFragment();
         parentLoader = findViewById(R.id.parentLoader);
         io = new FileIO(ParentActivity.this);
 
@@ -432,8 +428,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         Log.e("FAILURE", asyncReturnType);
-        errorFragment.setMessage(asyncReturnType + " cause this failure.");
-        navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
 
     }
 
