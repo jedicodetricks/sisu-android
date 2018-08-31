@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,8 +137,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
         try {
-//            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-
             Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
             fDefaultTextColor.setAccessible(true);
             fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
@@ -147,6 +146,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
             fFocusedTextColor.setAccessible(true);
             fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            Method method = layout.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(layout, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,9 +26,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,9 +56,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
-    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus;
+    private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus,
+                     appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle,dollarSign1, dollarSign2, commissionEquals, gciEquals,
+                     percentSign1, percentSign2, statusLabel;
     private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent;
+    private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -72,7 +78,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_add_client, container, false);
+        ScrollView contentView = (ScrollView) inflater.inflate(R.layout.activity_add_client, container, false);
+        ScrollView.LayoutParams viewLayout = new ScrollView.LayoutParams(container.getWidth(), container.getHeight());
+        contentView.setLayoutParams(viewLayout);
+        return contentView;
     }
 
     @Override
@@ -91,13 +100,56 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     }
 
     private void setupColorScheme() {
-        TextInputLayout layout = getView().findViewById(R.id.firstNameInputLayout);
-        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-        setInputTextLayoutColor(layout, colorSchemeManager.getIconActive());
+        firstNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        lastNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        emailText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        phoneText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        transAmount.setTextColor(colorSchemeManager.getDarkerTextColor());
+        paidIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
+        gci.setTextColor(colorSchemeManager.getDarkerTextColor());
+        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+        incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        
+        pipelineStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
+        signedStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
+        underContractStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
+        closedStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        dollarSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
+        dollarSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
+        percentSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
+        percentSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        commissionEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
+        gciEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
+        statusLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(emailLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(transAmountLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(paidIncomeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(gciLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
         try {
+
             Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
             fDefaultTextColor.setAccessible(true);
             fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
@@ -107,6 +159,11 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
             fFocusedTextColor.setAccessible(true);
             fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            Method method = layout.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(layout, true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,8 +172,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private void initActionBar() {
         TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
         TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
-        saveButton.setOnClickListener(this);
-        cancelButton.setOnClickListener(this);
+        if(cancelButton != null) {
+            cancelButton.setOnClickListener(this);
+        }
+
+        if(saveButton != null) {
+            saveButton.setOnClickListener(this);
+        }
     }
 
     private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
@@ -162,22 +224,26 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         getView().findViewById(R.id.signedDatePicker).setOnClickListener(this);
         signedDisplay = getView().findViewById(R.id.signedDateDisplay);
         signedDisplay.setOnClickListener(this);
-        getView().findViewById(R.id.signedDateTitle).setOnClickListener(this);
+        signedDateTitle = getView().findViewById(R.id.signedDateTitle);
+        signedDateTitle.setOnClickListener(this);
 
         getView().findViewById(R.id.underContractDatePicker).setOnClickListener(this);
         contractDisplay = getView().findViewById(R.id.underContractDateDisplay);
         contractDisplay.setOnClickListener(this);
-        getView().findViewById(R.id.underContractDateTitle).setOnClickListener(this);
+        underContractDateTitle = getView().findViewById(R.id.underContractDateTitle);
+        underContractDateTitle.setOnClickListener(this);
 
         getView().findViewById(R.id.settlementDatePicker).setOnClickListener(this);
         settlementDisplay = getView().findViewById(R.id.settlementDateDisplay);
         settlementDisplay.setOnClickListener(this);
-        getView().findViewById(R.id.settlementDateTitle).setOnClickListener(this);
+        settlementDateTitle = getView().findViewById(R.id.settlementDateTitle);
+        settlementDateTitle.setOnClickListener(this);
 
         getView().findViewById(R.id.appointmentDatePicker).setOnClickListener(this);
         appointmentDisplay = getView().findViewById(R.id.appointmentDateDisplay);
         appointmentDisplay.setOnClickListener(this);
-        getView().findViewById(R.id.appointmentDateTitle).setOnClickListener(this);
+        appointmentDateTitle = getView().findViewById(R.id.appointmentDateTitle);
+        appointmentDateTitle.setOnClickListener(this);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -226,6 +292,26 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         underContractStatus = getView().findViewById(R.id.contractButton);
         closedStatus = getView().findViewById(R.id.closedButton);
         noteText = getView().findViewById(R.id.editNotes);
+
+        firstNameLayout = getView().findViewById(R.id.firstNameInputLayoutAdd);
+        lastNameLayout = getView().findViewById(R.id.lastNameInputLayout);
+        emailLayout = getView().findViewById(R.id.emailInputLayout);
+        phoneLayout = getView().findViewById(R.id.phoneInputLayout);
+        transAmountLayout = getView().findViewById(R.id.transAmountInputLayout);
+        paidIncomeLayout = getView().findViewById(R.id.paidIncomePercentLayout);
+        gciLayout = getView().findViewById(R.id.gciInputLayout);
+        noteLayout = getView().findViewById(R.id.notesInputLayout);
+        gciPercentLayout = getView().findViewById(R.id.gciInputLayout);
+        commissionInputLayout = getView().findViewById(R.id.commissionInputLayout);
+
+        dollarSign1 = getView().findViewById(R.id.dollarSign);
+        dollarSign2 = getView().findViewById(R.id.dollarSign2);
+        percentSign1 = getView().findViewById(R.id.percentSign);
+        percentSign2 = getView().findViewById(R.id.percentSign2);
+        statusLabel = getView().findViewById(R.id.statusLabel);
+
+        commissionEquals = getView().findViewById(R.id.commissionEquals);
+        gciEquals = getView().findViewById(R.id.gciEquals);
     }
 
     @Override
