@@ -29,13 +29,12 @@ import co.sisu.mobile.models.TeamObject;
 public class ActionBarManager {
     private ParentActivity parentActivity;
     private ColorSchemeManager colorSchemeManager;
-    private TextView pageTitle, teamLetter;
+    private TextView pageTitle, teamLetter, backtionTitle;
     private View teamBlock;
     private DrawerLayout drawerLayout;
     private ActionBar bar;
     private List<TeamObject> teamsList;
     int selectedTeam = 0;
-    private TextView backtionTitle, title;
     private ClientObject selectedClient;
 
 
@@ -133,7 +132,6 @@ public class ActionBarManager {
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
 //                title = parentActivity.findViewById(R.id.title);
-                Log.e("TITLE BAR", "COLOR?!?!");
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
 //                ConstraintLayout layout = parentActivity.findViewById(R.id.action_bar_parent);
 //                layout.setBackgroundColor(parentActivity.getResources().getColor(R.color.colorClay));
@@ -169,11 +167,12 @@ public class ActionBarManager {
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                     pageTitle.setText(title);
-                    pageTitle.setTextColor(colorSchemeManager.getActionbarText());
                 }
+                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
 
             }
         });
@@ -185,13 +184,15 @@ public class ActionBarManager {
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                     pageTitle.setText(title);
-                    pageTitle.setTextColor(colorSchemeManager.getActionbarText());
                     TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
                     sendButton.setText("Send Slack");
                 }
+
+                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
             }
         });
     }
