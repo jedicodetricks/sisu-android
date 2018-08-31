@@ -57,7 +57,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
-    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus,
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle,dollarSign1, dollarSign2, commissionEquals, gciEquals,
                      percentSign1, percentSign2, statusLabel;
     private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent;
@@ -115,7 +115,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        
+
         pipelineStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
         signedStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
         underContractStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -134,6 +134,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         commissionEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
         gciEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
         statusLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
+        signedStatus.setTextColor(colorSchemeManager.getButtonText());
+        underContractStatus.setTextColor(colorSchemeManager.getButtonText());
+        closedStatus.setTextColor(colorSchemeManager.getButtonText());
+        archivedStatus.setTextColor(colorSchemeManager.getButtonText());
 
         setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
@@ -291,6 +297,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
         closedStatus = getView().findViewById(R.id.closedButton);
+        archivedStatus = getView().findViewById(R.id.archivedButton);
         noteText = getView().findViewById(R.id.editNotes);
 
         firstNameLayout = getView().findViewById(R.id.firstNameInputLayoutAdd);
