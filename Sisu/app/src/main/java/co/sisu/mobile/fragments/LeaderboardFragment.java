@@ -1,9 +1,12 @@
 package co.sisu.mobile.fragments;
 
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
@@ -50,6 +54,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -59,6 +64,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
     private int agentCounter = 0;
     private LeaderboardObject[] leaderBoardSections;
+    private TextView dateDisplay, monthToggle, yearToggle;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -77,15 +83,47 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
         expListView.setDividerHeight(0);
         initToggle();
         loader.setVisibility(View.VISIBLE);
-
+        initFields();
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
+        setColorScheme();
+    }
+
+    private void initFields() {
+        monthToggle = getView().findViewById(R.id.monthToggleText);
+        yearToggle = getView().findViewById(R.id.yearToggleText);
+
+    }
+
+    private void setColorScheme() {
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        monthToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        yearToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
     private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {
@@ -113,7 +151,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
 //        datePicker.date(this);
         final ImageView calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
-        final TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
+        dateDisplay = getView().findViewById(R.id.leaderboard_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -223,7 +261,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private void prepareListData() {
 
         for(int i = 0; i < leaderBoardSections.length; i++) {
-
             for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
                 if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
 
@@ -231,7 +268,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
                     if(!agents.containsKey(currentAgent.getAgent_id())) {
                         agents.put(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        /*Stop trying to delete this line, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
                     }
                 }
             }
@@ -244,6 +281,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
         }
 
+        //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
+        //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
         agentCounter = 0;
         for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
         {
@@ -322,7 +361,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onEventFailed(Object o, String s) {
-
+        Log.e("LEADERBOARD", "FAILED");
     }
 
     @Override

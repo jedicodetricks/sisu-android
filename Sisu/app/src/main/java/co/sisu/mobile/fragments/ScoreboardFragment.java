@@ -13,10 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -29,6 +33,7 @@ import java.util.TimeZone;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -54,6 +59,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private int selectedEndYear = 0;
     private int selectedEndMonth = 0;
     private int selectedEndDay = 0;
+    private ImageView addButton;
     private Calendar calendar = Calendar.getInstance();
     private Date selectedStartTime;
     private Date selectedEndTime;
@@ -147,7 +153,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedVolumeLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-
         contactsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         appointmentsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         bbSignedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
@@ -185,8 +190,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+
+        VectorChildFinder plusVector = new VectorChildFinder(getContext(), R.drawable.add_icon, addButton);
+        VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getIconActive());
+        plusPath.setStrokeColor(colorSchemeManager.getIconActive());
+        addButton.invalidate();
     }
 
     private void calculateVolumes() {
@@ -251,12 +261,14 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         spinner = getView().findViewById(R.id.timelineSelector);
         List<String> spinnerArray = initSpinnerArray();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.spinner_item,
-                spinnerArray
-        );
+        DropdownAdapter adapter = new DropdownAdapter(getContext(), R.layout.spinner_item, spinnerArray, colorSchemeManager);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//                getActivity(),
+//                R.layout.spinner_item,
+//                spinnerArray
+//        );
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -471,7 +483,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void initializeButtons(){
-        ImageView addButton = getView().findViewById(R.id.addView);
+        addButton = getView().findViewById(R.id.addView);
         addButton.setOnClickListener(this);
 
         contact = getView().findViewById(R.id.contactsProgressMark);

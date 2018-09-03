@@ -31,6 +31,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -139,8 +142,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 return bitmap.getByteCount() / 1024;
             }
         };
-
     }
+
 
     private void setActivityColors() {
         this.runOnUiThread(new Runnable() {
@@ -153,11 +156,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 Toolbar toolbar = findViewById(R.id.toolbar);
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
 
-                Drawable drawable = getResources().getDrawable(R.drawable.more_icon).mutate();
-                drawable.setColorFilter(getResources().getColor(R.color.colorMoonBlue), PorterDuff.Mode.SRC_ATOP);
-
-                ImageView moreView = findViewById(R.id.moreView);
-                moreView.setImageDrawable(drawable);
+                parentLoader.setBackgroundColor(colorSchemeManager.getIconActive());
             }
         });
 

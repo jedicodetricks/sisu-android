@@ -211,9 +211,9 @@ public class ApiManager {
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
-        Log.e("Trans-Id", transactionID);
-        Log.e("JWT", jwtStr);
-        Log.e("Timestamp", timestamp);
+//        Log.e("Trans-Id", transactionID);
+//        Log.e("JWT", jwtStr);
+//        Log.e("Timestamp", timestamp);
     }
 
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
