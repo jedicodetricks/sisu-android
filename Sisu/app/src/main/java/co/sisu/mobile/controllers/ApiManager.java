@@ -192,30 +192,6 @@ public class ApiManager {
         new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getJWT(String agentId) {
-        transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-        //TODO: The issuer needs to be unique
-        jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(date.getTime())
-                .setExpiration(expDate.getTime())
-                .claim("Transaction-Id", transactionID)
-                .claim("agent_id", agentId)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-
-//        Log.e("Trans-Id", transactionID);
-//        Log.e("JWT", jwtStr);
-//        Log.e("Timestamp", timestamp);
-    }
-
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         getJWT(agentId);
         new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
@@ -259,9 +235,33 @@ public class ApiManager {
         new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
+    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
         getJWT(agentId);
-        new AsyncGetTeamColorScheme(cb, url, selectedTeamId).execute(jwtStr, timestamp, transactionID);
+        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
 
+    }
+
+    public void getJWT(String agentId) {
+        transactionID = UUID.randomUUID().toString();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.SECOND, -60);
+        timestamp = String.valueOf(date.getTimeInMillis());
+
+        Calendar expDate = Calendar.getInstance();
+        expDate.add(Calendar.DATE, 1);
+        //TODO: The issuer needs to be unique
+        jwtStr = Jwts.builder()
+                .claim("Client-Timestamp", timestamp)
+                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
+                .setIssuedAt(date.getTime())
+                .setExpiration(expDate.getTime())
+                .claim("Transaction-Id", transactionID)
+                .claim("agent_id", agentId)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+//        Log.e("Trans-Id", transactionID);
+//        Log.e("JWT", jwtStr);
+//        Log.e("Timestamp", timestamp);
     }
 }

@@ -42,6 +42,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -50,6 +51,7 @@ import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.controllers.ToolbarManager;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -92,6 +94,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean teamParamFinished = false;
     private boolean settingsFinished = false;
     private boolean colorSchemeFinished = false;
+    private boolean teamsFinished = false;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
@@ -103,6 +106,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean imageIsExpanded = false;
     private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
+    private ConstraintLayout layout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +126,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parentLoader = findViewById(R.id.parentLoader);
         io = new FileIO(ParentActivity.this);
 
+        initParentFields();
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
@@ -144,23 +150,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         };
     }
 
+    private void initParentFields() {
+        layout = findViewById(R.id.parentLayout);
+        toolbar = findViewById(R.id.toolbar);
+    }
 
-    private void setActivityColors() {
+
+    public void setActivityColors() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Log.e("SETTING COLORS", "PARENT ACTIVITY");
-                ConstraintLayout layout = findViewById(R.id.parentLayout);
                 layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-
-                Toolbar toolbar = findViewById(R.id.toolbar);
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-
                 parentLoader.setBackgroundColor(colorSchemeManager.getIconActive());
             }
         });
-
-
     }
 
 
@@ -331,13 +336,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
-                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        if(settingsFinished) {
+                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                        }
                     }
                     else {
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }
+                    teamsFinished = true;
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -404,6 +412,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(reminderActive == 1) {
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
+            if(teamsFinished) {
+                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+            }
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Team Parameters")) {
@@ -424,6 +435,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             colorSchemeManager.setColorScheme(colorScheme);
             setActivityColors();
             colorSchemeFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();

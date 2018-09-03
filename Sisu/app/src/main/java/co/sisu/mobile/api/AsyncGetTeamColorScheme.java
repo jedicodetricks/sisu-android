@@ -21,11 +21,13 @@ public class AsyncGetTeamColorScheme extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     private String url;
     private int teamId;
+    private String isLightTheme;
 
-    public AsyncGetTeamColorScheme(AsyncServerEventListener cb, String url, int teamId) {
+    public AsyncGetTeamColorScheme(AsyncServerEventListener cb, String url, int teamId, String isLightTheme) {
         callback = cb;
         this.url = url;
         this.teamId = teamId;
+        this.isLightTheme = isLightTheme;
     }
 
     @Override
@@ -34,9 +36,9 @@ public class AsyncGetTeamColorScheme extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-            teamId = 715;
+//            teamId = 715;
             Request request = new Request.Builder()
-                    .url(url + "api/v1/team/theme/" + teamId + "/1")
+                    .url(url + "api/v1/team/theme/" + teamId + "/" + isLightTheme)
                     .get()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

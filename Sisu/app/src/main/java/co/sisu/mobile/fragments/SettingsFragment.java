@@ -34,9 +34,12 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
@@ -53,9 +56,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
     private PendingIntent pendingIntent;
     private List<ParameterObject> settings;
+    private boolean settingsFinished = false;
+    private boolean colorFinished = false;
+    private TeamColorSchemeObject[] colorScheme;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -77,6 +84,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         initAdditionalFields();
         initTimeSelector();
@@ -233,17 +241,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                 }
                 break;
-                //Keep these, we'll need them for V2
             case R.id.lightsSwitch:
                 activateLights(isChecked);
                 for(ParameterObject so : settings) {
-                    if(so.getName().equals("lights")) {
+                    if(so.getName().equalsIgnoreCase("lights")) {
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
 
-                Log.d("LIGHTS", "CHECK");
                 break;
+            //Keep this, we'll need it for V2
 //            case R.id.idSwitch:
 //                for(ParameterObject so : settings) {
 //                    if(so.getName().equals("biometrics")) {
@@ -258,16 +265,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void activateLights(Boolean isChecked) {
-        //NavigationManager navigationManager = parentActivity.getNavigationManager();
+        String lightsOn = "0";
         if(isChecked) {
-            parentActivity.setTheme(R.style.LightTheme);
-        } else {
-            parentActivity.setTheme(R.style.DarkTheme);
+            lightsOn = "1";
         }
-        final android.support.v4.app.FragmentTransaction ft = parentActivity.getSupportFragmentManager().beginTransaction();
-        ft.replace(this.getId(), this).commit();
-//        navigationManager.stackReplaceFragment(SettingsFragment.class);
-//        navigationManager.onBackPressed();
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), lightsOn);
     }
 
     @Override
@@ -295,11 +297,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 case "daily_reminder_time":
                     s.setValue(formatTimeTo24H(displayTime.getText().toString()));
                     break;
-                //Keep these, we'll need them for V2
-
-//                case "lights":
-//                    lightsSwitch.setChecked(isChecked(s));
-//                    break;
+                case "lights":
+                    lightsSwitch.setChecked(isChecked(s));
+                    break;
+                //Keep this, we'll need them for V2
 //                case "biometrics":
 //                    idSwitch.setChecked(isChecked(s));
 //                    break;
@@ -412,9 +413,24 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     ParameterObject[] array = new ParameterObject[settings.size()];
                     dataController.setSettings(settings.toArray(array));
-                    parentActivity.showToast("Your settings have been updated");
+                    colorSchemeManager.setColorScheme(colorScheme);
+                    parentActivity.setActivityColors();
+                    setColorScheme();
+                    if(colorFinished) {
+                        navigationManager.onBackPressed();
+                        parentActivity.showToast("Your settings have been updated");
+                    }
+                    settingsFinished = true;
                 }
             });
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            colorScheme = colorJson.getTheme();
+            if(settingsFinished) {
+                parentActivity.showToast("Your settings have been updated");
+            }
+            colorFinished = true;
         }
     }
 

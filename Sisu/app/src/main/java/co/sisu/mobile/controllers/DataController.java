@@ -637,7 +637,6 @@ public class DataController {
         List<ParameterObject> newSettings = new ArrayList<>();
         List<ParameterObject> relevantSettings = new ArrayList<>();
 
-
         for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
@@ -648,7 +647,10 @@ public class DataController {
                     existingSettings.add("daily_reminder_time");
                     newSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    existingSettings.add("lights");
+                    newSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     existingSettings.add("daily_reminder");
@@ -684,10 +686,11 @@ public class DataController {
             arraySize++;
         }
 
+        if(!existingSettings.contains("lights")) {
+            newSettings.add(getDefaultLights());
+            arraySize++;
+        }
 
-//        if(settings.length < 4) {
-//            settings = setDefaultSettingsObject(settings);
-//        }
         ParameterObject[] array = new ParameterObject[arraySize];
 
         settings = newSettings.toArray(array);
@@ -706,7 +709,12 @@ public class DataController {
                     }
                     relevantSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("0");
+                    }
+                    relevantSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     if(s.getValue().equals("{}")) {
@@ -723,8 +731,9 @@ public class DataController {
             }
 
 
-            this.settings = relevantSettings;
         }
+        this.settings = relevantSettings;
+
     }
 
     private void setupSelectedActivities(ParameterObject s) {
@@ -910,6 +919,10 @@ public class DataController {
         return new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
     }
 
+    private ParameterObject getDefaultLights() {
+        return new ParameterObject("lights", "0", "0", "5");
+    }
+
     private ParameterObject[] setDefaultSettingsObject(ParameterObject[] settings) {
         List<String> addedSettings = new ArrayList<>();
         ParameterObject[] updatedSettings = new ParameterObject[4];
@@ -975,5 +988,16 @@ public class DataController {
 
     public String getSlackInfo() {
         return slackInfo;
+    }
+
+    public String getColorSchemeId() {
+        if(settings.size() > 0) {
+            for (ParameterObject p : settings) {
+                if(p.getName().equalsIgnoreCase("lights")) {
+                    return p.getValue();
+                }
+            }
+        }
+        return "0";
     }
 }

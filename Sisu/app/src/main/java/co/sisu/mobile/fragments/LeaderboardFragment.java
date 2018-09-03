@@ -36,9 +36,11 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -227,6 +229,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         listAdapter = null;
         expListView.setAdapter(listAdapter);
         getLeaderboard(selectedYear, selectedMonth + 1);
+        //TODO: Swap these back
+//        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 715, dataController.getColorSchemeId());
     }
 
     private List<String> initSpinnerArray() {
@@ -355,6 +360,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
 
             prepareListData();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme);
+            parentActivity.setActivityColors();
         }
 
     }
