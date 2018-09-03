@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -134,13 +135,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private void setColorScheme() {
         username.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-
         firstName.setTextColor(colorSchemeManager.getDarkerTextColor());
         lastName.setTextColor(colorSchemeManager.getDarkerTextColor());
         phone.setTextColor(colorSchemeManager.getDarkerTextColor());
-//        passwordButton.setBackgroundColor(colorSchemeManager.getButtonBackground());
-//        passwordButton.setTextColor(colorSchemeManager.getButtonText());
-//        passwordButton.setHighlightColor(colorSchemeManager.getButtonSelected());
 
         ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconActive());
         username.setBackgroundTintList(colorStateList);
@@ -152,6 +149,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+
+        passwordButton.setTextColor(colorSchemeManager.getButtonText());
+        passwordButton.setBackgroundResource(R.drawable.rounded_button);
+        GradientDrawable drawable = (GradientDrawable) passwordButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {

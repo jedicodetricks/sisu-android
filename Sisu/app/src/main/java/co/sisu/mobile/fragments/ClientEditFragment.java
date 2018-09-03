@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
@@ -118,10 +119,21 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
 
-        pipelineStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
-        signedStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
-        underContractStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
-        closedStatus.setTextColor(colorSchemeManager.getDarkerTextColor());
+        signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
+        pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        signedStatus.setTextColor(colorSchemeManager.getButtonText());
+        signedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        underContractStatus.setTextColor(colorSchemeManager.getButtonText());
+        underContractStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        closedStatus.setTextColor(colorSchemeManager.getButtonText());
+        closedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        archivedStatus.setTextColor(colorSchemeManager.getButtonText());
+        archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
 
         appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -153,6 +165,56 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
+
+        exportContact.setHighlightColor(colorSchemeManager.getButtonSelected());
+        exportContact.setBackgroundResource(R.drawable.rounded_button);
+        GradientDrawable drawable = (GradientDrawable) exportContact.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        buyer.setTextColor(colorSchemeManager.getButtonText());
+        buyer.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) buyer.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        seller.setTextColor(colorSchemeManager.getButtonText());
+        seller.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) seller.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        signedClear.setTextColor(colorSchemeManager.getButtonText());
+        signedClear.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) signedClear.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        contractClear.setTextColor(colorSchemeManager.getButtonText());
+        contractClear.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) contractClear.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        settlementClear.setTextColor(colorSchemeManager.getButtonText());
+        settlementClear.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) settlementClear.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        appointmentClear.setTextColor(colorSchemeManager.getButtonText());
+        appointmentClear.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) appointmentClear.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
+        calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) calculateGciPercent.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        calculateIncomePercent.setTextColor(colorSchemeManager.getButtonText());
+        calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) calculateIncomePercent.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        noteButton.setTextColor(colorSchemeManager.getButtonText());
+        noteButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) noteButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
@@ -741,24 +803,27 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
     }
 
-    private void activateStatusColor(TextView status) {
-        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+    private void resetAllStatusColors() {
+        pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
+        pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        underContractStatus.setTextColor(colorSchemeManager.getButtonText());
+        underContractStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        closedStatus.setTextColor(colorSchemeManager.getButtonText());
+        closedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        signedStatus.setTextColor((colorSchemeManager.getButtonText()));
+        signedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        archivedStatus.setTextColor(colorSchemeManager.getButtonText());
+        archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
     }
 
-    private void resetAllStatusColors() {
-        pipelineStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
-        pipelineStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
-        underContractStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
-        underContractStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
-        closedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
-        closedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
-        signedStatus.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
-        signedStatus.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+    private void activateStatusColor(TextView status) {
+        status.setTextColor(colorSchemeManager.getButtonText());
+        status.setBackgroundColor(colorSchemeManager.getButtonSelected());
     }
+
     private void removeStatusColor(TextView status) {
-        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
-        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
+        status.setTextColor(colorSchemeManager.getButtonText());
+        status.setBackgroundColor(colorSchemeManager.getButtonBackground());
     }
 
     private void updateDisplayDate(int year, int month, int day, String calendarCaller) {

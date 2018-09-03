@@ -82,9 +82,6 @@ public class MoreListAdapter extends BaseAdapter {
             thumbnailImageView.setImageDrawable(rowView.getResources().getDrawable(morePageContainer.getThumbnailId()));
         }
 
-
-
-
         return rowView;
     }
 }
