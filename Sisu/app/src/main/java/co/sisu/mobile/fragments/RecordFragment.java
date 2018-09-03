@@ -49,6 +49,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ColorSchemeManager colorSchemeManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
+    private TextView dateDisplay;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -84,11 +85,17 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(save != null) {
             save.setOnClickListener(this);
         }
+
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
     private void initializeCalendarHandler() {
         final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-        final TextView dateDisplay = getView().findViewById(R.id.record_date);
+        dateDisplay = getView().findViewById(R.id.record_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);

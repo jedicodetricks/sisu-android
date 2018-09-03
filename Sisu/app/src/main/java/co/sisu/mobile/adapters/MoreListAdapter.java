@@ -73,10 +73,16 @@ public class MoreListAdapter extends BaseAdapter {
 
         titleTextView.setText(morePageContainer.getTitle());
         subTitleTextView.setText(morePageContainer.getSubTitle());
-        Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
-        thumbnailImageView.setImageDrawable(drawable);
-//        thumbnailImageView.setImageResource(morePageContainer.getThumbnailId());
+        if(!morePageContainer.getTitle().equals("Slack")) {
+            Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
+            drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+            thumbnailImageView.setImageDrawable(drawable);
+        }
+        else {
+            thumbnailImageView.setImageDrawable(rowView.getResources().getDrawable(morePageContainer.getThumbnailId()));
+        }
+
+
 
 
         return rowView;

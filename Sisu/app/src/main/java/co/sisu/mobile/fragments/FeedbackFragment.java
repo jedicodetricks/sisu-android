@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 
 /**
@@ -28,6 +31,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView feedbackHelpTextTop, feedbackHelpTextBottom;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -50,6 +55,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         Button feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
@@ -61,6 +67,18 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         });
+        initFields();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerTextColor());
+    }
+
+    private void initFields() {
+        feedbackHelpTextTop = getView().findViewById(R.id.feedbackHelpTextTop);
+        feedbackHelpTextBottom = getView().findViewById(R.id.feedbackHelpTextBottom);
     }
 
     public void hideKeyboard(View view) {

@@ -1,6 +1,7 @@
 package co.sisu.mobile.fragments;
 
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.adapters.ReportListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -77,17 +79,23 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         initializeListView();
         initializeTimelineSelector();
         spinner.setSelection(parentActivity.getTimelineSelection());
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
     }
 
     private void initializeTimelineSelector() {
         spinner = getView().findViewById(R.id.reportsTimelineSelector);
         List<String> spinnerArray = initSpinnerArray();
+        DropdownAdapter adapter = new DropdownAdapter(getContext(), R.layout.spinner_item, spinnerArray, colorSchemeManager);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(),
-                R.layout.spinner_item,
-                spinnerArray
-        );
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//                getActivity(),
+//                R.layout.spinner_item,
+//                spinnerArray
+//        );
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

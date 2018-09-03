@@ -60,6 +60,7 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
                     .addHeader("Transaction-Id", strings[2])
                     .build();
 
+            String responseString = "";
             try {
                 response = client.newCall(request).execute();
             } catch (IOException e) {
@@ -67,7 +68,8 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(response.body().charStream(), AsyncLeaderboardJsonObject.class);
+                    responseString = response.body().string();
+                    AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);
                     callback.onEventCompleted(leaderboardObject, "Leaderboard");
                 } else {
                     callback.onEventFailed(null, "Leaderboard");
