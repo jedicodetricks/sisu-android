@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -60,7 +61,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle,dollarSign1, dollarSign2, commissionEquals, gciEquals,
                      percentSign1, percentSign2, statusLabel;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
@@ -151,6 +152,22 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
+
+//        importContactButton.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        importContactButton.setHighlightColor(colorSchemeManager.getButtonSelected());
+        importContactButton.setBackgroundResource(R.drawable.rounded_button);
+        GradientDrawable drawable = (GradientDrawable) importContactButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        buyerButton.setTextColor(colorSchemeManager.getButtonText());
+        buyerButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) buyerButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        sellerButton.setTextColor(colorSchemeManager.getButtonText());
+        sellerButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) sellerButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
@@ -323,8 +340,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        Button buyerButton = getView().findViewById(R.id.buyerButton);
-        Button sellerButton= getView().findViewById(R.id.sellerButton);
         Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
         Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
@@ -339,17 +354,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 //                    onBackPressed();
                 break;
             case R.id.buyerButton:
-                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                buyerButton.setBackground(active);
-                sellerButton.setBackground(inactive);
-                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+//                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-                buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
-                buyerButton.setBackground(inactive);
-                sellerButton.setBackground(active);
-                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
+//                buyerButton.setTextColor(colorSchemeManager.getButtonText());
+//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
@@ -729,13 +740,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initializeButtons(){
 
-        Button buyerButton= getView().findViewById(R.id.buyerButton);
+        buyerButton= getView().findViewById(R.id.buyerButton);
         buyerButton.setOnClickListener(this);
 
-        Button sellerButton= getView().findViewById(R.id.sellerButton);
+        sellerButton= getView().findViewById(R.id.sellerButton);
         sellerButton.setOnClickListener(this);
 
-        Button importContactButton = getView().findViewById(R.id.importContactButton);
+        importContactButton = getView().findViewById(R.id.importContactButton);
         importContactButton.setOnClickListener(this);
 
         signedClear = getView().findViewById(R.id.signedDateButton);
