@@ -2,17 +2,22 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -26,6 +31,7 @@ import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
@@ -41,12 +47,14 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
     private List<ClientObject> currentList = new ArrayList<>();
     private TabLayout tabLayout;
     private static String selectedTab = "pipeline";
     private TextView addButton;
     private ConstraintLayout contentView;
+    private RelativeLayout divider;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -78,6 +86,7 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         AgentModel agent = dataController.getAgent();
         initializeTabView();
         apiManager.sendAsyncClients(this, agent.getAgent_id());
@@ -85,11 +94,20 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
         initAddButton();
+        loadColorScheme();
 
         //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
 //        loader.setVisibility(View.GONE);
 
+    }
+
+    private void loadColorScheme() {
+        tabLayout.setTabTextColors(colorSchemeManager.getMenuText(), colorSchemeManager.getMenuSelectedText());
+        tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
+        total.setTextColor(colorSchemeManager.getDarkerTextColor());
+        divider.setBackgroundColor(colorSchemeManager.getLine());
+        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
     }
 
     private void initAddButton() {
@@ -121,11 +139,12 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
         total = getView().findViewById(R.id.total);
+        divider = getView().findViewById(R.id.divider);
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
         if(getContext() != null) {
-            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this, colorSchemeManager);
             mListView.setAdapter(adapter);
 
             mListView.setOnItemClickListener(this);

@@ -7,16 +7,21 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -49,6 +56,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
@@ -71,10 +79,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
     private EditText username, firstName, lastName, phone;
+    private TextInputLayout usernameLayout, firstNameLayout, lastNameLayout, phoneLayout;
     private String imageData, imageFormat;
     private Button passwordButton;
     String imageType = "";
@@ -102,6 +112,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         agent = dataController.getAgent();
         cacheManager = parentActivity.getCacheManager();
         imageLoader = view.findViewById(R.id.imageLoader);
@@ -118,6 +129,49 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(profilePic);
         }
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        username.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        firstName.setTextColor(colorSchemeManager.getDarkerTextColor());
+        lastName.setTextColor(colorSchemeManager.getDarkerTextColor());
+        phone.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconActive());
+        username.setBackgroundTintList(colorStateList);
+        firstName.setBackgroundTintList(colorStateList);
+        lastName.setBackgroundTintList(colorStateList);
+        phone.setBackgroundTintList(colorStateList);
+
+        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+
+        passwordButton.setTextColor(colorSchemeManager.getButtonText());
+        passwordButton.setBackgroundResource(R.drawable.rounded_button);
+        GradientDrawable drawable = (GradientDrawable) passwordButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+    }
+
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
+        try {
+//            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+//            Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initFields() {
@@ -131,6 +185,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         phone.setOnFocusChangeListener(this);
         profileImage.setVisibility(View.INVISIBLE);
         imageLoader.setVisibility(View.VISIBLE);
+        usernameLayout = getView().findViewById(R.id.profileUsernameLayout);
+        firstNameLayout = getView().findViewById(R.id.profileFirstNameLayout);
+        lastNameLayout = getView().findViewById(R.id.profileLastNameLayout);
+        phoneLayout = getView().findViewById(R.id.profilePhoneLayout);
 
     }
 

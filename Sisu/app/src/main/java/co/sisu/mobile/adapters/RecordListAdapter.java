@@ -1,6 +1,9 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,10 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.Metric;
 
@@ -27,12 +34,14 @@ public class RecordListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<Metric> mDataSource;
     private RecordEventHandler mRecordEventHandler;
+    private ColorSchemeManager colorSchemeManager;
 
-    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler) {
+    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler, ColorSchemeManager colorSchemeManager) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecordEventHandler = recordEventHandler;
+        this.colorSchemeManager = colorSchemeManager;
     }
 
     @Override
@@ -59,6 +68,8 @@ public class RecordListAdapter extends BaseAdapter {
 
         if(metric.getType().equals("CLSD") && position != getCount() - 1) {
             rowView = mInflater.inflate(R.layout.adapter_record_list_other_hack, parent, false);
+            TextView otherText = rowView.findViewById(R.id.otherText);
+            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
         }
         else {
             rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
@@ -67,7 +78,7 @@ public class RecordListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.record_list_title);
-
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.record_list_thumbnail);
 
@@ -75,8 +86,27 @@ public class RecordListAdapter extends BaseAdapter {
         final EditText rowCounter = rowView.findViewById(R.id.rowCounter);
 
         ImageView minusButton = rowView.findViewById(R.id.minusButton);
-        ImageView plusButton = rowView.findViewById(R.id.plusButton);
+        Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
+        minusDrawable.setTint(colorSchemeManager.getIconActive());
+        minusButton.setImageDrawable(minusDrawable);
 
+        VectorChildFinder vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, minusButton);
+        for (int i = 0; i < 7; i++) {
+            String pathName = "orange_area" + (i + 1);
+            VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
+            path.setFillColor(colorSchemeManager.getIconActive());
+            path.setStrokeColor(colorSchemeManager.getIconActive());
+        }
+
+        minusButton.invalidate();
+
+
+        ImageView plusButton = rowView.findViewById(R.id.plusButton);
+        VectorChildFinder plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, plusButton);
+        VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getIconActive());
+        plusPath.setStrokeColor(colorSchemeManager.getIconActive());
+        plusButton.invalidate();
 
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,8 +168,12 @@ public class RecordListAdapter extends BaseAdapter {
         });
 
         titleTextView.setText(metric.getTitle());
-        thumbnailImageView.setImageResource(metric.getThumbnailId());
+        Drawable drawable = rowView.getResources().getDrawable(metric.getThumbnailId()).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        thumbnailImageView.setImageDrawable(drawable);
         rowCounter.setText(String.valueOf(metric.getCurrentNum()));
+        rowCounter.setTextColor(colorSchemeManager.getDarkerTextColor());
+
         switch(metric.getType()) {
             case "1TAPT":
             case "CLSD":

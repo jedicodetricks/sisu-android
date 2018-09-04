@@ -4,6 +4,7 @@
         android:viewportWidth="44.58"
         android:viewportHeight="44.58">
     <path
+        android:name="orange_area"
         android:pathData="M22.29,44.58A22.29,22.29 0,1 1,44.58 22.29,22.29 22.29,0 0,1 22.29,44.58Z"
         android:fillColor="#ff5000"/>
     <path

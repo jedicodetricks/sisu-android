@@ -26,6 +26,7 @@ import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
@@ -45,8 +46,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
+    private TextView dateDisplay;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -70,6 +73,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
         apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d);
@@ -81,11 +85,17 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(save != null) {
             save.setOnClickListener(this);
         }
+
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
     private void initializeCalendarHandler() {
         final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-        final TextView dateDisplay = getView().findViewById(R.id.record_date);
+        dateDisplay = getView().findViewById(R.id.record_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -127,7 +137,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager);
             mListView.setAdapter(adapter);
         }
 

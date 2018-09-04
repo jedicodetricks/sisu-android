@@ -37,6 +37,9 @@ public class NavigationManager {
         backStack = new Stack<>();
     }
 
+    public ActionBarManager getActionBarManager() {
+        return actionBarManager;
+    }
 
     public void replaceFragment(Class fragmentClass) {
         Fragment fragment = null;
