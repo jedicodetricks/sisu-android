@@ -5,9 +5,10 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,12 +16,12 @@ import okhttp3.Response;
 public class AsyncLabels extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private String agentId;
+    private String teamId;
     private String url;
 
-    public AsyncLabels (AsyncServerEventListener cb, String url, String agentId) {
+    public AsyncLabels (AsyncServerEventListener cb, String url, String teamId) {
         callback = cb;
-        this.agentId = agentId;
+        this.teamId = teamId;
         this.url = url;
     }
 
@@ -36,7 +37,7 @@ public class AsyncLabels extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url + "api/v1/agent/edit-agent/" + agentId)
+                .url(url + "api/v1/team/market/" + teamId + "/" + Locale.getDefault().toString())
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
@@ -50,9 +51,9 @@ public class AsyncLabels extends AsyncTask<String, String, String> {
         }
         if(response != null) {
             if(response.code() == 200) {
-                AsyncAgentJsonObject agentObject = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
+                AsyncLabelsJsonObject labelObject = gson.fromJson(response.body().charStream(), AsyncLabelsJsonObject.class);
 
-                callback.onEventCompleted(agentObject, "Get Labels");
+                callback.onEventCompleted(labelObject, "Get Labels");
             }
             else {
                 callback.onEventFailed(null, "Get Labels");
