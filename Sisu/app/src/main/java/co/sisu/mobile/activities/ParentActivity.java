@@ -725,4 +725,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public HashMap<String, String> getLabels() {
         return dataController.getLabels();
     }
+
+    public String localizeLabel(String toCheck) {
+        return dataController.localizeLabel(toCheck);
+    }
 }

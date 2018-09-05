@@ -1011,4 +1011,12 @@ public class DataController {
             this.labels = labels;
         }
     }
+
+    public String localizeLabel(String toCheck) {
+        String value = toCheck;
+            if(labels.containsKey(toCheck)) {
+                value = labels.get(toCheck);
+            }
+        return value;
+    }
 }
