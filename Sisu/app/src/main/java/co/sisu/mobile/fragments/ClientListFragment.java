@@ -56,6 +56,8 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private TextView addButton, editListButton;
     private ConstraintLayout contentView;
     private boolean editMode = false;
+    private int priorityPosition = 0;
+    private int pipelinePosition = 0;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -141,9 +143,37 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private void fillListViewWithData(List<ClientObject> metricList) {
         ArrayList mItemArray = new ArrayList<>();
         if(getContext() != null) {
-            for(int i = 0; i < metricList.size(); i++) {
-                mItemArray.add(new Pair<>((long) i, metricList.get(i)));
+
+            ArrayList priorityArray = new ArrayList<>();
+            ArrayList commonArray = new ArrayList<>();
+
+            for(ClientObject clientObject : metricList) {
+                if(clientObject.getIs_priority().equals("0")) {
+                    commonArray.add(clientObject);
+                }
+                else {
+                    priorityArray.add(clientObject);
+                }
             }
+            int counter = 0;
+            mItemArray.add(new Pair<>((long) counter, "Priority"));
+            priorityPosition = counter;
+            counter++;
+            for(int i = 0; i < priorityArray.size(); i++) {
+                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
+                counter++;
+            }
+
+            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
+            pipelinePosition = counter;
+            counter++;
+            for(int i = 0; i < commonArray.size(); i++) {
+                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
+                counter++;
+            }
+
+
+
 //            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
 //            mListView.setAdapter(adapter);
 
@@ -211,8 +241,32 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private void changeToEditList(List<ClientObject> metricList) {
         ArrayList mItemArray = new ArrayList<>();
         if(getContext() != null) {
-            for(int i = 0; i < metricList.size(); i++) {
-                mItemArray.add(new Pair<>((long) i, metricList.get(i)));
+            ArrayList priorityArray = new ArrayList<>();
+            ArrayList commonArray = new ArrayList<>();
+
+            for(ClientObject clientObject : metricList) {
+                if(clientObject.getIs_priority().equals("0")) {
+                    commonArray.add(clientObject);
+                }
+                else {
+                    priorityArray.add(clientObject);
+                }
+            }
+            int counter = 0;
+            mItemArray.add(new Pair<>((long) counter, "Priority"));
+            priorityPosition = counter;
+            counter++;
+            for(int i = 0; i < priorityArray.size(); i++) {
+                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
+                counter++;
+            }
+
+            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
+            pipelinePosition = counter;
+            counter++;
+            for(int i = 0; i < commonArray.size(); i++) {
+                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
+                counter++;
             }
 //            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
 //            mListView.setAdapter(adapter);
@@ -375,7 +429,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onItemDragStarted(int position) {
-        parentActivity.showToast("Start - position: " + position);
+//        parentActivity.showToast("Start - position: " + position);
     }
 
     @Override
@@ -386,7 +440,16 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
         if (fromPosition != toPosition) {
-            parentActivity.showToast("End - position: " + toPosition);
+            if(toPosition < pipelinePosition + 1) {
+                parentActivity.showToast("PRIORITY: " + toPosition);
+                pipelinePosition++;
+            }
+            else if(toPosition >= pipelinePosition + 1) {
+                parentActivity.showToast("PIPELINE: " + toPosition);
+            }
+//            else if(toPosition == pipelinePosition + 1) {
+//                parentActivity.showToast("THIS SHOULD TOGGLE: " + toPosition);
+//            }
 
         }
     }

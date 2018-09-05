@@ -3,10 +3,12 @@ package co.sisu.mobile.adapters;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,14 +25,14 @@ import co.sisu.mobile.models.ClientObject;
  * Created by Brady Groharing on 8/20/2018.
  */
 
-public class ClientItemAdapter extends DragItemAdapter<Pair<Long, ClientObject>, ClientItemAdapter.ViewHolder> {
+public class ClientItemAdapter extends DragItemAdapter<Pair<Long, Object>, ClientItemAdapter.ViewHolder> {
 
     private int mLayoutId;
     private int mGrabHandleId;
     private boolean mDragOnLongPress;
     private ClientMessagingEvent mClientMessagingEvent;
 
-    public ClientItemAdapter(ArrayList<Pair<Long, ClientObject>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ClientMessagingEvent clientMessagingEvent) {
+    public ClientItemAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ClientMessagingEvent clientMessagingEvent) {
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         mDragOnLongPress = dragOnLongPress;
@@ -48,25 +50,26 @@ public class ClientItemAdapter extends DragItemAdapter<Pair<Long, ClientObject>,
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        final ClientObject clientObject = mItemList.get(position).second;
-//        holder.mText.setText(text);
-        holder.itemView.setTag(mItemList.get(position));
+        try {
+            final ClientObject clientObject = (ClientObject) mItemList.get(position).second;
+            holder.itemView.setTag(mItemList.get(position));
 
 //          Get view for row item
             ImageView thumbnail = holder.itemView.findViewById(R.id.client_list_thumbnail);
             if(clientObject.getType_id().equalsIgnoreCase("b")) {
                 thumbnail.setImageResource(R.drawable.buyer_icon);
-            } else {
+            }
+            else {
                 thumbnail.setImageResource(R.drawable.seller_icon_active);
             }
 //
-//            // Get title element
+//          // Get title element
             TextView titleTextView = holder.itemView.findViewById(R.id.client_list_title);
 //
-//            // Get subtitle element
+//          // Get subtitle element
             TextView subtitleTextView = holder.itemView.findViewById(R.id.client_list_subtitle);
 //
-//            //Get the images
+//          //Get the images
             ImageView textImage = holder.itemView.findViewById(R.id.leftButton);
             ImageView phoneImage = holder.itemView.findViewById(R.id.centerButton);
             ImageView emailImage = holder.itemView.findViewById(R.id.rightButton);
@@ -133,7 +136,31 @@ public class ClientItemAdapter extends DragItemAdapter<Pair<Long, ClientObject>,
             titleTextView.setText(firstName + " " + lastName);
 //        String splitString = clientObject.getCommission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
             subtitleTextView.setText("$" + clientObject.getCommission_amt());
+        }catch(ClassCastException cce) {
+            //This is a header
+            ImageView thumbnail = holder.itemView.findViewById(R.id.client_list_thumbnail);
+            TextView titleTextView = holder.itemView.findViewById(R.id.client_list_title);
+            TextView subtitleTextView = holder.itemView.findViewById(R.id.client_list_subtitle);
+            ImageView textImage = holder.itemView.findViewById(R.id.leftButton);
+            ImageView phoneImage = holder.itemView.findViewById(R.id.centerButton);
+            ImageView emailImage = holder.itemView.findViewById(R.id.rightButton);
+            ConstraintLayout buttonLayout = holder.itemView.findViewById(R.id.buttonLayout);
+            RelativeLayout textLayout = holder.itemView.findViewById(R.id.client_list_item_text_layout);
 
+            thumbnail.setVisibility(View.GONE);
+            textImage.setVisibility(View.GONE);
+            phoneImage.setVisibility(View.GONE);
+            emailImage.setVisibility(View.GONE);
+            buttonLayout.setVisibility(View.GONE);
+//            textLayout.setGravity(10);
+//            textLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            titleTextView.setGravity(Gravity.CENTER);
+            //TODO: This will need to use the colorSchemeManager
+            titleTextView.setTextColor(holder.itemView.getResources().getColor(R.color.colorCorporateOrange));
+
+            titleTextView.setText(mItemList.get(position).second.toString());
+
+        }
     }
 
     @Override
@@ -146,23 +173,23 @@ public class ClientItemAdapter extends DragItemAdapter<Pair<Long, ClientObject>,
 
         ViewHolder(final View itemView) {
             super(itemView, mGrabHandleId, mDragOnLongPress);
-            mText = (TextView) itemView.findViewById(R.id.client_list_title);
+            mText = itemView.findViewById(R.id.client_list_title);
 
         }
 
         @Override
         public void onItemClicked(View view) {
 
-//            mClientMessagingEvent.onItemClicked();
-            Pair<Long, ClientObject> clientPair = mItemList.get((int) this.mItemId);
-            final ClientObject clientObject = clientPair.second;
-            mClientMessagingEvent.onItemClicked(clientObject);
-//            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+            try {
+                Pair<Long, Object> clientPair = mItemList.get((int) this.mItemId);
+                final ClientObject clientObject = (ClientObject) clientPair.second;
+                mClientMessagingEvent.onItemClicked(clientObject);
+            }catch (ClassCastException cce) {}
+
         }
 
         @Override
         public boolean onItemLongClicked(View view) {
-//            Toast.makeText(view.getContext(), "Item long clicked", Toast.LENGTH_SHORT).show();
             return true;
         }
     }

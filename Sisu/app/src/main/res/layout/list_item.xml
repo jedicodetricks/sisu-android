@@ -35,6 +35,7 @@
         android:textSize="20sp"/>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/list_item_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -54,13 +55,13 @@
             app:srcCompat="@drawable/contact_icon" />
 
         <RelativeLayout
-            android:id="@+id/client_list_text_layout"
+            android:id="@+id/client_list_item_text_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/client_list_thumbnail"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/client_list_thumbnail"
+            app:layout_constraintStart_toEndOf="@id/client_list_thumbnail"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -95,7 +96,7 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/client_list_text_layout"
+            app:layout_constraintStart_toEndOf="@id/client_list_item_text_layout"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
