@@ -733,7 +733,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public String localizeLabel(String toCheck) {
         String toReturn = "";
         if(toCheck != null) {
-            Log.e("Localize", toCheck);
             toReturn = dataController.localizeLabel(toCheck);
         }
         return toReturn;
