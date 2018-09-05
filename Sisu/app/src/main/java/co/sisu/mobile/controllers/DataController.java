@@ -52,6 +52,7 @@ public class DataController {
     private List<Metric> updatedRecords;
     private List<ParameterObject> settings;
     private HashMap<String, SelectedActivities> activitiesSelected;
+    private HashMap<String, String> labels;
     private String slackInfo;
 
     public DataController(){
@@ -999,5 +1000,15 @@ public class DataController {
             }
         }
         return "0";
+    }
+
+    public HashMap<String, String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(HashMap<String, String> labels) {
+        if(labels != null) {
+            this.labels = labels;
+        }
     }
 }

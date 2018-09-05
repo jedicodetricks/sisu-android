@@ -37,7 +37,7 @@ public class AsyncLabels extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url + "api/v1/team/market/" + teamId + "/" + Locale.getDefault().toString())
+                .url(url + "api/v1/team/market/" + 715 + "/" + Locale.getDefault().toString())
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])

@@ -1,22 +1,20 @@
 package co.sisu.mobile.models;
 
+import java.util.HashMap;
+
 public class AsyncLabelsJsonObject {
 
-    LabelObject labels;
+    HashMap<String, String> market;
     String server_time;
     String status;
     String status_code;
 
-    public LabelObject getLabels() {
-
-        if(labels == null) {
-            setLabels(new LabelObject("Buyer", "Buyers", "Contacts", "Listing", "Listings", "Scoreboard", "Units"));
-        }
-        return labels;
+    public HashMap<String, String> getMarket() {
+        return market;
     }
 
-    public void setLabels(LabelObject labels) {
-        this.labels = labels;
+    public void setMarket(HashMap<String, String> labels) {
+        this.market = labels;
     }
 
     public String getServer_time() {

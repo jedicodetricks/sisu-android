@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -61,7 +62,6 @@ import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
-import co.sisu.mobile.models.LabelObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
@@ -436,9 +436,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Get Labels")) {
-            AsyncLabelsJsonObject labelsJsonObject = (AsyncLabelsJsonObject) returnObject;
-            LabelObject labels = labelsJsonObject.getLabels();
-            Log.e("LABEL", labels.toString());
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = (HashMap<String, String>) labelObject.getMarket();
+            dataController.setLabels(labels);
         }
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
@@ -720,5 +720,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public int getMarketId() {
         return navigationManager.getMarketId();
+    }
+
+    public HashMap<String, String> getLabels() {
+        return dataController.getLabels();
     }
 }
