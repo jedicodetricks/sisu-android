@@ -35,6 +35,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
@@ -232,6 +233,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         //TODO: Swap these back
 //        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
         apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 715, dataController.getColorSchemeId());
+        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
     }
 
     private List<String> initSpinnerArray() {
@@ -304,6 +306,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
         for(int i = 0; i < leaderBoardSections.length; i++) {
             leaderBoardSections[i].setColor(teamColors[colorCounter]);
+            leaderBoardSections[i].setName(parentActivity.localizeLabel(leaderBoardSections[i].getName()));
             listDataHeader.add(leaderBoardSections[i]);
             List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
 
@@ -366,6 +369,11 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             colorSchemeManager.setColorScheme(colorScheme);
             parentActivity.setActivityColors();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
         }
 
     }

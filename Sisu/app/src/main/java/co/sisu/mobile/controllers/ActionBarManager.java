@@ -42,6 +42,8 @@ public class ActionBarManager {
         bar.setDisplayShowCustomEnabled(true);
         View customView = parentActivity.getLayoutInflater().inflate(R.layout.action_bar_layout, null);
         bar.setCustomView(customView);
+        TextView title = parentActivity.findViewById(R.id.action_bar_title);
+        title.setText(parentActivity.localizeLabel(parentActivity.getResources().getString(R.string.scoreboard)));
         Toolbar parent =(Toolbar) customView.getParent();
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
@@ -57,7 +59,7 @@ public class ActionBarManager {
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
 
         View view = parentActivity.getSupportActionBar().getCustomView();
-        pageTitle.setText(fragmentTag);
+        pageTitle.setText(parentActivity.localizeLabel(fragmentTag));
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
 
@@ -115,7 +117,7 @@ public class ActionBarManager {
                     }
                     backtionTitle.setText(displayName);
                 } else {
-                    backtionTitle.setText(titleString);
+                    backtionTitle.setText(parentActivity.localizeLabel(titleString));
                 }
             }
         });
@@ -136,7 +138,7 @@ public class ActionBarManager {
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
                 teamLetter = parentActivity.findViewById(R.id.team_letter);
                 teamBlock = parentActivity.findViewById(R.id.action_bar_home);
-                pageTitle.setText(titleString);
+                pageTitle.setText(parentActivity.localizeLabel(titleString));
                 View homeButton= parentActivity.findViewById(R.id.action_bar_home);
                 homeButton.setOnClickListener(parentActivity);
                 if(teamsList != null && titleString.equals("Leaderboard")) {
@@ -165,7 +167,7 @@ public class ActionBarManager {
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle.setText(title);
+                    pageTitle.setText(parentActivity.localizeLabel(title));
                 }
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
 
@@ -182,7 +184,7 @@ public class ActionBarManager {
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle.setText(title);
+                    pageTitle.setText(parentActivity.localizeLabel(title));
                     TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
                     sendButton.setText("Send Slack");
                 }
@@ -208,7 +210,7 @@ public class ActionBarManager {
                 if(selectedClient.getLast_name() != null) {
                     displayName += selectedClient.getLast_name();
                 }
-                backtionTitle.setText(displayName);
+                backtionTitle.setText(parentActivity.localizeLabel(displayName));
             }
         });
     }

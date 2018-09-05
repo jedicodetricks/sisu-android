@@ -26,11 +26,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncAgent;
-import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateAgent;
-import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -103,7 +99,25 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         reason = "";
         apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        setLabels();
         setColorScheme();
+    }
+
+    private void setLabels() {
+        activityTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.monthlyTitle)));
+        goalsLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.goals)));
+        desiredIncomeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.desired_income_hint)));
+        trackingReasonsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.goals_reason_hint)));
+        sClosedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.sellers_closed_hint)));
+        bClosedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyers_closed_hint)));
+        sContractLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.sellers_under_contract_hint)));
+        bContractLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyers_under_contract_hint)));
+        sSignedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.signed_sellers_hint)));
+        bSignedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.signed_buyers_hint)));
+        sAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.seller_appt_hint)));
+        bAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyer_appt_hint)));
+        contactsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.contacts)));
+
     }
 
     private void setColorScheme() {

@@ -2,19 +2,15 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -131,6 +127,9 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
     private void initializeTabView() {
         tabLayout = getView().findViewById(R.id.tabHost);
         tabLayout.addOnTabSelectedListener(this);
+        for(int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setText(parentActivity.localizeLabel((String)tabLayout.getTabAt(i).getText()));
+        }
     }
 
 
@@ -277,24 +276,24 @@ public class ClientListFragment extends Fragment implements AdapterView.OnItemCl
         if(mListView != null) {
             mListView.setAdapter(null);
         }
-        switch ((String) tab.getText()) {
-            case "Pipeline":
+        switch ((int) tab.getPosition()) {
+            case 0:
                 currentList = dataController.getPipelineList();
                 selectedTab = "pipeline";
                 break;
-            case "Signed":
+            case 1:
                 currentList = dataController.getSignedList();
                 selectedTab = "signed";
                 break;
-            case "Contract":
+            case 2:
                 currentList = dataController.getContractList();
                 selectedTab = "contract";
                 break;
-            case "Closed":
+            case 3:
                 currentList = dataController.getClosedList();
                 selectedTab = "closed";
                 break;
-            case "Archived":
+            case 4:
                 currentList = dataController.getArchivedList();
                 selectedTab = "archived";
                 break;

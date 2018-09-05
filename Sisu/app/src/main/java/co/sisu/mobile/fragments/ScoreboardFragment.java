@@ -7,13 +7,10 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -109,6 +106,34 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initProgressBars();
         calculateVolumes();
         setupColorScheme();
+        setupLabels();
+    }
+
+    private void setupLabels() {
+
+        TextView pendingVolume = parentActivity.findViewById(R.id.pendingVolumeLabel);
+        pendingVolume.setText(parentActivity.localizeLabel(getResources().getString(R.string.pending_volume)));
+
+        TextView closedVolume = parentActivity.findViewById(R.id.closedVolumeLabel);
+        closedVolume.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed_volume)));
+
+        TextView contacts = parentActivity.findViewById(R.id.contactsProgressText);
+        contacts.setText(parentActivity.localizeLabel(getResources().getString(R.string.contacts)));
+
+        TextView buyerSigned = parentActivity.findViewById(R.id.bbSignedProgressText);
+        buyerSigned.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyers_signed)));
+
+        TextView underContract = parentActivity.findViewById(R.id.underContractProgressText);
+        underContract.setText(parentActivity.localizeLabel(getResources().getString(R.string.under_contract)));
+
+        TextView appointments = parentActivity.findViewById(R.id.appointmentsProgressText);
+        appointments.setText(parentActivity.localizeLabel(getResources().getString(R.string.first_time_appts)));
+
+        TextView listingsTaken = parentActivity.findViewById(R.id.listingsTakenProgressText);
+        listingsTaken.setText(parentActivity.localizeLabel(getResources().getString(R.string.listings_taken)));
+
+        TextView closed = parentActivity.findViewById(R.id.closedProgressText);
+        closed.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
     }
 
     private void setupColorScheme() {

@@ -4,22 +4,15 @@ package co.sisu.mobile.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -43,11 +36,9 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -63,7 +54,6 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
-import okhttp3.Cache;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -129,7 +119,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(profilePic);
         }
+        setLabels();
         setColorScheme();
+    }
+
+    private void setLabels() {
+        usernameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.username_email_hint)));
+        firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
+        lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
+        phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
     }
 
     private void setColorScheme() {

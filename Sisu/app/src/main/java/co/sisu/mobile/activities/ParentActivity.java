@@ -89,6 +89,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean settingsFinished = false;
     private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
+    private boolean labelsFinished = false;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
@@ -283,7 +284,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -295,6 +296,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             settingsFinished = false;
             teamParamFinished = false;
             colorSchemeFinished = false;
+            labelsFinished = false;
         }
     }
 
@@ -437,8 +439,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(asyncReturnType.equals("Get Labels")) {
             AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
-            HashMap<String, String> labels = (HashMap<String, String>) labelObject.getMarket();
+            HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
+            labelsFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
@@ -727,6 +731,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public String localizeLabel(String toCheck) {
-        return dataController.localizeLabel(toCheck);
+        String toReturn = "";
+        if(toCheck != null) {
+            Log.e("Localize", toCheck);
+            toReturn = dataController.localizeLabel(toCheck);
+        }
+        return toReturn;
     }
 }

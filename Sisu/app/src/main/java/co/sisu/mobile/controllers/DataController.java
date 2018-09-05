@@ -66,6 +66,7 @@ public class DataController {
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
+        labels = new HashMap<>();
     }
 
     private void initializeMorePageObject() {
@@ -120,11 +121,11 @@ public class DataController {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
+        Metric firstAppointment = new Metric(localizeLabel("1st Time Appts"), "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
+        Metric closed = new Metric(localizeLabel("Closed"), "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
+        Metric contract = new Metric(localizeLabel("Under Contract"), "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
+        Metric signed = new Metric(localizeLabel("Signed"), "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
+        Metric contact = new Metric(localizeLabel("Contacts"), "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
@@ -156,7 +157,7 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
@@ -223,12 +224,12 @@ public class DataController {
         scoreboardObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric signed = new Metric("BB Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric firstAppointment = new Metric(localizeLabel("1st Time Appts"), "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric closed = new Metric(localizeLabel("Closed"), "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contract = new Metric(localizeLabel("Under Contract"), "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric showing = new Metric(localizeLabel("Listings Taken"), "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric(localizeLabel("BB Signed"), "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contact = new Metric(localizeLabel("Contacts"), "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
@@ -259,7 +260,7 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
@@ -328,7 +329,7 @@ public class DataController {
             }
 
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch(counters[i].getActivity_type()) {
                 case "CONTA":

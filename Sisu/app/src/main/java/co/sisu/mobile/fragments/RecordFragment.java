@@ -23,7 +23,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -85,8 +84,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(save != null) {
             save.setOnClickListener(this);
         }
-
         setColorScheme();
+    }
+
+    private void setLabels() {
+        for(Metric metric: metricList) {
+            metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
+        }
     }
 
     private void setColorScheme() {
@@ -263,6 +267,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 public void run() {
                     loader.setVisibility(View.GONE);
                     metricList = dataController.getRecordActivities();
+                    setLabels();
                     initializeListView(metricList);
                 }
             });

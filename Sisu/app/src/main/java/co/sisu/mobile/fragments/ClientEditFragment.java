@@ -99,7 +99,33 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         initializeCalendar();
         initializeClient();
         loader.setVisibility(View.GONE);
+        setupLabels();
         setColorScheme();
+    }
+
+    private void setupLabels() {
+
+        buyer.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyer)));
+        seller.setText(parentActivity.localizeLabel(getResources().getString(R.string.seller)));
+
+        firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
+        lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
+        transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
+        gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
+        commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
+        phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
+        emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
+        statusLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.status)));
+        pipelineStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.pipeline)));
+        signedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.signed)));
+        underContractStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.contract)));
+        closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
+        archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
+        appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
+        signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
+        underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
+        settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
+        noteLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.notes)));
     }
 
     private void setColorScheme() {

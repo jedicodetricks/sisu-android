@@ -5,12 +5,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -24,7 +22,6 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.adapters.ReportListAdapter;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -357,6 +354,9 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private void setData(List<Metric> metricList) {
+        for(Metric metric: metricList) {
+            metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
+        }
         if(getContext() != null) {
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
