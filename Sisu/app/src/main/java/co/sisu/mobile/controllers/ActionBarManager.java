@@ -1,18 +1,14 @@
 package co.sisu.mobile.controllers;
 
 import android.graphics.drawable.ColorDrawable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -255,6 +251,14 @@ public class ActionBarManager {
 
     public ClientObject getSelectedClient() {
         return selectedClient;
+    }
+
+    public int getMarketId() {
+        int marketId = 0;
+        if(teamsList != null) {
+            marketId = teamsList.get(selectedTeam).getMarket_id();
+        }
+        return marketId;
     }
 
 

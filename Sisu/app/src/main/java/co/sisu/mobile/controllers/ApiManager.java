@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
@@ -23,6 +22,7 @@ import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
 import co.sisu.mobile.api.AsyncGetTeamColorScheme;
+import co.sisu.mobile.api.AsyncLabels;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
@@ -226,8 +226,9 @@ public class ApiManager {
 
     public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
         getJWT(agent.getAgent_id());
-        new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
-
+        if(currentDevice != null) {
+            new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
+        }
     }
 
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
@@ -239,6 +240,11 @@ public class ApiManager {
         getJWT(agentId);
         new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
 
+    }
+
+    public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
+        getJWT(agentId);
+        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {

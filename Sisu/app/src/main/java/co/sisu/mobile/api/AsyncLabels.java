@@ -16,10 +16,10 @@ import okhttp3.Response;
 public class AsyncLabels extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private String teamId;
+    private int teamId;
     private String url;
 
-    public AsyncLabels (AsyncServerEventListener cb, String url, String teamId) {
+    public AsyncLabels (AsyncServerEventListener cb, String url, int teamId) {
         callback = cb;
         this.teamId = teamId;
         this.url = url;
@@ -45,7 +45,7 @@ public class AsyncLabels extends AsyncTask<String, String, String> {
                 .build();
         try {
             response = client.newCall(request).execute();
-//            Log.d("ASYNC", response.body().string());
+            //Log.d("LABELASYNC", response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }

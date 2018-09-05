@@ -2,16 +2,20 @@ package co.sisu.mobile.models;
 
 public class AsyncLabelsJsonObject {
 
-    LabelObject[] labels;
+    LabelObject labels;
     String server_time;
     String status;
     String status_code;
 
-    public LabelObject[] getLabels() {
+    public LabelObject getLabels() {
+
+        if(labels == null) {
+            setLabels(new LabelObject("Buyer", "Buyers", "Contacts", "Listing", "Listings", "Scoreboard", "Units"));
+        }
         return labels;
     }
 
-    public void setLabels(LabelObject[] labels) {
+    public void setLabels(LabelObject labels) {
         this.labels = labels;
     }
 

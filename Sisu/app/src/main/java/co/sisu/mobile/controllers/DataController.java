@@ -93,7 +93,7 @@ public class DataController {
         TeamJsonObject[] teams = teamsObjects.getTeams();
         int colorCounter = 0;
         for(int i = 0; i < teams.length; i++) {
-            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter])));
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter]), Integer.valueOf(teams[i].getMarket_id())));
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
             }

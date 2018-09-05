@@ -276,6 +276,10 @@ public class NavigationManager {
         return actionBarManager.getSelectedTeamId();
     }
 
+    public int getMarketId() {
+        return actionBarManager.getMarketId();
+    }
+
     public void updateSelectedTeam(int position) {
         actionBarManager.updateSelectedTeam(position);
     }
