@@ -53,8 +53,9 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private List<ClientObject> currentList = new ArrayList<>();
     private TabLayout tabLayout;
     private static String selectedTab = "pipeline";
-    private TextView addButton;
+    private TextView addButton, editListButton;
     private ConstraintLayout contentView;
+    private boolean editMode = false;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -102,13 +103,16 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 
     private void initAddButton() {
         addButton = parentActivity.findViewById(R.id.addClientButton);
+        editListButton = parentActivity.findViewById(R.id.editClientListButton);
+
         if(addButton != null) {
-            addButton.setVisibility(View.VISIBLE);
             addButton.setOnClickListener(this);
         }
-        else {
-//            addButton.setVisibility(View.GONE);
+
+        if(editListButton != null) {
+            editListButton.setOnClickListener(this);
         }
+
     }
 
     private void initSearchBar() {
@@ -189,6 +193,36 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                 break;
             case R.id.searchClient:
                 break;
+            case R.id.editClientListButton:
+                Log.e("EDIT LIST", "PLS");
+                if(!editMode) {
+                    changeToEditList(currentList);
+                    editMode = true;
+                }
+                else {
+                    fillListViewWithData(currentList);
+                    editMode = false;
+                }
+                break;
+        }
+    }
+
+    private void changeToEditList(List<ClientObject> metricList) {
+        ArrayList mItemArray = new ArrayList<>();
+        if(getContext() != null) {
+            for(int i = 0; i < metricList.size(); i++) {
+                mItemArray.add(new Pair<>((long) i, metricList.get(i)));
+            }
+//            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+//            mListView.setAdapter(adapter);
+
+            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.edit_list_item, R.id.client_list_thumbnail, false, this);
+            mListView.setAdapter(clientItemAdapter, true);
+            mListView.setCanDragHorizontally(false);
+//            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
+            mListView.setCustomDragItem(null);
+
+//            mListView.setOnItemClickListener(this);
         }
     }
 
