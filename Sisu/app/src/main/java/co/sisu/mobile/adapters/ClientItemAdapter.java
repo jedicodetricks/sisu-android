@@ -1,6 +1,7 @@
 package co.sisu.mobile.adapters;
 
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;

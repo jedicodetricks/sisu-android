@@ -148,6 +148,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 //            mListView.setAdapter(adapter);
 
             ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
+            mListView.setDragEnabled(false);
             mListView.setAdapter(clientItemAdapter, true);
             mListView.setCanDragHorizontally(false);
 //            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
@@ -216,7 +217,8 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 //            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
 //            mListView.setAdapter(adapter);
 
-            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.edit_list_item, R.id.client_list_thumbnail, false, this);
+            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.edit_list_item, R.id.editButton, false, this);
+            mListView.setDragEnabled(true);
             mListView.setAdapter(clientItemAdapter, true);
             mListView.setCanDragHorizontally(false);
 //            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
