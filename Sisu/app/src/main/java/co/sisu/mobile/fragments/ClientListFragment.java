@@ -253,9 +253,9 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                 }
             }
             int counter = 0;
-            mItemArray.add(new Pair<>((long) counter, "Priority"));
-            priorityPosition = counter;
-            counter++;
+//            mItemArray.add(new Pair<>((long) counter, "Priority"));
+//            priorityPosition = counter;
+//            counter++;
             for(int i = 0; i < priorityArray.size(); i++) {
                 mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
                 counter++;
@@ -440,16 +440,19 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
         if (fromPosition != toPosition) {
-            if(toPosition < pipelinePosition + 1) {
+            Log.e("TO POSITION", String.valueOf(toPosition));
+            Log.e("PIPELINE", String.valueOf(pipelinePosition));
+            if(toPosition < pipelinePosition) {
                 parentActivity.showToast("PRIORITY: " + toPosition);
                 pipelinePosition++;
             }
-            else if(toPosition >= pipelinePosition + 1) {
+            else if(toPosition > pipelinePosition) {
                 parentActivity.showToast("PIPELINE: " + toPosition);
+                pipelinePosition--;
             }
-//            else if(toPosition == pipelinePosition + 1) {
-//                parentActivity.showToast("THIS SHOULD TOGGLE: " + toPosition);
-//            }
+            else if(toPosition == pipelinePosition) {
+                parentActivity.showToast("THIS SHOULD TOGGLE: " + toPosition);
+            }
 
         }
     }
