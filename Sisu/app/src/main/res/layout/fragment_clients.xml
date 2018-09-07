@@ -15,27 +15,35 @@
             android:elevation="1dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabHost"
-            app:layout_constraintBottom_toTopOf="@android:id/tabcontent">
+            app:layout_constraintTop_toBottomOf="@id/tabHost"/>
 
-        </SearchView>
+        <TextView
+            android:id="@+id/priorityLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Priority"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchClient"/>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchClient"
-            app:layout_constraintBottom_toTopOf="@id/divider">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/priorityLabel"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            >
 
                 <com.woxthebox.draglistview.DragListView
                     android:id="@+id/clientListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
-                    android:clickable="true">
-
-                </com.woxthebox.draglistview.DragListView>
+                    android:clickable="true"/>
 
         </FrameLayout>
 
@@ -48,7 +56,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/searchClient"
             app:tabTextAppearance="@style/MyTabTextAppearance">
 
                 <android.support.design.widget.TabItem
@@ -83,13 +90,13 @@
         </android.support.design.widget.TabLayout>
 
         <RelativeLayout
-            android:id="@id/divider"
+            android:id="@+id/divider"
             style="@style/DividerStyle"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@android:id/tabcontent" />
+            app:layout_constraintBottom_toTopOf="@id/total" />
 
         <TextView
             android:id="@+id/total"
@@ -99,7 +106,6 @@
             android:padding="@dimen/font_smaller"
             android:text="@string/total"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ProgressBar

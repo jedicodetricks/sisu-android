@@ -155,10 +155,11 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                     priorityArray.add(clientObject);
                 }
             }
+
             int counter = 0;
-            mItemArray.add(new Pair<>((long) counter, "Priority"));
-            priorityPosition = counter;
-            counter++;
+//            mItemArray.add(new Pair<>((long) counter, "Priority"));
+//            priorityPosition = counter;
+//            counter++;
             for(int i = 0; i < priorityArray.size(); i++) {
                 mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
                 counter++;
