@@ -2,6 +2,8 @@ package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.woxthebox.draglistview.DragListView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,12 +21,14 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
+import co.sisu.mobile.adapters.ClientItemAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateSettingsObject;
@@ -31,9 +37,9 @@ import co.sisu.mobile.models.UpdateSettingsObject;
  * Created by Jeff on 4/18/2018.
  */
 
-public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
+public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, DragListView.DragListListener {
 
-    private ListView mListView;
+    private DragListView mListView;
     private ParentActivity parentActivity;
     private NavigationManager  navigationManager;
     private ApiManager apiManager;
@@ -61,7 +67,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         apiManager = parentActivity.getApiManager();
         loader = view.findViewById(R.id.activitySettingsLoader);
         initializeButtons();
-//        initializeListView();
+        initializeListView();
         loader.setVisibility(View.VISIBLE);
         apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id());
     }
@@ -88,15 +94,75 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void initializeListView() {
         mListView = getView().findViewById(R.id.activity_list_view);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        mListView.setDragListListener(this);
+        mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
+        mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
+    }
 
-//        final List<SelectedActivities> activitiesContainerList = parentActivity.getActivitiesObject();
+    private void fillListViewWithData(HashMap<String, SelectedActivities> selectedActivities) {
+        ArrayList mItemArray = new ArrayList<>();
+        int counter = 0;
+        if(getContext() != null) {
 
-        ActivityListAdapter adapter = new ActivityListAdapter(getContext(), selectedActivities);
-        mListView.setAdapter(adapter);
+            for ( String key : selectedActivities.keySet() ) {
+                SelectedActivities value = selectedActivities.get(key);
+                mItemArray.add(new Pair<>((long) counter, value));
+                counter++;
+//            jsonString += "\"" + key + "\":\"" + value + "\"";
+//            if(counter < changedFields.size() - 1) {
+//                jsonString += ",";
+//            }
+//            counter++;
+            }
+//
+//            ArrayList priorityArray = new ArrayList<>();
+//            ArrayList commonArray = new ArrayList<>();
+//
+//            for(ClientObject clientObject : metricList) {
+//                if(clientObject.getIs_priority().equals("0")) {
+//                    commonArray.add(clientObject);
+//                }
+//                else {
+//                    priorityArray.add(clientObject);
+//                }
+//            }
+//
+//            int counter = 0;
+////            mItemArray.add(new Pair<>((long) counter, "Priority"));
+////            priorityPosition = counter;
+////            counter++;
+//            for(int i = 0; i < priorityArray.size(); i++) {
+//                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
+//                counter++;
+//            }
+//
+//            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
+//            pipelinePosition = counter;
+//            counter++;
+//            for(int i = 0; i < commonArray.size(); i++) {
+//                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
+//                counter++;
+//            }
+//
+//
+//
+////            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+////            mListView.setAdapter(adapter);
+//
+//            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
+//            mListView.setDragEnabled(false);
+//            mListView.setAdapter(clientItemAdapter, true);
+//            mListView.setCanDragHorizontally(false);
+////            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
+//            mListView.setCustomDragItem(null);
+//
+////            mListView.setOnItemClickListener(this);
+        }
+        ActivityListAdapter activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false);
+        mListView.setAdapter(activityListAdapter, true);
+        mListView.setCanDragHorizontally(false);
+        mListView.setCustomDragItem(null);
 
-//        mListView.setOnItemClickListener(this);
     }
 
     @Override
@@ -156,7 +222,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 public void run() {
                     loader.setVisibility(View.GONE);
                     setupFieldsWithData();
-                    initializeListView();
+                    fillListViewWithData(dataController.getSelectedActivitiesList());
                 }
             });
         }
@@ -169,6 +235,21 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onItemDragStarted(int position) {
+
+    }
+
+    @Override
+    public void onItemDragging(int itemPosition, float x, float y) {
+
+    }
+
+    @Override
+    public void onItemDragEnded(int fromPosition, int toPosition) {
 
     }
 }

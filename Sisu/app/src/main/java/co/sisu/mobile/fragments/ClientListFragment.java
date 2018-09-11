@@ -135,9 +135,6 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         mListView.setDragListListener(this);
         mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
         mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
-//        mListView.setDivider(null);
-//        mListView.setDividerHeight(30);
-        total = getView().findViewById(R.id.total);
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {

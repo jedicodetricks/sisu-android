@@ -976,4 +976,9 @@ public class DataController {
     public String getSlackInfo() {
         return slackInfo;
     }
+
+    public HashMap<String, SelectedActivities> getSelectedActivitiesList() {
+
+        return activitiesSelected;
+    }
 }

@@ -50,6 +50,7 @@ public class ClientItemAdapter extends DragItemAdapter<Pair<Long, Object>, Clien
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
         try {
             final ClientObject clientObject = (ClientObject) mItemList.get(position).second;
             holder.itemView.setTag(mItemList.get(position));
