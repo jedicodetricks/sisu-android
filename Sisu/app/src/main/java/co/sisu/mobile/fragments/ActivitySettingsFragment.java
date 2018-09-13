@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private DataController dataController;
     private List<SelectedActivities> selectedActivities;
     private ProgressBar loader;
+    private ArrayList mItemArray = new ArrayList<>();
+
 
     public ActivitySettingsFragment() {
         // Required empty public constructor
@@ -100,7 +103,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void fillListViewWithData(HashMap<String, SelectedActivities> selectedActivities) {
-        ArrayList mItemArray = new ArrayList<>();
         int counter = 0;
         if(getContext() != null) {
 
@@ -108,46 +110,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 SelectedActivities value = selectedActivities.get(key);
                 mItemArray.add(new Pair<>((long) counter, value));
                 counter++;
-//            jsonString += "\"" + key + "\":\"" + value + "\"";
-//            if(counter < changedFields.size() - 1) {
-//                jsonString += ",";
-//            }
-//            counter++;
             }
 //
-//            ArrayList priorityArray = new ArrayList<>();
-//            ArrayList commonArray = new ArrayList<>();
-//
-//            for(ClientObject clientObject : metricList) {
-//                if(clientObject.getIs_priority().equals("0")) {
-//                    commonArray.add(clientObject);
-//                }
-//                else {
-//                    priorityArray.add(clientObject);
-//                }
-//            }
-//
-//            int counter = 0;
-////            mItemArray.add(new Pair<>((long) counter, "Priority"));
-////            priorityPosition = counter;
-////            counter++;
-//            for(int i = 0; i < priorityArray.size(); i++) {
-//                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
-//                counter++;
-//            }
-//
-//            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
-//            pipelinePosition = counter;
-//            counter++;
-//            for(int i = 0; i < commonArray.size(); i++) {
-//                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
-//                counter++;
-//            }
-//
-//
-//
-////            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
-////            mListView.setAdapter(adapter);
 //
 //            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
 //            mListView.setDragEnabled(false);
@@ -159,7 +123,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 ////            mListView.setOnItemClickListener(this);
         }
         ActivityListAdapter activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false);
-        mListView.setAdapter(activityListAdapter, true);
+        mListView.setDragEnabled(true);
+        mListView.setAdapter(activityListAdapter, false);
         mListView.setCanDragHorizontally(false);
         mListView.setCustomDragItem(null);
 
@@ -250,6 +215,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
+        Log.e("TO POSITION", String.valueOf(toPosition));
+        Log.e("FROM POSITION", String.valueOf(fromPosition));
 
+        if (fromPosition != toPosition) {
+        }
     }
 }

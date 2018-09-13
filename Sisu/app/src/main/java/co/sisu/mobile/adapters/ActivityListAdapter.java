@@ -26,10 +26,6 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 
-/**
- * Created by Jeff on 4/18/2018.
- */
-
 public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, ActivityListAdapter.ViewHolder> {
 
     private Context mContext;
@@ -48,7 +44,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
 
     @NonNull
     @Override
-    public ActivityListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
         return new ViewHolder(view);
     }
@@ -57,19 +53,21 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     public void onBindViewHolder(@NonNull ActivityListAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         Pair<Long, Object> thing = mItemList.get(position);
-        Log.e("HI", "BYE");
-        final SelectedActivities selectedActivities = (SelectedActivities) mItemList.get(position).second;
-//        holder.itemView.setTag(mItemList.get(position));
-//
-////          Get view for row item
-//        ImageView thumbnail = holder.itemView.findViewById(R.id.client_list_thumbnail);
-//        if(clientObject.getType_id().equalsIgnoreCase("b")) {
-//            thumbnail.setImageResource(R.drawable.buyer_icon);
-//        }
-//        else {
-//            thumbnail.setImageResource(R.drawable.seller_icon_active);
-//        }
-//
+        final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
+        holder.itemView.setTag(mItemList.get(position));
+
+        // Get title element
+        TextView titleTextView = holder.itemView.findViewById(R.id.activity_list_title);
+        Switch activitySwitch = holder.itemView.findViewById(R.id.activity_list_switch);
+
+        titleTextView.setText(selectedActivity.getName());
+        activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
+        activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                selectedActivity.setValue(jsonIsChecked(isChecked));
+            }
+        });
     }
 
 //    @Override
@@ -117,7 +115,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
 
         ViewHolder(final View itemView) {
             super(itemView, mGrabHandleId, mDragOnLongPress);
-            mText = itemView.findViewById(R.id.client_list_title);
+            mText = itemView.findViewById(R.id.activity_list_title);
 
         }
 
