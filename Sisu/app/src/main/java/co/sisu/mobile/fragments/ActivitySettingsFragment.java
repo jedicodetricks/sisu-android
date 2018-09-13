@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private List<SelectedActivities> selectedActivities;
     private ProgressBar loader;
     private ArrayList mItemArray = new ArrayList<>();
+    private boolean editMode = false;
 
 
     public ActivitySettingsFragment() {
@@ -93,6 +95,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
+        TextView editButton = parentActivity.findViewById(R.id.editButton);
+        if(editButton != null) {
+            editButton.setOnClickListener(this);
+        }
     }
 
     private void initializeListView() {
@@ -101,6 +107,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
         mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
     }
+
+
 
     private void fillListViewWithData(HashMap<String, SelectedActivities> selectedActivities) {
         int counter = 0;
@@ -111,19 +119,17 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 mItemArray.add(new Pair<>((long) counter, value));
                 counter++;
             }
-//
-//
-//            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
-//            mListView.setDragEnabled(false);
-//            mListView.setAdapter(clientItemAdapter, true);
-//            mListView.setCanDragHorizontally(false);
-////            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
-//            mListView.setCustomDragItem(null);
-//
-////            mListView.setOnItemClickListener(this);
         }
-        ActivityListAdapter activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false);
-        mListView.setDragEnabled(true);
+        ActivityListAdapter activityListAdapter = null;
+
+        if(!editMode) {
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false);
+            mListView.setDragEnabled(false);
+        }
+        else {
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false);
+            mListView.setDragEnabled(true);
+        }
         mListView.setAdapter(activityListAdapter, false);
         mListView.setCanDragHorizontally(false);
         mListView.setCustomDragItem(null);
@@ -145,6 +151,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
                 saveSettings();
+                break;
+            case R.id.editButton:
+                editMode = !editMode;
+                fillListViewWithData(dataController.getActivitiesSelected());
                 break;
         }
     }
