@@ -172,20 +172,17 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                 mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
                 counter++;
             }
-
-
-
 //            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
 //            mListView.setAdapter(adapter);
 
             ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
+
             mListView.setDragEnabled(false);
             mListView.setAdapter(clientItemAdapter, true);
             mListView.setCanDragHorizontally(false);
 //            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
             mListView.setCustomDragItem(null);
 
-//            mListView.setOnItemClickListener(this);
         }
 
     }
@@ -226,7 +223,6 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
             case R.id.searchClient:
                 break;
             case R.id.editClientListButton:
-                Log.e("EDIT LIST", "PLS");
                 if(!editMode) {
                     changeToEditList(currentList);
                     editMode = true;
