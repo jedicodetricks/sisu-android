@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -51,7 +52,7 @@ public class DataController {
     private List<ClientObject> archivedList;
     private List<Metric> updatedRecords;
     private List<ParameterObject> settings;
-    private HashMap<String, SelectedActivities> activitiesSelected;
+    private LinkedHashMap<String, SelectedActivities> activitiesSelected;
     private String slackInfo;
 
     public DataController(){
@@ -728,7 +729,7 @@ public class DataController {
     }
 
     private void setupSelectedActivities(ParameterObject s) {
-        activitiesSelected = new HashMap<>();
+        activitiesSelected = new LinkedHashMap<>();
         if(s != null) {
             String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
             String[] splitString = formattedString.split(",");
@@ -791,7 +792,7 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public HashMap<String, SelectedActivities> getActivitiesSelected() {
+    public LinkedHashMap<String, SelectedActivities> getActivitiesSelected() {
         return activitiesSelected;
     }
 
@@ -961,7 +962,7 @@ public class DataController {
 
     private ParameterObject setDefaultActivitesSelected() {
         ParameterObject activites = (new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7"));
-        return  activites;
+        return activites;
     }
 
     public void setAgentIncomeAndReason(AgentModel agentModel) {
@@ -977,8 +978,4 @@ public class DataController {
         return slackInfo;
     }
 
-    public HashMap<String, SelectedActivities> getSelectedActivitiesList() {
-
-        return activitiesSelected;
-    }
 }

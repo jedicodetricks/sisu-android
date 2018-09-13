@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,19 +16,18 @@ import com.woxthebox.draglistview.DragListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
-import co.sisu.mobile.adapters.ClientItemAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
-import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateSettingsObject;
@@ -47,10 +44,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ApiManager apiManager;
     private DataController dataController;
     private List<SelectedActivities> selectedActivities;
+    private List<String> currentActivitiesSorting;
     private ProgressBar loader;
     private ArrayList mItemArray = new ArrayList<>();
     private boolean editMode = false;
-
+    private TextView saveButton, editButton;
 
     public ActivitySettingsFragment() {
         // Required empty public constructor
@@ -91,11 +89,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void initializeButtons() {
-        TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+        saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
-        TextView editButton = parentActivity.findViewById(R.id.editButton);
+        editButton = parentActivity.findViewById(R.id.editButton);
         if(editButton != null) {
             editButton.setOnClickListener(this);
         }
@@ -150,10 +148,26 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.saveButton://notify of success update api
-                saveSettings();
+                if(editMode) {
+                    //This would save the editing of priority
+                    editMode = false;
+                    saveButton.setText("Save");
+                    editButton.setVisibility(View.VISIBLE);
+                    fillListViewWithData(dataController.getActivitiesSelected());
+                }
+                else {
+                    saveSettings();
+                }
                 break;
             case R.id.editButton:
                 editMode = !editMode;
+                if(editMode) {
+                    saveButton.setText("Done");
+                    editButton.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    saveButton.setText("Save");
+                }
                 fillListViewWithData(dataController.getActivitiesSelected());
                 break;
         }
@@ -191,13 +205,13 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
             ParameterObject settings = settingsJson.getParameter();
             dataController.setActivitiesSelected(settings);
-
+            currentActivitiesSorting = setupCurrentSorting(dataController.getActivitiesSelected());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     loader.setVisibility(View.GONE);
                     setupFieldsWithData();
-                    fillListViewWithData(dataController.getSelectedActivitiesList());
+                    fillListViewWithData(dataController.getActivitiesSelected());
                 }
             });
         }
@@ -206,6 +220,16 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             parentActivity.showToast("Activity updates saved");
 
         }
+    }
+
+    private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
+        List<String> currentSorting = new ArrayList<>();
+        for ( String key : activitiesSelected.keySet() ) {
+            SelectedActivities selectedActivity = activitiesSelected.get(key);
+
+            currentSorting.add(key);
+        }
+        return currentSorting;
     }
 
     @Override
@@ -225,10 +249,36 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
-        Log.e("TO POSITION", String.valueOf(toPosition));
         Log.e("FROM POSITION", String.valueOf(fromPosition));
-
+        String fromActivity = currentActivitiesSorting.get(fromPosition);
+        Log.e("FROM", fromActivity);
+        Log.e("TO POSITION", String.valueOf(toPosition));
+        String toActivity = currentActivitiesSorting.get(toPosition);
+        Log.e("TO", toActivity);
+        sortActivities(fromActivity, fromPosition, toPosition);
         if (fromPosition != toPosition) {
+            Log.e("SELECTED", String.valueOf(currentActivitiesSorting));
         }
+    }
+
+    private void sortActivities(String fromActivity, int fromPosition, int toPosition) {
+        List<String> newSorting = new ArrayList<>();
+        if(fromPosition > toPosition) {
+            for(int i = 0; i < toPosition; i++) {
+                if(i != fromPosition) {
+                    newSorting.add(currentActivitiesSorting.get(i));
+                }
+            }
+            newSorting.add(fromActivity);
+            for(int i = toPosition + 1; i < currentActivitiesSorting.size(); i++) {
+                if(i != fromPosition) {
+                    newSorting.add(currentActivitiesSorting.get(i));
+                }
+            }
+        }
+        else if(toPosition > fromPosition) {
+
+        }
+        Log.e("SORTING", String.valueOf(newSorting));
     }
 }
