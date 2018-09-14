@@ -119,11 +119,11 @@ public class DataController {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 99);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 98);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 97);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 96);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 95);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
+        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
+        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 99);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
