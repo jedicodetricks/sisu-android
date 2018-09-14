@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,10 @@ import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragListView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,9 +29,12 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
+import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
+import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
+import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
@@ -49,6 +54,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ArrayList mItemArray = new ArrayList<>();
     private boolean editMode = false;
     private TextView saveButton, editButton;
+    private boolean activitySaveComplete = false;
+    private boolean settingsSaveComplete = false;
 
     public ActivitySettingsFragment() {
         // Required empty public constructor
@@ -110,15 +117,17 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void fillListViewWithData(HashMap<String, SelectedActivities> selectedActivities) {
         int counter = 0;
+        mItemArray = new ArrayList<>();
         if(getContext() != null) {
-
             for ( String key : selectedActivities.keySet() ) {
                 SelectedActivities value = selectedActivities.get(key);
                 mItemArray.add(new Pair<>((long) counter, value));
                 counter++;
             }
         }
-        ActivityListAdapter activityListAdapter = null;
+
+
+        ActivityListAdapter activityListAdapter;
 
         if(!editMode) {
             activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false);
@@ -150,10 +159,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             case R.id.saveButton://notify of success update api
                 if(editMode) {
                     //This would save the editing of priority
-                    editMode = false;
-                    saveButton.setText("Save");
-                    editButton.setVisibility(View.VISIBLE);
-                    fillListViewWithData(dataController.getActivitiesSelected());
+                    dataController.sortSelectedActivities(currentActivitiesSorting);
+//                    saveSorting();
+                    saveSettings();
                 }
                 else {
                     saveSettings();
@@ -177,15 +185,65 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     }
 
-    private void saveSettings() {
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(selectedActivities));
+    private void saveSorting() {
+        List<Metric> allActivities = dataController.getMasterActivitiesObject();
+        int weightCounter = 0;
 
+        for(String s : currentActivitiesSorting) {
+            for(Metric m : allActivities) {
+                if(m.getWeight() < 80) {
+                    if(m.getType().equalsIgnoreCase(s)) {
+                        m.setWeight(currentActivitiesSorting.size() - weightCounter);
+                        weightCounter++;
+                        break;
+                    }
+                }
+            }
+        }
+        updateRecordedActivities(allActivities);
     }
 
-    private AsyncUpdateSettingsJsonObject createUpdateObject(List<SelectedActivities> selectedActivities) {
+    public void updateRecordedActivities(List<Metric> updatedRecords) {
+//        List<Metric> updatedRecords = dataController.getUpdatedRecords();
+        List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
+
+        Calendar c = Calendar.getInstance();
+        Date d = c.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
+        for(Metric m : updatedRecords) {
+            switch(m.getType()) {
+                case "BSGND":
+                case "SSGND":
+                case "BUNDC":
+                case "SUNDC":
+                case "BCLSD":
+                case "SCLSD":
+                case "BAPPT":
+                case "SAPPT":
+                    break;
+                default:
+                    updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(dataController.getAgent().getAgent_id()), m.getWeight()));
+                    break;
+            }
+        }
+        UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
+        updateActivitiesModels.toArray(array);
+
+        activitiesJsonObject.setActivities(array);
+
+        apiManager.sendAsyncUpdateActivities(this, dataController.getAgent().getAgent_id(), activitiesJsonObject);
+    }
+
+    private void saveSettings() {
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()));
+    }
+
+    private AsyncUpdateSettingsJsonObject createUpdateObject(LinkedHashMap<String, SelectedActivities> selectedActivities) {
         String valueString = "{";
         int counter = 0;
-        for(SelectedActivities activity : selectedActivities) {
+        for (String key : selectedActivities.keySet()) {
+            SelectedActivities activity = selectedActivities.get(key);
             valueString += "\"" + activity.getType() + "\"" + ":" + activity.getValue();
             if(counter < selectedActivities.size() - 1) {
                 valueString += ",";
@@ -216,17 +274,47 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             });
         }
         else if(asyncReturnType.equals("Update Settings")) {
-            navigationManager.clearStackReplaceFragment(MoreFragment.class);
-            parentActivity.showToast("Activity updates saved");
+            if(editMode) {
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        settingsSaveComplete = true;
+//                        if(activitySaveComplete) {
+                        editMode = false;
+                        saveButton.setText("Save");
+                        editButton.setVisibility(View.VISIBLE);
+                        fillListViewWithData(dataController.getActivitiesSelected());
+//                        }
 
+                    }
+                });
+
+            }
+            else {
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+                parentActivity.showToast("Activity updates saved");
+            }
+        }
+        else if(asyncReturnType.equals("Update Activities")) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activitySaveComplete = true;
+                    if(settingsSaveComplete) {
+                        editMode = false;
+                        saveButton.setText("Save");
+                        editButton.setVisibility(View.VISIBLE);
+                        fillListViewWithData(dataController.getActivitiesSelected());
+                    }
+
+                }
+            });
         }
     }
 
     private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
         List<String> currentSorting = new ArrayList<>();
-        for ( String key : activitiesSelected.keySet() ) {
-            SelectedActivities selectedActivity = activitiesSelected.get(key);
-
+        for (String key : activitiesSelected.keySet()) {
             currentSorting.add(key);
         }
         return currentSorting;
@@ -249,16 +337,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
-        Log.e("FROM POSITION", String.valueOf(fromPosition));
         String fromActivity = currentActivitiesSorting.get(fromPosition);
-        Log.e("FROM", fromActivity);
-        Log.e("TO POSITION", String.valueOf(toPosition));
-        String toActivity = currentActivitiesSorting.get(toPosition);
-        Log.e("TO", toActivity);
         sortActivities(fromActivity, fromPosition, toPosition);
-        if (fromPosition != toPosition) {
-            Log.e("SELECTED", String.valueOf(currentActivitiesSorting));
-        }
     }
 
     private void sortActivities(String fromActivity, int fromPosition, int toPosition) {
@@ -270,15 +350,23 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 }
             }
             newSorting.add(fromActivity);
-            for(int i = toPosition + 1; i < currentActivitiesSorting.size(); i++) {
+            for(int i = toPosition; i < currentActivitiesSorting.size(); i++) {
                 if(i != fromPosition) {
                     newSorting.add(currentActivitiesSorting.get(i));
                 }
             }
         }
         else if(toPosition > fromPosition) {
-
+            for(int i = 0; i <= toPosition; i++) {
+                if(i != fromPosition) {
+                    newSorting.add(currentActivitiesSorting.get(i));
+                }
+            }
+            newSorting.add(fromActivity);
+            for(int i = toPosition + 1; i < currentActivitiesSorting.size(); i++) {
+                newSorting.add(currentActivitiesSorting.get(i));
+            }
         }
-        Log.e("SORTING", String.valueOf(newSorting));
+        currentActivitiesSorting = newSorting;
     }
 }

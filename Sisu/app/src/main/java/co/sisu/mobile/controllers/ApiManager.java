@@ -61,7 +61,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://api.sisu.co/";
+    private String url = "http://staging.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -208,6 +208,11 @@ public class ApiManager {
                 .claim("agent_id", agentId)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
+
+//        Log.e("JWT", jwtStr);
+//        Log.e("TRANS", transactionID);
+//        Log.e("TIME", timestamp);
+
     }
 
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {

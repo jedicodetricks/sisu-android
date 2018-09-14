@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -120,11 +119,11 @@ public class DataController {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 99);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 98);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 97);
+        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 96);
+        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 95);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
@@ -388,7 +387,57 @@ public class DataController {
         Arrays.sort(array);
 
         activities = new ArrayList<>(Arrays.asList(array));
+        activities = sortActivitiesObjectByActivitySettings(activities);
         return activities;
+    }
+
+    private List<Metric> sortActivitiesObjectByActivitySettings(List<Metric> activities) {
+        List<Metric> importantList = new ArrayList<>();
+        List<Metric> otherList = new ArrayList<>();
+        for(Metric m : activities) {
+            if(m.getWeight() > 80) {
+                importantList.add(m);
+            }
+            else {
+                otherList.add(m);
+            }
+        }
+
+        List<Metric> finalList = new ArrayList<>();
+        for(Metric m : importantList) {
+            finalList.add(m);
+        }
+
+        List<String> sortedList = setupCurrentSorting(activitiesSelected);
+        int weightCounter = 0;
+        for(String s : sortedList) {
+            for(Metric m : otherList) {
+                if(m.getWeight() < 80) {
+                    if(m.getType().equalsIgnoreCase(s)) {
+                        finalList.add(m);
+//                        m.setWeight(sortedList.size() - weightCounter);
+//                        weightCounter++;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+//
+//        for(Metric m : otherList) {
+//            finalList.add(m);
+//        }
+
+        return finalList;
+    }
+
+    private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
+        List<String> currentSorting = new ArrayList<>();
+        for (String key : activitiesSelected.keySet()) {
+            currentSorting.add(key);
+        }
+        return currentSorting;
     }
 
     private void setMetricThumbnail(Metric metric) {
@@ -978,4 +1027,15 @@ public class DataController {
         return slackInfo;
     }
 
+    public List<Metric> getMasterActivitiesObject() {
+        return masterActivitiesObject;
+    }
+
+    public void sortSelectedActivities(List<String> currentActivitiesSorting) {
+        LinkedHashMap<String, SelectedActivities> itemArray = new LinkedHashMap<>();
+        for(int i = 0; i < activitiesSelected.size(); i++) {
+            itemArray.put(currentActivitiesSorting.get(i), activitiesSelected.get(currentActivitiesSorting.get(i)));
+        }
+        activitiesSelected = itemArray;
+    }
 }

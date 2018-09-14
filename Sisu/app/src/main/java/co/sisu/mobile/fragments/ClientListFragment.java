@@ -127,6 +127,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private void initializeTabView() {
         tabLayout = getView().findViewById(R.id.tabHost);
         tabLayout.addOnTabSelectedListener(this);
+        total = getView().findViewById(R.id.total);
     }
 
 

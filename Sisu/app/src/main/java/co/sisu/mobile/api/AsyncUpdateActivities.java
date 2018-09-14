@@ -71,10 +71,10 @@ public class AsyncUpdateActivities extends AsyncTask<String, String, String> {
                 if (response.code() == 200) {
                     callback.onEventCompleted(null, "Update Activities");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Update Activities");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Update Activities");
             }
 
             response.body().close();
