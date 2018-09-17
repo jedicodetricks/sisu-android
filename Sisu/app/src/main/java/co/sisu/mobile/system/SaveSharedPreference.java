@@ -15,6 +15,7 @@ public class SaveSharedPreference
     static final String JWT = "jwt";
     static final String CLIENT_TIMESTAMP = "client-timestamp";
     static final String TRANS_ID = "trans-id";
+    static final String FIREBASE_DEVICE_ID = "firebase-id";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         SharedPreferences sharedPref = ctx.getSharedPreferences("login", Context.MODE_PRIVATE);
@@ -31,6 +32,18 @@ public class SaveSharedPreference
     public static String getUserName(Context ctx)
     {
         return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
+    }
+
+    public static void setFirebaseDeviceId(Context ctx, String deviceId)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(FIREBASE_DEVICE_ID, deviceId);
+        editor.commit();
+    }
+
+    public static String getFirebaseDeviceId(Context ctx)
+    {
+        return getSharedPreferences(ctx).getString(FIREBASE_DEVICE_ID, "");
     }
 
     public static void setUserId(Context ctx, String userName)

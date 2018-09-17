@@ -20,4 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class android.support.v7.widget.** { *; }
+-keep class com.woxthebox.draglistview.** { *; }
 

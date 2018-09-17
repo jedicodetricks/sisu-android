@@ -19,7 +19,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         context.startService(service1);*/
         Log.i("App", "called receiver method");
         try{
-            Utils.generateNotification(context);
+            Utils.generateNotification(context, "Sisu", "Reminder: Enter your numbers for today!");
         }catch(Exception e){
             e.printStackTrace();
         }

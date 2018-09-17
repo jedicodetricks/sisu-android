@@ -32,11 +32,13 @@ import co.sisu.mobile.system.SaveSharedPreference;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
 
-    String emailAddress;
-    String password;
-    boolean networkActive = true;
-    Button signInButton;
-    ProgressBar loader;
+    private String emailAddress;
+    private String password;
+    private boolean networkActive = true;
+    private Button signInButton;
+    private ProgressBar loader;
+    private AgentModel agent;
+    int authRetry = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-            AgentModel agent = agentObject.getAgent();
+            agent = agentObject.getAgent();
             if (agentObject.getStatus_code().equals("-1")) {
                 this.runOnUiThread(new Runnable() {
                     @Override
@@ -219,12 +221,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showToast("The server experienced an issue, please try again.");
+
+        if(asyncReturnType.equals("Authenticator")) {
+            if(authRetry == 2) {
+                this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast("The server is experiencing issues. Please try again later.");
+                    }
+                });
             }
-        });
+            else {
+                new AsyncAuthenticator(this, emailAddress, password).execute();
+                authRetry++;
+            }
+        }
+        else {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showToast("The server experienced an issue, please try again.");
+                }
+            });
+        }
+
     }
 
 }

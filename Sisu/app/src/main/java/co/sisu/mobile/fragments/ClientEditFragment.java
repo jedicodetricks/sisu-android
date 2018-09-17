@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -47,10 +46,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private NavigationManager navigationManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -91,55 +90,44 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         loader.setVisibility(View.GONE);
     }
 
-//    private void calculatePercentage() {
-//        int dollar;
-//        float percent;
-//        Log.e("CALCULATING", "");
-//        if(!transAmount.getText().toString().isEmpty() && !gciPercent.getText().toString().isEmpty()) {
-//            percent = Float.parseFloat(gciPercent.getText().toString());
-//            convertPercentToDollar(percent, gci);
-//        } else {
-//            if(!gci.getText().toString().isEmpty() && !gciPercent.getText().toString().isEmpty()) {
-//                dollar = Integer.parseInt(gci.getText().toString());
-//                convertDollarToPercent(dollar * 100f, gciPercent);
+    private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
+        float percent;
+        if(!transAmount.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+            percent = Float.parseFloat(editPercent.getText().toString());
+            convertPercentToDollar(percent / 100f, editDollar, transAmount);
+        } else {
+            parentActivity.showToast(getText(R.string.percent_help_text));
+//            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(editDollar.getText().toString());
+//                convertDollarToPercent(dollar * 100f, editPercent);
 //            }
-//        }
-//        if(!transAmount.getText().toString().isEmpty() && !incomePercent.getText().toString().isEmpty()) {
-//            percent = Float.parseFloat(incomePercent.getText().toString());
-//            convertPercentToDollar(percent, paidIncome);
-//        } else {
-//            if(!paidIncome.getText().toString().isEmpty() && !incomePercent.getText().toString().isEmpty()) {
-//                dollar = Integer.parseInt(paidIncome.getText().toString());
-//                convertDollarToPercent(dollar * 100f, incomePercent);
+        }
+    }
+
+    private void calculateGciPercentage(EditText editPercent, EditText editDollar) {
+        float percent;
+        if(!gci.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+            percent = Float.parseFloat(editPercent.getText().toString());
+            convertPercentToDollar(percent / 100f, editDollar, gci);
+        } else {
+            parentActivity.showToast("GCI and Percent Required");
+//            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+//                dollar = Integer.parseInt(editDollar.getText().toString());
+//                convertDollarToPercent(dollar * 100f, editPercent);
 //            }
-//        }
-//    }
-//
-//    private void convertPercentToDollar(float percent, EditText dollarText) {
-//        float dollar;
-//        int transTotal = Integer.parseInt(transAmount.getText().toString());
-//        if(transTotal != 0 && percent <= 100 && percent > 0) {
-//            dollar = percent * transTotal;
-//            if(dollar <= transTotal && dollar > 0) {
-//                dollarText.setText(dollar + "");//String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
-//            }
-//        }
-//    }
-//
-//    private void convertDollarToPercent(float dollar, EditText percentText) {
-//        float percent;
-//        int transTotal = Integer.parseInt(transAmount.getText().toString());
-//        if(transTotal != 0 && dollar <= transTotal && dollar > 0) {
-//            percent = dollar / transTotal;
-//            if(percent <= 100 && percent > 0) {
-//                percentText.setText(String.valueOf(percent).substring(0,String.valueOf(percent).indexOf('.')));
-//            } else {
-//                //might be an error in user input
-//            }
-//        } else {
-//            parentActivity.showToast("Please enter a transaction amount first");
-//        }
-//    }
+        }
+    }
+
+    private void convertPercentToDollar(float percent, EditText dollarText, EditText parent) {
+        float dollar;
+        int transTotal = Integer.parseInt(parent.getText().toString());
+        if(transTotal != 0 && percent <= 100 && percent > 0) {
+            dollar = percent * transTotal;
+            if(dollar <= transTotal && dollar > 0) {
+                dollarText.setText(String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
+            }
+        }
+    }
 
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
@@ -357,10 +345,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         paidIncome.setOnFocusChangeListener(this);
         gci = getView().findViewById(R.id.editGci);
         gci.setOnFocusChangeListener(this);
-//        gciPercent = getView().findViewById(R.id.editGciPercent);
-//        gciPercent.setOnFocusChangeListener(this);
-//        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
-//        incomePercent.setOnFocusChangeListener(this);
+        gciPercent = getView().findViewById(R.id.editGciPercent);
+        gciPercent.setOnFocusChangeListener(this);
+        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
+        incomePercent.setOnFocusChangeListener(this);
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -433,6 +421,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 seller.setBackground(active);
                 seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
                 typeSelected = "s";
+                break;
+            case R.id.calculateGciPercent:
+                calculateTransPercentage(gciPercent, gci);
+                break;
+            case R.id.calculateIncomePercent:
+                calculateGciPercentage(incomePercent, paidIncome);
                 break;
             case R.id.saveButton://notify of success update api
                 if(verifyInputFields()) {
@@ -544,6 +538,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 //        deleteButton.setOnClickListener(this);
         noteButton = getView().findViewById(R.id.clientNotesButton);
         noteButton.setOnClickListener(this);
+        calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
+        calculateGciPercent.setOnClickListener(this);
+        calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
+        calculateIncomePercent.setOnClickListener(this);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

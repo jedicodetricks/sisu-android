@@ -187,7 +187,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     public void teamSwap() {
         listAdapter = null;
         expListView.setAdapter(listAdapter);
-        getLeaderboard(selectedYear, selectedMonth);
+        getLeaderboard(selectedYear, selectedMonth + 1);
     }
 
     private List<String> initSpinnerArray() {

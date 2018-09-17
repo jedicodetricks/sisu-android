@@ -86,7 +86,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
         version = getView().findViewById(R.id.versionLabel);
-        version.setText("Version: " + BuildConfig.VERSION_NAME);
+        version.setText("Version: " + BuildConfig.VERSION_NAME + " | Build: " + BuildConfig.VERSION_CODE);
         
     }
 

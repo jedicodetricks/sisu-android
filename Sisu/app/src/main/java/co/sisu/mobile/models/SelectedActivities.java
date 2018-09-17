@@ -15,6 +15,12 @@ public class SelectedActivities {
         this.type = type;
     }
 
+    public SelectedActivities(String value, String type, String name) {
+        this.value = value;
+        this.type = type;
+        this.name = name;
+    }
+
     public String getValue() {
         return value;
     }
