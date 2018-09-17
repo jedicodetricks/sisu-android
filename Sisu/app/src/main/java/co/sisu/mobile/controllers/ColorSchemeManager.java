@@ -65,6 +65,11 @@ public class ColorSchemeManager {
                 case "lighter_text":
                     lighterTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
+                case "logo":
+                    logo = colorSchemeObject.getTheme_data();
+                    break;
+                case "icon":
+                    icon = colorSchemeObject.getTheme_data();
                 case "darker_text":
                     darkerTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
