@@ -106,7 +106,7 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
             fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveAction("Activity Settings");
+            actionBarManager.swapToSaveEditAction("Activity Settings");
         }
         else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
             fragmentTag = "Settings";

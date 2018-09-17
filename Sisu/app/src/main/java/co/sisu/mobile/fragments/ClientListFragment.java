@@ -146,6 +146,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         for(int i = 0; i < tabLayout.getTabCount(); i++) {
             tabLayout.getTabAt(i).setText(parentActivity.localizeLabel((String)tabLayout.getTabAt(i).getText()));
         }
+        total = getView().findViewById(R.id.total);
     }
 
 
@@ -159,6 +160,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         mListView.setOnItemClickListener(this);
         total = getView().findViewById(R.id.total);
         divider = getView().findViewById(R.id.divider);
+
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
