@@ -7,13 +7,10 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -190,7 +187,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        //spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
 
         VectorChildFinder plusVector = new VectorChildFinder(getContext(), R.drawable.add_icon, addButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");

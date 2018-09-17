@@ -11,9 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -31,9 +29,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.devs.vectorchildfinder.VectorChildFinder;
-import com.devs.vectorchildfinder.VectorDrawableCompat;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +37,6 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -51,7 +45,6 @@ import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.controllers.ToolbarManager;
 import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -163,7 +156,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 Log.e("SETTING COLORS", "PARENT ACTIVITY");
                 layout.setBackgroundColor(colorSchemeManager.getAppBackground());
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-                parentLoader.setBackgroundColor(colorSchemeManager.getIconActive());
+                //change parentLoader here, if needed
             }
         });
     }
