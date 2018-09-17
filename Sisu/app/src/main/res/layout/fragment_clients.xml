@@ -38,7 +38,14 @@
             app:layout_constraintBottom_toTopOf="@id/divider"
             >
 
-                <com.woxthebox.draglistview.DragListView
+                <!--<com.woxthebox.draglistview.DragListView-->
+                    <!--android:id="@+id/clientListView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:clickable="true"/>-->
+
+                <ListView
                     android:id="@+id/clientListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
