@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -42,8 +41,8 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.LeaderboardFragment;
@@ -93,9 +92,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
-    private FileIO io;
     private NotesObject selectedNote;
-    private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
@@ -117,7 +114,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
         parentLoader = findViewById(R.id.parentLoader);
-        io = new FileIO(ParentActivity.this);
 
         initParentFields();
         initializeButtons();
@@ -700,22 +696,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public ApiManager getApiManager() {
         return apiManager;
-    }
-
-    public Bitmap getImage(String profile) { return io.getImage(profile, 1024); }//size here should be cache size i think
-
-    public void saveImage(byte[] image, String profile) { io.addImage(profile, image); }
-
-    public boolean imageExists(Context context,  String id) {
-        return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
-    }
-
-    public CacheManager getCacheManager() {
-        return cacheManager;
-    }
-
-    public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
     }
 
     public ColorSchemeManager getColorSchemeManager() {

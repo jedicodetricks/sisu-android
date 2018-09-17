@@ -95,7 +95,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
-//        loader.setVisibility(View.VISIBLE);
         initializeForm();
         initializeButtons();
         initializeCalendar();
@@ -638,25 +637,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                     updateCurrentClient(false);
                     saveClient();
                 }
-//                parentActivity.stackReplaceFragment(ClientListFragment.class);
-//                parentActivity.swapToClientListBar();
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
             case R.id.signedDateTitle:
-//                Toast.makeText(AddClientActivity.this, "SIGNED DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(signedSelectedYear, signedSelectedMonth, signedSelectedDay, "signed");
                 break;
             case R.id.underContractDatePicker:
             case R.id.underContractDateDisplay:
             case R.id.underContractDateTitle:
-//                Toast.makeText(AddClientActivity.this, "UNDER CONTRACT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(contractSelectedYear, contractSelectedMonth, contractSelectedDay, "contract");
                 break;
             case R.id.settlementDatePicker:
             case R.id.settlementDateDisplay:
             case R.id.settlementDateTitle:
-//                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay, "settlement");
                 break;
             case R.id.appointmentDatePicker:
@@ -739,8 +733,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer.setOnClickListener(this);
         seller = parentActivity.findViewById(R.id.sellerButton);
         seller.setOnClickListener(this);
-//        deleteButton = getView().findViewById(R.id.clientDeleteButton);
-//        deleteButton.setOnClickListener(this);
         noteButton = getView().findViewById(R.id.clientNotesButton);
         noteButton.setOnClickListener(this);
         calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);

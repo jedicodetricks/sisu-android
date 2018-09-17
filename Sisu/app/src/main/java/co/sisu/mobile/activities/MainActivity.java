@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         networkActive = getIntent().getBooleanExtra("Network", true);
 
-//        if(!networkActive) {
-//            showToast("The server is experiencing issues, please try again later.");
-//        }
     }
 
     public String getDeviceDensity(Context context){

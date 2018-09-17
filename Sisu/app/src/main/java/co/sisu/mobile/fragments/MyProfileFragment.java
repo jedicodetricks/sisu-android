@@ -78,8 +78,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private String imageData, imageFormat;
     private Button passwordButton;
     String imageType = "";
-    private CacheManager cacheManager;
-    //ProfileObject currentProfile;
 
     public MyProfileFragment() {
         // Required empty public constructor
@@ -104,7 +102,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         agent = dataController.getAgent();
-        cacheManager = parentActivity.getCacheManager();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();

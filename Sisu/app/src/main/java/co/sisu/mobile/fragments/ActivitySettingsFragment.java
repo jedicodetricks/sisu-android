@@ -33,7 +33,7 @@ import co.sisu.mobile.models.UpdateSettingsObject;
  * Created by Jeff on 4/18/2018.
  */
 
-public class ActivitySettingsFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener {
+public class ActivitySettingsFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     private ListView mListView;
     private ParentActivity parentActivity;
@@ -95,22 +95,10 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         mListView.setDivider(null);
         mListView.setDividerHeight(30);
 
-//        final List<SelectedActivities> activitiesContainerList = parentActivity.getActivitiesObject();
 
         ActivityListAdapter adapter = new ActivityListAdapter(getContext(), selectedActivities, colorSchemeManager);
         mListView.setAdapter(adapter);
 
-//        mListView.setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //ActivitiesPageContainer value = (ActivitiesPageContainer) parent.getItemAtPosition(position);
-
-//        switch() {
-//            default:
-//                break;
-//        }
     }
 
     @Override
@@ -122,9 +110,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         }
     }
 
-    private void updateCurrentSettings() {
-
-    }
 
     private void saveSettings() {
         apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(selectedActivities));

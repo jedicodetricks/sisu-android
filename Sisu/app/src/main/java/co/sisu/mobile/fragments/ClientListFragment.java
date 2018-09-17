@@ -108,10 +108,6 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         initAddButton();
         loadColorScheme();
 
-        //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
-//        currentList = parentActivity.getPipelineList();
-//        loader.setVisibility(View.GONE);
-
     }
 
     private void loadColorScheme() {

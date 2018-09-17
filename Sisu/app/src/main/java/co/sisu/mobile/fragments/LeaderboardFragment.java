@@ -52,7 +52,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ExpandableListView expListView;
     private List<LeaderboardObject> listDataHeader;
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
-    private ProgressBar loader, imageLoader;
+    private ProgressBar loader;
     private Calendar calendar = Calendar.getInstance();
     private ParentActivity parentActivity;
     private DataController dataController;

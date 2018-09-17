@@ -152,7 +152,6 @@ public class ClientListAdapter extends BaseAdapter {
             lastName = clientObject.getLast_name();
         }
         titleTextView.setText(firstName + " " + lastName);
-//        String splitString = clientObject.getCommission_amt().substring(0, clientObject.getGross_commission_amt().indexOf("."));//getting rid of the .0
         subtitleTextView.setText("$" + clientObject.getCommission_amt());
 
 

@@ -51,7 +51,6 @@ public class ActionBarManager {
     }
 
     public void initializeActionBar(String fragmentTag) {
-//        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = parentActivity.findViewById(R.id.action_bar_title);
@@ -63,16 +62,9 @@ public class ActionBarManager {
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
 
-//        if(teamsList != null && pageTitle.getText().toString().equals("Leaderboard")) {
-//            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//            teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-//            teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-//            teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-//        }
-//        else {
         teamBlock.setVisibility(View.GONE);
         teamLetter.setVisibility(View.GONE);
-//        }
+
         parentActivity.getSupportActionBar().setElevation(0);
     }
 
