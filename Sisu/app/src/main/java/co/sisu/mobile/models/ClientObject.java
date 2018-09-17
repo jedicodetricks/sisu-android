@@ -35,6 +35,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String type_id_dscr;
     private String uc_dt;
     private String updated_ts;
+    private String is_priority;
 
     public String getAddress_1() {
         return address_1;
@@ -255,5 +256,13 @@ public class ClientObject implements Comparable<ClientObject>{
     @Override
     public int compareTo(@NonNull ClientObject c) {
         return (this.getLast_name().compareTo(c.last_name));
+    }
+
+    public String getIs_priority() {
+        return is_priority;
+    }
+
+    public void setIs_priority(String is_priority) {
+        this.is_priority = is_priority;
     }
 }

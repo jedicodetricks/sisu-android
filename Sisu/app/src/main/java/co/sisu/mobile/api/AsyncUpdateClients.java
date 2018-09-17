@@ -49,6 +49,8 @@ public class AsyncUpdateClients extends AsyncTask<String, String, String> {
                     .create();
             String jsonInString = gson.toJson(clientObject);
             Log.e("POST CLIENT", jsonInString);
+            jsonInString = jsonInString.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
+            jsonInString = jsonInString.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);

@@ -49,11 +49,24 @@ public class ClientListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        // Get view for row item
-        final View rowView = mInflater.inflate(R.layout.adapter_client_list, parent, false);
-        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
 
         final ClientObject clientObject = (ClientObject) getItem(position);
+        ClientObject nextClientObject = null;
+        if(position < mDataSource.size() - 1) {
+            nextClientObject = (ClientObject) getItem(position + 1);
+        }
+
+        View rowView = mInflater.inflate(R.layout.adapter_client_list, parent, false);
+
+        if(nextClientObject != null) {
+            if(clientObject.getIs_priority().equals("1") && nextClientObject.getIs_priority().equals("0")) {
+                rowView = mInflater.inflate(R.layout.adapter_client_list_other_hack, parent, false);
+            }
+        }
+
+        // Get view for row item
+        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
+
         if(clientObject.getType_id().equalsIgnoreCase("b")) {
             thumbnail.setImageResource(R.drawable.buyer_icon);
         } else {

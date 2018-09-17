@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -50,6 +51,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent;
+    private Switch prioritySwitch;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -166,6 +168,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
         noteText.setText(currentClient.getNote());
+        prioritySwitch.setChecked(currentClient.getIs_priority().equals("1") ? true : false);
         updateStatus();
         //calculatePercentage();
     }
@@ -205,6 +208,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
         currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
+        currentClient.setIs_priority(prioritySwitch.isChecked() ? "1" : "0");
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -358,6 +362,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         seller = getView().findViewById(R.id.sellerButton);
         exportContact = getView().findViewById(R.id.exportContactButton);
         noteText = getView().findViewById(R.id.editNotes);
+        prioritySwitch = getView().findViewById(R.id.prioritySwitch);
     }
 
     @Override

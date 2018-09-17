@@ -208,6 +208,10 @@ public class ApiManager {
                 .claim("agent_id", agentId)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
+
+//        Log.e("JWT", jwtStr);
+//        Log.e("TRANS", transactionID);
+//        Log.e("TIME", timestamp);
     }
 
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {

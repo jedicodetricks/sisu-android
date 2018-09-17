@@ -112,8 +112,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
                 String token = task.getResult().getToken();
 
                 // Log and toast
-                apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
-                Log.e("Firebase TOKEN REFRESH", token);
+                if(currentDevice != null) {
+                    apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
+                    Log.e("Firebase TOKEN REFRESH", token);
+                }
+
             }
         });
     }
