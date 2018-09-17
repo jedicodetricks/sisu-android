@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.TextInputLayout;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -55,6 +57,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ProgressBar loader;
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent;
+    private ImageView lock;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
@@ -345,6 +348,26 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         prioritySwitch.setChecked(currentClient.getIs_priority().equals("1") ? true : false);
         updateStatus();
         //calculatePercentage();
+        if(currentClient.getIs_locked() != null && currentClient.getIs_locked().equals("1")) {
+            lockClient();
+        }
+    }
+
+    private void lockClient() {
+        saveButton.setOnClickListener(null);
+        archiveButton.setOnClickListener(null);
+        saveButton.setVisibility(View.GONE);
+        lock = parentActivity.findViewById(R.id.lock);
+        lock.setVisibility(View.VISIBLE);
+        lock.setOnClickListener(this);
+        ConstraintLayout c = (ConstraintLayout) parentActivity.findViewById(R.id.editClientLayout);
+        for(View v : c.getTouchables()) {
+            v.setEnabled(false);
+            v.setFocusable(false);
+            v.setFocusableInTouchMode(false);
+        }
+        noteButton.setEnabled(true);
+        noteButton.setClickable(true);
     }
 
     private String getFormattedDateFromApiReturn(String dateString) {
@@ -631,6 +654,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 break;
             case R.id.calculateIncomePercent:
                 calculateGciPercentage(incomePercent, paidIncome);
+                break;
+            case R.id.lock:
+                parentActivity.showToast("This client account has been locked by your team administrator.");
                 break;
             case R.id.saveButton://notify of success update api
                 if(verifyInputFields()) {
