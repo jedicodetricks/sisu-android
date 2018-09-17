@@ -224,12 +224,13 @@ public class DataController {
         scoreboardObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric(localizeLabel("1st Time Appts"), "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric closed = new Metric(localizeLabel("Closed"), "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contract = new Metric(localizeLabel("Under Contract"), "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric showing = new Metric(localizeLabel("Listings Taken"), "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric signed = new Metric(localizeLabel("BB Signed"), "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contact = new Metric(localizeLabel("Contacts"), "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric("Buyers Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
@@ -1015,9 +1016,18 @@ public class DataController {
 
     public String localizeLabel(String toCheck) {
         String value = toCheck;
-            if(labels.containsKey(toCheck)) {
-                value = labels.get(toCheck);
-            }
+        if (labels.containsKey(toCheck)) {
+            value = labels.get(toCheck);
+        }
         return value;
+    }
+
+    public Metric getContactsMetric() {
+        for (Metric m : recordObject) {
+            if(m.getType().equalsIgnoreCase("CONTA")) {
+                return m;
+            }
+        }
+        return null;
     }
 }
