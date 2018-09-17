@@ -200,7 +200,7 @@
     <style name="ToolBar">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLabelText</item>
+        <item name="android:textColor">@color/colorAlmostBlack</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">

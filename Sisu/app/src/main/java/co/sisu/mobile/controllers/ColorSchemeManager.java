@@ -40,7 +40,6 @@ public class ColorSchemeManager {
 
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme) {
-        //TODO: Missing icon and logo
 
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
@@ -64,6 +63,12 @@ public class ColorSchemeManager {
                     break;
                 case "lighter_text":
                     lighterTextColor = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "logo":
+                    logo = colorSchemeObject.getTheme_data();
+                    break;
+                case "icon":
+                    icon = colorSchemeObject.getTheme_data();
                     break;
                 case "darker_text":
                     darkerTextColor = Color.parseColor(colorSchemeObject.getTheme_data());

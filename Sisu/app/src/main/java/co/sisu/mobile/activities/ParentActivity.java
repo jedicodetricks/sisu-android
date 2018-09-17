@@ -152,7 +152,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 Log.e("SETTING COLORS", "PARENT ACTIVITY");
                 layout.setBackgroundColor(colorSchemeManager.getAppBackground());
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-                parentLoader.setBackgroundColor(colorSchemeManager.getIconActive());
+                //change parentLoader here, if needed
             }
         });
     }

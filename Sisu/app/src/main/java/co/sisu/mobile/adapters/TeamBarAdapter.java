@@ -1,16 +1,15 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +56,19 @@ public class TeamBarAdapter extends BaseAdapter {
         TextView textViewHome = v.findViewById(R.id.team_title);
         TextView letter = v.findViewById(R.id.list_team_letter);
         View block = v.findViewById(R.id.rectangle_at_the_top);
+        ImageView icon = v.findViewById(R.id.team_list_icon);
+
+        if(info.getIcon() != null) {
+            Picasso.with(mContext).load(Uri.parse(info.getIcon())).into(icon);
+            icon.setVisibility(View.VISIBLE);
+            letter.setVisibility(View.GONE);
+        } else {
+            letter.setText(info.getTeamLetter());
+            letter.setBackgroundColor(info.getColor());
+        }
 
         textViewHome.setText(info.getName());
-        letter.setText(info.getTeamLetter());
-
         block.setBackgroundColor(info.getColor());
-        letter.setBackgroundColor(info.getColor());
 
         return v;
     }

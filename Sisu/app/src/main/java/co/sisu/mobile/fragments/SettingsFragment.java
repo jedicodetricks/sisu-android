@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +51,7 @@ import co.sisu.mobile.models.UpdateSettingsObject;
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     private Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
-    private ImageView timeSelector;
+    private ImageView timeSelector, settingsLogo, sisuPowerLogo;
     private TextView reminderTimeTitle, displayTime, version, timeZoneDisplay, reminderLabel, lightsLabel, timeZoneTitle;
     private int currentSelectedHour, currentSelectedMinute;
     private int alarmId = 1412;
@@ -107,6 +110,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         reminderLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
         lightsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
         timeZoneTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
+            //Picasso.with(parentActivity).load(Uri.parse("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg")).into(settingsLogo);
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(settingsLogo);
+        }
 
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
@@ -132,6 +139,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
+        settingsLogo = getView().findViewById(R.id.settingsLogo);
+        sisuPowerLogo = getView().findViewById(R.id.sisuPowerLogo);
         version = getView().findViewById(R.id.versionLabel);
         version.setText("Version: " + BuildConfig.VERSION_NAME + " | Build: " + BuildConfig.VERSION_CODE);
         reminderLabel = getView().findViewById(R.id.reminderLabel);

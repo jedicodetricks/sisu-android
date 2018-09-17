@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +35,8 @@ public class AsyncGetTeamColorScheme extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-//            teamId = 715;
+            //TODO: Get rid of this
+            teamId = 715;
             Request request = new Request.Builder()
                     .url(url + "api/v1/team/theme/" + teamId + "/" + isLightTheme)
                     .get()

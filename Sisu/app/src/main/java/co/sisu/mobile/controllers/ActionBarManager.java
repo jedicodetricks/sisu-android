@@ -1,17 +1,18 @@
 package co.sisu.mobile.controllers;
 
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import com.squareup.picasso.Picasso;
 import java.util.List;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.TeamBarAdapter;
@@ -26,6 +27,7 @@ public class ActionBarManager {
     private ParentActivity parentActivity;
     private ColorSchemeManager colorSchemeManager;
     private TextView pageTitle, teamLetter, backtionTitle;
+    private ImageView teamIcon;
     private View teamBlock;
     private DrawerLayout drawerLayout;
     private ActionBar bar;
@@ -55,6 +57,7 @@ public class ActionBarManager {
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = parentActivity.findViewById(R.id.action_bar_title);
         teamLetter = parentActivity.findViewById(R.id.team_letter);
+        teamIcon = parentActivity.findViewById(R.id.team_icon);
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
 
         View view = parentActivity.getSupportActionBar().getCustomView();
@@ -76,14 +79,19 @@ public class ActionBarManager {
 
             this.teamsList = teamsList;
 
-            TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList);
-            mListView.setAdapter(adapter);
 
             mListView.setOnItemClickListener(parentActivity);
+            if(colorSchemeManager.getIcon() != null) {
+                //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
+                teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
+            } else {
+                teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
+                teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+            }
 
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-            teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(teamsList.get(0).getColor());
+            TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList);
+            mListView.setAdapter(adapter);
         }
     }
 
@@ -152,15 +160,26 @@ public class ActionBarManager {
                 teamLetter = parentActivity.findViewById(R.id.team_letter);
                 teamBlock = parentActivity.findViewById(R.id.action_bar_home);
                 pageTitle.setText(parentActivity.localizeLabel(titleString));
+                teamIcon = parentActivity.findViewById(R.id.team_icon);
                 View homeButton= parentActivity.findViewById(R.id.action_bar_home);
                 homeButton.setOnClickListener(parentActivity);
                 if(teamsList != null && titleString.equals("Leaderboard")) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-                    teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-                    teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-                    teamBlock.setVisibility(View.VISIBLE);
-                    teamLetter.setVisibility(View.VISIBLE);
+                    if(colorSchemeManager.getIcon() != null) {
+                        Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+                        //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+                        //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
+                        teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
+                        teamIcon.setVisibility(View.VISIBLE);
+                        teamLetter.setVisibility(View.GONE);
+                    } else {
+                        teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
+                        teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                        teamBlock.setVisibility(View.VISIBLE);
+                        teamLetter.setVisibility(View.VISIBLE);
+                        teamIcon.setVisibility(View.GONE);
+                    }
                 }
                 else {
                     teamBlock.setVisibility(View.GONE);
@@ -229,9 +248,16 @@ public class ActionBarManager {
     }
 
     public void updateTeam(TeamObject team) {
+        if(colorSchemeManager.getIcon() != null) {
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+            //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+            teamIcon.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.GONE);
+        } else {
+            teamLetter.setText(team.getTeamLetter());
+            teamLetter.setBackgroundColor(team.getColor());
+        }
         teamBlock.setBackgroundColor(team.getColor());
-        teamLetter.setText(team.getTeamLetter());
-        teamLetter.setBackgroundColor(team.getColor());
     }
 
     public void toggleDrawer() {
