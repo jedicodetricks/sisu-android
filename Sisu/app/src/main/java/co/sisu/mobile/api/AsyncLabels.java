@@ -1,40 +1,32 @@
 package co.sisu.mobile.api;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.models.AsyncProfileImageJsonObject;
-import co.sisu.mobile.models.LeaderboardAgentModel;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by Jeff on 6/20/2018.
- */
+public class AsyncLabels extends AsyncTask<String, String, String> {
 
-public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
+    private int teamId;
     private String url;
-    private LeaderboardAgentModel leaderboardAgentModel;
 
-    public AsyncLeaderboardImage(AsyncServerEventListener cb, String url, LeaderboardAgentModel leaderboardAgentModel) {
+    public AsyncLabels (AsyncServerEventListener cb, String url, int teamId) {
         callback = cb;
+        this.teamId = teamId;
         this.url = url;
-        this.leaderboardAgentModel = leaderboardAgentModel;
     }
 
     @Override
     protected String doInBackground(String... strings) {
-
         Response response = null;
         Gson gson = new Gson();
 
@@ -45,7 +37,7 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url + "api/v1/image/" + leaderboardAgentModel.getProfile())
+                .url(url + "api/v1/team/market/" + teamId + "/" + Locale.getDefault().toString())
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
@@ -53,32 +45,26 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .build();
         try {
             response = client.newCall(request).execute();
-            Log.e("PROFILE PIC", response.body().string());
+            //Log.d("LABELASYNC", response.body().string());
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
-                InputStream inputStream = response.body().byteStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                if(bitmap != null) {
-                    Log.e("bmp response", bitmap.toString());
-                    leaderboardAgentModel.setBitmap(bitmap);
-                }
+                AsyncLabelsJsonObject labelObject = gson.fromJson(response.body().charStream(), AsyncLabelsJsonObject.class);
 
-//                profileObject.setFilename(profile);
-                callback.onEventCompleted(leaderboardAgentModel, "Leaderboard Image");
+                callback.onEventCompleted(labelObject, "Get Labels");
             }
             else {
-                callback.onEventFailed(null, "Leaderboard Image");
+                callback.onEventFailed(null, "Get Labels");
             }
         }
         else {
-            callback.onEventFailed(null, "Leaderboard Image");
+            callback.onEventFailed(null, "Get Labels");
         }
 
+//        Log.d("ASYNC PING IS", "NULL");
         response.body().close();
         return null;
     }
 }
-

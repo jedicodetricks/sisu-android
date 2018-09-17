@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
@@ -50,6 +52,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
     private List<ClientObject> currentList = new ArrayList<>();
     private TabLayout tabLayout;
@@ -59,6 +62,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private boolean editMode = false;
     private int priorityPosition = 0;
     private int pipelinePosition = 0;
+    private RelativeLayout divider;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -90,6 +94,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         AgentModel agent = dataController.getAgent();
         initializeTabView();
         apiManager.sendAsyncClients(this, agent.getAgent_id());
@@ -97,11 +102,20 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
         initAddButton();
+        loadColorScheme();
 
         //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
 //        currentList = parentActivity.getPipelineList();
 //        loader.setVisibility(View.GONE);
 
+    }
+
+    private void loadColorScheme() {
+        tabLayout.setTabTextColors(colorSchemeManager.getMenuText(), colorSchemeManager.getMenuSelectedText());
+        tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
+        total.setTextColor(colorSchemeManager.getDarkerTextColor());
+        divider.setBackgroundColor(colorSchemeManager.getLine());
+        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
     }
 
     private void initAddButton() {
@@ -129,6 +143,9 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private void initializeTabView() {
         tabLayout = getView().findViewById(R.id.tabHost);
         tabLayout.addOnTabSelectedListener(this);
+        for(int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setText(parentActivity.localizeLabel((String)tabLayout.getTabAt(i).getText()));
+        }
     }
 
 
@@ -141,6 +158,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         mListView.setDividerHeight(30);
         mListView.setOnItemClickListener(this);
         total = getView().findViewById(R.id.total);
+        divider = getView().findViewById(R.id.divider);
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
@@ -175,7 +193,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                 mItemArray.add(commonArray.get(i));
                 counter++;
             }
-            ClientListAdapter adapter = new ClientListAdapter(getContext(), mItemArray, this);
+            ClientListAdapter adapter = new ClientListAdapter(getContext(), mItemArray, this, colorSchemeManager);
             mListView.setAdapter(adapter);
 
 //            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
@@ -362,24 +380,24 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         if(mListView != null) {
 //            mListView.setAdapter(null);
         }
-        switch ((String) tab.getText()) {
-            case "Pipeline":
+        switch ((int) tab.getPosition()) {
+            case 0:
                 currentList = dataController.getPipelineList();
                 selectedTab = "pipeline";
                 break;
-            case "Signed":
+            case 1:
                 currentList = dataController.getSignedList();
                 selectedTab = "signed";
                 break;
-            case "Contract":
+            case 2:
                 currentList = dataController.getContractList();
                 selectedTab = "contract";
                 break;
-            case "Closed":
+            case 3:
                 currentList = dataController.getClosedList();
                 selectedTab = "closed";
                 break;
-            case "Archived":
+            case 4:
                 currentList = dataController.getArchivedList();
                 selectedTab = "archived";
                 break;

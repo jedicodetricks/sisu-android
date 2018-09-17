@@ -1,5 +1,6 @@
 package co.sisu.mobile.controllers;
 
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -8,8 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -25,23 +24,26 @@ import co.sisu.mobile.models.TeamObject;
 
 public class ActionBarManager {
     private ParentActivity parentActivity;
-    private TextView pageTitle, teamLetter;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView pageTitle, teamLetter, backtionTitle;
     private View teamBlock;
     private DrawerLayout drawerLayout;
     private ActionBar bar;
     private List<TeamObject> teamsList;
     int selectedTeam = 0;
-    private TextView backtionTitle, title;
     private ClientObject selectedClient;
 
 
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
         bar = parentActivity.getSupportActionBar();
         bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         bar.setDisplayShowCustomEnabled(true);
         View customView = parentActivity.getLayoutInflater().inflate(R.layout.action_bar_layout, null);
         bar.setCustomView(customView);
+        TextView title = parentActivity.findViewById(R.id.action_bar_title);
+        title.setText(parentActivity.localizeLabel(parentActivity.getResources().getString(R.string.scoreboard)));
         Toolbar parent =(Toolbar) customView.getParent();
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
@@ -57,7 +59,7 @@ public class ActionBarManager {
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
 
         View view = parentActivity.getSupportActionBar().getCustomView();
-        pageTitle.setText(fragmentTag);
+        pageTitle.setText(parentActivity.localizeLabel(fragmentTag));
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
 
@@ -98,7 +100,13 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
+                TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+                saveButton.setTextColor(colorSchemeManager.getActionbarText());
+
+
                 if(titleString == null) {
                     String displayName = "";
                     if(selectedClient.getFirst_name() != null) {
@@ -109,7 +117,7 @@ public class ActionBarManager {
                     }
                     backtionTitle.setText(displayName);
                 } else {
-                    backtionTitle.setText(titleString);
+                    backtionTitle.setText(parentActivity.localizeLabel(titleString));
                 }
             }
         });
@@ -122,10 +130,15 @@ public class ActionBarManager {
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
 //                title = parentActivity.findViewById(R.id.title);
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                ConstraintLayout layout = parentActivity.findViewById(R.id.action_bar_parent);
+//                layout.setBackgroundColor(parentActivity.getResources().getColor(R.color.colorClay));
+
                 pageTitle = parentActivity.findViewById(R.id.action_bar_title);
+                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
                 teamLetter = parentActivity.findViewById(R.id.team_letter);
                 teamBlock = parentActivity.findViewById(R.id.action_bar_home);
-                pageTitle.setText(titleString);
+                pageTitle.setText(parentActivity.localizeLabel(titleString));
                 View homeButton= parentActivity.findViewById(R.id.action_bar_home);
                 homeButton.setOnClickListener(parentActivity);
                 if(teamsList != null && titleString.equals("Leaderboard")) {
@@ -151,10 +164,13 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                    pageTitle.setText(title);
+                    pageTitle.setText(parentActivity.localizeLabel(title));
                 }
+                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
 
             }
         });
@@ -165,12 +181,16 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
-                    pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                    pageTitle.setText(title);
+                    pageTitle.setText(parentActivity.localizeLabel(title));
                     TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
                     sendButton.setText("Send Slack");
                 }
+
+                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
             }
         });
     }
@@ -180,7 +200,9 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+                backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 String displayName = "";
                 if(selectedClient.getFirst_name() != null) {
                     displayName += selectedClient.getFirst_name() + " ";
@@ -188,7 +210,7 @@ public class ActionBarManager {
                 if(selectedClient.getLast_name() != null) {
                     displayName += selectedClient.getLast_name();
                 }
-                backtionTitle.setText(displayName);
+                backtionTitle.setText(parentActivity.localizeLabel(displayName));
             }
         });
     }
@@ -231,6 +253,14 @@ public class ActionBarManager {
 
     public ClientObject getSelectedClient() {
         return selectedClient;
+    }
+
+    public int getMarketId() {
+        int marketId = 0;
+        if(teamsList != null) {
+            marketId = teamsList.get(selectedTeam).getMarket_id();
+        }
+        return marketId;
     }
 
 

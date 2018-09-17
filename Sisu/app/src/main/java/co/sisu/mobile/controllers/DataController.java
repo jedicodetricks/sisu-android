@@ -52,6 +52,7 @@ public class DataController {
     private List<Metric> updatedRecords;
     private List<ParameterObject> settings;
     private HashMap<String, SelectedActivities> activitiesSelected;
+    private HashMap<String, String> labels;
     private String slackInfo;
 
     public DataController(){
@@ -65,6 +66,7 @@ public class DataController {
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
+        labels = new HashMap<>();
     }
 
     private void initializeMorePageObject() {
@@ -93,7 +95,7 @@ public class DataController {
         TeamJsonObject[] teams = teamsObjects.getTeams();
         int colorCounter = 0;
         for(int i = 0; i < teams.length; i++) {
-            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter])));
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter]), Integer.valueOf(teams[i].getMarket_id())));
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
             }
@@ -119,11 +121,11 @@ public class DataController {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
+        Metric firstAppointment = new Metric(localizeLabel("1st Time Appts"), "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 58);
+        Metric closed = new Metric(localizeLabel("Closed"), "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 55);
+        Metric contract = new Metric(localizeLabel("Under Contract"), "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 56);
+        Metric signed = new Metric(localizeLabel("Signed"), "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 57);
+        Metric contact = new Metric(localizeLabel("Contacts"), "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 59);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
@@ -155,7 +157,7 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
@@ -222,12 +224,12 @@ public class DataController {
         scoreboardObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric signed = new Metric("BB Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric firstAppointment = new Metric(localizeLabel("1st Time Appts"), "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric closed = new Metric(localizeLabel("Closed"), "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contract = new Metric(localizeLabel("Under Contract"), "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric showing = new Metric(localizeLabel("Listings Taken"), "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric(localizeLabel("BB Signed"), "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric contact = new Metric(localizeLabel("Contacts"), "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
@@ -258,7 +260,7 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
@@ -327,7 +329,7 @@ public class DataController {
             }
 
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch(counters[i].getActivity_type()) {
                 case "CONTA":
@@ -637,7 +639,6 @@ public class DataController {
         List<ParameterObject> newSettings = new ArrayList<>();
         List<ParameterObject> relevantSettings = new ArrayList<>();
 
-
         for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
@@ -648,7 +649,10 @@ public class DataController {
                     existingSettings.add("daily_reminder_time");
                     newSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    existingSettings.add("lights");
+                    newSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     existingSettings.add("daily_reminder");
@@ -684,10 +688,11 @@ public class DataController {
             arraySize++;
         }
 
+        if(!existingSettings.contains("lights")) {
+            newSettings.add(getDefaultLights());
+            arraySize++;
+        }
 
-//        if(settings.length < 4) {
-//            settings = setDefaultSettingsObject(settings);
-//        }
         ParameterObject[] array = new ParameterObject[arraySize];
 
         settings = newSettings.toArray(array);
@@ -706,7 +711,12 @@ public class DataController {
                     }
                     relevantSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("0");
+                    }
+                    relevantSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     if(s.getValue().equals("{}")) {
@@ -723,8 +733,9 @@ public class DataController {
             }
 
 
-            this.settings = relevantSettings;
         }
+        this.settings = relevantSettings;
+
     }
 
     private void setupSelectedActivities(ParameterObject s) {
@@ -910,6 +921,10 @@ public class DataController {
         return new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
     }
 
+    private ParameterObject getDefaultLights() {
+        return new ParameterObject("lights", "0", "0", "5");
+    }
+
     private ParameterObject[] setDefaultSettingsObject(ParameterObject[] settings) {
         List<String> addedSettings = new ArrayList<>();
         ParameterObject[] updatedSettings = new ParameterObject[4];
@@ -975,5 +990,34 @@ public class DataController {
 
     public String getSlackInfo() {
         return slackInfo;
+    }
+
+    public String getColorSchemeId() {
+        if(settings.size() > 0) {
+            for (ParameterObject p : settings) {
+                if(p.getName().equalsIgnoreCase("lights")) {
+                    return p.getValue();
+                }
+            }
+        }
+        return "0";
+    }
+
+    public HashMap<String, String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(HashMap<String, String> labels) {
+        if(labels != null) {
+            this.labels = labels;
+        }
+    }
+
+    public String localizeLabel(String toCheck) {
+        String value = toCheck;
+            if(labels.containsKey(toCheck)) {
+                value = labels.get(toCheck);
+            }
+        return value;
     }
 }

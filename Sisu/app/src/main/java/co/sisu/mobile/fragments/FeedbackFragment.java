@@ -2,6 +2,8 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -11,12 +13,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 
 /**
@@ -28,6 +32,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView feedbackHelpTextTop, feedbackHelpTextBottom;
+    private Button feedbackButton;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -50,7 +57,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
-        Button feedbackButton = view.findViewById(R.id.submitFeedbackButton);
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
         feedback.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -61,6 +69,27 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         });
+        initFields();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        feedbackButton.setTextColor(colorSchemeManager.getButtonText());
+        feedbackButton.setBackgroundResource(R.drawable.rounded_button);
+        GradientDrawable drawable = (GradientDrawable) feedbackButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedback.setBackgroundResource(R.drawable.light_input_text_box);
+
+    }
+
+    private void initFields() {
+        feedbackHelpTextTop = getView().findViewById(R.id.feedbackHelpTextTop);
+        feedbackHelpTextBottom = getView().findViewById(R.id.feedbackHelpTextBottom);
     }
 
     public void hideKeyboard(View view) {

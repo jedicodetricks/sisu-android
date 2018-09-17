@@ -1,6 +1,11 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 
@@ -26,11 +32,15 @@ public class ActivityListAdapter extends BaseAdapter{
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<SelectedActivities> mDataSource;
+    private ColorSchemeManager colorSchemeManager;
+    private Switch activitySwitch;
+    private TextView titleTextView;
 
-    public ActivityListAdapter(Context context, List<SelectedActivities> items) {
+    public ActivityListAdapter(Context context, List<SelectedActivities> items, ColorSchemeManager colorSchemeManager) {
         mContext = context;
         mDataSource = (ArrayList<SelectedActivities>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.colorSchemeManager = colorSchemeManager;
     }
 
     @Override
@@ -54,9 +64,9 @@ public class ActivityListAdapter extends BaseAdapter{
         View rowView = mInflater.inflate(R.layout.adapter_activity_list, parent, false);
         final SelectedActivities selectedActivity = (SelectedActivities) getItem(position);
         // Get title element
-        TextView titleTextView = rowView.findViewById(R.id.activity_list_title);
+        titleTextView = rowView.findViewById(R.id.activity_list_title);
 
-        Switch activitySwitch = rowView.findViewById(R.id.activity_list_switch);
+        activitySwitch = rowView.findViewById(R.id.activity_list_switch);
 
         titleTextView.setText(selectedActivity.getName());
         activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
@@ -66,7 +76,31 @@ public class ActivityListAdapter extends BaseAdapter{
                 selectedActivity.setValue(jsonIsChecked(isChecked));
             }
         });
+
+        setColorScheme();
         return rowView;
+    }
+
+    private void setColorScheme() {
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        activitySwitch.setHighlightColor(colorSchemeManager.getSegmentSelected());
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
     private boolean parseValue(String value) {

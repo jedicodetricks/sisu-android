@@ -49,13 +49,19 @@ public class AsyncAgentGoals extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(response.code() == 200) {
-            AsyncGoalsJsonObject goals = gson.fromJson(response.body().charStream(), AsyncGoalsJsonObject.class);
-            callback.onEventCompleted(goals, "Goals");
+        if(response != null) {
+            if(response.code() == 200) {
+                AsyncGoalsJsonObject goals = gson.fromJson(response.body().charStream(), AsyncGoalsJsonObject.class);
+                callback.onEventCompleted(goals, "Goals");
+            }
+            else {
+                callback.onEventFailed(null, "Goals");
+            }
         }
         else {
             callback.onEventFailed(null, "Goals");
         }
+
 
         return null;
     }

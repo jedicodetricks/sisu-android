@@ -11,6 +11,7 @@ public class TeamJsonObject {
     String status;
     String team_id;
     String updated_ts;
+    String market_id;
 
     public String getCreated_ts() {
         return created_ts;
@@ -58,5 +59,13 @@ public class TeamJsonObject {
 
     public void setUpdated_ts(String updated_ts) {
         this.updated_ts = updated_ts;
+    }
+
+    public String getMarket_id() {
+        return market_id;
+    }
+
+    public void setMarket_id(String market_id) {
+        this.market_id = market_id;
     }
 }
