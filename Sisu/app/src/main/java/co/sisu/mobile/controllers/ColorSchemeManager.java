@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.graphics.Color;
 
+import co.sisu.mobile.R;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 
 /**
@@ -39,8 +40,9 @@ public class ColorSchemeManager {
 
 
 
-    public void setColorScheme(TeamColorSchemeObject[] colorScheme) {
+    public void setColorScheme(TeamColorSchemeObject[] colorScheme, String colorSchemeId) {
 
+        setDefaults(colorSchemeId);
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
                 case "icon_selected":
@@ -127,6 +129,71 @@ public class ColorSchemeManager {
             }
 
         }
+    }
+
+    private void setDefaults(String colorSchemeId) {
+
+//        if(colorSchemeId.equals("0")) {
+//            //Dark Theme
+//            iconActive = R.color.colorCorporateOrange;
+//            iconIdle = R.color.colorCorporateGrey;
+//            appBackground = ;
+//            toolbarBackground = ;
+//            actionbarBackground = ;
+//            normalTextColor = ;
+//            lighterTextColor = ;
+//            logo = ;
+//            icon = ;
+//            darkerTextColor = ;
+//            actionbarText = ;
+//            buttonText = ;
+//            buttonSelected = ;
+//            buttonBorder = ;
+//            buttonBackground = ;
+//            toolbarText = ;
+//            menuBackground = ;
+//            menuText = ;
+//            menuSelected = ;
+//            spinnerText = ;
+//            spinnerBackground = ;
+//            progressBackground = ;
+//            segmentSelected = ;
+//            menuSelectedText = ;
+//            segmentLine = ;
+//            segmentBackground = ;
+//            line = ;
+//        }
+//        else {
+//            //Light Theme
+//            iconActive = ;
+//            iconIdle = ;
+//            appBackground = ;
+//            toolbarBackground = ;
+//            actionbarBackground = ;
+//            normalTextColor = ;
+//            lighterTextColor = ;
+//            logo = ;
+//            icon = ;
+//            darkerTextColor = ;
+//            actionbarText = ;
+//            buttonText = ;
+//            buttonSelected = ;
+//            buttonBorder = ;
+//            buttonBackground = ;
+//            toolbarText = ;
+//            menuBackground = ;
+//            menuText = ;
+//            menuSelected = ;
+//            spinnerText = ;
+//            spinnerBackground = ;
+//            progressBackground = ;
+//            segmentSelected = ;
+//            menuSelectedText = ;
+//            segmentLine = ;
+//            segmentBackground = ;
+//            line = ;
+//        }
+
     }
 
     public int getIconIdle() {

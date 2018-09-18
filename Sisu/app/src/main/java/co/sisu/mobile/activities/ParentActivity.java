@@ -428,7 +428,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(asyncReturnType.equals("Get Color Scheme")) {
             AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme);
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             setActivityColors();
             colorSchemeFinished = true;
             navigateToScoreboard();

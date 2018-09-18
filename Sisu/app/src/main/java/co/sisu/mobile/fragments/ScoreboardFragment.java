@@ -105,7 +105,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         initializeButtons();
         initProgressBars();
         calculateVolumes();
-        setupColorScheme();
+        setColorScheme();
         setupLabels();
     }
 
@@ -136,7 +136,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closed.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
     }
 
-    private void setupColorScheme() {
+    private void setColorScheme() {
         ConstraintLayout layout = getView().findViewById(R.id.scoreboard_fragment_parent);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
@@ -215,7 +215,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        //spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
 
         VectorChildFinder plusVector = new VectorChildFinder(getContext(), R.drawable.add_icon, addButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");

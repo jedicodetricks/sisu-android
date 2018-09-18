@@ -422,7 +422,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     ParameterObject[] array = new ParameterObject[settings.size()];
                     dataController.setSettings(settings.toArray(array));
-                    colorSchemeManager.setColorScheme(colorScheme);
+                    colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
                     parentActivity.setActivityColors();
                     setColorScheme();
                     if(colorFinished) {

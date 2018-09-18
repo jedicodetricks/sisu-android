@@ -4,6 +4,8 @@ package co.sisu.mobile.fragments;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -68,6 +70,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private int agentCounter = 0;
     private LeaderboardObject[] leaderBoardSections;
     private TextView dateDisplay, monthToggle, yearToggle;
+    private ImageView calendarLauncher;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -127,6 +130,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
         DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getThumbDrawable()), new ColorStateList(states, thumbColors));
         DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
+
+        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        calendarLauncher.setImageDrawable(drawable);
     }
 
     private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {
@@ -153,7 +160,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private void initializeCalendarHandler() {
 
 //        datePicker.date(this);
-        final ImageView calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
+        calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
         dateDisplay = getView().findViewById(R.id.leaderboard_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -367,7 +374,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         else if(asyncReturnType.equals("Get Color Scheme")) {
             AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme);
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             parentActivity.setActivityColors();
         }
         else if(asyncReturnType.equals("Get Labels")) {

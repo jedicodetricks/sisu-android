@@ -2,7 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,7 +50,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ColorSchemeManager colorSchemeManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
-    private TextView dateDisplay;
+    private TextView dateDisplay, otherLabel;
+    private ImageView calendarLauncher;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -95,10 +98,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     private void setColorScheme() {
         dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        calendarLauncher.setImageDrawable(drawable);
     }
 
     private void initializeCalendarHandler() {
-        final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
+        calendarLauncher = getView().findViewById(R.id.calender_date_picker);
         dateDisplay = getView().findViewById(R.id.record_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -109,6 +116,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         calendarLauncher.setOnClickListener(this);
         dateDisplay.setOnClickListener(this);
+
     }
 
     private void updateDisplayDate(int year, int month, int day) {
