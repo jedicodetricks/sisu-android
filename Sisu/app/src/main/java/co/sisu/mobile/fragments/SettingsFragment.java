@@ -44,6 +44,7 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,6 +114,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
             //Picasso.with(parentActivity).load(Uri.parse("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg")).into(settingsLogo);
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(settingsLogo);
+            SaveSharedPreference.setLogo(parentActivity, colorSchemeManager.getLogo());
+            sisuPowerLogo.setVisibility(View.VISIBLE);
         }
 
         int[][] states = new int[][] {
@@ -279,6 +282,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             lightsOn = "1";
         }
         apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), lightsOn);
+        SaveSharedPreference.setLights(parentActivity, lightsOn);
     }
 
     @Override

@@ -16,6 +16,10 @@ public class SaveSharedPreference
     static final String CLIENT_TIMESTAMP = "client-timestamp";
     static final String TRANS_ID = "trans-id";
     static final String FIREBASE_DEVICE_ID = "firebase-id";
+    static final String LOGO = "logo";
+    static final String ICON = "icon";
+    static final String TEAM_ID = "team-id";
+    static final String LIGHTS = "lights";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         SharedPreferences sharedPref = ctx.getSharedPreferences("login", Context.MODE_PRIVATE);
@@ -100,6 +104,50 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(TRANS_ID, transId);
+        editor.commit();
+    }
+
+    public static String getLogo(Context ctx) {
+        return getSharedPreferences(ctx).getString(LOGO, "");
+    }
+
+    public static void setLogo(Context ctx, String uri)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(LOGO, uri);
+        editor.commit();
+    }
+
+    public static String getIcon(Context ctx) {
+        return getSharedPreferences(ctx).getString(ICON, "");
+    }
+
+    public static void setIcon(Context ctx, String uri)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(ICON, uri);
+        editor.commit();
+    }
+
+    public static String getTeam(Context ctx) {
+        return getSharedPreferences(ctx).getString(TEAM_ID, "0");
+    }
+
+    public static void setTeam(Context ctx, String teamId)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(TEAM_ID, teamId);
+        editor.commit();
+    }
+
+    public static String getLights(Context ctx) {
+        return getSharedPreferences(ctx).getString(LIGHTS, "0");
+    }
+
+    public static void setLights(Context ctx, String lights)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(LIGHTS, lights);
         editor.commit();
     }
 

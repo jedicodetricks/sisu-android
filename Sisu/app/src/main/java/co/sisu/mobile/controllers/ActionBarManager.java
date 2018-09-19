@@ -1,5 +1,6 @@
 package co.sisu.mobile.controllers;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.TeamObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 5/25/18.
@@ -241,11 +243,13 @@ public class ActionBarManager {
             //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
             teamIcon.setVisibility(View.VISIBLE);
             teamLetter.setVisibility(View.GONE);
+            teamBlock.setBackgroundColor(Color.TRANSPARENT);
+            SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
         } else {
             teamLetter.setText(team.getTeamLetter());
             teamLetter.setBackgroundColor(team.getColor());
+            teamBlock.setBackgroundColor(team.getColor());
         }
-        teamBlock.setBackgroundColor(team.getColor());
     }
 
     public void toggleDrawer() {

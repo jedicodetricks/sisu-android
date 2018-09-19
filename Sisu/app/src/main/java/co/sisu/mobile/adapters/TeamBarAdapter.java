@@ -1,6 +1,7 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.TeamObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by Brady Groharing on 3/12/2018.
@@ -62,13 +64,14 @@ public class TeamBarAdapter extends BaseAdapter {
             Picasso.with(mContext).load(Uri.parse(info.getIcon())).into(icon);
             icon.setVisibility(View.VISIBLE);
             letter.setVisibility(View.GONE);
+            SaveSharedPreference.setIcon(mContext, info.getIcon());
+            block.setBackgroundColor(Color.TRANSPARENT);
         } else {
             letter.setText(info.getTeamLetter());
             letter.setBackgroundColor(info.getColor());
+            block.setBackgroundColor(info.getColor());
         }
-
         textViewHome.setText(info.getName());
-        block.setBackgroundColor(info.getColor());
 
         return v;
     }
