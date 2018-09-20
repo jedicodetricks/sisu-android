@@ -7,16 +7,16 @@
         <item name="android:background">@color/colorAlmostBlack</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat">
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/transparent</item>
         <item name="android:popupBackground">@color/transparent</item>
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorWhite</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:statusBarColor">@color/transparent</item>
 
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
@@ -42,6 +42,23 @@
         <item name="android:statusBarColor">@color/colorWhite</item>
         <item name="android:textColorSecondaryInverse">@android:color/black</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
+    </style>
+
+    <style name="ParentTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="android:popupBackground">@color/transparent</item>
+        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>
+
+        <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
+        <item name="android:colorForeground">@color/colorAlmostBlack</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
 
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
@@ -176,6 +193,8 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:width">330dp</item>
         <item name="android:height">96dp</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:colorPrimary">@color/colorAlmostBlack</item>
     </style>
 
     <style name="TabLayout" parent="Base.Widget.AppCompat.ActionBar.TabView">

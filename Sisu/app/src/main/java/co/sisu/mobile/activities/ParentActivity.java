@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,11 +39,9 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.LeaderboardFragment;
@@ -327,6 +326,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                         if(settingsFinished) {
                             apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
                             apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
@@ -702,6 +702,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return colorSchemeManager;
     }
 
+    public boolean imageExists(Context context, String id) {
+        return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
+    }
+
     public int getMarketId() {
         return navigationManager.getMarketId();
     }
@@ -717,4 +721,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         return toReturn;
     }
+
 }

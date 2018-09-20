@@ -44,6 +44,7 @@ import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -237,10 +238,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         listAdapter = null;
         expListView.setAdapter(listAdapter);
         getLeaderboard(selectedYear, selectedMonth + 1);
-        //TODO: Swap these back
-//        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
-        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 715, dataController.getColorSchemeId());
         apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
+        SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
     }
 
     private List<String> initSpinnerArray() {
