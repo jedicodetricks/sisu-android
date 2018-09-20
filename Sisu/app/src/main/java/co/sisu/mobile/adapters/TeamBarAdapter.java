@@ -70,6 +70,7 @@ public class TeamBarAdapter extends BaseAdapter {
             icon.setVisibility(View.VISIBLE);
             letter.setVisibility(View.GONE);
             SaveSharedPreference.setIcon(mContext, info.getIcon());
+            icon.setPadding(0, Math.round(mContext.getResources().getDimension(R.dimen.spacing_tiny)), 0, 0);
             block.setBackgroundColor(Color.TRANSPARENT);
         } else {
             letter.setText(info.getTeamLetter());
