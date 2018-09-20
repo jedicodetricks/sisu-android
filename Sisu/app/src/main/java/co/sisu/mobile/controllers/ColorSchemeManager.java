@@ -42,7 +42,7 @@ public class ColorSchemeManager {
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme, String colorSchemeId) {
 
-        setDefaults(colorSchemeId);
+//        setDefaults(colorSchemeId);
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
                 case "icon_selected":
@@ -133,66 +133,66 @@ public class ColorSchemeManager {
 
     private void setDefaults(String colorSchemeId) {
 
-//        if(colorSchemeId.equals("0")) {
-//            //Dark Theme
-//            iconActive = R.color.colorCorporateOrange;
-//            iconIdle = R.color.colorCorporateGrey;
-//            appBackground = ;
-//            toolbarBackground = ;
-//            actionbarBackground = ;
-//            normalTextColor = ;
-//            lighterTextColor = ;
+        if(colorSchemeId.equals("0")) {
+            //Dark Theme
+            iconActive = R.color.colorCorporateOrange;
+            iconIdle = R.color.colorCorporateGrey;
+            appBackground = R.color.colorAlmostBlack;
+            toolbarBackground = R.color.colorDarkGrey;
+            actionbarBackground = R.color.colorAlmostBlack;
+            normalTextColor = R.color.colorLightGrey;
+            lighterTextColor = R.color.colorLightGrey;
 //            logo = ;
 //            icon = ;
-//            darkerTextColor = ;
-//            actionbarText = ;
-//            buttonText = ;
-//            buttonSelected = ;
-//            buttonBorder = ;
-//            buttonBackground = ;
-//            toolbarText = ;
-//            menuBackground = ;
-//            menuText = ;
-//            menuSelected = ;
-//            spinnerText = ;
-//            spinnerBackground = ;
-//            progressBackground = ;
-//            segmentSelected = ;
-//            menuSelectedText = ;
-//            segmentLine = ;
-//            segmentBackground = ;
-//            line = ;
-//        }
-//        else {
-//            //Light Theme
-//            iconActive = ;
-//            iconIdle = ;
-//            appBackground = ;
-//            toolbarBackground = ;
-//            actionbarBackground = ;
-//            normalTextColor = ;
-//            lighterTextColor = ;
+            darkerTextColor = R.color.colorLightGrey;
+            actionbarText = R.color.colorLightGrey;
+            buttonText = R.color.colorLightGrey;
+            buttonSelected = R.color.colorCorporateOrange;
+            buttonBorder = R.color.colorLightGrey;
+            buttonBackground = R.color.colorAlmostBlack;
+            toolbarText = R.color.colorLabelText;
+            menuBackground = R.color.colorAlmostBlack;
+            menuText = R.color.colorLightGrey;
+            menuSelected = R.color.colorCorporateOrange;
+            spinnerText = R.color.colorLightGrey;
+            spinnerBackground = R.color.colorAlmostBlack;
+            progressBackground = R.color.colorWhite;
+            segmentSelected = R.color.colorCorporateOrange;
+            menuSelectedText = R.color.colorLightGrey;
+            segmentLine = R.color.colorCorporateOrange;
+            segmentBackground = R.color.colorCorporateOrange;
+            line = R.color.colorCorporateOrange;
+        }
+        else {
+            //Light Theme
+            iconActive = R.color.colorCorporateOrange;
+            iconIdle = R.color.colorLightGrey;
+            appBackground = R.color.colorWhite;
+            toolbarBackground = R.color.colorWhite;
+            actionbarBackground = R.color.colorWhite;
+            normalTextColor = R.color.colorDarkGrey;
+            lighterTextColor = R.color.colorDarkGrey;
 //            logo = ;
 //            icon = ;
-//            darkerTextColor = ;
-//            actionbarText = ;
-//            buttonText = ;
-//            buttonSelected = ;
-//            buttonBorder = ;
-//            buttonBackground = ;
-//            toolbarText = ;
-//            menuBackground = ;
-//            menuText = ;
-//            menuSelected = ;
-//            spinnerText = ;
-//            spinnerBackground = ;
-//            progressBackground = ;
-//            segmentSelected = ;
-//            menuSelectedText = ;
-//            segmentLine = ;
-//            segmentBackground = ;
-//            line = ;
-//        }
+            darkerTextColor = R.color.colorDarkGrey;
+            actionbarText = R.color.colorDarkGrey;
+            buttonText = R.color.colorDarkGrey;
+            buttonSelected = R.color.colorCorporateOrange;
+            buttonBorder = R.color.colorLightGrey;
+            buttonBackground = R.color.colorCorporateOrange;
+            toolbarText = R.color.colorDarkGrey;
+            menuBackground = R.color.colorWhite;
+            menuText = R.color.colorDarkGrey;
+            menuSelected = R.color.colorCorporateOrange;
+            spinnerText = R.color.colorDarkGrey;
+            spinnerBackground = R.color.colorWhite;
+            progressBackground = R.color.colorCorporateOrange;
+            segmentSelected = R.color.colorCorporateOrange;
+            menuSelectedText = R.color.colorDarkGrey;
+            segmentLine = R.color.colorCorporateOrange;
+            segmentBackground = R.color.colorCorporateOrange;
+            line = R.color.colorCorporateOrange;
+        }
 
     }
 

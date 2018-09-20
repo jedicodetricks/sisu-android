@@ -39,8 +39,14 @@ public class Metric implements Comparable<Metric>{
 
     public int getPercentComplete(String timeline){
         if(goalNum == 0) {
-            return 100;
+            if(currentNum > 0) {
+                return 100;
+            }
+            else {
+                return 0;
+            }
         }
+
         int percentComplete = 0;
 
         switch (timeline) {

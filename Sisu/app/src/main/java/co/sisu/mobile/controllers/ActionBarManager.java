@@ -92,7 +92,7 @@ public class ActionBarManager {
             }
 
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-            TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList);
+            TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList, colorSchemeManager);
             mListView.setAdapter(adapter);
         }
     }

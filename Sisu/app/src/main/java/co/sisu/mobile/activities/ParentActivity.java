@@ -14,9 +14,11 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +101,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
     private Toolbar toolbar;
+    private NavigationView navView;
+    private ListView navViewList;
+    private TextView navTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +147,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void initParentFields() {
         layout = findViewById(R.id.parentLayout);
         toolbar = findViewById(R.id.toolbar);
+        navViewList = findViewById(R.id.navViewList);
+        navTitle = findViewById(R.id.nav_title);
     }
 
 
@@ -151,6 +159,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 Log.e("SETTING COLORS", "PARENT ACTIVITY");
                 layout.setBackgroundColor(colorSchemeManager.getAppBackground());
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
                 //change parentLoader here, if needed
             }
         });

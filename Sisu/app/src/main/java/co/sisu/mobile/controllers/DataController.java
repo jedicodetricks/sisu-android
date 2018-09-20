@@ -1076,7 +1076,7 @@ public class DataController {
     }
 
     public Metric getContactsMetric() {
-        for (Metric m : recordObject) {
+        for (Metric m : scoreboardObject) {
             if (m.getType().equalsIgnoreCase("CONTA")) {
                 return m;
             }

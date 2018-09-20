@@ -36,7 +36,7 @@ public class AsyncGetTeamColorScheme extends AsyncTask<String, String, String> {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             //TODO: Get rid of this
-            teamId = 715;
+            teamId = 685;
             Request request = new Request.Builder()
                     .url(url + "api/v1/team/theme/" + teamId + "/" + isLightTheme)
                     .get()
