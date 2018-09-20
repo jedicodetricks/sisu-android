@@ -1,6 +1,7 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -79,7 +80,11 @@ public class MoreListAdapter extends BaseAdapter {
             thumbnailImageView.setImageDrawable(drawable);
         }
         else {
-            thumbnailImageView.setImageDrawable(rowView.getResources().getDrawable(morePageContainer.getThumbnailId()));
+            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                thumbnailImageView.setImageDrawable(rowView.getResources().getDrawable(R.drawable.slack_icon_color));
+            } else {
+                thumbnailImageView.setImageDrawable(rowView.getResources().getDrawable(morePageContainer.getThumbnailId()));
+            }
         }
 
         return rowView;
