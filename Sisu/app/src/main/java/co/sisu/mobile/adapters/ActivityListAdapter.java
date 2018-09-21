@@ -1,35 +1,24 @@
 package co.sisu.mobile.adapters;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.SwitchCompat;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 
 public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, ActivityListAdapter.ViewHolder> {
@@ -40,12 +29,14 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     private int mLayoutId;
     private int mGrabHandleId;
     private boolean mDragOnLongPress;
+    private boolean isEditMode;
 
-    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ColorSchemeManager colorSchemeManager) {
+    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ColorSchemeManager colorSchemeManager, boolean isEditMode) {
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         mDragOnLongPress = dragOnLongPress;
         this.colorSchemeManager = colorSchemeManager;
+        this.isEditMode = isEditMode;
         setItemList(list);
     }
 
@@ -59,8 +50,12 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     @Override
     public void onBindViewHolder(@NonNull ActivityListAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+        holder.setIsRecyclable(false);
 //        Pair<Long, Object> thing = mItemList.get(position);
         final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
+        if(selectedActivity.getType().equals("ADDDB")) {
+            Log.e("ADDDB", selectedActivity.getValue());
+        }
         holder.itemView.setTag(mItemList.get(position));
 
         // Get title element
@@ -72,9 +67,15 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
         activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.e("CHANGED", String.valueOf(isChecked));
                 selectedActivity.setValue(jsonIsChecked(isChecked));
             }
         });
+
+        if(isEditMode) {
+            activitySwitch.setEnabled(false);
+        }
+
         setColorScheme();
     }
 

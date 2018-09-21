@@ -133,11 +133,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         ActivityListAdapter activityListAdapter;
 
         if(!editMode) {
-            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false, colorSchemeManager);
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false, colorSchemeManager, false);
             mListView.setDragEnabled(false);
         }
         else {
-            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false, colorSchemeManager);
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false, colorSchemeManager, true);
             mListView.setDragEnabled(true);
         }
         mListView.setAdapter(activityListAdapter, false);
@@ -364,6 +364,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             }
             newSorting.add(fromActivity);
             for(int i = toPosition + 1; i < currentActivitiesSorting.size(); i++) {
+                newSorting.add(currentActivitiesSorting.get(i));
+            }
+        }
+        else {
+            for(int i = 0; i < currentActivitiesSorting.size(); i++) {
                 newSorting.add(currentActivitiesSorting.get(i));
             }
         }

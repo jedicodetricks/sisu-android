@@ -47,7 +47,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/edit_icon" />
+                app:srcCompat="@drawable/drag_drop" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline4"

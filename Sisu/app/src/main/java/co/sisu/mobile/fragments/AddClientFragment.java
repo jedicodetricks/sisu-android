@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -69,6 +70,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
     private int counter;
+    private Switch prioritySwitch;
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
@@ -574,6 +576,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         newClient.setUc_dt(null);
         newClient.setClosed_dt(null);
         newClient.setType_id(typeSelected);
+        newClient.setIs_priority(prioritySwitch.isChecked() ? "1" : "0");
 
         if(!appointmentDisplay.getText().equals("")) {
             newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -822,6 +825,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
         calculateIncomePercent.setOnClickListener(this);
+        prioritySwitch = getView().findViewById(R.id.prioritySwitch);
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

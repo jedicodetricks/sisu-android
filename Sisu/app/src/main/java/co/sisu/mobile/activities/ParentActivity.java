@@ -163,6 +163,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
                 navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
                 //change parentLoader here, if needed
+                parentLoader.setBackgroundColor(colorSchemeManager.getProgressBackground());
             }
         });
     }
