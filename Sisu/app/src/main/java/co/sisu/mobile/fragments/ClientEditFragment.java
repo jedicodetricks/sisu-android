@@ -43,7 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,7 +57,6 @@ import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.ParameterObject;
-import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateSettingsObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
@@ -654,6 +652,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         archivedLayout = getView().findViewById(R.id.archiveReasonLayout);
         archivedLayout.setClickable(false);
         archivedReason = getView().findViewById(R.id.archiveReason);
+        archivedReason.setFocusable(false);
         firstNameText = getView().findViewById(R.id.editFirstName);
         firstNameText.setOnFocusChangeListener(this);
         lastNameText = getView().findViewById(R.id.editLastName);
@@ -1065,8 +1064,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         else if(asyncReturnType.equals("Client Settings")) {
             AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
             ParameterObject settings = settingsJson.getParameter();
-            //TODO: Jeff this is where you'll start
-            initializeClient();
+            if(settings != null) {
+                currentClient.setActivate_client(settings.getValue());
+            }
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeClient();
+                    loader.setVisibility(View.GONE);
+                }
+            });
         }
         else if(asyncReturnType.equals("Update Settings")) {
             loader.setVisibility(View.GONE);
