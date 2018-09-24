@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import co.sisu.mobile.api.AsyncActivateClientSettings;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
@@ -40,6 +41,7 @@ import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
+import co.sisu.mobile.fragments.ClientEditFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -247,6 +249,11 @@ public class ApiManager {
         new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void setClientParameter(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject activateClientObject) {
+        getJWT(agentId);
+        new AsyncUpdateSettings(cb, url, agentId, activateClientObject).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void getJWT(String agentId) {
         transactionID = UUID.randomUUID().toString();
         Calendar date = Calendar.getInstance();
@@ -269,5 +276,11 @@ public class ApiManager {
 //        Log.e("Trans-Id", transactionID);
 //        Log.e("JWT", jwtStr);
 //        Log.e("Timestamp", timestamp);
+    }
+
+    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
+        getJWT(agentId);
+        new AsyncActivateClientSettings(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+
     }
 }

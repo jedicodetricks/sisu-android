@@ -40,8 +40,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 
 import co.sisu.mobile.R;
@@ -51,7 +54,12 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncParameterJsonObject;
+import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.SelectedActivities;
+import co.sisu.mobile.models.UpdateSettingsObject;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
@@ -108,8 +116,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         initializeForm();
         initializeButtons();
         initializeCalendar();
-        initializeClient();
-        loader.setVisibility(View.GONE);
+        if(currentClient.getStatus().equals("D")) {
+            apiManager.getClientParams(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id());
+        }
+        else {
+            initializeClient();
+            loader.setVisibility(View.GONE);
+        }
         setupLabels();
         setColorScheme();
     }
@@ -330,6 +343,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 Log.e("ADD", m_Text);
                 if(!m_Text.equals("")) {
                     apiManager.addNote(ClientEditFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), label + ": " + m_Text, "NOTES");
+                    apiManager.setClientParameter(ClientEditFragment.this, dataController.getAgent().getAgent_id(), createActivateClientObject(parentActivity.getSelectedClient().getClient_id(), m_Text));
                 }
                 else {
                     parentActivity.showToast("Please enter some text in the note field.");
@@ -344,6 +358,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         });
 
         builder.show();
+    }
+
+    private AsyncUpdateSettingsJsonObject createActivateClientObject(String clientId, String reasonText) {
+//        String valueString = "{\"type\":3,\"id\":"+ clientId +",\"parameters\":[{\"name\":\"activate_client\",\"value\":\""+ reasonText +"\"}]}";
+        List<UpdateSettingsObject> list = new ArrayList<>();
+        list.add(new UpdateSettingsObject("activate_client", reasonText));
+        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(3, Integer.valueOf(parentActivity.getSelectedClient().getClient_id()), list);
+        return asyncUpdateSettingsJsonObject;
     }
 
     private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
@@ -1039,7 +1061,24 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(asyncReturnType.equals("Add Notes")) {
             updateCurrentClient(!currentClient.getStatus().equals("D"));
             saveClient();
-        } else {
+        }
+        else if(asyncReturnType.equals("Client Settings")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            ParameterObject settings = settingsJson.getParameter();
+            //TODO: Jeff this is where you'll start
+            initializeClient();
+        }
+        else if(asyncReturnType.equals("Update Settings")) {
+            loader.setVisibility(View.GONE);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.onBackPressed();
+                    parentActivity.showToast("Client has been archived");
+                }
+            });
+        }
+        else {
             loader.setVisibility(View.GONE);
 //        parentActivity.navigateToClientList(statusList, null);
             parentActivity.runOnUiThread(new Runnable() {
