@@ -62,7 +62,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent;
+    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
     private ImageView lock, archiveButton;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton,
@@ -70,7 +70,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                      percentSign1, percentSign2, statusLabel, priorityText;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
     private Switch prioritySwitch;
-    private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
+    private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -119,6 +119,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         buyer.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyer)));
         seller.setText(parentActivity.localizeLabel(getResources().getString(R.string.seller)));
         activateButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.activate)));
+        archivedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.archived_reason)));
 
         firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
         lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
@@ -141,6 +142,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void setColorScheme() {
+        archivedReason.setTextColor(colorSchemeManager.getDarkerTextColor());
         firstNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
         lastNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
         emailText.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -194,6 +196,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         archivedStatus.setTextColor(colorSchemeManager.getButtonText());
 
         setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerTextColor());
         setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(emailLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
@@ -399,6 +402,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         transAmount.setText(currentClient.getTrans_amt());
         paidIncome.setText(currentClient.getCommission_amt());
         gci.setText(currentClient.getGross_commission_amt());
+        if(currentClient.getActivate_client() != null) {
+            Log.e("REASONNNN", currentClient.getActivate_client());
+            archivedReason.setText(currentClient.getActivate_client());
+        }
         if(currentClient.getMobile_phone() != null){
             phoneText.setText(PhoneNumberUtils.formatNumber(currentClient.getMobile_phone(), Locale.getDefault().getCountry()));
         } else if (currentClient.getHome_phone() != null){
@@ -410,6 +417,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             if(clientStatus.equals("D")) {
                 archiveButton.setVisibility(View.INVISIBLE);
                 activateButton.setVisibility(View.VISIBLE);
+                archivedLayout.setVisibility(View.VISIBLE);
             }
         }
 
@@ -514,10 +522,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
         if(deleteClient) {
             currentClient.setStatus("D");
+            currentClient.setActivate_client(m_Text);
+            Log.e("M_TEXT", m_Text);
             statusList = "archived";
         } else {
             if(currentClient.getStatus().equals("D")) {
-                currentClient.setStatus("P");
+                currentClient.setStatus("N");
                 statusList = "pipeline";
             }
         }
@@ -619,6 +629,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void initializeForm() {
+        archivedLayout = getView().findViewById(R.id.archiveReasonLayout);
+        archivedLayout.setClickable(false);
+        archivedReason = getView().findViewById(R.id.archiveReason);
         firstNameText = getView().findViewById(R.id.editFirstName);
         firstNameText.setOnFocusChangeListener(this);
         lastNameText = getView().findViewById(R.id.editLastName);

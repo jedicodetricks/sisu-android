@@ -37,6 +37,15 @@ public class ClientObject implements Comparable<ClientObject>{
     private String uc_dt;
     private String updated_ts;
     private String is_priority;
+    private String activate_client;
+
+    public String getActivate_client() {
+        return activate_client;
+    }
+
+    public void setActivate_client(String activate_client) {
+        this.activate_client = activate_client;
+    }
 
     public String getAddress_1() {
         return address_1;

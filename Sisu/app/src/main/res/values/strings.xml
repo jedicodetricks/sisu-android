@@ -14,6 +14,7 @@
     <string name="version">Version 1.1</string>
 
     <!--Labels-->
+    <string name="archived_reason">Archived Reason:</string>
     <string name="annual_title">Annual Goals</string>
     <string name="appointments">Appointments</string>
     <string name="first_time_appts">1st Time Appts</string>
