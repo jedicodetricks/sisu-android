@@ -209,7 +209,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         Drawable imageDrawable = getResources().getDrawable(R.drawable.import_contacts_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
 //        calendarLauncher.setImageDrawable(drawable);
-        exportContact.setBackgroundResource(R.drawable.import_contacts_icon);
+//        exportContact.setBackgroundResource(R.drawable.import_contacts_icon);
 
         buyer.setTextColor(colorSchemeManager.getButtonText());
         buyer.setBackgroundResource(R.drawable.rounded_button);

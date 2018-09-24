@@ -233,7 +233,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.leaderBoardView:
                 noNavigation = false;
                 navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                break;`
+                break;
             case R.id.moreView:
                 noNavigation = false;
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);

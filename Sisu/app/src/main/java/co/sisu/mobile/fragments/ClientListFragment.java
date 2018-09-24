@@ -115,7 +115,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
         total.setTextColor(colorSchemeManager.getDarkerTextColor());
         divider.setBackgroundColor(colorSchemeManager.getLine());
-        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
+//        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
     }
 
     private void initAddButton() {
