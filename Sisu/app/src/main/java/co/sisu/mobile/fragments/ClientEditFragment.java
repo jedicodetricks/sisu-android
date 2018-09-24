@@ -2,7 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -12,12 +14,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.TextInputLayout;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.telephony.PhoneNumberUtils;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,19 +63,19 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ProgressBar loader;
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent;
-    private ImageView lock;
+    private ImageView lock, archiveButton;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
-    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton,
+    private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
                      percentSign1, percentSign2, statusLabel, priorityText;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
     private Switch prioritySwitch;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
-    private String typeSelected, clientStatus;
+    private String typeSelected, clientStatus, m_Text;
     private String statusList = "pipeline";
     private int counter;
 
@@ -115,6 +118,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
         buyer.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyer)));
         seller.setText(parentActivity.localizeLabel(getResources().getString(R.string.seller)));
+        activateButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.activate)));
 
         firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
         lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
@@ -221,6 +225,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         drawable = (GradientDrawable) seller.getBackground();
         drawable.setColor(colorSchemeManager.getButtonSelected());
 
+        activateButton.setTextColor(colorSchemeManager.getButtonText());
+        activateButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) activateButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
         signedClear.setTextColor(colorSchemeManager.getButtonText());
         signedClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) signedClear.getBackground();
@@ -299,6 +308,41 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
     }
 
+    private void popReasonDialog(String message, String text) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        builder.setTitle(message);
+        final String label = text;
+// Set up the input
+        final EditText input = new EditText(parentActivity);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+                Log.e("ADD", m_Text);
+                if(!m_Text.equals("")) {
+                    apiManager.addNote(ClientEditFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), label + ": " + m_Text, "NOTES");
+                }
+                else {
+                    parentActivity.showToast("Please enter some text in the note field.");
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
         float percent;
         if(!transAmount.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
@@ -363,6 +407,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         emailText.setText(currentClient.getEmail());
         if(currentClient.getStatus() != null) {
             clientStatus = currentClient.getStatus();
+            if(clientStatus.equals("D")) {
+                archiveButton.setVisibility(View.INVISIBLE);
+                activateButton.setVisibility(View.VISIBLE);
+            }
         }
 
         String formattedApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_dt());
@@ -467,6 +515,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(deleteClient) {
             currentClient.setStatus("D");
             statusList = "archived";
+        } else {
+            if(currentClient.getStatus().equals("D")) {
+                currentClient.setStatus("P");
+                statusList = "pipeline";
+            }
         }
     }
 
@@ -754,8 +807,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 startActivityForResult(contactIntent, 1);
                 break;
             case R.id.archiveButton:
-                updateCurrentClient(true);
-                saveClient();
+                popReasonDialog("Reason for Archiving Client?", "Archived");
+                break;
+            case R.id.activateButton:
+                popReasonDialog("Reason for Activating Client?", "Activated");
                 break;
             case R.id.clientNotesButton:
                 navigationManager.stackReplaceFragment(ClientNoteFragment.class);
@@ -786,6 +841,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         archiveButton = parentActivity.findViewById(R.id.archiveButton);
         if(archiveButton != null) {
             archiveButton.setOnClickListener(this);
+        }
+        activateButton = parentActivity.findViewById(R.id.activateButton);
+        if(activateButton != null) {
+            activateButton.setOnClickListener(this);
         }
         buyer = parentActivity.findViewById(R.id.buyerButton);
         buyer.setOnClickListener(this);
@@ -964,15 +1023,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        loader.setVisibility(View.GONE);
+        if(asyncReturnType.equals("Add Notes")) {
+            updateCurrentClient(!currentClient.getStatus().equals("D"));
+            saveClient();
+        } else {
+            loader.setVisibility(View.GONE);
 //        parentActivity.navigateToClientList(statusList, null);
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.onBackPressed();
-                parentActivity.showToast("Client updates saved");
-            }
-        });
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.onBackPressed();
+                    parentActivity.showToast("Client updates saved");
+                }
+            });
+        }
 
     }
 

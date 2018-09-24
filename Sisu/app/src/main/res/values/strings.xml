@@ -67,6 +67,7 @@
     <string name="yearlyTitle">Yearly Goals</string>
 
     <!--Buttons/Links-->
+    <string name="activate">Activate</string>
     <string name="calculate">Calculate</string>
     <string name="archive">Archive</string>
     <string name="notes">Notes</string>
