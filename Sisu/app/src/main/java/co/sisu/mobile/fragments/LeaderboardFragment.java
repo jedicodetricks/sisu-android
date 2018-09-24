@@ -1,9 +1,14 @@
 package co.sisu.mobile.fragments;
 
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +36,17 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.utils.LeaderboardComparator;
+import co.sisu.mobile.models.TeamColorSchemeObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,11 +57,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ExpandableListView expListView;
     private List<LeaderboardObject> listDataHeader;
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listDataChild;
-    private ProgressBar loader, imageLoader;
+    private ProgressBar loader;
     private Calendar calendar = Calendar.getInstance();
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -61,6 +72,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
     private int agentCounter = 0;
     private List<LeaderboardObject> leaderBoardSections;
+    private TextView dateDisplay, monthToggle, yearToggle;
+    private ImageView calendarLauncher;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -79,14 +92,51 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
+        expListView.setDividerHeight(0);
         initToggle();
         loader.setVisibility(View.VISIBLE);
-
+        initFields();
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
+        setColorScheme();
+    }
+
+    private void initFields() {
+        monthToggle = getView().findViewById(R.id.monthToggleText);
+        yearToggle = getView().findViewById(R.id.yearToggleText);
+
+    }
+
+    private void setColorScheme() {
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        monthToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        yearToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
+
+        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        calendarLauncher.setImageDrawable(drawable);
     }
 
     private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {
@@ -113,8 +163,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private void initializeCalendarHandler() {
 
 //        datePicker.date(this);
-        final ImageView calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
-        final TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
+        calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
+        dateDisplay = getView().findViewById(R.id.leaderboard_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -190,6 +240,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         listAdapter = null;
         expListView.setAdapter(listAdapter);
         getLeaderboard(selectedYear, selectedMonth + 1);
+        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
+        SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
     }
 
     private List<String> initSpinnerArray() {
@@ -245,6 +298,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
         }
 
+        //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
+        //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
         agentCounter = 0;
         for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
         {
@@ -322,12 +377,23 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
             prepareListData();
         }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            parentActivity.setActivityColors();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+        }
 
     }
 
     @Override
     public void onEventFailed(Object o, String s) {
-
+        Log.e("LEADERBOARD", "FAILED");
     }
 
     @Override

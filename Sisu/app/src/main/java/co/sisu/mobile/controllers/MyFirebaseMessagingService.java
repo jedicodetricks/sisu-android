@@ -99,6 +99,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         //This should do a sync with the server
     }
 
+    public void refreshToken() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("Firebase", "getInstanceId failed", task.getException());
+                    return;
+                }
+
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+
+                // Log and toast
+                if(currentDevice != null) {
+                    apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
+                    Log.e("Firebase TOKEN REFRESH", token);
+                }
+
+            }
+        });
+    }
+
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of

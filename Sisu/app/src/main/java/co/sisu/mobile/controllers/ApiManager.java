@@ -21,6 +21,8 @@ import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
+import co.sisu.mobile.api.AsyncGetTeamColorScheme;
+import co.sisu.mobile.api.AsyncLabels;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
@@ -61,7 +63,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://beta.sisu.co/";
+    private String url = "http://staging.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -190,26 +192,6 @@ public class ApiManager {
         new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getJWT(String agentId) {
-        transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-        jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(date.getTime())
-                .setExpiration(expDate.getTime())
-                .claim("Transaction-Id", transactionID)
-                .claim("agent_id", agentId)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-    }
-
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         getJWT(agentId);
         new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
@@ -244,12 +226,48 @@ public class ApiManager {
 
     public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
         getJWT(agent.getAgent_id());
-        new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
-
+        if(currentDevice != null) {
+            new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
+        }
     }
 
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
         getJWT(agentId);
         new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
+        getJWT(agentId);
+        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
+
+    }
+
+    public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
+        getJWT(agentId);
+        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getJWT(String agentId) {
+        transactionID = UUID.randomUUID().toString();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.SECOND, -60);
+        timestamp = String.valueOf(date.getTimeInMillis());
+
+        Calendar expDate = Calendar.getInstance();
+        expDate.add(Calendar.DATE, 1);
+        //TODO: The issuer needs to be unique
+        jwtStr = Jwts.builder()
+                .claim("Client-Timestamp", timestamp)
+                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
+                .setIssuedAt(date.getTime())
+                .setExpiration(expDate.getTime())
+                .claim("Transaction-Id", transactionID)
+                .claim("agent_id", agentId)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+//        Log.e("Trans-Id", transactionID);
+//        Log.e("JWT", jwtStr);
+//        Log.e("Timestamp", timestamp);
     }
 }

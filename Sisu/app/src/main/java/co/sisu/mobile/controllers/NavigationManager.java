@@ -37,6 +37,9 @@ public class NavigationManager {
         backStack = new Stack<>();
     }
 
+    public ActionBarManager getActionBarManager() {
+        return actionBarManager;
+    }
 
     public void replaceFragment(Class fragmentClass) {
         Fragment fragment = null;
@@ -103,7 +106,7 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
             fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveAction("Activity Settings");
+            actionBarManager.swapToSaveEditAction("Activity Settings");
         }
         else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
             fragmentTag = "Settings";
@@ -271,6 +274,10 @@ public class NavigationManager {
 
     public int getSelectedTeamId() {
         return actionBarManager.getSelectedTeamId();
+    }
+
+    public int getMarketId() {
+        return actionBarManager.getMarketId();
     }
 
     public void updateSelectedTeam(int position) {

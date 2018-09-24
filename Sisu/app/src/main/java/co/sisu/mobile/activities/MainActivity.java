@@ -3,10 +3,15 @@ package co.sisu.mobile.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
@@ -17,44 +22,64 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.JWTObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
 
     private String emailAddress;
-    private String password;
+    private String passwordText;
     private boolean networkActive = true;
     private Button signInButton;
     private ProgressBar loader;
     private AgentModel agent;
+    private TeamColorSchemeObject[] colorScheme;
+    ConstraintLayout layout;
+    TextInputEditText emailAddressEntry, passwordEntry;
+    TextInputLayout emailSignInLayout, passwordSignInLayout;
+    TextView forgotPassword, legal;
+    ImageView logo, sisuPowerLogo;
     int authRetry = 0;
+    ApiManager apiManager;
+    ColorSchemeManager colorSchemeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        apiManager = new ApiManager(this);
+        colorSchemeManager = new ColorSchemeManager();
         setContentView(R.layout.activity_main);
         Log.e("Screen Density: ", getDeviceDensity(this));
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
-        getSupportActionBar().setElevation(0);
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
+//        getSupportActionBar().setElevation(0);
         loader = findViewById(R.id.signInLoader);
         initializeButtons();
-        initEditText();
-        final EditText password = findViewById(R.id.passwordInput);
-        password.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
-        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        initFields();
+        getSavedData();
+        passwordEntry.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
+        passwordEntry.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
@@ -67,9 +92,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         networkActive = getIntent().getBooleanExtra("Network", true);
 
-//        if(!networkActive) {
-//            showToast("The server is experiencing issues, please try again later.");
-//        }
+    }
+
+    private void setColors() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                emailAddressEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
+                passwordEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
+                forgotPassword.setTextColor(colorSchemeManager.getDarkerTextColor());
+                legal.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+                setInputTextLayoutColor(emailSignInLayout, colorSchemeManager.getIconActive());
+                setInputTextLayoutColor(passwordSignInLayout, colorSchemeManager.getIconActive());
+
+                signInButton.setHighlightColor(colorSchemeManager.getButtonSelected());
+                signInButton.setBackgroundResource(R.drawable.rounded_button);
+                GradientDrawable drawable = (GradientDrawable) signInButton.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonBackground());
+
+                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+            }
+        });
+    }
+
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
+        try {
+
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            //Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            Method method = layout.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(layout, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getSavedData() {
+        if(SaveSharedPreference.getUserId(this).length() > 0) {
+            Log.e("SAVE DATA", "GOT EEM");
+            apiManager.getColorScheme(this, SaveSharedPreference.getUserId(this), Integer.parseInt(SaveSharedPreference.getTeam(this)), SaveSharedPreference.getLights(this));
+            if(SaveSharedPreference.getLogo(this).length() > 0) {
+                Picasso.with(this).load(Uri.parse(SaveSharedPreference.getLogo(this))).into(logo);
+                sisuPowerLogo.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     public String getDeviceDensity(Context context){
@@ -114,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void initEditText() {
-        EditText emailAddressEntry = findViewById(R.id.emailInput);
+    private void initFields() {
+        emailAddressEntry = findViewById(R.id.emailInput);
         emailAddressEntry.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -124,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-        EditText passwordEntry = findViewById(R.id.passwordInput);
+        passwordEntry = findViewById(R.id.passwordInput);
         passwordEntry.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -133,6 +210,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+        forgotPassword = findViewById(R.id.forgotPassword);
+        legal = findViewById(R.id.legal);
+        logo = findViewById(R.id.logo);
+        emailSignInLayout = findViewById(R.id.emailSignInLayout);
+        passwordSignInLayout = findViewById(R.id.passwordSignInLayout);
+        sisuPowerLogo = findViewById(R.id.sisuPowerLogo);
+        layout = findViewById(R.id.logIn);
     }
 
     public void hideKeyboard(View view) {
@@ -145,8 +229,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final EditText emailAddressEntry = findViewById(R.id.emailInput);
         final EditText passwordEntry = findViewById(R.id.passwordInput);
         emailAddress = emailAddressEntry.getText().toString().replaceAll(" ", "");
-        password = passwordEntry.getText().toString().replaceAll(" ", "");
-        new AsyncAuthenticator(this, emailAddress, password).execute();
+        passwordText = passwordEntry.getText().toString().replaceAll(" ", "");
+        new AsyncAuthenticator(this, emailAddress, passwordText).execute();
     }
 
     private void initializeButtons(){
@@ -182,6 +266,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
             SaveSharedPreference.setTransId(this, jwt.getTransId());
         }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
+            setColors();
+        }
         else {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             agent = agentObject.getAgent();
@@ -206,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SaveSharedPreference.setUserName(this, emailAddress);
                 try {
                     //TODO: We need to encrypt this in some way
-                    SaveSharedPreference.setUserPassword(this, password);
+                    SaveSharedPreference.setUserPassword(this, passwordText);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -232,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
             }
             else {
-                new AsyncAuthenticator(this, emailAddress, password).execute();
+                new AsyncAuthenticator(this, emailAddress, passwordText).execute();
                 authRetry++;
             }
         }

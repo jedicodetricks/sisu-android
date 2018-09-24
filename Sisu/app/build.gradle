@@ -44,6 +44,8 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation 'com.github.woxthebox:draglistview:1.6.2'
+    implementation 'com.github.devsideal:VectorChildFinder:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

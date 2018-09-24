@@ -1,5 +1,7 @@
 package co.sisu.mobile.controllers;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import co.sisu.mobile.R;
@@ -11,46 +13,66 @@ import co.sisu.mobile.activities.ParentActivity;
 
 public class ToolbarManager {
     private ParentActivity parentActivity;
+    private ColorSchemeManager colorSchemeManager;
 
     public ToolbarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
     }
 
     public void resetToolbarImages(String inputActivity) {
         ImageView scoreBoardButton = parentActivity.findViewById(R.id.scoreboardView);
-        scoreBoardButton.setImageResource(R.drawable.home_icon);
+        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        scoreBoardButton.setImageDrawable(drawable);
 
         ImageView reportButton = parentActivity.findViewById(R.id.reportView);
-        reportButton.setImageResource(R.drawable.report_icon);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        reportButton.setImageDrawable(drawable);
 
         ImageView recordButton = parentActivity.findViewById(R.id.recordView);
-        recordButton.setImageResource(R.drawable.record_icon);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        recordButton.setImageDrawable(drawable);
 
         ImageView leaderBoardButton = parentActivity.findViewById(R.id.leaderBoardView);
-        leaderBoardButton.setImageResource(R.drawable.leaderboard_icon);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        leaderBoardButton.setImageDrawable(drawable);
 
         ImageView moreButton = parentActivity.findViewById(R.id.moreView);
-        moreButton.setImageResource(R.drawable.more_icon);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        moreButton.setImageDrawable(drawable);
 
         switch (inputActivity) {
             case "Scoreboard":
-                scoreBoardButton.setImageResource(R.drawable.home_icon_active);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
+                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                scoreBoardButton.setImageDrawable(drawable);
                 break;
             case "Report":
-                reportButton.setImageResource(R.drawable.report_icon_active);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon_active).mutate();
+                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                reportButton.setImageDrawable(drawable);
                 break;
             case "Record":
-                recordButton.setImageResource(R.drawable.record_icon_active);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();
+                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                recordButton.setImageDrawable(drawable);
                 break;
             case "Leaderboard":
-                leaderBoardButton.setImageResource(R.drawable.leaderboard_icon_active);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active).mutate();
+                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                leaderBoardButton.setImageDrawable(drawable);
                 break;
             case "More":
             case "Add Client Note":
-                moreButton.setImageResource(R.drawable.more_icon_active);
-                break;
             case "Feedback":
-                moreButton.setImageResource(R.drawable.more_icon_active);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
+                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                moreButton.setImageDrawable(drawable);
                 break;
         }
     }

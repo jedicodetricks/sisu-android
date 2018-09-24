@@ -13,37 +13,40 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -53,14 +56,17 @@ import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -74,6 +80,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
     private ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
@@ -81,17 +88,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
     private boolean settingsFinished = false;
+    private boolean colorSchemeFinished = false;
+    private boolean teamsFinished = false;
+    private boolean labelsFinished = false;
+    private boolean noNavigation = true;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
-    private ErrorMessageFragment errorFragment;
-    private FileIO io;
     private NotesObject selectedNote;
-    private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
+    private ConstraintLayout layout;
+    private Toolbar toolbar;
+    private NavigationView navView;
+    private ListView navViewList;
+    private TextView navTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,16 +112,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_parent);
 
         dataController = new DataController();
+        colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
-        errorFragment = new ErrorMessageFragment();
         parentLoader = findViewById(R.id.parentLoader);
-        io = new FileIO(ParentActivity.this);
 
+        initParentFields();
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
@@ -132,8 +145,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         };
     }
 
+    private void initParentFields() {
+        layout = findViewById(R.id.parentLayout);
+        toolbar = findViewById(R.id.toolbar);
+        navViewList = findViewById(R.id.navViewList);
+        navTitle = findViewById(R.id.nav_title);
+    }
 
 
+    public void setActivityColors() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("SETTING COLORS", "PARENT ACTIVITY");
+                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+                toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+                //change parentLoader here, if needed
+                parentLoader.setBackgroundColor(colorSchemeManager.getProgressBackground());
+            }
+        });
+    }
 
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -189,15 +223,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                break;
+                break;`
             case R.id.moreView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
@@ -258,7 +296,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && noNavigation) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -269,6 +307,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             goalsFinished = false;
             settingsFinished = false;
             teamParamFinished = false;
+            colorSchemeFinished = false;
+            labelsFinished = false;
+            noNavigation = true;
         }
     }
 
@@ -303,11 +344,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
+                        if(settingsFinished) {
+                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+                        }
                     }
                     else {
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }
+                    teamsFinished = true;
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
@@ -329,6 +376,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(firebaseDeviceId.equals("")) {
                 myFirebaseMessagingService.initFirebase();
             }
+            else {
+                myFirebaseMessagingService.refreshToken();
+            }
+
 
         }
         else if(asyncReturnType.equals("Goals")) {
@@ -374,6 +425,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(reminderActive == 1) {
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
+            if(teamsFinished) {
+                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+            }
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Team Parameters")) {
@@ -386,6 +441,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 dataController.setSlackInfo(params.getValue());
             }
             teamParamFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Update Activities")) {
@@ -428,8 +498,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         Log.e("FAILURE", asyncReturnType);
-        errorFragment.setMessage(asyncReturnType + " cause this failure.");
-        navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
 
     }
 
@@ -648,20 +716,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return apiManager;
     }
 
-    public Bitmap getImage(String profile) { return io.getImage(profile, 1024); }//size here should be cache size i think
+    public ColorSchemeManager getColorSchemeManager() {
+        return colorSchemeManager;
+    }
 
-    public void saveImage(byte[] image, String profile) { io.addImage(profile, image); }
-
-    public boolean imageExists(Context context,  String id) {
+    public boolean imageExists(Context context, String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
     }
 
-    public CacheManager getCacheManager() {
-        return cacheManager;
+    public int getMarketId() {
+        return navigationManager.getMarketId();
     }
 
-    public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+    public HashMap<String, String> getLabels() {
+        return dataController.getLabels();
+    }
+
+    public String localizeLabel(String toCheck) {
+        String toReturn = "";
+        if(toCheck != null) {
+            toReturn = dataController.localizeLabel(toCheck);
+        }
+        return toReturn;
     }
 
 }

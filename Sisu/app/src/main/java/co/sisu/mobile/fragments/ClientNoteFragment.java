@@ -87,9 +87,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             addButton.setVisibility(View.VISIBLE);
             addButton.setOnClickListener(this);
         }
-        else {
-//            addButton.setVisibility(View.GONE);
-        }
     }
 
     @Override

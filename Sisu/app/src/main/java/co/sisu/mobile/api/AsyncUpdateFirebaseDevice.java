@@ -42,45 +42,47 @@ public class AsyncUpdateFirebaseDevice extends AsyncTask<String, String, String>
 
     @Override
     protected String doInBackground(String... strings) {
-        FirebaseDeviceObject firebaseDeviceObject = new FirebaseDeviceObject(currentDevice.getDevice_type(), currentDevice.getDevice_id(), currentDevice.getDevice_name(), fcmToken);
-
-        try {
-            Response response = null;
-            OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
-            String jsonInString = gson.toJson(firebaseDeviceObject);
-            Log.e("PUT FIREBASE DEVICE", jsonInString);
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, jsonInString);
-
-            Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/device/" + agent.getAgent_id())
-                    .put(body)
-                    .addHeader("Authorization", strings[0])
-                    .addHeader("Client-Timestamp", strings[1])
-                    .addHeader("Content-Type", "application/json")
-                    .addHeader("Transaction-Id", strings[2])
-                    .build();
+        if(currentDevice != null) {
+            FirebaseDeviceObject firebaseDeviceObject = new FirebaseDeviceObject(currentDevice.getDevice_type(), currentDevice.getDevice_id(), currentDevice.getDevice_name(), fcmToken);
 
             try {
-                response = client.newCall(request).execute();
+                Response response = null;
+                OkHttpClient client = new OkHttpClient();
+                Gson gson = new Gson();
+                String jsonInString = gson.toJson(firebaseDeviceObject);
+                Log.e("PUT FIREBASE DEVICE", jsonInString);
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(mediaType, jsonInString);
+
+                Request request = new Request.Builder()
+                        .url(url + "api/v1/agent/device/" + agent.getAgent_id())
+                        .put(body)
+                        .addHeader("Authorization", strings[0])
+                        .addHeader("Client-Timestamp", strings[1])
+                        .addHeader("Content-Type", "application/json")
+                        .addHeader("Transaction-Id", strings[2])
+                        .build();
+
+                try {
+                    response = client.newCall(request).execute();
 //                Log.e("Update Firebase Device", response.body().string());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (response != null) {
-                if (response.code() == 200) {
-                    callback.onEventCompleted(null, "Update Firebase Device");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (response != null) {
+                    if (response.code() == 200) {
+                        callback.onEventCompleted(null, "Update Firebase Device");
+                    } else {
+                        callback.onEventFailed(null, "Update Firebase Device");
+                    }
                 } else {
                     callback.onEventFailed(null, "Update Firebase Device");
                 }
-            } else {
-                callback.onEventFailed(null, "Update Firebase Device");
-            }
 
-            response.body().close();
-        } catch (Exception e) {
-            e.printStackTrace();
+                response.body().close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

@@ -1,18 +1,12 @@
 package co.sisu.mobile.adapters;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,25 +30,15 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
     private List<LeaderboardObject> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<LeaderboardObject, List<LeaderboardItemsObject>> _listDataChild;
-    int[] teamColors = {R.color.colorCorporateOrange, R.color.colorMoonBlue, R.color.colorYellow, R.color.colorLightGrey};
-    private int colorCounter = 0;
-    private ApiManager apiManager;
     private ParentActivity parentActivity;
-    private String agentId;
-    private ImageView thumbnail, expanded;
-    private String imageName;
-    private Animator mCurrentAnimator;
-    private int mShortAnimationDuration;
+    private ImageView thumbnail;
 
     public LeaderboardListExpandableAdapter(Context context, List<LeaderboardObject> listDataHeader,
                                             HashMap<LeaderboardObject, List<LeaderboardItemsObject>> listChildData, ParentActivity parent, ApiManager apiManager, String agent_id) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
-        colorCounter = 0;
         this.parentActivity = parent;
-        this.apiManager = apiManager;
-        this.agentId = agent_id;
     }
 
     @Override
@@ -82,26 +66,12 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         thumbnail = convertView.findViewById(R.id.leaderboard_list_thumbnail);
 
 
-//        mShortAnimationDuration = parentActivity.getResources().getInteger(android.R.integer.config_shortAnimTime);
-//        expanded = parentActivity.findViewById(R.id.expanded_image);
 
         //This will always be null the first time through
         final Bitmap bmp = childText.getImage();
         if(bmp == null) {
             thumbnail.setImageResource(R.drawable.client_icon);
             thumbnail.setEnabled(false);
-//            imageName = childText.getProfile();
-//            if(parentActivity.imageExists(_context, imageName) && imageName != null) {
-//                Log.e("CALLING IMAGE", imageName + "");
-//                //Bitmap image = parentActivity.getImage(imageName);
-//                //if(image != null) {
-////                    new LeaderboardImageTask(childText, thumbnail, agentId).execute(imageName);//this is where setting the image is actually happening, calls-download, then sets in onPost
-//                //}
-//            }
-//            else {
-//                Log.e("THIS SHIT IS NULL", childText.getLabel());
-//                //This would be a default image
-//            }
         }
         else {
             thumbnail.setImageBitmap(bmp);

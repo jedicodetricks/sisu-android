@@ -7,16 +7,20 @@
         <item name="android:background">@color/colorAlmostBlack</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat">
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="android:background">@color/colorAlmostBlack</item>
-        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/transparent</item>
+        <item name="android:popupBackground">@color/transparent</item>
 
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorWhite</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
     <style name="LightTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -30,7 +34,7 @@
 
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <!--<item name="colorAccent">@color/colorCorporateOrange</item>-->
         <item name="android:textColorPrimary">@color/colorCorporateGrey</item>
         <item name="android:colorForeground">@color/colorAlmostBlack</item>
         <item name="android:colorBackground">@android:color/white</item>
@@ -38,6 +42,27 @@
         <item name="android:statusBarColor">@color/colorWhite</item>
         <item name="android:textColorSecondaryInverse">@android:color/black</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
+    </style>
+
+    <style name="ParentTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="android:popupBackground">@color/transparent</item>
+        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>
+
+        <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
+        <item name="android:colorForeground">@color/colorAlmostBlack</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.NoActionBar">
@@ -93,9 +118,10 @@
     <style name="EditTextTheme" parent="Theme.AppCompat">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorLightGrey</item>
-        <item name="colorControlNormal">@color/colorLightGrey</item>
+        <item name="colorControlNormal">@color/colorCorporateGrey</item>
+        <item name="colorAccent">@color/colorCorporateGrey</item>
         <item name="colorControlActivated">@color/colorLightGrey</item>
-        <item name="colorControlHighlight">@color/colorCorporateOrange</item>
+        <item name="colorControlHighlight">@color/colorLightGrey</item>
     </style>
 
     <style name="RequiredTextTheme" parent="ThemeOverlay.AppCompat">
@@ -167,6 +193,8 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:width">330dp</item>
         <item name="android:height">96dp</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:colorPrimary">@color/colorAlmostBlack</item>
     </style>
 
     <style name="TabLayout" parent="Base.Widget.AppCompat.ActionBar.TabView">
@@ -190,10 +218,9 @@
     </style>
 
     <style name="ToolBar">
-        <item name="android:background">@color/colorDarkGrey</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLabelText</item>
+        <item name="android:textColor">@color/colorAlmostBlack</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">

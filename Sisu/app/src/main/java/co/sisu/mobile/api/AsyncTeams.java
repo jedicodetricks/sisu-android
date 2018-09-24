@@ -51,14 +51,20 @@ public class AsyncTeams extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(teamsResponse.code() == 200) {
-            AsyncTeamsJsonObject teams = gson.fromJson(teamsResponse.body().charStream(), AsyncTeamsJsonObject.class);
-            callback.onEventCompleted(teams, "Teams");
+        if(teamsResponse != null) {
+            if(teamsResponse.code() == 200) {
+                AsyncTeamsJsonObject teams = gson.fromJson(teamsResponse.body().charStream(), AsyncTeamsJsonObject.class);
+                callback.onEventCompleted(teams, "Teams");
+            }
+            else {
+                callback.onEventFailed(null, "Teams");
+            }
+            teamsResponse.body().close();
         }
         else {
             callback.onEventFailed(null, "Teams");
         }
-        teamsResponse.body().close();
+
         return null;
     }
 }

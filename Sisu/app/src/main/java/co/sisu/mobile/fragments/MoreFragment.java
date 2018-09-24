@@ -16,6 +16,7 @@ import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.MorePageContainer;
@@ -31,6 +32,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private DataController dataController;
     private ParentActivity parentActivity;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -51,6 +53,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         initializeListView();
     }
 
@@ -62,7 +65,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
         final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer();
 
-        MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList);
+        MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList, colorSchemeManager);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
@@ -79,27 +82,21 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 break;
             case "Clients":
                 navigationManager.stackReplaceFragment(ClientListFragment.class);
-//                navigationManager.swapToClientListBar(null);
                 break;
             case "My Profile":
                 navigationManager.stackReplaceFragment(MyProfileFragment.class);
-//                navigationManager.swapToBacktionBar("My Profile", null);
                 break;
             case "Goal Setup":
                 navigationManager.stackReplaceFragment(GoalSetupFragment.class);
-//                navigationManager.swapToBacktionBar("Goal Setup", null);
                 break;
             case "Activity Settings":
                 navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
-//                navigationManager.swapToBacktionBar("Activity Settings", null);
                 break;
             case "Settings":
                 navigationManager.stackReplaceFragment(SettingsFragment.class);
-//                navigationManager.swapToBacktionBar("Settings", null);
                 break;
             case "Feedback":
                 navigationManager.stackReplaceFragment(FeedbackFragment.class);
-//                navigationManager.swapToTitleBar("Feedback");
                 break;
             case "Slack":
                 navigationManager.stackReplaceFragment(SlackMessageFragment.class);
