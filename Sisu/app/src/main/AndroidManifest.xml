@@ -31,7 +31,7 @@
         </activity>
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/MainTheme"/>
         <activity android:name=".activities.ForgotPasswordActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.ParentActivity"

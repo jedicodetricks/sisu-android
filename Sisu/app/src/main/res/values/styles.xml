@@ -7,6 +7,22 @@
         <item name="android:background">@color/colorAlmostBlack</item>
     </style>
 
+    <style name="MainTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="colorPrimary">@color/transparent</item>
+        <item name="android:popupBackground">@color/transparent</item>
+
+        <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
+        <item name="android:colorForeground">@color/colorWhite</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+
+        <item name="android:textSelectHandleLeft">@drawable/transparent</item>
+        <item name="android:textSelectHandleRight">@drawable/transparent</item>
+        <item name="android:textSelectHandle">@drawable/transparent</item>
+    </style>
+
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
