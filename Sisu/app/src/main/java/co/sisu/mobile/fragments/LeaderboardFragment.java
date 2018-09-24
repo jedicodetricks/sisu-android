@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
+import co.sisu.mobile.utils.LeaderboardComparator;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -69,7 +71,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private int colorCounter = 0;
     private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
     private int agentCounter = 0;
-    private LeaderboardObject[] leaderBoardSections;
+    private List<LeaderboardObject> leaderBoardSections;
     private TextView dateDisplay, monthToggle, yearToggle;
     private ImageView calendarLauncher;
 
@@ -274,15 +276,16 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void prepareListData() {
 
-        for(int i = 0; i < leaderBoardSections.length; i++) {
-            for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
+        for(int i = 0; i < leaderBoardSections.size(); i++) {
 
-                    LeaderboardItemsObject currentAgent = leaderBoardSections[i].getLeaderboardItemsObject()[j];
+            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+
+                    LeaderboardItemsObject currentAgent = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
 
                     if(!agents.containsKey(currentAgent.getAgent_id())) {
-                        agents.put(leaderBoardSections[i].getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                        /*Stop trying to delete this line, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
+                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
                     }
                 }
             }
@@ -310,16 +313,16 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
         colorCounter = 0;
+        Collections.sort(leaderBoardSections, new LeaderboardComparator());
 
-        for(int i = 0; i < leaderBoardSections.length; i++) {
-            leaderBoardSections[i].setColor(teamColors[colorCounter]);
-            leaderBoardSections[i].setName(parentActivity.localizeLabel(leaderBoardSections[i].getName()));
-            listDataHeader.add(leaderBoardSections[i]);
+        for(int i = 0; i < leaderBoardSections.size(); i++) {
+            leaderBoardSections.get(i).setColor(teamColors[colorCounter]);
+            listDataHeader.add(leaderBoardSections.get(i));
             List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
 
-            for(int j = 0; j < leaderBoardSections[i].getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections[i].getLeaderboardItemsObject()[j].getValue().equals("0")) {
-                    LeaderboardItemsObject item = leaderBoardSections[i].getLeaderboardItemsObject()[j];
+            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                    LeaderboardItemsObject item = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
                     LeaderboardAgentModel agent = agents.get(item.getAgent_id());
                     item.setImage(agent.getBitmap());
                     leaderboardItems.add(item);
@@ -334,6 +337,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 colorCounter++;
             }
         }
+
+        //Collections.sort(listDataHeader, new LeaderboardComparator());
+
 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
