@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -14,6 +16,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +64,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton, archiveButton,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
-                     percentSign1, percentSign2, statusLabel;
+                     percentSign1, percentSign2, statusLabel, priorityText;
     private Button signedClear, contractClear, settlementClear, appointmentClear, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent;
     private Switch prioritySwitch;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
@@ -72,6 +75,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private String typeSelected, clientStatus;
     private String statusList = "pipeline";
     private int counter;
+
 
     public ClientEditFragment() {
         // Required empty public constructor
@@ -198,8 +202,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
         exportContact.setHighlightColor(colorSchemeManager.getButtonSelected());
         exportContact.setBackgroundResource(R.drawable.rounded_button);
+        exportContact.setTextColor(colorSchemeManager.getButtonText());
         GradientDrawable drawable = (GradientDrawable) exportContact.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        Drawable imageDrawable = getResources().getDrawable(R.drawable.import_contacts_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+//        calendarLauncher.setImageDrawable(drawable);
+        exportContact.setBackgroundResource(R.drawable.import_contacts_icon);
 
         buyer.setTextColor(colorSchemeManager.getButtonText());
         buyer.setBackgroundResource(R.drawable.rounded_button);
@@ -245,6 +255,26 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         noteButton.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) noteButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
@@ -585,6 +615,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
         commissionEquals = getView().findViewById(R.id.commissionEquals);
         gciEquals = getView().findViewById(R.id.gciEquals);
+
+        priorityText = getView().findViewById(R.id.priorityText);
     }
 
     @Override
@@ -765,6 +797,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
         calculateIncomePercent.setOnClickListener(this);
+
+
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

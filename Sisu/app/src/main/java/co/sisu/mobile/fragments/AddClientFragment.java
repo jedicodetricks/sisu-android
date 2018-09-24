@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -18,6 +20,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +64,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
-                     percentSign1, percentSign2, statusLabel;
+                     percentSign1, percentSign2, statusLabel, priorityText;
     private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
     private String typeSelected;
@@ -187,6 +190,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
         importContactButton.setHighlightColor(colorSchemeManager.getButtonSelected());
         importContactButton.setBackgroundResource(R.drawable.rounded_button);
+        importContactButton.setTextColor(colorSchemeManager.getButtonText());
         GradientDrawable drawable = (GradientDrawable) importContactButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
@@ -229,6 +233,26 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateIncomePercent.getBackground();
         drawable.setColor(colorSchemeManager.getButtonSelected());
+
+        priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getSegmentSelected()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
@@ -397,6 +421,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
         commissionEquals = getView().findViewById(R.id.commissionEquals);
         gciEquals = getView().findViewById(R.id.gciEquals);
+        priorityText = getView().findViewById(R.id.priorityText);
     }
 
     @Override

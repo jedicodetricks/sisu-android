@@ -91,6 +91,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
     private boolean labelsFinished = false;
+    private boolean noNavigation = true;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
@@ -222,15 +223,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                 break;
             case R.id.reportView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(ReportFragment.class);
                 break;
             case R.id.recordView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(RecordFragment.class);
                 break;
             case R.id.leaderBoardView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                break;
+                break;`
             case R.id.moreView:
+                noNavigation = false;
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
                 break;
             case R.id.cancelButton:
@@ -291,7 +296,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && noNavigation) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -304,6 +309,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamParamFinished = false;
             colorSchemeFinished = false;
             labelsFinished = false;
+            noNavigation = true;
         }
     }
 
