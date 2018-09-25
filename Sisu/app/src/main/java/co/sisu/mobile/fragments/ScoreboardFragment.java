@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -218,6 +219,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        spinner.getBackground().setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
 
         VectorChildFinder plusVector = new VectorChildFinder(getContext(), R.drawable.add_icon, addButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");

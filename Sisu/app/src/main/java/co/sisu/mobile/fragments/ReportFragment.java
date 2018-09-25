@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -83,6 +84,8 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private void setColorScheme() {
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        spinner.getBackground().setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
             loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));

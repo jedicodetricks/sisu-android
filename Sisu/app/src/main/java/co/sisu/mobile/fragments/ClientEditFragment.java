@@ -418,13 +418,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private void initializeClient() {
         typeSelected = currentClient.getType_id();
         if(typeSelected.equals("b")) {
-            Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
-            buyer.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-            buyer.setBackground(active);
+            buyer.setTextColor(colorSchemeManager.getButtonText());
+            buyer.setBackgroundResource(R.drawable.rounded_button);
+            GradientDrawable drawable = (GradientDrawable) buyer.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonSelected());
         } else {
-            Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
-            seller.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-            seller.setBackground(active);
+            seller.setTextColor(colorSchemeManager.getButtonText());
+            seller.setBackgroundResource(R.drawable.rounded_button);
+            GradientDrawable drawable = (GradientDrawable) seller.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonSelected());
         }
 
         firstNameText.setText(currentClient.getFirst_name());
@@ -761,21 +763,29 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onClick(View v) {
-        Drawable active = getResources().getDrawable(R.drawable.rounded_button_active);
-        Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
             case R.id.buyerButton:
-                buyer.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                buyer.setBackground(active);
-                seller.setBackground(inactive);
-                seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                buyer.setTextColor(colorSchemeManager.getButtonText());
+                buyer.setBackgroundResource(R.drawable.rounded_button);
+                GradientDrawable drawable = (GradientDrawable) buyer.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonSelected());
+
+                seller.setTextColor(colorSchemeManager.getButtonText());
+                seller.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) seller.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonBackground());
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-                buyer.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
-                buyer.setBackground(inactive);
-                seller.setBackground(active);
-                seller.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
+                seller.setTextColor(colorSchemeManager.getButtonText());
+                seller.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) seller.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonSelected());
+
+                buyer.setTextColor(colorSchemeManager.getButtonText());
+                buyer.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) buyer.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonBackground());
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
