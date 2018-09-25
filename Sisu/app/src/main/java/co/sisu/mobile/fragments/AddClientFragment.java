@@ -440,13 +440,17 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 //                    onBackPressed();
                 break;
             case R.id.buyerButton:
-//                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                buyerButton.setBackground(active);
+                sellerButton.setBackground(inactive);
+                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-//                buyerButton.setTextColor(colorSchemeManager.getButtonText());
-//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorCorporateOrange));
+                sellerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                sellerButton.setBackground(active);
+                buyerButton.setBackground(inactive);
+                buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
