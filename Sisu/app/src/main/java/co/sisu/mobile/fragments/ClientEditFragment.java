@@ -219,6 +219,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
 
+        Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
+        imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        archiveButton.setImageDrawable(imageDraw);
+
         exportContact.setHighlightColor(colorSchemeManager.getButtonSelected());
         exportContact.setBackgroundResource(R.drawable.rounded_button);
         exportContact.setTextColor(colorSchemeManager.getButtonText());

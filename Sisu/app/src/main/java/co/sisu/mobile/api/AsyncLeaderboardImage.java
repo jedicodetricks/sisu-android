@@ -44,6 +44,7 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
+        Log.e("IMAGE", leaderboardAgentModel.getProfile());
         Request request = new Request.Builder()
                 .url(url + "api/v1/image/" + leaderboardAgentModel.getProfile())
                 .get()
@@ -51,9 +52,11 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .addHeader("Client-Timestamp", strings[1])
                 .addHeader("Transaction-Id", strings[2])
                 .build();
+        String responseString = "";
         try {
             response = client.newCall(request).execute();
-            Log.e("PROFILE PIC", response.body().string());
+//            responseString = response.body().string();
+//            Log.e("PROFILE PIC", responseString);
         } catch (IOException e) {
             e.printStackTrace();
         }
