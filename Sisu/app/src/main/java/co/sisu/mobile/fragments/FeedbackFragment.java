@@ -82,6 +82,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         drawable.setColor(colorSchemeManager.getButtonSelected());
 
         feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
+        //TODO: This shouldn't work like this. Discuss current design with Rick.
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             feedback.setBackgroundResource(R.drawable.light_input_text_box);
         } else {

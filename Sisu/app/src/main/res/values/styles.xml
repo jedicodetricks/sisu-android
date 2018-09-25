@@ -4,7 +4,6 @@
     <style name="DarkActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:contentInsetStart">0dp</item>
         <item name="android:contentInsetEnd">0dp</item>
-        <item name="android:background">@color/colorAlmostBlack</item>
     </style>
 
     <style name="MainTheme" parent="Theme.AppCompat.NoActionBar">
@@ -241,7 +240,7 @@
 
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/colorClay</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
 
