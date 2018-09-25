@@ -213,7 +213,7 @@ public class NavigationManager {
 
     public void onBackPressed() {
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-            AlertDialog dialog = new AlertDialog.Builder(parentActivity)
+            AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.alertDialog)
                     .setIcon(R.drawable.sisu_mark)
                     .setTitle("Closing Sisu")
                     .setMessage("Are you sure you want to exit?")
