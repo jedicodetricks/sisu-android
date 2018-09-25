@@ -81,7 +81,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
-    private ProgressBar parentLoader;
+    public ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
@@ -109,6 +109,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
+        parentLoader = findViewById(R.id.parentLoader);
 
         dataController = new DataController();
         colorSchemeManager = new ColorSchemeManager();
@@ -117,8 +118,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
-
-        parentLoader = findViewById(R.id.parentLoader);
 
         initParentFields();
         initializeButtons();
@@ -163,7 +162,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
                 navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
                 //change parentLoader here, if needed
-                parentLoader.setBackgroundColor(colorSchemeManager.getProgressBackground());
+                parentLoader = findViewById(R.id.parentLoader);
+                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                } else {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                }
             }
         });
     }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -298,6 +299,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
         DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
         DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {

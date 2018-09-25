@@ -3,14 +3,13 @@ package co.sisu.mobile.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
-import android.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +25,11 @@ import com.woxthebox.draglistview.DragItem;
 import com.woxthebox.draglistview.DragListView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.ClientItemAdapter;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -43,7 +40,6 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
-import okhttp3.Cache;
 
 public class ClientListFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener, AdapterView.OnItemClickListener {
 
@@ -116,6 +112,15 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         total.setTextColor(colorSchemeManager.getDarkerTextColor());
         divider.setBackgroundColor(colorSchemeManager.getLine());
 //        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void initAddButton() {

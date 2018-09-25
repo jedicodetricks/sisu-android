@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,9 +45,9 @@ import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardItemsObject;
 import co.sisu.mobile.models.LeaderboardObject;
-import co.sisu.mobile.utils.LeaderboardComparator;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.LeaderboardComparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -137,6 +138,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
         calendarLauncher.setImageDrawable(drawable);
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {

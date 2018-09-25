@@ -2,7 +2,9 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -102,6 +104,16 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
         calendarLauncher.setImageDrawable(drawable);
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void initializeCalendarHandler() {

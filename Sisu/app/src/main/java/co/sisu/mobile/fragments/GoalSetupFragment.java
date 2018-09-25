@@ -2,6 +2,8 @@ package co.sisu.mobile.fragments;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -146,6 +148,16 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
 

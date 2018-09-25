@@ -2,6 +2,8 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -222,6 +224,16 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         plusPath.setFillColor(colorSchemeManager.getIconActive());
         plusPath.setStrokeColor(colorSchemeManager.getIconActive());
         addButton.invalidate();
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void calculateVolumes() {

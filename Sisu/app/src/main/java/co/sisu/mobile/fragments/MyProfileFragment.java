@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -46,7 +48,6 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -150,7 +151,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         GradientDrawable drawable = (GradientDrawable) passwordButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonSelected());
 
-        imageLoader.setBackgroundColor(colorSchemeManager.getProgressBackground());
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = imageLoader.getIndeterminateDrawable().getBounds();
+            imageLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            imageLoader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = imageLoader.getIndeterminateDrawable().getBounds();
+            imageLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            imageLoader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
