@@ -65,7 +65,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "http://staging.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 

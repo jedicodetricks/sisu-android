@@ -229,15 +229,27 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         GradientDrawable drawable = (GradientDrawable) exportContact.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        buyer.setTextColor(colorSchemeManager.getButtonText());
-        buyer.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) buyer.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
+        typeSelected = currentClient.getType_id();
+        if(typeSelected.equals("b")) {
+            buyer.setBackgroundResource(R.drawable.rounded_button);
+            drawable = (GradientDrawable) buyer.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonSelected());
 
+            seller.setBackgroundResource(R.drawable.rounded_button);
+            drawable = (GradientDrawable) seller.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonBackground());
+        } else {
+            seller.setBackgroundResource(R.drawable.rounded_button);
+            drawable = (GradientDrawable) seller.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonSelected());
+
+            buyer.setBackgroundResource(R.drawable.rounded_button);
+            drawable = (GradientDrawable) buyer.getBackground();
+            drawable.setColor(colorSchemeManager.getButtonBackground());
+        }
+
+        buyer.setTextColor(colorSchemeManager.getButtonText());
         seller.setTextColor(colorSchemeManager.getButtonText());
-        seller.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) seller.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         activateButton.setTextColor(colorSchemeManager.getButtonText());
         activateButton.setBackgroundResource(R.drawable.rounded_button);
@@ -247,37 +259,37 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         signedClear.setTextColor(colorSchemeManager.getButtonText());
         signedClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) signedClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         contractClear.setTextColor(colorSchemeManager.getButtonText());
         contractClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) contractClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         settlementClear.setTextColor(colorSchemeManager.getButtonText());
         settlementClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) settlementClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         appointmentClear.setTextColor(colorSchemeManager.getButtonText());
         appointmentClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) appointmentClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
         calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateGciPercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateIncomePercent.setTextColor(colorSchemeManager.getButtonText());
         calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateIncomePercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         noteButton.setTextColor(colorSchemeManager.getButtonText());
         noteButton.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) noteButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
 

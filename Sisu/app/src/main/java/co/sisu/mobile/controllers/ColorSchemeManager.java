@@ -129,6 +129,10 @@ public class ColorSchemeManager {
             }
 
         }
+
+        if(buttonBackground == buttonSelected) {
+            buttonSelected = Color.GRAY;
+        }
     }
 
     private void setDefaults(String colorSchemeId) {
