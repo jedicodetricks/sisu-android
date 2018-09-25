@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragItem;
@@ -41,12 +40,12 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 
-public class ClientListFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener, AdapterView.OnItemClickListener {
+public class ClientListFragment extends Fragment implements android.support.v7.widget.SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener, AdapterView.OnItemClickListener {
 
 //    private DragListView mListView;
     private ListView mListView;
     private String searchText = "";
-    private SearchView clientSearch;
+    private android.support.v7.widget.SearchView clientSearch;
     private TextView total;
     private ParentActivity parentActivity;
     private DataController dataController;
@@ -111,7 +110,14 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
         total.setTextColor(colorSchemeManager.getDarkerTextColor());
         divider.setBackgroundColor(colorSchemeManager.getLine());
-//        clientSearch.setBackgroundColor(colorSchemeManager.getIconActive());
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            clientSearch.setBackgroundColor(colorSchemeManager.getIconIdle());
+            android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            search.setTextColor(colorSchemeManager.getDarkerTextColor());
+            search.setHighlightColor(colorSchemeManager.getLighterTextColor());
+            search.setHintTextColor(colorSchemeManager.getLighterTextColor());
+        }
+
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
             loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
