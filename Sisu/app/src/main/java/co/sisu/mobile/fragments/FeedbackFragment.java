@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -83,7 +82,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         drawable.setColor(colorSchemeManager.getButtonSelected());
 
         feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
-        feedback.setBackgroundResource(R.drawable.light_input_text_box);
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            feedback.setBackgroundResource(R.drawable.light_input_text_box);
+        } else {
+            feedback.setBackgroundResource(R.drawable.input_text_box);
+        }
 
     }
 
