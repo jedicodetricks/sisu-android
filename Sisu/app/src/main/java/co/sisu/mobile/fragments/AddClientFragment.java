@@ -202,37 +202,37 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         sellerButton.setTextColor(colorSchemeManager.getButtonText());
         sellerButton.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) sellerButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         signedClear.setTextColor(colorSchemeManager.getButtonText());
         signedClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) signedClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         contractClear.setTextColor(colorSchemeManager.getButtonText());
         contractClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) contractClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         settlementClear.setTextColor(colorSchemeManager.getButtonText());
         settlementClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) settlementClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         appointmentClear.setTextColor(colorSchemeManager.getButtonText());
         appointmentClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) appointmentClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
         calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateGciPercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateIncomePercent.setTextColor(colorSchemeManager.getButtonText());
         calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateIncomePercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
 
@@ -440,17 +440,36 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 //                    onBackPressed();
                 break;
             case R.id.buyerButton:
-                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                buyerButton.setBackground(active);
-                sellerButton.setBackground(inactive);
-                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                buyerButton.setTextColor(colorSchemeManager.getButtonText());
+                buyerButton.setBackgroundResource(R.drawable.rounded_button);
+                GradientDrawable drawable = (GradientDrawable) buyerButton.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonSelected());
+
+                sellerButton.setTextColor(colorSchemeManager.getButtonText());
+                sellerButton.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) sellerButton.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonBackground());
+//                buyerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+//                buyerButton.setBackground(active);
+//                sellerButton.setBackground(inactive);
+//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-                sellerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                sellerButton.setBackground(active);
-                buyerButton.setBackground(inactive);
-                buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
+                sellerButton.setTextColor(colorSchemeManager.getButtonText());
+                sellerButton.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) sellerButton.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonSelected());
+
+                buyerButton.setTextColor(colorSchemeManager.getButtonText());
+                buyerButton.setBackgroundResource(R.drawable.rounded_button);
+                drawable = (GradientDrawable) buyerButton.getBackground();
+                drawable.setColor(colorSchemeManager.getButtonBackground());
+
+//                sellerButton.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+//                sellerButton.setBackground(active);
+//                buyerButton.setBackground(inactive);
+//                buyerButton.setTextColor(ContextCompat.getColor(parentActivity,R.color.colorLightGrey));
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
