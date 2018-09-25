@@ -16,7 +16,6 @@
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorWhite</item>
         <item name="android:statusBarColor">@color/colorAlmostBlack</item>
-
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
         <item name="android:textSelectHandle">@drawable/transparent</item>
@@ -31,7 +30,7 @@
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorWhite</item>
-        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
 
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
