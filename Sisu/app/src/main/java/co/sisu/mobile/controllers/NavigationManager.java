@@ -2,6 +2,7 @@ package co.sisu.mobile.controllers;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -28,8 +29,10 @@ public class NavigationManager {
     private ActionBarManager actionBarManager;
     private String fragmentTag;
     private Stack<Class> backStack;
+    private ColorSchemeManager colorSchemeManager;
 
     public NavigationManager(ParentActivity parentActivity) {
+        this.colorSchemeManager = parentActivity.colorSchemeManager;
         this.parentActivity = parentActivity;
         this.toolbarManager = new ToolbarManager(parentActivity);
         this.actionBarManager = new ActionBarManager(parentActivity);
@@ -213,31 +216,59 @@ public class NavigationManager {
 
     public void onBackPressed() {
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-            AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.alertDialog)
-                    .setIcon(R.drawable.sisu_mark)
-                    .setTitle("Closing Sisu")
-                    .setMessage("Are you sure you want to exit?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            parentActivity.finish();
-                        }
-
-                    })
-                    .setNegativeButton("No", null)
-                    .setOnKeyListener( new Dialog.OnKeyListener() {
-
-                        @Override
-                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)
+                        .setIcon(R.drawable.sisu_mark)
+                        .setTitle("Closing Sisu")
+                        .setMessage("Are you sure you want to exit?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 parentActivity.finish();
-                                dialog.dismiss();
                             }
-                            return true;
-                        }
-                    })
-                    .show();
+
+                        })
+                        .setNegativeButton("No", null)
+                        .setOnKeyListener( new Dialog.OnKeyListener() {
+
+                            @Override
+                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    parentActivity.finish();
+                                    dialog.dismiss();
+                                }
+                                return true;
+                            }
+                        })
+                        .show();
+            } else {
+                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.lightDialog)
+                        .setIcon(R.drawable.sisu_mark)
+                        .setTitle("Closing Sisu")
+                        .setMessage("Are you sure you want to exit?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                parentActivity.finish();
+                            }
+
+                        })
+                        .setNegativeButton("No", null)
+                        .setOnKeyListener( new Dialog.OnKeyListener() {
+
+                            @Override
+                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    parentActivity.finish();
+                                    dialog.dismiss();
+                                }
+                                return true;
+                            }
+                        })
+                        .show();
+            }
         } else {
             backStack.pop();
             Log.e("BACK STACK", String.valueOf(backStack.size()));

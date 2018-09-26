@@ -7,9 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.adapters.NoteListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -73,7 +70,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     private void fillListViewWithData(List<NotesObject> noteList) {
         if(getContext() != null) {
-            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this);
+            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this, parentActivity.colorSchemeManager);
             mListView.setAdapter(adapter);
 
 //            mListView.setOnItemClickListener(this);

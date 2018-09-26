@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -80,7 +79,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
-    private ColorSchemeManager colorSchemeManager;
+    public ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
     public ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";

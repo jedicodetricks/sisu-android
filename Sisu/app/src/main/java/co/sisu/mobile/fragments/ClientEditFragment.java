@@ -345,12 +345,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private void popReasonDialog(String message, String text) {
+        AlertDialog.Builder builder;
+        final EditText input = new EditText(parentActivity);
+            builder = new AlertDialog.Builder(parentActivity, R.style.lightDialog);
+            input.setTextColor(Color.BLACK);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setTitle(message);
         final String label = text;
 // Set up the input
-        final EditText input = new EditText(parentActivity);
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
