@@ -83,6 +83,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         if(addButton != null) {
             addButton.setVisibility(View.VISIBLE);
             addButton.setOnClickListener(this);
+            TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+            edit.setVisibility(View.GONE);
         }
     }
 
