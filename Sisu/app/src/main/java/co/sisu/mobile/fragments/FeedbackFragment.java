@@ -79,7 +79,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         feedbackButton.setTextColor(colorSchemeManager.getButtonText());
         feedbackButton.setBackgroundResource(R.drawable.rounded_button);
         GradientDrawable drawable = (GradientDrawable) feedbackButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
         //TODO: This shouldn't work like this. Discuss current design with Rick.
