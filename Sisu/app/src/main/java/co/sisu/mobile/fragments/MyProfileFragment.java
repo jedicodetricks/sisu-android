@@ -149,7 +149,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         passwordButton.setTextColor(colorSchemeManager.getButtonText());
         passwordButton.setBackgroundResource(R.drawable.rounded_button);
         GradientDrawable drawable = (GradientDrawable) passwordButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonSelected());
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = imageLoader.getIndeterminateDrawable().getBounds();
