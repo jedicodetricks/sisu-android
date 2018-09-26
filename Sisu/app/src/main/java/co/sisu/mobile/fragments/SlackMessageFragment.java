@@ -1,10 +1,10 @@
 package co.sisu.mobile.fragments;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +53,17 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         apiManager = parentActivity.getApiManager();
         initForm();
         initUpdateOrAdd();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        //TODO: This shouldn't work like this. Discuss current design with Rick.
+        if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+            noteText.setBackgroundResource(R.drawable.light_input_text_box);
+        } else {
+            noteText.setBackgroundResource(R.drawable.input_text_box);
+        }
+        noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
     }
 
     private void initUpdateOrAdd() {

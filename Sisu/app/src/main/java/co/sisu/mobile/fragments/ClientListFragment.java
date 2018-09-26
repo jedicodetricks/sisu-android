@@ -56,7 +56,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     private List<ClientObject> currentList = new ArrayList<>();
     private TabLayout tabLayout;
     private static String selectedTab = "pipeline";
-    private TextView addButton, editListButton;
+    private TextView addButton, editListButton, priorityLabel;
     private ConstraintLayout contentView;
     private boolean editMode = false;
     private int priorityPosition = 0;
@@ -110,6 +110,8 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
         total.setTextColor(colorSchemeManager.getDarkerTextColor());
         divider.setBackgroundColor(colorSchemeManager.getLine());
+        priorityLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
 
         // TODO: 9/25/2018  
         //THIS IS THE SEARCH BAR COLORING AND MAY NEED TO CHANGE WHEN WE CONFIRM DB COLORS FOR THEMES
@@ -139,6 +141,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     private void initAddButton() {
+        priorityLabel = parentActivity.findViewById(R.id.priorityLabel);
         addButton = parentActivity.findViewById(R.id.addClientButton);
         editListButton = parentActivity.findViewById(R.id.editClientListButton);
 
