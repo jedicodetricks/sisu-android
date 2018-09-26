@@ -320,6 +320,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
             loader.getIndeterminateDrawable().setBounds(bounds);
         }
+        updateStatus();
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
