@@ -239,12 +239,18 @@ public class ApiManager {
     }
 
     public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
+        if(selectedTeamId == -1) {
+            selectedTeamId = 0;
+        }
         getJWT(agentId);
         new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
 
     }
 
     public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
+        if(teamId == -1) {
+            teamId = 0;
+        }
         getJWT(agentId);
         new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
     }
@@ -254,6 +260,13 @@ public class ApiManager {
         new AsyncUpdateSettings(cb, url, agentId, activateClientObject).execute(jwtStr, timestamp, transactionID);
     }
 
+
+    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
+        getJWT(agentId);
+        new AsyncActivateClientSettings(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+
+    }
+
     public void getJWT(String agentId) {
         transactionID = UUID.randomUUID().toString();
         Calendar date = Calendar.getInstance();
@@ -261,8 +274,8 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-        //TODO: The issuer needs to be unique
+        expDate.add(Calendar.DATE, 30);
+
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)
                 .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
@@ -273,14 +286,9 @@ public class ApiManager {
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 
-//        Log.e("Trans-Id", transactionID);
 //        Log.e("JWT", jwtStr);
-//        Log.e("Timestamp", timestamp);
-    }
-
-    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
-        getJWT(agentId);
-        new AsyncActivateClientSettings(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+//        Log.e("TRANS", transactionID);
+//        Log.e("TIME", timestamp);
 
     }
 }
