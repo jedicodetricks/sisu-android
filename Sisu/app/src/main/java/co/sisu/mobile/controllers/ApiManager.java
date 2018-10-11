@@ -244,7 +244,6 @@ public class ApiManager {
         }
         getJWT(agentId);
         new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
-
     }
 
     public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
@@ -274,7 +273,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 30);
+        expDate.add(Calendar.DATE, 1);
 
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)

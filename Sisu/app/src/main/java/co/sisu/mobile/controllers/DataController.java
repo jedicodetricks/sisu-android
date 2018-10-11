@@ -785,8 +785,6 @@ public class DataController {
                     setupSelectedActivities(s);
                     break;
             }
-
-
         }
         this.settings = relevantSettings;
 
@@ -976,7 +974,7 @@ public class DataController {
     }
 
     private ParameterObject getDefaultLights() {
-        return new ParameterObject("lights", "0", "0", "5");
+        return new ParameterObject("lights", "N", "0", "5");
     }
 
     private ParameterObject[] setDefaultSettingsObject(ParameterObject[] settings) {
