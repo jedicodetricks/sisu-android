@@ -151,7 +151,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         navTitle = findViewById(R.id.nav_title);
     }
 
-
     public void setActivityColors() {
         this.runOnUiThread(new Runnable() {
             @Override

@@ -208,7 +208,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     private void updateRecordInfo() {
         String formattedMonth = String.valueOf(selectedMonth + 1);
-        if(selectedMonth < 10) {
+        if(selectedMonth + 1 < 10) {
             formattedMonth = "0" + formattedMonth;
         }
         String formattedDay = String.valueOf(selectedDay);
