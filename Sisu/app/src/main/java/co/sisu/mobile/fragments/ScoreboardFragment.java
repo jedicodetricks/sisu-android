@@ -223,8 +223,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
         VectorChildFinder plusVector = new VectorChildFinder(getContext(), R.drawable.add_icon, addButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
-        plusPath.setFillColor(colorSchemeManager.getIconActive());
-        plusPath.setStrokeColor(colorSchemeManager.getIconActive());
+        plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
+        plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
         addButton.invalidate();
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
