@@ -124,6 +124,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
         setupLabels();
         setColorScheme();
+        if(currentClient.getIs_locked() != null && currentClient.getIs_locked().equals("1")) {
+            parentActivity.showToast("This client account has been locked by your team administrator.");
+        }
     }
 
     private void setupLabels() {

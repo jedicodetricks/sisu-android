@@ -679,6 +679,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setSelectedClient(ClientObject client) {
+        if(client.getIs_locked() == null) {
+            client.setIs_locked("0");
+        }
         navigationManager.setSelectedClient(client);
     }
 

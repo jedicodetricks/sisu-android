@@ -174,6 +174,7 @@ public class ActionBarManager {
                         //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
                         teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
                         teamIcon.setVisibility(View.VISIBLE);
+                        teamBlock.setVisibility(View.INVISIBLE);
                         teamLetter.setVisibility(View.GONE);
                     } else {
                         teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());

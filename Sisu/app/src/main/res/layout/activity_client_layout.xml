@@ -272,9 +272,6 @@
 
         </android.support.design.widget.TextInputLayout>
 
-
-
-
         <android.support.design.widget.TextInputLayout
             android:id="@+id/paidIncomePercentLayout"
             android:layout_width="0dp"
@@ -312,65 +309,6 @@
             app:layout_constraintBottom_toTopOf="@id/phoneInputLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gciPercentLayout" />
-
-        <!---->
-
-        <!--<android.support.design.widget.TextInputLayout-->
-            <!--android:id="@+id/gciInputLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:theme="@style/RequiredTextTheme"-->
-            <!--app:layout_constraintEnd_toStartOf="@+id/guideline2"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/editGci"-->
-                <!--style="@style/EditTextLabelStyle"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="8dp"-->
-                <!--android:layout_marginStart="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:ems="10"-->
-                <!--android:hint="@string/gci_hint"-->
-                <!--android:maxLength="8"-->
-                <!--android:inputType="number"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintHorizontal_bias="0.0"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/editTransAmount" />-->
-
-        <!--</android.support.design.widget.TextInputLayout>-->
-
-        <!--<android.support.design.widget.TextInputLayout-->
-            <!--android:id="@+id/commissionInputLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="8dp"-->
-            <!--android:theme="@style/RequiredTextTheme"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/gciInputLayout">-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/editPaidIncome"-->
-                <!--style="@style/EditTextLabelStyle"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="8dp"-->
-                <!--android:layout_marginStart="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:ems="10"-->
-                <!--android:hint="@string/commission_hint"-->
-                <!--android:maxLength="8"-->
-                <!--android:inputType="number"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintHorizontal_bias="0.0"-->
-                <!--app:layout_constraintStart_toStartOf="parent" />-->
-
-        <!--</android.support.design.widget.TextInputLayout>-->
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/emailInputLayout"
@@ -471,6 +409,46 @@
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/statusLabel"/>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/notesInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:theme="@style/RequiredTextTheme"
+            app:layout_constraintTop_toBottomOf="@id/statusRadioGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <EditText
+                android:id="@+id/editNotes"
+                style="@style/EditTextLabelStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/notes"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/clientNotesButton"
+            style="@style/ButtonStyle"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/notesInputLayout"
+            android:textAllCaps="false"
+            android:text="@string/logs" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/addClientDatePickers"
             android:layout_width="match_parent"
@@ -482,7 +460,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statusRadioGroup">
+            app:layout_constraintTop_toBottomOf="@id/clientNotesButton">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/appointmentDateSection"
@@ -724,47 +702,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
             </android.support.constraint.ConstraintLayout>
-
-            <Button
-                android:id="@+id/clientNotesButton"
-                style="@style/ButtonStyle"
-                android:layout_width="75dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/notesInputLayout"
-                android:textAllCaps="false"
-                android:text="@string/logs" />
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/notesInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:theme="@style/RequiredTextTheme"
-                app:layout_constraintTop_toBottomOf="@id/settlementDateSection"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editNotes"
-                    style="@style/EditTextLabelStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
-                    android:ems="10"
-                    android:hint="@string/notes"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-            </android.support.design.widget.TextInputLayout>
 
 
         </android.support.constraint.ConstraintLayout>
