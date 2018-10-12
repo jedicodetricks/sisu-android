@@ -19,7 +19,6 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/pipeline"
-            android:textSize="@dimen/font_smaller"
             style="@style/StatusStyle"/>
         <TextView
             android:id="@+id/signedButton"
@@ -29,7 +28,6 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/signed"
-            android:textSize="@dimen/font_smaller"
             style="@style/StatusStyle"/>
         <TextView
             android:id="@+id/contractButton"
@@ -39,7 +37,6 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/contract"
-            android:textSize="@dimen/font_smaller"
             style="@style/StatusStyle"/>
         <TextView
             android:id="@+id/closedButton"
@@ -49,7 +46,6 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/closed"
-            android:textSize="@dimen/font_smaller"
             style="@style/StatusStyle"/>
         <TextView
             android:id="@+id/archivedButton"
@@ -59,7 +55,6 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/archived"
-            android:textSize="@dimen/font_smaller"
             style="@style/StatusStyle"/>
     </RadioGroup>
 
