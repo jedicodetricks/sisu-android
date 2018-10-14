@@ -149,8 +149,8 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             addButton.setOnClickListener(this);
         }
 
-        editListButton.setVisibility(View.GONE);
         if(editListButton != null) {
+            editListButton.setVisibility(View.GONE);
             editListButton.setOnClickListener(this);
         }
 

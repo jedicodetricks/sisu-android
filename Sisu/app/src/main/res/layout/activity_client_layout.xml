@@ -185,8 +185,8 @@
             android:id="@+id/gciInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toEndOf="@id/dollarSign"
@@ -197,8 +197,8 @@
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:hint="@string/gci_hint"
                 android:inputType="number"
@@ -214,7 +214,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toStartOf="@+id/percentSign"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/gciEquals"
             app:layout_constraintTop_toBottomOf="@+id/transAmountInputLayout">
 
             <EditText
@@ -248,8 +248,8 @@
             android:id="@+id/commissionInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toEndOf="@id/dollarSign2"
@@ -260,8 +260,8 @@
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:hint="@string/commission_hint"
                 android:inputType="number"
@@ -280,7 +280,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/RequiredTextTheme"
             app:layout_constraintEnd_toStartOf="@+id/percentSign2"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/commissionEquals"
             app:layout_constraintTop_toBottomOf="@+id/gciInputLayout">
 
             <EditText
@@ -782,8 +782,8 @@
             android:id="@+id/percentSign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="32dp"
             android:text="@string/percent"
             app:layout_constraintBottom_toBottomOf="@+id/gciPercentLayout"
             app:layout_constraintEnd_toStartOf="@id/calculateGciPercent" />
@@ -792,8 +792,8 @@
             android:id="@+id/percentSign2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="32dp"
             android:text="@string/percent"
             app:layout_constraintBottom_toBottomOf="@+id/paidIncomePercentLayout"
             app:layout_constraintEnd_toStartOf="@id/calculateIncomePercent" />

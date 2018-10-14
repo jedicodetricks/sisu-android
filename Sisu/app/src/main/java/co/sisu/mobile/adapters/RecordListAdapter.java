@@ -1,7 +1,6 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -87,15 +86,15 @@ public class RecordListAdapter extends BaseAdapter {
 
         ImageView minusButton = rowView.findViewById(R.id.minusButton);
         Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
-        minusDrawable.setTint(colorSchemeManager.getIconActive());
+        minusDrawable.setTint(colorSchemeManager.getRoundedButtonColor());
         minusButton.setImageDrawable(minusDrawable);
 
         VectorChildFinder vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, minusButton);
         for (int i = 0; i < 7; i++) {
             String pathName = "orange_area" + (i + 1);
             VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
-            path.setFillColor(colorSchemeManager.getIconActive());
-            path.setStrokeColor(colorSchemeManager.getIconActive());
+            path.setFillColor(colorSchemeManager.getRoundedButtonColor());
+            path.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
         }
 
         minusButton.invalidate();
@@ -104,8 +103,8 @@ public class RecordListAdapter extends BaseAdapter {
         ImageView plusButton = rowView.findViewById(R.id.plusButton);
         VectorChildFinder plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, plusButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
-        plusPath.setFillColor(colorSchemeManager.getIconActive());
-        plusPath.setStrokeColor(colorSchemeManager.getIconActive());
+        plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
+        plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
         plusButton.invalidate();
 
         minusButton.setOnClickListener(new View.OnClickListener() {

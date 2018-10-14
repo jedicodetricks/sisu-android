@@ -1000,7 +1000,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 activateStatusColor(closedStatus);
             }
         }
-        if(clientStatus.equals("D")) {
+        if(clientStatus != null && clientStatus.equals("D")) {
             resetAllStatusColors();
             activateStatusColor(archivedStatus);
         }

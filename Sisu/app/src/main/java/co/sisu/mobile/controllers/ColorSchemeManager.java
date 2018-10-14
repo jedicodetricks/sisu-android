@@ -36,6 +36,7 @@ public class ColorSchemeManager {
     private int line;
     private int segmentBackground;
     private int spinnerBackground;
+    private int roundedButtonColor;
     private String icon;
 
 
@@ -126,6 +127,8 @@ public class ColorSchemeManager {
                 case "line":
                     line = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
+                case "rounded_button":
+                    roundedButtonColor = Color.parseColor(colorSchemeObject.getTheme_data());
             }
 
         }
@@ -165,6 +168,7 @@ public class ColorSchemeManager {
             menuSelectedText = R.color.colorLightGrey;
             segmentLine = R.color.colorCorporateOrange;
             segmentBackground = R.color.colorCorporateOrange;
+            roundedButtonColor = R.color.colorCorporateOrange;
             line = R.color.colorCorporateOrange;
         }
         else {
@@ -194,6 +198,7 @@ public class ColorSchemeManager {
             segmentSelected = R.color.colorCorporateOrange;
             menuSelectedText = R.color.colorDarkGrey;
             segmentLine = R.color.colorCorporateOrange;
+            roundedButtonColor = R.color.colorCorporateOrange;
             segmentBackground = R.color.colorCorporateOrange;
             line = R.color.colorCorporateOrange;
         }
@@ -306,5 +311,13 @@ public class ColorSchemeManager {
 
     public String getIcon() {
         return icon;
+    }
+
+    public int getRoundedButtonColor() {
+        return roundedButtonColor;
+    }
+
+    public void setRoundedButtonColor(int roundedButtonColor) {
+        this.roundedButtonColor = roundedButtonColor;
     }
 }
