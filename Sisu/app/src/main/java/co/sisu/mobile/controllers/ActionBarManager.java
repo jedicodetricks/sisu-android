@@ -260,9 +260,11 @@ public class ActionBarManager {
             teamBlock.setBackgroundColor(colorSchemeManager.getIconActive());
             SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
         } else {
-            teamLetter.setText(colorSchemeManager.getDarkerTextColor());
-            teamLetter.setBackgroundColor(colorSchemeManager.getIconActive());
-            teamBlock.setBackgroundColor(colorSchemeManager.getIconActive());
+            teamLetter.setText(team.getTeamLetter());
+            teamLetter.setBackgroundColor(team.getColor());
+            teamBlock.setBackgroundColor(team.getColor());
+            SaveSharedPreference.setLogo(parentActivity, null);
+            SaveSharedPreference.setIcon(parentActivity, null);
         }
     }
 
