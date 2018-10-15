@@ -116,7 +116,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         monthToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
         yearToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
-
+        expListView.setBackgroundColor(colorSchemeManager.getAppBackground());
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
                 new int[] {android.R.attr.state_checked},

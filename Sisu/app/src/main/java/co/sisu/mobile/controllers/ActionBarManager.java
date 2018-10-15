@@ -1,6 +1,5 @@
 package co.sisu.mobile.controllers;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v4.view.GravityCompat;
@@ -12,8 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.TeamBarAdapter;
@@ -167,9 +169,10 @@ public class ActionBarManager {
                 homeButton.setOnClickListener(parentActivity);
                 if(teamsList != null && titleString.equals("Leaderboard")) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                    teamBlock.setBackgroundColor(colorSchemeManager.getIconActive());
                     if(colorSchemeManager.getIcon() != null) {
                         Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+
                         //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
                         //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
                         teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
@@ -177,7 +180,7 @@ public class ActionBarManager {
                         teamLetter.setVisibility(View.GONE);
                     } else {
                         teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-                        teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                        teamLetter.setBackgroundColor(colorSchemeManager.getIconActive());
                         teamBlock.setVisibility(View.VISIBLE);
                         teamLetter.setVisibility(View.VISIBLE);
                         teamIcon.setVisibility(View.GONE);
@@ -251,16 +254,15 @@ public class ActionBarManager {
 
     public void updateTeam(TeamObject team) {
         if(colorSchemeManager.getIcon() != null) {
-            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
-            //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
             teamIcon.setVisibility(View.VISIBLE);
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
             teamLetter.setVisibility(View.GONE);
-            teamBlock.setBackgroundColor(Color.TRANSPARENT);
+            teamBlock.setBackgroundColor(colorSchemeManager.getIconActive());
             SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
         } else {
-            teamLetter.setText(team.getTeamLetter());
-            teamLetter.setBackgroundColor(team.getColor());
-            teamBlock.setBackgroundColor(team.getColor());
+            teamLetter.setText(colorSchemeManager.getDarkerTextColor());
+            teamLetter.setBackgroundColor(colorSchemeManager.getIconActive());
+            teamBlock.setBackgroundColor(colorSchemeManager.getIconActive());
         }
     }
 
