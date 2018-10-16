@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -126,7 +127,17 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 }

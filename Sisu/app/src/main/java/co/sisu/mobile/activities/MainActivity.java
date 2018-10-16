@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -310,6 +311,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         if(asyncReturnType.equals("Authenticator")) {
@@ -334,6 +340,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

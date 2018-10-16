@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncForgotPassword;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -64,7 +65,17 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object o, String s) {
         //showToast("There was an error sending that request. Please try again.");
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+
     }
 }

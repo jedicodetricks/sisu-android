@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.JWTObject;
 import io.jsonwebtoken.Jwts;
@@ -25,12 +26,12 @@ public class AsyncGet extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String url;
-    private String returnString;
+    private ApiReturnTypes returnType;
 
-    public AsyncGet (AsyncServerEventListener cb, String url, String returnString) {
+    public AsyncGet (AsyncServerEventListener cb, String url, ApiReturnTypes returnType) {
         callback = cb;
         this.url = url;
-        this.returnString = returnString;
+        this.returnType = returnType;
     }
 
     @Override
@@ -61,14 +62,14 @@ public class AsyncGet extends AsyncTask<String, String, String> {
             if(response.code() == 200) {
 //                AsyncAgentJsonObject agentObject = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
 
-                callback.onEventCompleted(response, returnString);
+                callback.onEventCompleted(response, returnType);
             }
             else {
-                callback.onEventFailed(null, returnString);
+                callback.onEventFailed(null, returnType);
             }
         }
         else {
-            callback.onEventFailed(null, returnString);
+            callback.onEventFailed(null, returnType);
         }
 
         response.body().close();

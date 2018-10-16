@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.DropdownAdapter;
@@ -834,7 +835,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 }

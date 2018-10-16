@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
@@ -312,6 +313,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         }
     }
 
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
     private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
         List<String> currentSorting = new ArrayList<>();
         for (String key : activitiesSelected.keySet()) {
@@ -322,6 +328,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

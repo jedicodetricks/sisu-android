@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.NoteListAdapter;
@@ -128,8 +129,11 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             parentActivity.showToast("Note has been deleted");
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
-        else if(asyncReturnType.equals("Get Message Center")) {
-//            Log.e("BEING RETURNED", (Response) returnObject);
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_MESSAGE_CENTER) {
             AsyncMessageCenterObject messageCenterObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncMessageCenterObject.class);
             final PushModel[] pushModels = messageCenterObject.getPush_messages();
             parentActivity.runOnUiThread(new Runnable() {
@@ -143,6 +147,11 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

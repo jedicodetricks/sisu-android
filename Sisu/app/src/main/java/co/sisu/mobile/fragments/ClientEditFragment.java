@@ -37,6 +37,8 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -47,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -59,6 +62,7 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
+import okhttp3.Response;
 
 public class ClientEditFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
@@ -85,6 +89,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private String typeSelected, clientStatus, m_Text;
     private String statusList = "pipeline";
     private int counter;
+    private Gson gson;
 
 
     public ClientEditFragment() {
@@ -103,6 +108,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        gson = new Gson();
         loader = view.findViewById(R.id.clientLoader);
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
@@ -1100,20 +1106,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             updateCurrentClient(!currentClient.getStatus().equals("D"));
             saveClient();
         }
-        else if(asyncReturnType.equals("Client Settings")) {
-            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
-            ParameterObject settings = settingsJson.getParameter();
-            if(settings != null) {
-                currentClient.setActivate_client(settings.getValue());
-            }
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initializeClient();
-                    loader.setVisibility(View.GONE);
-                }
-            });
-        }
         else if(asyncReturnType.equals("Update Settings")) {
             loader.setVisibility(View.GONE);
             parentActivity.runOnUiThread(new Runnable() {
@@ -1139,7 +1131,30 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_CLIENT_SETTINGS) {
+            AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
+            ParameterObject settings = settingsJson.getParameter();
+            if(settings != null) {
+                currentClient.setActivate_client(settings.getValue());
+            }
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeClient();
+                    loader.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    @Override
     public void onEventFailed(Object o, String s) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

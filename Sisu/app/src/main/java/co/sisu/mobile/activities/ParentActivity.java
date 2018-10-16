@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -476,6 +477,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
         if(pendingIntent == null) {
             Intent myIntent = new Intent(this, NotificationReceiver.class);
@@ -506,6 +512,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         Log.e("FAILURE", asyncReturnType);
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

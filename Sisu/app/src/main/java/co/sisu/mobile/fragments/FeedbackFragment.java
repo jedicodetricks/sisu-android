@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -125,6 +126,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object o, String s) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
@@ -132,5 +138,10 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 parentActivity.showToast("We had an issue recording your feedback. Please try again later.");
             }
         });
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+
     }
 }

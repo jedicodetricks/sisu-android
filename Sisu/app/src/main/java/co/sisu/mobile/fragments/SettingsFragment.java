@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -448,7 +449,17 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object o, String s) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 }

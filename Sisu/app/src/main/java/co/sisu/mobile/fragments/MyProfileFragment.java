@@ -44,6 +44,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -441,6 +442,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 //        if(asyncReturnType.equals("Profile Image")) {
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
@@ -450,6 +456,11 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 //            parentActivity.stackReplaceFragment(MoreFragment.class);
 //            parentActivity.swapToTitleBar("More");
 //        }
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
 
     }
 

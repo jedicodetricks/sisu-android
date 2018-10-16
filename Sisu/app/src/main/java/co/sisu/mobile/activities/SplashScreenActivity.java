@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -92,6 +93,11 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     }
 
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
     private void launchActivity() {
         createNotificationChannel();
         startActivity(intent);
@@ -139,6 +145,11 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
             intent.putExtra("Network", false);
             launchActivity();
         }
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+
     }
 
     public void showToast(final CharSequence msg){

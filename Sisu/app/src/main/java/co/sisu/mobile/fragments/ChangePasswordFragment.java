@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
@@ -123,9 +124,19 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Update Profile")) {
             parentActivity.showToast("Issue with password change. Please try again later.");
         }
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+
     }
 }
