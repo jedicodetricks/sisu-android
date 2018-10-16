@@ -104,6 +104,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private NavigationView navView;
     private ListView navViewList;
     private TextView navTitle;
+    private boolean isNoteFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -750,4 +751,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return toReturn;
     }
 
+    public boolean getIsNoteFragment() {
+        return isNoteFragment;
+    }
+
+    public void setNoteOrMessage(String type) {
+        if(type.equals("Message")) {
+            isNoteFragment = false;
+        }
+        else {
+            isNoteFragment = true;
+        }
+    }
 }

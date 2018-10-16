@@ -101,6 +101,10 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
             case "Slack":
                 navigationManager.stackReplaceFragment(SlackMessageFragment.class);
                 break;
+            case "Message Center":
+                parentActivity.setNoteOrMessage("Message");
+                navigationManager.stackReplaceFragment(ClientNoteFragment.class);
+                break;
             case "Logout":
                 logout();
                 SaveSharedPreference.setUserName(getContext(), "");

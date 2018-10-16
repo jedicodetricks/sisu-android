@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,13 +19,17 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.NoteListAdapter;
+import co.sisu.mobile.adapters.PushModelListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.models.PushModel;
+import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 7/17/18.
@@ -38,6 +44,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private NavigationManager navigationManager;
     private ConstraintLayout contentView;
     private TextView addButton;
+    private Gson gson;
 
     public ClientNoteFragment() {
         // Required empty public constructor
@@ -56,11 +63,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initListView();
+        gson = new Gson();
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
-        apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        if(parentActivity.getIsNoteFragment()) {
+            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
+        else {
+            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id());
+        }
         initAddButton();
     }
 
@@ -71,6 +84,16 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private void fillListViewWithData(List<NotesObject> noteList) {
         if(getContext() != null) {
             NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this, parentActivity.colorSchemeManager);
+            mListView.setAdapter(adapter);
+
+//            mListView.setOnItemClickListener(this);
+        }
+
+    }
+
+    private void fillListViewWithMessageCenterData(List<PushModel> pushModelList) {
+        if(getContext() != null) {
+            PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, parentActivity.colorSchemeManager);
             mListView.setAdapter(adapter);
 
 //            mListView.setOnItemClickListener(this);
@@ -104,6 +127,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         else if(asyncReturnType.equals("Delete Notes")) {
             parentActivity.showToast("Note has been deleted");
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
+        else if(asyncReturnType.equals("Get Message Center")) {
+//            Log.e("BEING RETURNED", (Response) returnObject);
+            AsyncMessageCenterObject messageCenterObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncMessageCenterObject.class);
+            final PushModel[] pushModels = messageCenterObject.getPush_messages();
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fillListViewWithMessageCenterData(new ArrayList<>(Arrays.asList(pushModels)));
+                }
+            });
         }
     }
 

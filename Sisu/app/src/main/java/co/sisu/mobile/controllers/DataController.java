@@ -83,6 +83,7 @@ public class DataController {
         if(slackInfo != null) {
             morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
         }
+        morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.feedback_icon_active));
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 

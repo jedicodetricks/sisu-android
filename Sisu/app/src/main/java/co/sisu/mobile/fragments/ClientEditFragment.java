@@ -885,6 +885,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 popReasonDialog("Reason for Activating Client?", "Activated");
                 break;
             case R.id.clientNotesButton:
+                parentActivity.setNoteOrMessage("Note");
                 navigationManager.stackReplaceFragment(ClientNoteFragment.class);
                 break;
             default:

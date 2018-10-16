@@ -20,6 +20,7 @@ import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncGet;
 import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
 import co.sisu.mobile.api.AsyncGetTeamColorScheme;
@@ -42,6 +43,7 @@ import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
 import co.sisu.mobile.fragments.ClientEditFragment;
+import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -65,7 +67,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://api.sisu.co/";
+    private String url = "http://staging.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -263,7 +265,14 @@ public class ApiManager {
     public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
         getJWT(agentId);
         new AsyncActivateClientSettings(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+    }
 
+    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
+        getJWT(agentId);
+        //TODO: Mimic this across the board and create an enum class that holds all these.
+        String returnString = "Get Message Center";
+        url = url + "api/v1/agent/push-message/" + agentId;
+        new AsyncGet(cb, url, returnString).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {
@@ -290,4 +299,5 @@ public class ApiManager {
 //        Log.e("TIME", timestamp);
 
     }
+
 }
