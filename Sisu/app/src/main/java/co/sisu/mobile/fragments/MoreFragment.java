@@ -78,7 +78,6 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
         switch(value.getTitle()) {
             case "Teams":
-
                 break;
             case "Clients":
                 navigationManager.stackReplaceFragment(ClientListFragment.class);

@@ -44,6 +44,7 @@ import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
 import co.sisu.mobile.fragments.ClientEditFragment;
 import co.sisu.mobile.fragments.ClientNoteFragment;
+import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -271,8 +272,8 @@ public class ApiManager {
         getJWT(agentId);
         //TODO: Mimic this across the board and create an enum class that holds all these.
         String returnString = "Get Message Center";
-        url = url + "api/v1/agent/push-message/" + agentId;
-        new AsyncGet(cb, url, returnString).execute(jwtStr, timestamp, transactionID);
+        String currentUrl = url + "api/v1/agent/push-message/" + agentId;
+        new AsyncGet(cb, currentUrl, returnString).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {
@@ -300,4 +301,8 @@ public class ApiManager {
 
     }
 
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String message) {
+        getJWT(agentId);
+        new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
+    }
 }

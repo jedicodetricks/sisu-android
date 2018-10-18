@@ -36,6 +36,7 @@ public class ActionBarManager {
     private List<TeamObject> teamsList;
     int selectedTeam = 0;
     private ClientObject selectedClient;
+    private TeamObject currentTeam;
 
 
     public ActionBarManager(ParentActivity parentActivity) {
@@ -251,6 +252,7 @@ public class ActionBarManager {
     }
 
     public void updateTeam(TeamObject team) {
+        currentTeam = team;
         if(colorSchemeManager.getIcon() != null) {
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
             //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
@@ -263,6 +265,10 @@ public class ActionBarManager {
             teamLetter.setBackgroundColor(team.getColor());
             teamBlock.setBackgroundColor(team.getColor());
         }
+    }
+
+    public TeamObject getCurrentTeam() {
+        return currentTeam;
     }
 
     public void toggleDrawer() {

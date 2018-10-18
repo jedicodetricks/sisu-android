@@ -29,6 +29,7 @@ import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.PushModel;
+import co.sisu.mobile.models.TeamObject;
 import okhttp3.Response;
 
 /**
@@ -104,10 +105,26 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private void initAddButton() {
         addButton = parentActivity.findViewById(R.id.addClientButton);
         if(addButton != null) {
-            addButton.setVisibility(View.VISIBLE);
-            addButton.setOnClickListener(this);
-            TextView edit = parentActivity.findViewById(R.id.editClientListButton);
-            edit.setVisibility(View.GONE);
+            if(parentActivity.getIsNoteFragment()) {
+                addButton.setVisibility(View.VISIBLE);
+                addButton.setOnClickListener(this);
+                TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                edit.setVisibility(View.GONE);
+            }
+            else {
+                if(parentActivity.getCurrentTeam().getRole() != null && parentActivity.getCurrentTeam().getRole().equals("ADMIN")) {
+                    addButton.setVisibility(View.VISIBLE);
+                    addButton.setOnClickListener(this);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+                else {
+                    addButton.setVisibility(View.INVISIBLE);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 
@@ -151,9 +168,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addClientButton:
-                parentActivity.setSelectedNote(null);
-                navigationManager.stackReplaceFragment(AddNoteFragment.class);
-                break;
+                if(parentActivity.getIsNoteFragment()) {
+                    parentActivity.setSelectedNote(null);
+                    navigationManager.stackReplaceFragment(AddNoteFragment.class);
+                    break;
+                }
+                else {
+                    parentActivity.setSelectedNote(null);
+                    navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    break;
+                }
+
         }
     }
 

@@ -68,7 +68,12 @@ public class NavigationManager {
                 actionBarManager.swapToAddClientBar(null);
             }
             else {
-                actionBarManager.swapToAddClientBar("Send Slack Message");
+                if(parentActivity.getIsNoteFragment()) {
+                    actionBarManager.swapToAddClientBar("Send Slack Message");
+                }
+                else {
+                    actionBarManager.swapToAddClientBar("Send Push Notification");
+                }
             }
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
@@ -305,6 +310,10 @@ public class NavigationManager {
 
     public int getSelectedTeamId() {
         return actionBarManager.getSelectedTeamId();
+    }
+
+    public TeamObject getCurrentTeam() {
+        return actionBarManager.getCurrentTeam();
     }
 
     public int getMarketId() {
