@@ -351,6 +351,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
+                        dataController.setMessageCenterVisible(true);
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                         SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                         if(settingsFinished) {
@@ -359,6 +360,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
                     else {
+                        dataController.setMessageCenterVisible(false);
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }

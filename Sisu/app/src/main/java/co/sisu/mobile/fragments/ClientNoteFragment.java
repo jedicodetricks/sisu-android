@@ -151,26 +151,20 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addClientButton:
-                if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
-                    parentActivity.setSelectedNote(null);
-                    navigationManager.stackReplaceFragment(AddNoteFragment.class);
-                }
+                parentActivity.setSelectedNote(null);
+                navigationManager.stackReplaceFragment(AddNoteFragment.class);
                 break;
         }
     }
 
     @Override
     public void editButtonClicked(NotesObject noteObject) {
-        if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
-            parentActivity.setSelectedNote(noteObject);
-            navigationManager.stackReplaceFragment(AddNoteFragment.class);
-        }
+        parentActivity.setSelectedNote(noteObject);
+        navigationManager.stackReplaceFragment(AddNoteFragment.class);
     }
 
     @Override
     public void deleteButtonClicked(NotesObject noteObject) {
-        if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
-            apiManager.deleteNote(this, dataController.getAgent().getAgent_id(), noteObject.getId());
-        }
+        apiManager.deleteNote(this, dataController.getAgent().getAgent_id(), noteObject.getId());
     }
 }

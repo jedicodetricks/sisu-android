@@ -56,6 +56,7 @@ public class DataController {
     private HashMap<String, String> labels;
 
     private String slackInfo;
+    private boolean messageCenterVisible = false;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -83,7 +84,9 @@ public class DataController {
         if(slackInfo != null) {
             morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
         }
-        morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.feedback_icon_active));
+        if(messageCenterVisible) {
+            morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.text_message_icon_active));
+        }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
@@ -1093,5 +1096,9 @@ public class DataController {
             itemArray.put(currentActivitiesSorting.get(i), activitiesSelected.get(currentActivitiesSorting.get(i)));
         }
         activitiesSelected = itemArray;
+    }
+
+    public void setMessageCenterVisible(boolean b) {
+        messageCenterVisible = b;
     }
 }
