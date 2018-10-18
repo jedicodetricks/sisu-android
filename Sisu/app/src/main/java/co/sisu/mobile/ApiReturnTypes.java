@@ -6,6 +6,8 @@ package co.sisu.mobile;
 
 public enum ApiReturnTypes {
     GET_MESSAGE_CENTER,
-    GET_ACTIVITIES,
-    GET_CLIENT_SETTINGS
+    GET_CLIENT_SETTINGS,
+    GET_AGENT_GOALS,
+    GET_TEAMS,
+    GET_SETTINGS
 }

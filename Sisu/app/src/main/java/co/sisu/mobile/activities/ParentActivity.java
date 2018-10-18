@@ -31,6 +31,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,6 +62,7 @@ import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
+import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
@@ -70,6 +73,7 @@ import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
+import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 2/26/18.
@@ -106,6 +110,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ListView navViewList;
     private TextView navTitle;
     private boolean isNoteFragment = false;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +119,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorCorporateGrey)));
 
         parentLoader = findViewById(R.id.parentLoader);
-
+        gson = new Gson();
         dataController = new DataController();
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
@@ -125,7 +130,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         initParentFields();
         initializeButtons();
-        apiManager.sendAsyncTeams(this, agent.getAgent_id());
+        apiManager.getTeams(this, agent.getAgent_id());
         apiManager.sendAsyncClients(this, agent.getAgent_id());
 
         // Get max available VM memory, exceeding this amount will throw an
@@ -345,31 +350,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Teams")) {
-            dataController.setTeamsObject(ParentActivity.this, returnObject);
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    if(dataController.getTeamsObject().size() > 0) {
-                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
-                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
-                        if(settingsFinished) {
-                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
-                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
-                        }
-                    }
-                    else {
-                        teamParamFinished = true;
-                        dataController.setSlackInfo(null);
-                    }
-                    teamsFinished = true;
-                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
-                    apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
-                }
-            });
-        }
-        else if(asyncReturnType.equals("Get Firebase Device")) {
+//        if(asyncReturnType.equals("Teams")) {
+//            dataController.setTeamsObject(ParentActivity.this, returnObject);
+//            this.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    navigationManager.initializeTeamBar(dataController.getTeamsObject());
+//                    if(dataController.getTeamsObject().size() > 0) {
+//                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+//                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
+//                        if(settingsFinished) {
+//                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+//                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+//                        }
+//                    }
+//                    else {
+//                        teamParamFinished = true;
+//                        dataController.setSlackInfo(null);
+//                    }
+//                    teamsFinished = true;
+//                    apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id());
+//                    apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+//                }
+//            });
+//        }
+        if(asyncReturnType.equals("Get Firebase Device")) {
             AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;
             FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
             String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
@@ -391,15 +396,103 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
 
         }
-        else if(asyncReturnType.equals("Goals")) {
-            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+//        else if(asyncReturnType.equals("Goals")) {
+//            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+//            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+//            dataController.setAgentGoals(agentGoalsObject);
+//            goalsFinished = true;
+//            navigateToScoreboard();
+//        }
+//        else if(asyncReturnType.equals("Settings")) {
+//            AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
+//            ParameterObject[] settings = settingsJson.getParameters();
+//            dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
+//            List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
+//            settingsFinished = true;
+//            int hour = 0;
+//            int minute = 0;
+//            int reminderActive = 0;
+//            for (ParameterObject s : newSettings) {
+//                Log.e(s.getName(), s.getValue());
+//                switch (s.getName()) {
+//                    case "daily_reminder_time":
+//                        String[] values = s.getValue().split(":");
+//                        try{
+//                            hour = Integer.parseInt(values[0]);
+//                            minute = Integer.parseInt(values[1]);
+//                            Log.e("ALARM TIME", hour + " " + minute);
+//                        } catch(NumberFormatException nfe) {
+//                            hour = 17;
+//                            minute = 0;
+//                        }
+//                        break;
+//                    case "daily_reminder":
+//                        try{
+//                            reminderActive = Integer.parseInt(s.getValue());
+//
+//                        } catch(NumberFormatException nfe) {
+//                            reminderActive = 1;
+//                        }
+//                }
+//            }
+//
+//            if(reminderActive == 1) {
+//                createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+//            }
+//            if(teamsFinished) {
+//                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+//                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+//            }
+//            navigateToScoreboard();
+//        }
+        else if(asyncReturnType.equals("Team Parameters")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            if(settingsJson.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settingsJson.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Update Activities")) {
+            dataController.clearUpdatedRecords();
+        }
+        else if(asyncReturnType.equals("Clients")) {
+            dataController.setClientListObject(returnObject);
+            clientFinished = true;
+            navigateToScoreboard();
+        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
+            AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
             goalsFinished = true;
             navigateToScoreboard();
         }
-        else if(asyncReturnType.equals("Settings")) {
-            AsyncSettingsJsonObject settingsJson = (AsyncSettingsJsonObject) returnObject;
+        else if(returnType == ApiReturnTypes.GET_SETTINGS) {
+            AsyncSettingsJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncSettingsJsonObject.class);
             ParameterObject[] settings = settingsJson.getParameters();
             dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
             List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
@@ -440,46 +533,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             navigateToScoreboard();
         }
-        else if(asyncReturnType.equals("Team Parameters")) {
-            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
-            if(settingsJson.getStatus_code().equals("-1")) {
-                dataController.setSlackInfo(null);
-            }
-            else {
-                ParameterObject params = settingsJson.getParameter();
-                dataController.setSlackInfo(params.getValue());
-            }
-            teamParamFinished = true;
-            navigateToScoreboard();
+        else if(returnType == ApiReturnTypes.GET_TEAMS) {
+            AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
+            dataController.setTeamsObject(ParentActivity.this, teamsObject);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                    if(dataController.getTeamsObject().size() > 0) {
+                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
+                        if(settingsFinished) {
+                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+                        }
+                    }
+                    else {
+                        teamParamFinished = true;
+                        dataController.setSlackInfo(null);
+                    }
+                    teamsFinished = true;
+                    apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id());
+                    apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+                }
+            });
         }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            setActivityColors();
-            colorSchemeFinished = true;
-            navigateToScoreboard();
-        }
-        else if(asyncReturnType.equals("Get Labels")) {
-            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
-            HashMap<String, String> labels = labelObject.getMarket();
-            dataController.setLabels(labels);
-            labelsFinished = true;
-            navigateToScoreboard();
-        }
-        else if(asyncReturnType.equals("Update Activities")) {
-            dataController.clearUpdatedRecords();
-        }
-        else if(asyncReturnType.equals("Clients")) {
-            dataController.setClientListObject(returnObject);
-            clientFinished = true;
-            navigateToScoreboard();
-        }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
@@ -510,14 +588,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-
         Log.e("FAILURE", asyncReturnType);
 
     }
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-
+        Log.e("FAILURE", returnType.name());
     }
 
     private Animator mCurrentAnimator;
@@ -773,5 +850,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else {
             isNoteFragment = true;
         }
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

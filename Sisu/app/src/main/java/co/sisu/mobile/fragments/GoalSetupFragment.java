@@ -40,6 +40,7 @@ import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.UpdateAgentGoalsObject;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,7 +101,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
+        apiManager.getAgentGoals(this, agent.getAgent_id());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
@@ -459,15 +460,15 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 //                navigationManager.swapToTitleBar("More");
             }
         }
-        else if(asyncReturnType.equals("Goals")) {
-            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
-            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject);
-            goalsUpdated = true;
-            if(agentUpdated) {
-                setupFieldsWithGoalData();
-            }
-        }
+//        else if(asyncReturnType.equals("Goals")) {
+//            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+//            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+//            dataController.setAgentGoals(agentGoalsObject);
+//            goalsUpdated = true;
+//            if(agentUpdated) {
+//                setupFieldsWithGoalData();
+//            }
+//        }
         else if(asyncReturnType.equals("Update Agent")) {
             agentUpdating = false;
             updatedGoals = new HashMap<>();
@@ -495,7 +496,15 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
+            AsyncGoalsJsonObject goals = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
+            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
+            goalsUpdated = true;
+            if(agentUpdated) {
+                setupFieldsWithGoalData();
+            }
+        }
     }
 
     @Override

@@ -76,34 +76,48 @@ public class ApiManager {
         cache = new Cache(context.getCacheDir(), cacheSize);
     }
 
-    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
-        //POST
-        getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, startDate, endDate).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime) {
-        //POST
-        getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId) {
+    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
         getJWT(agentId);
-        new AsyncAgentGoals(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_SETTINGS;
+        String currentUrl = url + "api/v1/parameter/edit-parameter/3/"+ clientId +"/activate_client";
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        AsyncActivateClientSettings
     }
 
-    public void sendAsyncSettings(AsyncServerEventListener cb, String agentId) {
+    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncSettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_MESSAGE_CENTER;
+        String currentUrl = url + "api/v1/agent/push-message/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncTeams(AsyncServerEventListener cb, String agentId) {
+    public void getAgentGoals(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_GOALS;
+        String currentUrl = url + "api/v1/agent/get-goals/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncAgentGoals(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getSettings(AsyncServerEventListener cb, String agentId) {
+        //GET
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_SETTINGS;
+        String currentUrl = url + "api/v1/parameter/get-parameters/2/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncSettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getTeams(AsyncServerEventListener cb, String agentId) {
+        //GET
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAMS;
+        String currentUrl = url + "api/v1/agent/get-teams/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncClients(AsyncServerEventListener cb, String agentId) {
@@ -112,63 +126,16 @@ public class ApiManager {
         new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
-        //PUT
-        getJWT(agentId);
-        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject).execute(jwtStr, timestamp, transactionID);
-    }
-
     public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
         new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
-        //PUT
-        getJWT(agentId);
-        new AsyncUpdateActivitySettings(cb, url, updateObject).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
-        //POST
-        getJWT(agentId);
-        new AsyncAddClient(cb, url, agentId, newClient).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncUpdateClients(AsyncServerEventListener cb, String agentId, ClientObject currentClient) {
-        //PUT
-        getJWT(agentId);
-        new AsyncUpdateClients(cb, url, currentClient).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
-        //POST
-        getJWT(agentId);
-        if(slackUrl != null) {
-            new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
-        }
-        else {
-            new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
-        }
-    }
-
     public void sendAsyncAgent(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
         new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
-        //PUT
-        getJWT(agentId);
-        new AsyncUpdateAgent(cb, url, agentId, income, reason).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
-        //PUT
-        getJWT(agentId);
-        new AsyncUpdateGoals(cb, url, agentId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
@@ -193,6 +160,101 @@ public class ApiManager {
         //GET
         getJWT(agentId);
         new AsyncProfileImage(cb, url, agentId, cache).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
+        //GET
+        getJWT(agentId);
+        new AsyncTeamParameters(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
+        //GET
+        getJWT(agentId);
+        new AsyncGetNotes(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
+        //GET
+        getJWT(agentId);
+        new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
+        //GET
+        if(selectedTeamId == -1) {
+            selectedTeamId = 0;
+        }
+        getJWT(agentId);
+        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
+        //GET
+        if(teamId == -1) {
+            teamId = 0;
+        }
+        getJWT(agentId);
+        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+        //POST
+        getJWT(agentId);
+        new AsyncActivities(cb, url, agentId, startDate, endDate).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime) {
+        //POST
+        getJWT(agentId);
+        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
+        //POST
+        getJWT(agentId);
+        new AsyncAddClient(cb, url, agentId, newClient).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
+        //POST
+        getJWT(agentId);
+        if(slackUrl != null) {
+            new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
+        }
+        else {
+            new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
+        }
+    }
+
+    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
+        //PUT
+        getJWT(agentId);
+        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
+        //PUT
+        getJWT(agentId);
+        new AsyncUpdateActivitySettings(cb, url, updateObject).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncUpdateClients(AsyncServerEventListener cb, String agentId, ClientObject currentClient) {
+        //PUT
+        getJWT(agentId);
+        new AsyncUpdateClients(cb, url, currentClient).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
+        //PUT
+        getJWT(agentId);
+        new AsyncUpdateAgent(cb, url, agentId, income, reason).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
+        //PUT
+        getJWT(agentId);
+        new AsyncUpdateGoals(cb, url, agentId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateProfileImage(AsyncServerEventListener cb, String agentId, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
@@ -231,12 +293,6 @@ public class ApiManager {
         new AsyncUpdateNotes(cb, url, noteId, note, noteType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
-        //GET
-        getJWT(agentId);
-        new AsyncGetNotes(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
-    }
-
     public void deleteNote(AsyncServerEventListener cb, String agentId, String noteId) {
         //DELETE
         getJWT(agentId);
@@ -244,11 +300,6 @@ public class ApiManager {
     }
 
 
-    public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
-        //GET
-        getJWT(agentId);
-        new AsyncTeamParameters(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
-    }
 
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         //POST
@@ -265,51 +316,10 @@ public class ApiManager {
         }
     }
 
-    public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
-        //GET
-        getJWT(agentId);
-        new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
-        //GET
-        if(selectedTeamId == -1) {
-            selectedTeamId = 0;
-        }
-        getJWT(agentId);
-        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
-        //GET
-        if(teamId == -1) {
-            teamId = 0;
-        }
-        getJWT(agentId);
-        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
-    }
-
     public void setClientParameter(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject activateClientObject) {
         //PUT
         getJWT(agentId);
         new AsyncUpdateSettings(cb, url, agentId, activateClientObject).execute(jwtStr, timestamp, transactionID);
-    }
-
-
-    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
-        getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_SETTINGS;
-        url = url + "api/v1/parameter/edit-parameter/3/"+ clientId +"/activate_client";
-        new AsyncGet(cb, url, returnType).execute(jwtStr, timestamp, transactionID);
-//        AsyncActivateClientSettings
-    }
-
-    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
-        getJWT(agentId);
-        //TODO: Mimic this across the board and create an enum class that holds all these.
-        ApiReturnTypes returnType = ApiReturnTypes.GET_MESSAGE_CENTER;
-        url = url + "api/v1/agent/push-message/" + agentId;
-        new AsyncGet(cb, url, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {

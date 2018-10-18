@@ -60,10 +60,10 @@ public class AsyncClients extends AsyncTask<String, String, String> {
                     AsyncClientJsonObject clientObject = gson.fromJson(response.body().charStream(), AsyncClientJsonObject.class);
                     callback.onEventCompleted(clientObject, "Clients");
                 } else {
-                    callback.onEventFailed(null, "Server Ping");
+                    callback.onEventFailed(null, "Clients");
                 }
             } else {
-                callback.onEventFailed(null, "Server Ping");
+                callback.onEventFailed(null, "Clients");
             }
 
             response.body().close();
