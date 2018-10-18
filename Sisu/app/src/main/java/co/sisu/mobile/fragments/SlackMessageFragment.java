@@ -32,7 +32,6 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     private ApiManager apiManager;
     private EditText noteText;
     private TextView sendSlackButton, cancelButton;
-    private boolean isUpdate = false;
 
 
     @Override
@@ -70,7 +69,6 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         NotesObject notesObject = parentActivity.getSelectedNote();
         if(notesObject != null) {
             noteText.setText(notesObject.getNote());
-            isUpdate = true;
         }
     }
 
@@ -78,6 +76,9 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         noteText = getView().findViewById(R.id.addNoteEditText);
         sendSlackButton = parentActivity.findViewById(R.id.addClientSaveButton);
         if(sendSlackButton != null) {
+            if(!parentActivity.getIsNoteFragment()) {
+                sendSlackButton.setText("Send");
+            }
             sendSlackButton.setOnClickListener(this);
         }
         cancelButton = parentActivity.findViewById(R.id.cancelButton);
@@ -91,8 +92,15 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         switch (view.getId()) {
             case R.id.addClientSaveButton:
                 if(!noteText.getText().toString().equals("")) {
-                    apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
-                    parentActivity.showToast("Sending message to your Slack channel.");
+                    if(parentActivity.getIsNoteFragment()) {
+                        apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
+                        parentActivity.showToast("Sending message to your Slack channel...");
+                    }
+                    else {
+                        //TODO: This will be where we put the apimanager to send the push
+                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), noteText.getText().toString());
+                        parentActivity.showToast("Sending push notification to your team...");
+                    }
                     hideKeyboard(getView());
                     navigationManager.onBackPressed();
                 }

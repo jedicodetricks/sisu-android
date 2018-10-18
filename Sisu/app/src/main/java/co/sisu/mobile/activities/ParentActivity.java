@@ -303,6 +303,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         navigationManager.closeDrawer();
     }
 
+    public TeamObject getCurrentTeam() {
+        return navigationManager.getCurrentTeam();
+    }
+
     private void navigateToScoreboard() {
         if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && noNavigation) {
             this.runOnUiThread(new Runnable() {
@@ -350,7 +354,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                    navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                     if(dataController.getTeamsObject().size() > 0) {
+                        dataController.setMessageCenterVisible(true);
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                         SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                         if(settingsFinished) {
@@ -359,6 +365,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
                     else {
+                        dataController.setMessageCenterVisible(false);
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }

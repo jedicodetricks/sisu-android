@@ -13,13 +13,15 @@ public class TeamObject {
     private int market_id;
     private String icon;
     private String logo;
+    private String role;
 
-    public TeamObject(String name, int id, int color, int market_id) {
+    public TeamObject(String name, int id, int color, int market_id, String role) {
         this.name = name;
         this.id = id;
         this.color = color;
         this.teamLetter = name.charAt(0) + "";
         this.market_id = market_id;
+        this.role = role;
     }
 
     public String getName() {
@@ -57,4 +59,9 @@ public class TeamObject {
     public void setLogo(String logo) {
         this.logo = logo;
     }
+
+    public String getRole() {
+        return role;
+    }
+
 }

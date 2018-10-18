@@ -56,6 +56,7 @@ public class DataController {
     private HashMap<String, String> labels;
 
     private String slackInfo;
+    private boolean messageCenterVisible = false;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -83,7 +84,9 @@ public class DataController {
         if(slackInfo != null) {
             morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
         }
-        morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.feedback_icon_active));
+        if(messageCenterVisible) {
+            morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.text_message_icon_active));
+        }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
@@ -98,7 +101,7 @@ public class DataController {
         TeamJsonObject[] teams = teamsObjects.getTeams();
         int colorCounter = 0;
         for(int i = 0; i < teams.length; i++) {
-            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter]), Integer.valueOf(teams[i].getMarket_id())));
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter]), Integer.valueOf(teams[i].getMarket_id()), teams[i].getRole()));
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
             }
@@ -1093,5 +1096,9 @@ public class DataController {
             itemArray.put(currentActivitiesSorting.get(i), activitiesSelected.get(currentActivitiesSorting.get(i)));
         }
         activitiesSelected = itemArray;
+    }
+
+    public void setMessageCenterVisible(boolean b) {
+        messageCenterVisible = b;
     }
 }
