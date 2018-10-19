@@ -2,6 +2,7 @@ package co.sisu.mobile.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -85,13 +86,14 @@ public class AsyncAddFirebaseDevice extends AsyncTask<String, String, String> {
     }
 
     private FirebaseDeviceObject generateFirebaseObject() {
-        String deviceId = agent.getAgent_id() + "-" + UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString();
+        String deviceId = agent.getAgent_id() + "-" + uuid;
         String deviceName = agent.getAgent_id() + "'s android";
         if(agent.getFirst_name() != null && agent.getLast_name() != null) {
-            deviceName = agent.getAgent_id() + "-" + agent.getFirst_name() + " " + agent.getLast_name() + " android";
+            deviceName = agent.getAgent_id() + "-" + agent.getFirst_name() + " " + agent.getLast_name() + " android " + uuid;
         }
         else if(agent.getLast_name() != null) {
-            deviceName = agent.getAgent_id() + " " + agent.getLast_name() + "s android";
+            deviceName = agent.getAgent_id() + " " + agent.getLast_name() + "s android " + uuid;
         }
         SaveSharedPreference.setFirebaseDeviceId(context, deviceId);
         FirebaseDeviceObject firebaseDeviceObject = new FirebaseDeviceObject("Android", deviceId, deviceName, fcmToken);

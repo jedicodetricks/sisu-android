@@ -112,10 +112,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
                 String token = task.getResult().getToken();
 
                 // Log and toast
-                if(currentDevice != null) {
+//                if(currentDevice != null) {
                     apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
                     Log.e("Firebase TOKEN REFRESH", token);
-                }
+//                }
 
             }
         });
@@ -141,11 +141,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-
+        Log.e("FIREBASE COMPLETE", asyncReturnType);
     }
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-
+        Log.e("FIREBASE FAILURE", asyncReturnType);
     }
 }

@@ -226,7 +226,6 @@ public class ApiManager {
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         getJWT(agent.getAgent_id());
         new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
-
     }
 
     public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
@@ -303,6 +302,6 @@ public class ApiManager {
 
     public void sendPushNotification(AsyncServerEventListener cb, String agentId, String message) {
         getJWT(agentId);
-        new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
+        new AsyncFeedback(cb, url, agentId, message, false).execute(jwtStr, timestamp, transactionID);
     }
 }
