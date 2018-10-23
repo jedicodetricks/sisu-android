@@ -860,7 +860,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.addAppointmentDateTitle:
             case R.id.addAppointmentDateButton:
                 //TODO: Change this to addAppointment stuff
-                showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
+                showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "add");
                 break;
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
@@ -1112,6 +1112,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
+            case "add":
+                int addYear = year;
+                int addMonth = month - 1;
+                int addDay = day;
+//                appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+//                updateStatus();
+                break;
+
         }
 
 
