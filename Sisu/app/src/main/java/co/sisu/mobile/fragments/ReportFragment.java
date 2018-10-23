@@ -368,14 +368,19 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     }
 
     private void setData(List<Metric> metricList) {
+        List<Metric> prunedList = new ArrayList<>();
+
         for(Metric metric: metricList) {
             metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
+            if(metric.getCurrentNum() > 0|| metric.getWeight() > 40) {
+                prunedList.add(metric);
+            }
         }
         if(getContext() != null) {
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
             }
-            ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, parentActivity.getTimeline(), colorSchemeManager);
+            ReportListAdapter adapter = new ReportListAdapter(getContext(), prunedList, parentActivity.getTimeline(), colorSchemeManager);
             mListView.setAdapter(adapter);
         }
 

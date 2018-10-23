@@ -98,7 +98,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
                     }
                     else {
                         //TODO: This will be where we put the apimanager to send the push
-                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), noteText.getText().toString());
+                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
                         parentActivity.showToast("Sending push notification to your team...");
                     }
                     hideKeyboard(getView());

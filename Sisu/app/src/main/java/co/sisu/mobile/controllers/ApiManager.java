@@ -28,6 +28,7 @@ import co.sisu.mobile.api.AsyncLabels;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
+import co.sisu.mobile.api.AsyncPushMessage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeamParameters;
@@ -68,7 +69,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "http://staging.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -300,8 +301,8 @@ public class ApiManager {
 
     }
 
-    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String message) {
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
         getJWT(agentId);
-        new AsyncFeedback(cb, url, agentId, message, false).execute(jwtStr, timestamp, transactionID);
+        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
     }
 }
