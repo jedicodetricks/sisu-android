@@ -1135,7 +1135,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 }
             });
         }
-
     }
 
     @Override

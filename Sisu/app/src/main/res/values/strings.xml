@@ -48,6 +48,7 @@
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
     <string name="appointmentDateTitle">Initial Appt Date:</string>
+    <string name="addAppointmentDateTitle">Add Appointment:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
