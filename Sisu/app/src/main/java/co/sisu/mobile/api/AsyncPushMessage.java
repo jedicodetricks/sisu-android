@@ -18,13 +18,13 @@ import okhttp3.Response;
 public class AsyncPushMessage extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private String agentId, feedback, url;
+    private String teamId, message, url;
     private boolean isSlackCall;
 
-    public AsyncPushMessage(AsyncServerEventListener cb, String url, String agentId, String feedback, boolean isSlackCall) {
+    public AsyncPushMessage(AsyncServerEventListener cb, String url, String teamId, String message, boolean isSlackCall) {
         callback = cb;
-        this.agentId = agentId;
-        this.feedback = feedback;
+        this.teamId = teamId;
+        this.message = message;
         this.url = url;
         this.isSlackCall = isSlackCall;
     }
@@ -34,10 +34,12 @@ public class AsyncPushMessage extends AsyncTask<String, String, String> {
         Response response = null;
 
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, "{\"feedback\":\"" + feedback +"\"}");
+        RequestBody body = RequestBody.create(mediaType, "{\"body\":\"" + message +"\", \"title\":\"Message from Team Administrator\"}");
 
         OkHttpClient client = new OkHttpClient();
-        String fullUrl = url + "api/v1/feedback/add-feedback/" + agentId;
+//        {{url}}/api/{{version}}team/push-message/{{team_id}}
+
+        String fullUrl = url + "api/v1/team/push-message/" + teamId;
 
         Request request = new Request.Builder()
                 .url(fullUrl)
@@ -47,14 +49,14 @@ public class AsyncPushMessage extends AsyncTask<String, String, String> {
                 .addHeader("Transaction-Id", strings[2])
                 .build();
 
-        if(isSlackCall) {
-            fullUrl = url;
-            body = RequestBody.create(mediaType, "{\"text\":\"" + feedback +"\"}");
-            request = new Request.Builder()
-                    .url(fullUrl)
-                    .post(body)
-                    .build();
-        }
+//        if(isSlackCall) {
+//            fullUrl = url;
+//            body = RequestBody.create(mediaType, "{\"text\":\"" + feedback +"\"}");
+//            request = new Request.Builder()
+//                    .url(fullUrl)
+//                    .post(body)
+//                    .build();
+//        }
 
         Log.e("FULL URL", url);
 

@@ -69,7 +69,11 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
+<<<<<<< HEAD
     private String url = "https://beta.sisu.co/";
+=======
+    private String url = "https://api.sisu.co/";
+>>>>>>> 3917aa61baaf3701758bb188ec72ca7234254700
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -301,8 +305,12 @@ public class ApiManager {
 
     }
 
-    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String message) {
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
         getJWT(agentId);
+<<<<<<< HEAD
         new AsyncPushMessage(cb, url, agentId, message, false).execute(jwtStr, timestamp, transactionID);
+=======
+        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
+>>>>>>> 3917aa61baaf3701758bb188ec72ca7234254700
     }
 }
