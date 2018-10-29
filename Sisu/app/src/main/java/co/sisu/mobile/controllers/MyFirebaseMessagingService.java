@@ -20,6 +20,7 @@ import java.util.logging.Handler;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ForgotPasswordActivity;
 import co.sisu.mobile.activities.MainActivity;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
@@ -91,7 +92,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         if (remoteMessage.getNotification() != null) {
             Log.e("Firebase", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
-            getApplicationContext().startActivity(new Intent(this, ParentActivity.class));
+            Intent intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("title", remoteMessage.getNotification().getTitle());
+            intent.putExtra("body", remoteMessage.getNotification().getBody());
+            getApplicationContext().startActivity(intent);
 //            Utils.generateDialogue(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
             Log.e("RECEIVED", "YES");
         }
