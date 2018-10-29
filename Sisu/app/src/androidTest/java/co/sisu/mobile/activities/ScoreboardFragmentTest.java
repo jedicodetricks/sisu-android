@@ -118,17 +118,14 @@ public class ScoreboardFragmentTest {
         onView(withId(R.id.underContactGoalNumber)).check(matches(withText(String.valueOf(contract))));
         onView(withId(R.id.closedGoalNumber)).check(matches(withText(String.valueOf(closed))));
 
-        sleep(1000);
-
         ViewInteraction contactsButton = onView(
                 allOf(withId(R.id.contactsProgress), isDisplayed()));
         contactsButton.perform(click());
 
         sleep(1000);
 
-        Activity secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -139,9 +136,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -152,9 +147,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -165,9 +158,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -178,9 +169,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -191,9 +180,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        secondActivity = getInstrumentation()
-                .waitForMonitorWithTimeout(clientMonitor, 5000);
-        assertNotNull(secondActivity);
+        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
 
