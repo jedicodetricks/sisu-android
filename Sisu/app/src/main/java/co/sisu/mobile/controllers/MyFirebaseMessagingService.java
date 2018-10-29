@@ -1,8 +1,11 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,7 +15,11 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.logging.Handler;
+
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ForgotPasswordActivity;
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
@@ -63,8 +70,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.e("Firebase", "From: " + remoteMessage.getFrom());
@@ -82,12 +87,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             }
 
         }
-
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e("Firebase", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
-            Utils.generateNotification(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            getApplicationContext().startActivity(new Intent(this, ParentActivity.class));
+//            Utils.generateDialogue(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            Log.e("RECEIVED", "YES");
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

@@ -3,16 +3,14 @@ package co.sisu.mobile.utils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.activities.SplashScreenActivity;
 
 /**
@@ -44,8 +42,25 @@ public class Utils {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         notificationManager.notify(666, mBuilder.build());
+    }
 
+    @SuppressWarnings("static-access")
+    public static AlertDialog generateDialogue(Context context, String title, String text) {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("HELLO WORLD")
+                .setPositiveButton("FIRE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        // Create the AlertDialog object and return it
+        return builder.create();
     }
 
 }
