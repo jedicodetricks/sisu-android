@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
 
     <ImageView
         android:id="@+id/notificationImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/sisu_launcher_icon" />
+
 
     <TextView
         android:id="@+id/notificationTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@id/notificationImage"
         android:text="INFORMATION"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationImage" />
+        android:textSize="@dimen/font_large"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/notificationBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_below="@+id/notificationTitle"
+        android:layout_alignStart="@id/notificationTitle"
+        android:layout_alignEnd="@id/notificationTitle"
         android:text="BLAH BLAH BLAH"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationTitle" />
-</android.support.constraint.ConstraintLayout>
+        android:textSize="@dimen/font_normal" />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="372dp" />
+
+</RelativeLayout>
