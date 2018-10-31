@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -31,6 +32,9 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
@@ -77,6 +81,38 @@ public class NotificationActivity extends AppCompatActivity implements View.OnCl
             bodyView.setText(body);
         }
 
+        Pattern phonePattern = Patterns.PHONE;
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+        final String URL_REGEX = "((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+        Pattern urlPattern = Pattern.compile(URL_REGEX);
+
+        Matcher phoneMatcher = phonePattern.matcher(body);
+        Matcher emailMatcher = emailPattern.matcher(body);
+        Matcher urlMatcher = urlPattern.matcher(body);
+
+        boolean phoneVal = phoneMatcher.find();
+        boolean emailVal = emailMatcher.find();
+        boolean urlVal = urlMatcher.find();
+        String notificationBody = "";
+        String phoneNumber = "";
+        String email = "";
+        String url = "";
+        if(phoneVal) {
+            Log.e("LENGTH", String.valueOf(phoneMatcher.groupCount()));
+            Log.e("PHONE NUMBER", phoneMatcher.group(0));
+            phoneNumber = phoneMatcher.group(0);
+        }
+
+        if(emailVal) {
+            Log.e("EMAIL", emailMatcher.group(0));
+
+        }
+
+        if(urlVal) {
+            Log.e("URL", urlMatcher.group(0));
+        }
+
+        Log.e("TEST", "TEST");
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
