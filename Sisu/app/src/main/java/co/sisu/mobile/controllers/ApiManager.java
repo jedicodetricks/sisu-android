@@ -130,10 +130,13 @@ public class ApiManager {
 //        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncAgent(AsyncServerEventListener cb, String agentId) {
+    public void getAgent(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT;
+        String currentUrl = url + "api/v1/agent/edit-agent/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
@@ -342,7 +345,6 @@ public class ApiManager {
 //        Log.e("JWT", jwtStr);
 //        Log.e("TRANS", transactionID);
 //        Log.e("TIME", timestamp);
-
     }
 
 }

@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Api;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -56,6 +57,7 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -107,7 +109,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
-        apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        apiManager.getAgent(this, agent.getAgent_id());
 
         Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
         if(profilePic == null) {
@@ -431,19 +433,26 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
 //            navigationManager.swapToTitleBar("More");
         }
-        else if(asyncReturnType.equals("Get Agent")) {
-            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
-            AgentModel agentModel = agentJsonObject.getAgent();
-            dataController.setAgent(agentModel);
-            agent = dataController.getAgent();
-            fillInAgentInfo();
-        }
+//        else if(asyncReturnType.equals("Get Agent")) {
+//            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
+//            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
+//            AgentModel agentModel = agentJsonObject.getAgent();
+//            dataController.setAgent(agentModel);
+//            agent = dataController.getAgent();
+//            fillInAgentInfo();
+//        }
 
     }
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_AGENT) {
+            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
+            AgentModel agentModel = agentJsonObject.getAgent();
+            dataController.setAgent(agentModel);
+            agent = dataController.getAgent();
+            fillInAgentInfo();
+        }
     }
 
     @Override

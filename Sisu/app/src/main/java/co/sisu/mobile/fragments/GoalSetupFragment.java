@@ -102,7 +102,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         income = "";
         reason = "";
         apiManager.getAgentGoals(this, agent.getAgent_id());
-        apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        apiManager.getAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
     }
@@ -476,16 +476,16 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
 //            navigationManager.swapToTitleBar("More");
         }
-        else if(asyncReturnType.equals("Get Agent")) {
-            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
-            AgentModel agentModel = agentJsonObject.getAgent();
-            dataController.setAgentIncomeAndReason(agentModel);
-            agent = dataController.getAgent();
-            agentUpdated = true;
-            if(goalsUpdated) {
-                setupFieldsWithGoalData();
-            }
-        }
+//        else if(asyncReturnType.equals("Get Agent")) {
+//            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
+//            AgentModel agentModel = agentJsonObject.getAgent();
+//            dataController.setAgentIncomeAndReason(agentModel);
+//            agent = dataController.getAgent();
+//            agentUpdated = true;
+//            if(goalsUpdated) {
+//                setupFieldsWithGoalData();
+//            }
+//        }
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -505,6 +505,22 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 setupFieldsWithGoalData();
             }
         }
+        else if(returnType == ApiReturnTypes.GET_AGENT) {
+            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
+            AgentModel agentModel = agentJsonObject.getAgent();
+            dataController.setAgentIncomeAndReason(agentModel);
+            agent = dataController.getAgent();
+            agentUpdated = true;
+            if(goalsUpdated) {
+                setupFieldsWithGoalData();
+            }
+        }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loader.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
