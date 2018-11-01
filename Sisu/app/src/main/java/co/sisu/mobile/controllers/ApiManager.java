@@ -1,7 +1,6 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,16 +8,13 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import co.sisu.mobile.ApiReturnTypes;
-import co.sisu.mobile.api.AsyncActivateClientSettings;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncAddFirebaseDevice;
 import co.sisu.mobile.api.AsyncAddNotes;
 import co.sisu.mobile.api.AsyncAgent;
-import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
-import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGet;
@@ -30,9 +26,7 @@ import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeamParameters;
-import co.sisu.mobile.api.AsyncTeams;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.api.AsyncUpdateAgent;
@@ -43,8 +37,6 @@ import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
-import co.sisu.mobile.fragments.ClientEditFragment;
-import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -120,7 +112,7 @@ public class ApiManager {
 //        new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncClients(AsyncServerEventListener cb, String agentId) {
+    public void getClients(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENTS;
@@ -129,10 +121,13 @@ public class ApiManager {
 //        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {
+    public void getActivitySettings(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
+        String currentUrl = url + "api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities";
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAgent(AsyncServerEventListener cb, String agentId) {

@@ -132,7 +132,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initParentFields();
         initializeButtons();
         apiManager.getTeams(this, agent.getAgent_id());
-        apiManager.sendAsyncClients(this, agent.getAgent_id());
+        apiManager.getClients(this, agent.getAgent_id());
 
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an

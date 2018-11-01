@@ -1,6 +1,5 @@
 package co.sisu.mobile.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +38,7 @@ import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.models.UpdateSettingsObject;
+import okhttp3.Response;
 
 /**
  * Created by Jeff on 4/18/2018.
@@ -84,7 +84,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeButtons();
         initializeListView();
         loader.setVisibility(View.VISIBLE);
-        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id());
     }
 
     private void setupFieldsWithData() {
@@ -260,21 +260,22 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Activity Settings")) {
-            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
-            ParameterObject settings = settingsJson.getParameter();
-            dataController.setActivitiesSelected(settings);
-            currentActivitiesSorting = setupCurrentSorting(dataController.getActivitiesSelected());
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loader.setVisibility(View.GONE);
-                    setupFieldsWithData();
-                    fillListViewWithData(dataController.getActivitiesSelected());
-                }
-            });
-        }
-        else if(asyncReturnType.equals("Update Settings")) {
+//        if(asyncReturnType.equals("Activity Settings")) {
+//            AsyncParameterJsonObject settings = gson.fromJson(responseBody, AsyncParameterJsonObject.class);
+//            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+//            ParameterObject settings = settingsJson.getParameter();
+//            dataController.setActivitiesSelected(settings);
+//            currentActivitiesSorting = setupCurrentSorting(dataController.getActivitiesSelected());
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loader.setVisibility(View.GONE);
+//                    setupFieldsWithData();
+//                    fillListViewWithData(dataController.getActivitiesSelected());
+//                }
+//            });
+//        }
+        if(asyncReturnType.equals("Update Settings")) {
             if(editMode) {
                 parentActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -315,7 +316,20 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+            AsyncParameterJsonObject settingsObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
+            ParameterObject settings = settingsObject.getParameter();
+            dataController.setActivitiesSelected(settings);
+            currentActivitiesSorting = setupCurrentSorting(dataController.getActivitiesSelected());
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                    setupFieldsWithData();
+                    fillListViewWithData(dataController.getActivitiesSelected());
+                }
+            });
+        }
     }
 
     private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {

@@ -10,5 +10,6 @@ public enum ApiReturnTypes {
     GET_AGENT_GOALS,
     GET_TEAMS,
     GET_SETTINGS,
-    GET_CLIENTS
+    GET_CLIENTS,
+    GET_ACTIVITY_SETTINGS
 }
