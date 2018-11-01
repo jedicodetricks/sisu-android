@@ -96,7 +96,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             intent.putExtra("title", remoteMessage.getNotification().getTitle());
             intent.putExtra("body", remoteMessage.getNotification().getBody());
             getApplicationContext().startActivity(intent);
-//            Utils.generateDialogue(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
             Log.e("RECEIVED", "YES");
         }
 
