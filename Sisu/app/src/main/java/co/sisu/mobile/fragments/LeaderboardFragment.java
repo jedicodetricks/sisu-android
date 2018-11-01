@@ -49,6 +49,7 @@ import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 import co.sisu.mobile.utils.LeaderboardComparator;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -238,10 +239,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
             if(leaderboardToggle.isChecked()) {
                 //Year selected
-                apiManager.sendAsyncLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
+                apiManager.getLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
             }
             else {
-                apiManager.sendAsyncLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
+                apiManager.getLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
             }
         }
 
@@ -382,12 +383,13 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             agentDisplayCounting();
 
         }
-        else if(asyncReturnType.equals("Leaderboard")){
-            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
-            leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
-
-            prepareListData();
-        }
+//        else if(asyncReturnType.equals("Leaderboard")){
+//            AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);
+//            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
+//            leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
+//
+//            prepareListData();
+//        }
         else if(asyncReturnType.equals("Get Color Scheme")) {
             AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
@@ -404,7 +406,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_LEADERBOARDS){
+            AsyncLeaderboardJsonObject leaderboardJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeaderboardJsonObject.class);
+            leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
 
+            prepareListData();
+        }
     }
 
     @Override

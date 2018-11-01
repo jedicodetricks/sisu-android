@@ -34,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Api;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -113,7 +112,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 
         Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
         if(profilePic == null) {
-            apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+            apiManager.getProfileImage(this, dataController.getAgent().getAgent_id());
         }
         else {
             imageLoader.setVisibility(View.GONE);
@@ -417,18 +416,19 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Profile Image")) {
-            Log.e("GOT THE PIC", "WOOT");
-            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    decodeBase64Image(profileObject.getData());
-                }
-            });
-        }
-        else if(asyncReturnType.equals("Update Profile")) {
+//        if(asyncReturnType.equals("Profile Image")) {
+//            Log.e("GOT THE PIC", "WOOT");
+//            AsyncProfileImageJsonObject profileObject = gson.fromJson(response.body().charStream(), AsyncProfileImageJsonObject.class);
+//            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    decodeBase64Image(profileObject.getData());
+//                }
+//            });
+//        }
+        if(asyncReturnType.equals("Update Profile")) {
             parentActivity.showToast("Your profile has been updated");
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
 //            navigationManager.swapToTitleBar("More");
@@ -452,6 +452,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             dataController.setAgent(agentModel);
             agent = dataController.getAgent();
             fillInAgentInfo();
+        }
+        else if(returnType == ApiReturnTypes.GET_PROFILE_IMAGE) {
+            final AsyncProfileImageJsonObject profileObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncProfileImageJsonObject.class);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    decodeBase64Image(profileObject.getData());
+                }
+            });
         }
     }
 

@@ -139,16 +139,22 @@ public class ApiManager {
 //        new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
+    public void getLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
         //GET
         getJWT(agentId);
-        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, "").execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
+        String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, "").execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncLeaderboardYearAndMonth(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear, String formattedMonth) {
+    public void getLeaderboardYearAndMonth(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear, String formattedMonth) {
         //GET
         getJWT(agentId);
-        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
+        String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear + "/" + formattedMonth;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
@@ -157,10 +163,13 @@ public class ApiManager {
         new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncProfileImage(AsyncServerEventListener cb, String agentId) {
+    public void getProfileImage(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncProfileImage(cb, url, agentId, cache).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_PROFILE_IMAGE;
+        String currentUrl = url + "api/v1/image/3/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncProfileImage(cb, url, agentId, cache).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
