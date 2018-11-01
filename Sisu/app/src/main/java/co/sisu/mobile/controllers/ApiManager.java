@@ -123,7 +123,10 @@ public class ApiManager {
     public void sendAsyncClients(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENTS;
+        String currentUrl = url + "api/v1/agent/get-clients/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+//        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {

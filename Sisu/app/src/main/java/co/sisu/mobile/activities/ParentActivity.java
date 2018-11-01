@@ -56,6 +56,7 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
@@ -475,11 +476,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
         }
-        else if(asyncReturnType.equals("Clients")) {
-            dataController.setClientListObject(returnObject);
-            clientFinished = true;
-            navigateToScoreboard();
-        }
+//        else if(asyncReturnType.equals("Clients")) {
+//            dataController.setClientListObject(returnObject);
+//            clientFinished = true;
+//            navigateToScoreboard();
+//        }
     }
 
     @Override
@@ -557,6 +558,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.GET_CLIENTS) {
+            AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
+            dataController.setClientListObject(clientObject);
+            clientFinished = true;
+            navigateToScoreboard();
         }
     }
 

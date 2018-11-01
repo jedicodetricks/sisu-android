@@ -38,8 +38,10 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
+import okhttp3.Response;
 
 public class ClientListFragment extends Fragment implements android.support.v7.widget.SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener, AdapterView.OnItemClickListener {
 
@@ -331,8 +333,26 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         if (asyncReturnType.equals("Add Notes")) {
 
         }
-        else {
-            dataController.setClientListObject(returnObject);
+//        else {
+//            dataController.setClientListObject(returnObject);
+//
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loader.setVisibility(View.GONE);
+//                    selectTab(selectedTab);
+//                    fillListViewWithData(currentList);
+//                }
+//            });
+//        }
+
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_CLIENTS) {
+            AsyncClientJsonObject clientObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
+            dataController.setClientListObject(clientObject);
 
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -343,12 +363,6 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                 }
             });
         }
-
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     @Override
