@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
@@ -44,6 +45,7 @@ import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int authRetry = 0;
     ApiManager apiManager;
     ColorSchemeManager colorSchemeManager;
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,12 +270,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
             SaveSharedPreference.setTransId(this, jwt.getTransId());
         }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-            colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
-            setColors();
-        }
+//        else if(asyncReturnType.equals("Get Color Scheme")) {
+//            AsyncTeamColorSchemeObject asyncTeamColorSchemeObject = gson.fromJson(response.body().charStream(), AsyncTeamColorSchemeObject.class);
+//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+//            colorScheme = colorJson.getTheme();
+//            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
+//            setColors();
+//        }
         else {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             agent = agentObject.getAgent();
@@ -312,7 +316,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+            colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
+            setColors();
+        }
     }
 
     @Override

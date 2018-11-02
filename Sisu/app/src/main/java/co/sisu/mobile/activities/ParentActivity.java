@@ -375,28 +375,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                }
 //            });
 //        }
-        if(asyncReturnType.equals("Get Firebase Device")) {
-            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;
-            FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
-            String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
-
-            for(FirebaseDeviceObject fdo : devices) {
-                if(fdo.getDevice_id().equals(firebaseDeviceId)) {
-                    Log.e("Current Device", fdo.getDevice_id());
-                    currentDevice = fdo;
-                }
-            }
-            myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
-
-            if(firebaseDeviceId.equals("")) {
-                myFirebaseMessagingService.initFirebase();
-            }
-            else {
-                myFirebaseMessagingService.refreshToken();
-            }
-
-
-        }
+//        if(asyncReturnType.equals("Get Firebase Device")) {
+//            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = gson.fromJson(response.body().charStream(), AsyncFirebaseDeviceJsonObject.class);
+//            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;
+//            FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
+//            String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
+//
+//            for(FirebaseDeviceObject fdo : devices) {
+//                if(fdo.getDevice_id().equals(firebaseDeviceId)) {
+//                    Log.e("Current Device", fdo.getDevice_id());
+//                    currentDevice = fdo;
+//                }
+//            }
+//            myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+//
+//            if(firebaseDeviceId.equals("")) {
+//                myFirebaseMessagingService.initFirebase();
+//            }
+//            else {
+//                myFirebaseMessagingService.refreshToken();
+//            }
+//
+//
+//        }
 //        else if(asyncReturnType.equals("Goals")) {
 //            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
 //            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
@@ -446,34 +447,36 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            }
 //            navigateToScoreboard();
 //        }
-        else if(asyncReturnType.equals("Team Parameters")) {
-            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
-            if(settingsJson.getStatus_code().equals("-1")) {
-                dataController.setSlackInfo(null);
-            }
-            else {
-                ParameterObject params = settingsJson.getParameter();
-                dataController.setSlackInfo(params.getValue());
-            }
-            teamParamFinished = true;
-            navigateToScoreboard();
-        }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            setActivityColors();
-            colorSchemeFinished = true;
-            navigateToScoreboard();
-        }
-        else if(asyncReturnType.equals("Get Labels")) {
-            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
-            HashMap<String, String> labels = labelObject.getMarket();
-            dataController.setLabels(labels);
-            labelsFinished = true;
-            navigateToScoreboard();
-        }
-        else if(asyncReturnType.equals("Update Activities")) {
+//        else if(asyncReturnType.equals("Team Parameters")) {
+//            AsyncParameterJsonObject settings = gson.fromJson(responseBody, AsyncParameterJsonObject.class);
+//            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+//            if(settingsJson.getStatus_code().equals("-1")) {
+//                dataController.setSlackInfo(null);
+//            }
+//            else {
+//                ParameterObject params = settingsJson.getParameter();
+//                dataController.setSlackInfo(params.getValue());
+//            }
+//            teamParamFinished = true;
+//            navigateToScoreboard();
+//        }
+//        if(asyncReturnType.equals("Get Color Scheme")) {
+//            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+//            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+//            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+//            setActivityColors();
+//            colorSchemeFinished = true;
+//            navigateToScoreboard();
+//        }
+//        if(asyncReturnType.equals("Get Labels")) {
+//            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+//            HashMap<String, String> labels = labelObject.getMarket();
+//            dataController.setLabels(labels);
+//            labelsFinished = true;
+//            navigateToScoreboard();
+//        }
+        if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
         }
 //        else if(asyncReturnType.equals("Clients")) {
@@ -563,6 +566,53 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject);
             clientFinished = true;
+            navigateToScoreboard();
+        }
+        else if(returnType == ApiReturnTypes.GET_CLIENTS) {
+            AsyncParameterJsonObject settings = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
+            if(settings.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settings.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
+            navigateToScoreboard();
+        }
+        else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {
+            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncFirebaseDeviceJsonObject.class);
+            FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
+            String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
+
+            for(FirebaseDeviceObject fdo : devices) {
+                if(fdo.getDevice_id().equals(firebaseDeviceId)) {
+                    Log.e("Current Device", fdo.getDevice_id());
+                    currentDevice = fdo;
+                }
+            }
+            myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+
+            if(firebaseDeviceId.equals("")) {
+                myFirebaseMessagingService.initFirebase();
+            }
+            else {
+                myFirebaseMessagingService.refreshToken();
+            }
+        }
+        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            navigateToScoreboard();
+        }
+        else if(returnType == ApiReturnTypes.GET_LABELS) {
+            AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
             navigateToScoreboard();
         }
     }

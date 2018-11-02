@@ -46,6 +46,7 @@ import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -438,19 +439,26 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 }
             });
         }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+//        else if(asyncReturnType.equals("Get Color Scheme")) {
+//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+//            colorScheme = colorJson.getTheme();
+//            if(settingsFinished) {
+//                parentActivity.showToast("Your settings have been updated");
+//            }
+//            colorFinished = true;
+//        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             colorScheme = colorJson.getTheme();
             if(settingsFinished) {
                 parentActivity.showToast("Your settings have been updated");
             }
             colorFinished = true;
         }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     @Override

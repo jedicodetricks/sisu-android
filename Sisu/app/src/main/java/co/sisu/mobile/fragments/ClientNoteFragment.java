@@ -114,18 +114,19 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Get Notes")) {
-            AsyncNotesJsonObject asyncNotesJsonObject = (AsyncNotesJsonObject) returnObject;
-            final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
-            Log.e("SIZE", String.valueOf(allNotes.length));
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
-                }
-            });
-        }
-        else if(asyncReturnType.equals("Delete Notes")) {
+//        if(asyncReturnType.equals("Get Notes")) {
+//            AsyncNotesJsonObject asyncNotesJsonObject = gson.fromJson(response.body().charStream(), AsyncNotesJsonObject.class);
+//            AsyncNotesJsonObject asyncNotesJsonObject = (AsyncNotesJsonObject) returnObject;
+//            final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
+//            Log.e("SIZE", String.valueOf(allNotes.length));
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
+//                }
+//            });
+//        }
+        if(asyncReturnType.equals("Delete Notes")) {
             parentActivity.showToast("Note has been deleted");
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
@@ -140,6 +141,16 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                 @Override
                 public void run() {
                     fillListViewWithMessageCenterData(new ArrayList<>(Arrays.asList(pushModels)));
+                }
+            });
+        }
+        else if(returnType == ApiReturnTypes.GET_NOTES) {
+            AsyncNotesJsonObject asyncNotesJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncNotesJsonObject.class);
+            final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
                 }
             });
         }

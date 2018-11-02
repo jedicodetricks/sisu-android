@@ -5,28 +5,20 @@ import android.content.Context;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.api.AsyncActivities;
-import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
 import co.sisu.mobile.api.AsyncAddFirebaseDevice;
 import co.sisu.mobile.api.AsyncAddNotes;
-import co.sisu.mobile.api.AsyncAgent;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGet;
-import co.sisu.mobile.api.AsyncGetFirebaseDevices;
-import co.sisu.mobile.api.AsyncGetNotes;
-import co.sisu.mobile.api.AsyncGetTeamColorScheme;
-import co.sisu.mobile.api.AsyncLabels;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
-import co.sisu.mobile.api.AsyncLeaderboardStats;
-import co.sisu.mobile.api.AsyncProfileImage;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncTeamParameters;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
 import co.sisu.mobile.api.AsyncUpdateAgent;
@@ -68,13 +60,21 @@ public class ApiManager {
         cache = new Cache(context.getCacheDir(), cacheSize);
     }
 
+    //TODO: THIS MIGHT BE A SPECIAL CASE BECAUSE OF ASYNC. Keep looking into it.
+    public void getLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
+        //GET
+        getJWT(agentId);
+        new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
+    }
+
+    //START OF GET CALLS
+
     public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_SETTINGS;
         String currentUrl = url + "api/v1/parameter/edit-parameter/3/"+ clientId +"/activate_client";
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        AsyncActivateClientSettings
     }
 
     public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
@@ -91,7 +91,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_GOALS;
         String currentUrl = url + "api/v1/agent/get-goals/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncAgentGoals(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getSettings(AsyncServerEventListener cb, String agentId) {
@@ -100,7 +99,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_SETTINGS;
         String currentUrl = url + "api/v1/parameter/get-parameters/2/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncSettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getTeams(AsyncServerEventListener cb, String agentId) {
@@ -109,7 +107,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_TEAMS;
         String currentUrl = url + "api/v1/agent/get-teams/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getClients(AsyncServerEventListener cb, String agentId) {
@@ -118,7 +115,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENTS;
         String currentUrl = url + "api/v1/agent/get-clients/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getActivitySettings(AsyncServerEventListener cb, String agentId) {
@@ -127,7 +123,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
         String currentUrl = url + "api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities";
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getAgent(AsyncServerEventListener cb, String agentId) {
@@ -136,7 +131,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT;
         String currentUrl = url + "api/v1/agent/edit-agent/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
@@ -145,7 +139,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
         String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, "").execute(jwtStr, timestamp, transactionID);
     }
 
     public void getLeaderboardYearAndMonth(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear, String formattedMonth) {
@@ -154,13 +147,6 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
         String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear + "/" + formattedMonth;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncLeaderboardStats(cb, url, formattedTeamId, formattedYear, formattedMonth).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void sendAsyncLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
-        //GET
-        getJWT(agentId);
-        new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getProfileImage(AsyncServerEventListener cb, String agentId) {
@@ -169,25 +155,30 @@ public class ApiManager {
         ApiReturnTypes returnType = ApiReturnTypes.GET_PROFILE_IMAGE;
         String currentUrl = url + "api/v1/image/3/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-//        new AsyncProfileImage(cb, url, agentId, cache).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
         //GET
         getJWT(agentId);
-        new AsyncTeamParameters(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_PARAMS;
+        String currentUrl = url + "api/v1/parameter/edit-parameter/1/"+ teamId +"/slack_url";
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
         getJWT(agentId);
-        new AsyncGetNotes(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_NOTES;
+        String currentUrl = url + "api/v1/client/logs/" + clientId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_FIREBASE_DEVICES;
+        String currentUrl = url + "api/v1/agent/device/" + agentId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
@@ -196,7 +187,9 @@ public class ApiManager {
             selectedTeamId = 0;
         }
         getJWT(agentId);
-        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_COLOR_SCHEME;
+        String currentUrl = url + "api/v1/team/theme/" + selectedTeamId + "/" + isLightTheme;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
@@ -205,8 +198,12 @@ public class ApiManager {
             teamId = 0;
         }
         getJWT(agentId);
-        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_LABELS;
+        String currentUrl = url + "api/v1/team/market/" + teamId + "/" + Locale.getDefault().toString();
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
+
+    //START OF POST CALLS
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
         //POST

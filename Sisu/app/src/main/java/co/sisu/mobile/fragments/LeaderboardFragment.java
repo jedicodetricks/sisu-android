@@ -155,7 +155,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         if(leaderboardAgentModel.getProfile() != null) {
             Bitmap bitmap = parentActivity.getBitmapFromMemCache(leaderboardAgentModel.getProfile());
             if(bitmap == null) {
-                apiManager.sendAsyncLeaderboardImage(this, dataController.getAgent().getAgent_id(), leaderboardAgentModel);
+                apiManager.getLeaderboardImage(this, dataController.getAgent().getAgent_id(), leaderboardAgentModel);
             }
             else {
                 leaderboardAgentModel.setBitmap(bitmap);
@@ -390,17 +390,19 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 //
 //            prepareListData();
 //        }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            parentActivity.setActivityColors();
-        }
-        else if(asyncReturnType.equals("Get Labels")) {
-            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
-            HashMap<String, String> labels = labelObject.getMarket();
-            dataController.setLabels(labels);
-        }
+//        else if(asyncReturnType.equals("Get Color Scheme")) {
+//            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+//            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+//            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+//            parentActivity.setActivityColors();
+//        }
+//        else if(asyncReturnType.equals("Get Labels")) {
+//            AsyncLabelsJsonObject labelObject = gson.fromJson(response.body().charStream(), AsyncLabelsJsonObject.class);
+//            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+//            HashMap<String, String> labels = labelObject.getMarket();
+//            dataController.setLabels(labels);
+//        }
 
     }
 
@@ -411,6 +413,17 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
 
             prepareListData();
+        }
+        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            parentActivity.setActivityColors();
+        }
+        else if(returnType == ApiReturnTypes.GET_LABELS) {
+            AsyncLabelsJsonObject labelObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
         }
     }
 
