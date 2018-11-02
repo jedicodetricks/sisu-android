@@ -234,6 +234,26 @@ public class ApiManager {
         }
     }
 
+    public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
+        //POST (PROBS NEED THIS ONE)
+        getJWT(agentId);
+        new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
+        //POST
+        getJWT(agentId);
+        new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
+        //POST
+        getJWT(agent.getAgent_id());
+        new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
+    }
+
+    //START OF PUT CALLS
+
     public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
         //PUT
         getJWT(agentId);
@@ -282,37 +302,10 @@ public class ApiManager {
         new AsyncUpdateSettings(cb, url, agentId, asyncUpdateSettingsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
-        //POST (PROBS NEED THIS ONE)
-        getJWT(agentId);
-        new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
-        //POST
-        getJWT(agentId);
-        new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
-    }
-
     public void updateNote(AsyncServerEventListener cb, String agentId, String noteId, String note, String noteType) {
         //PUT
         getJWT(agentId);
         new AsyncUpdateNotes(cb, url, noteId, note, noteType).execute(jwtStr, timestamp, transactionID);
-    }
-
-    public void deleteNote(AsyncServerEventListener cb, String agentId, String noteId) {
-        //DELETE
-        getJWT(agentId);
-        new AsyncDeleteNotes(cb, url, noteId).execute(jwtStr, timestamp, transactionID);
-    }
-
-
-
-    public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
-        //POST
-        getJWT(agent.getAgent_id());
-        new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
-
     }
 
     public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
@@ -327,6 +320,14 @@ public class ApiManager {
         //PUT
         getJWT(agentId);
         new AsyncUpdateSettings(cb, url, agentId, activateClientObject).execute(jwtStr, timestamp, transactionID);
+    }
+
+    //START OF DELETE CALLS
+
+    public void deleteNote(AsyncServerEventListener cb, String agentId, String noteId) {
+        //DELETE
+        getJWT(agentId);
+        new AsyncDeleteNotes(cb, url, noteId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getJWT(String agentId) {
