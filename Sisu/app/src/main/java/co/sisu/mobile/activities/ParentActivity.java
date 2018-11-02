@@ -568,7 +568,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             clientFinished = true;
             navigateToScoreboard();
         }
-        else if(returnType == ApiReturnTypes.GET_CLIENTS) {
+        else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settings = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             if(settings.getStatus_code().equals("-1")) {
                 dataController.setSlackInfo(null);
