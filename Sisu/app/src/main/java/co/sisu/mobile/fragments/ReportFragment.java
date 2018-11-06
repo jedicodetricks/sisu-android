@@ -250,7 +250,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
                 String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
                 String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getCurrentTeam().getMarket_id());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
             @Override
@@ -376,6 +376,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 prunedList.add(metric);
             }
         }
+
         if(getContext() != null) {
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));

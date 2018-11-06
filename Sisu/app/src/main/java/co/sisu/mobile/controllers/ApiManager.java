@@ -43,9 +43,6 @@ import co.sisu.mobile.api.AsyncUpdateNotes;
 import co.sisu.mobile.api.AsyncUpdateProfile;
 import co.sisu.mobile.api.AsyncUpdateProfileImage;
 import co.sisu.mobile.api.AsyncUpdateSettings;
-import co.sisu.mobile.fragments.ClientEditFragment;
-import co.sisu.mobile.fragments.ClientNoteFragment;
-import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -69,7 +66,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "https://beta.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -77,14 +74,14 @@ public class ApiManager {
         cache = new Cache(context.getCacheDir(), cacheSize);
     }
 
-    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, startDate, endDate).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, startDate, endDate, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime) {
+    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime, int marketId) {
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId) {
@@ -102,14 +99,14 @@ public class ApiManager {
         new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncClients(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncClients(AsyncServerEventListener cb, String agentId, int marketId) {
         getJWT(agentId);
-        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncClients(cb, url, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
+    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject, int marketId) {
         getJWT(agentId);
-        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {

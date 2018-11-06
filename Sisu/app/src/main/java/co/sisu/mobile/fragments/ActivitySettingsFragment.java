@@ -232,7 +232,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, dataController.getAgent().getAgent_id(), activitiesJsonObject);
+        apiManager.sendAsyncUpdateActivities(this, dataController.getAgent().getAgent_id(), activitiesJsonObject, parentActivity.getCurrentTeam().getMarket_id());
     }
 
     private void saveSettings() {

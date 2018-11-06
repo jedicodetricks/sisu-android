@@ -25,11 +25,13 @@ public class AsyncClients extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     private String agentId;
     private String url;
+    private int marketId;
 
-    public AsyncClients (AsyncServerEventListener cb, String url, String agentId) {
+    public AsyncClients(AsyncServerEventListener cb, String url, String agentId, int marketId) {
         callback = cb;
         this.agentId = agentId;
         this.url = url;
+        this.marketId = marketId;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class AsyncClients extends AsyncTask<String, String, String> {
             Gson gson = new Gson();
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/get-clients/" + agentId)
+                    .url(url + "api/v1/agent/get-clients/" + agentId + "/" + marketId)
                     .get()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

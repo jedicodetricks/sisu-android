@@ -125,7 +125,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initParentFields();
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
-        apiManager.sendAsyncClients(this, agent.getAgent_id());
+
 
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
@@ -274,7 +274,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject);
+        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getCurrentTeam().getMarket_id());
     }
 
     @Override
@@ -358,6 +358,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     if(dataController.getTeamsObject().size() > 0) {
                         dataController.setMessageCenterVisible(true);
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        apiManager.sendAsyncClients(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getMarket_id());
                         SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                         if(settingsFinished) {
                             apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
