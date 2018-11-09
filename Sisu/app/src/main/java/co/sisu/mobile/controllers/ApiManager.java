@@ -109,7 +109,7 @@ public class ApiManager {
         new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId, int marketId) {
         getJWT(agentId);
         new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
@@ -132,7 +132,6 @@ public class ApiManager {
     public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
         getJWT(agentId);
         if(slackUrl != null) {
-            Log.e("GOING TO SLACK", "YES");
             new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
         }
         else {

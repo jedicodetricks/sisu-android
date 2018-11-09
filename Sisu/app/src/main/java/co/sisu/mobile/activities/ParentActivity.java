@@ -437,7 +437,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         try{
                             hour = Integer.parseInt(values[0]);
                             minute = Integer.parseInt(values[1]);
-                            Log.e("ALARM TIME", hour + " " + minute);
                         } catch(NumberFormatException nfe) {
                             hour = 17;
                             minute = 0;
@@ -514,12 +513,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
 
         if(currentTimeInMillis > calendar.getTimeInMillis()) {
-            Log.e("Calendar", "Calendar can't be set in the past");
             calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
         }
 
-        Log.e("CALENDAR SET", calendar.getTime().toString());
-        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);

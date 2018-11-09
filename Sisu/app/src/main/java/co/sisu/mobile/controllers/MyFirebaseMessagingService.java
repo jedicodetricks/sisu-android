@@ -97,7 +97,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             intent.putExtra("body", remoteMessage.getNotification().getBody());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getApplicationContext().startActivity(intent);
-            Log.e("RECEIVED", "YES");
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

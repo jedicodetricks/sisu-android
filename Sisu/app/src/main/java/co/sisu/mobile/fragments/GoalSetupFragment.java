@@ -406,7 +406,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         AgentGoalsObject selectedGoal = null;
 
         int currentGoalsLength = currentGoalsObject.length;
-        Log.e("LENGTH", String.valueOf(currentGoalsObject.length));
 
         for(AgentGoalsObject ago : currentGoalsObject) {
             if(ago.getGoal_id().equals(fieldName)) {

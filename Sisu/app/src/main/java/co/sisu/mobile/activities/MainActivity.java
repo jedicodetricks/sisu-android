@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         apiManager = new ApiManager(this);
         colorSchemeManager = new ColorSchemeManager();
         setContentView(R.layout.activity_main);
-        Log.e("Screen Density: ", getDeviceDensity(this));
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
@@ -140,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getSavedData() {
         if(SaveSharedPreference.getUserId(this).length() > 0) {
-            Log.e("SAVE DATA", "GOT EEM");
             apiManager.getColorScheme(this, SaveSharedPreference.getUserId(this), Integer.parseInt(SaveSharedPreference.getTeam(this)), SaveSharedPreference.getLights(this));
             if(SaveSharedPreference.getLogo(this).length() > 0) {
                 Picasso.with(this).load(Uri.parse(SaveSharedPreference.getLogo(this))).into(logo);
@@ -291,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         loader.setVisibility(View.GONE);
                     }
                 });
-                Log.e("AGENT OBJECT", agent.getAgent_id());
                 SaveSharedPreference.setUserId(this, agent.getAgent_id());
                 SaveSharedPreference.setUserName(this, emailAddress);
                 try {

@@ -133,7 +133,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         if(asyncReturnType.equals("Get Notes")) {
             AsyncNotesJsonObject asyncNotesJsonObject = (AsyncNotesJsonObject) returnObject;
             final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
-            Log.e("SIZE", String.valueOf(allNotes.length));
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

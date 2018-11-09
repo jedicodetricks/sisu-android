@@ -430,11 +430,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
             case R.id.cancelButton:
-                Log.e("CANCEL", "YES");
                 parentActivity.onBackPressed();
                 break;
             case R.id.addClientSaveButton:
-                Log.e("SAVE", "YES");
                 saveClient();
                     //animation of confirmation
 //                    onBackPressed();

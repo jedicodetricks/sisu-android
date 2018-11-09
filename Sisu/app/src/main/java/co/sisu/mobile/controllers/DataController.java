@@ -678,6 +678,14 @@ public class DataController {
         }
         else {
             this.agent.setAgentGoalsObject(agentGoalsObject);
+//            for(AgentGoalsObject ago : agentGoalsObject) {
+//                for(Metric m : scoreboardObject) {
+//                    if(ago.getGoal_id().equals(m.getType())) {
+//                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+//                        break;
+//                    }
+//                }
+//            }
         }
     }
 

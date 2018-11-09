@@ -581,7 +581,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(deleteClient) {
             currentClient.setStatus("D");
             currentClient.setActivate_client(m_Text);
-            Log.e("M_TEXT", m_Text);
             statusList = "archived";
         } else {
             if(currentClient.getStatus().equals("D")) {
@@ -1071,7 +1070,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         month += 1;
-        Log.e("MONTH", String.valueOf(month));
         String formatDate = year + "/" + month + "/" + day;
         Calendar updatedTime = Calendar.getInstance();
 
