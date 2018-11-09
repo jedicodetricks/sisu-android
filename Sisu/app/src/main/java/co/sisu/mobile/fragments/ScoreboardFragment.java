@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -110,6 +112,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         calculateVolumes();
         setColorScheme();
         setupLabels();
+
+        if(parentActivity.shouldDisplayPushNotification()) {
+            parentActivity.setShouldDisplayPushNotification(false);
+            String title = parentActivity.getPushNotificationTitle();
+            String body = parentActivity.getPushNotificationBody();
+            Intent intent = new Intent(parentActivity, NotificationActivity.class);
+            intent.putExtra("title", title);
+            intent.putExtra("body", body);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     private void setupLabels() {

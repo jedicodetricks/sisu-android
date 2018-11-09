@@ -99,7 +99,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
+        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
@@ -439,10 +439,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array));
+                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), new AsyncUpdateAgentGoalsJsonObject(array));
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), income, reason);
+                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), income, reason);
                 }
                 break;
         }
@@ -455,7 +455,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 updatedGoals = new HashMap<>();
                 parentActivity.showToast("Goals have been updated");
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//                navigationManager.swapToTitleBar("More");
             }
         }
         else if(asyncReturnType.equals("Goals")) {

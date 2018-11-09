@@ -76,7 +76,7 @@ public class MoreListAdapter extends BaseAdapter {
         subTitleTextView.setText(morePageContainer.getSubTitle());
         if(!morePageContainer.getTitle().equals("Slack")) {
             Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
-            drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+            drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
             thumbnailImageView.setImageDrawable(drawable);
         }
         else {

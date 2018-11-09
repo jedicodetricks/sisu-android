@@ -49,29 +49,29 @@ public class ToolbarManager {
         switch (inputActivity) {
             case "Scoreboard":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 scoreBoardButton.setImageDrawable(drawable);
                 break;
             case "Report":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 reportButton.setImageDrawable(drawable);
                 break;
             case "Record":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 recordButton.setImageDrawable(drawable);
                 break;
             case "Leaderboard":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 leaderBoardButton.setImageDrawable(drawable);
                 break;
             case "More":
             case "Add Client Note":
             case "Feedback":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 moreButton.setImageDrawable(drawable);
                 break;
         }

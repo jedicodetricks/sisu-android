@@ -5,24 +5,26 @@ package co.sisu.mobile.models;
  */
 
 public class AgentGoalsObject {
-    String agent_id;
-    String goal_id;
-    String name;
-    String value;
+    private String display_order;
+    private String goal_id;
+    private String label;
+    private String value;
+    private String monthly;
 
-    public AgentGoalsObject(String agent_id, String goal_id, String name, String value) {
-        this.agent_id = agent_id;
+    public AgentGoalsObject(String display_order, String goal_id, String label, String value, String monthly) {
+        this.display_order = display_order;
         this.goal_id = goal_id;
-        this.name = name;
+        this.label = label;
         this.value = value;
+        this.monthly = monthly;
     }
 
-    public String getAgent_id() {
-        return agent_id;
+    public String getDisplay_order() {
+        return display_order;
     }
 
-    public void setAgent_id(String agent_id) {
-        this.agent_id = agent_id;
+    public void setDisplay_order(String display_order) {
+        this.display_order = display_order;
     }
 
     public String getGoal_id() {
@@ -33,12 +35,12 @@ public class AgentGoalsObject {
         this.goal_id = goal_id;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getValue() {
@@ -47,5 +49,13 @@ public class AgentGoalsObject {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getMonthly() {
+        return monthly;
+    }
+
+    public void setMonthly(String monthly) {
+        this.monthly = monthly;
     }
 }

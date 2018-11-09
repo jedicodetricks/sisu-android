@@ -91,6 +91,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean teamsFinished = false;
     private boolean labelsFinished = false;
     private boolean noNavigation = true;
+    private boolean shouldDisplayPushNotification = false;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
@@ -105,6 +106,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ListView navViewList;
     private TextView navTitle;
     private boolean isNoteFragment = false;
+    private String pushNotificationTitle = "";
+    private String pushNotificationBody = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +121,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null) {
+//            for (String key : bundle.keySet()) {
+//                Object value = bundle.get(key);
+//                Log.e("BUNDLE", String.format("%s %s (%s)", key,
+//                        value.toString(), value.getClass().getName()));
+//            }
+//        }
+        pushNotificationTitle = getIntent().getStringExtra("title");
+        pushNotificationBody = getIntent().getStringExtra("body");
+        if(!pushNotificationTitle.equals("") && !pushNotificationBody.equals("")) {
+            shouldDisplayPushNotification = true;
+        }
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
@@ -156,7 +172,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.e("SETTING COLORS", "PARENT ACTIVITY");
                 layout.setBackgroundColor(colorSchemeManager.getAppBackground());
                 toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
                 navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
@@ -371,7 +386,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         dataController.setSlackInfo(null);
                     }
                     teamsFinished = true;
-                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
+                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getCurrentTeam().getId());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
                 }
             });
@@ -770,5 +785,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else {
             isNoteFragment = true;
         }
+    }
+
+    public boolean shouldDisplayPushNotification() {
+        return shouldDisplayPushNotification;
+    }
+
+    public String getPushNotificationTitle() {
+        return pushNotificationTitle;
+    }
+
+    public String getPushNotificationBody() {
+        return pushNotificationBody;
+    }
+
+    public void setShouldDisplayPushNotification(boolean b) {
+        shouldDisplayPushNotification = b;
     }
 }

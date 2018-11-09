@@ -38,6 +38,7 @@ public class ColorSchemeManager {
     private int spinnerBackground;
     private int roundedButtonColor;
     private String icon;
+    private int menuIcon;
 
 
 
@@ -129,6 +130,10 @@ public class ColorSchemeManager {
                     break;
                 case "rounded_button":
                     roundedButtonColor = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
+                case "menu_icon":
+                    menuIcon = Color.parseColor(colorSchemeObject.getTheme_data());
+                    break;
             }
 
         }
@@ -319,5 +324,9 @@ public class ColorSchemeManager {
 
     public void setRoundedButtonColor(int roundedButtonColor) {
         this.roundedButtonColor = roundedButtonColor;
+    }
+
+    public int getMenuIcon() {
+        return menuIcon;
     }
 }

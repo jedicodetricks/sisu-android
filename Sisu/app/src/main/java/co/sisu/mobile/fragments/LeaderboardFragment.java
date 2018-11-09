@@ -39,6 +39,8 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AgentGoalsObject;
+import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
@@ -252,6 +254,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         getLeaderboard(selectedYear, selectedMonth + 1);
         apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
         apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
+        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getId());
         SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
     }
 
@@ -379,7 +382,11 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
             agentDisplayCounting();
-
+        }
+        else if(asyncReturnType.equals("Goals")) {
+            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
         }
         else if(asyncReturnType.equals("Leaderboard")){
             AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;

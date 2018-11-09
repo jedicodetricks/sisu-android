@@ -870,6 +870,7 @@ public class DataController {
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {
+        //TODO: This doesn't work with agent goals v2
         List<String> addedGoals = new ArrayList<>();
         AgentGoalsObject[] updatedAgentGoalsObject = new AgentGoalsObject[9];
 
@@ -913,50 +914,50 @@ public class DataController {
                     break;
             }
         }
-        if(!addedGoals.contains("CONTA")) {
-            updatedAgentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
-
-        }
-
-        if(!addedGoals.contains("BAPPT")) {
-            updatedAgentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
-
-        }
-
-        if(!addedGoals.contains("SAPPT")) {
-            updatedAgentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
-
-        }
-
-        if(!addedGoals.contains("BSGND")) {
-            updatedAgentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
-
-        }
-
-        if(!addedGoals.contains("SSGND")) {
-            updatedAgentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
-
-        }
-
-        if(!addedGoals.contains("BUNDC")) {
-            updatedAgentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
-
-        }
-
-        if(!addedGoals.contains("SUNDC")) {
-            updatedAgentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
-
-        }
-
-        if(!addedGoals.contains("BCLSD")) {
-            updatedAgentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
-
-        }
-
-        if(!addedGoals.contains("SCLSD")) {
-            updatedAgentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
-
-        }
+//        if(!addedGoals.contains("CONTA")) {
+//            updatedAgentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BAPPT")) {
+//            updatedAgentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SAPPT")) {
+//            updatedAgentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BSGND")) {
+//            updatedAgentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SSGND")) {
+//            updatedAgentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BUNDC")) {
+//            updatedAgentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SUNDC")) {
+//            updatedAgentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BCLSD")) {
+//            updatedAgentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SCLSD")) {
+//            updatedAgentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
+//
+//        }
 
         this.agent.setAgentGoalsObject(updatedAgentGoalsObject);
     }

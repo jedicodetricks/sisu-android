@@ -84,9 +84,9 @@ public class ApiManager {
         new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId, int teamId) {
         getJWT(agentId);
-        new AsyncAgentGoals(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncAgentGoals(cb, url, agentId, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncSettings(AsyncServerEventListener cb, String agentId) {
@@ -145,14 +145,14 @@ public class ApiManager {
         new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
+    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, int teamId, String income, String reason) {
         getJWT(agentId);
-        new AsyncUpdateAgent(cb, url, agentId, income, reason).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateAgent(cb, url, agentId, teamId, income, reason).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
+    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, int teamId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
         getJWT(agentId);
-        new AsyncUpdateGoals(cb, url, agentId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateGoals(cb, url, agentId, teamId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
