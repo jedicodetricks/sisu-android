@@ -75,6 +75,7 @@
 
             <EditText
                 android:id="@+id/desiredIncome"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -104,6 +105,7 @@
 
             <EditText
                 android:id="@+id/goalsReason"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -215,6 +217,7 @@
 
             <EditText
                 android:id="@+id/sellersClosed"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -242,6 +245,7 @@
 
             <EditText
                 android:id="@+id/buyersClosed"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -268,6 +272,7 @@
 
             <EditText
                 android:id="@+id/sellersUnderContract"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -294,6 +299,7 @@
 
             <EditText
                 android:id="@+id/buyersUnderContract"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -320,6 +326,7 @@
 
             <EditText
                 android:id="@+id/signedSellers"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -346,6 +353,7 @@
 
             <EditText
                 android:id="@+id/signedBuyers"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -372,6 +380,7 @@
 
             <EditText
                 android:id="@+id/sellerAppts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -398,6 +407,7 @@
 
             <EditText
                 android:id="@+id/buyerAppts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -424,6 +434,7 @@
 
             <EditText
                 android:id="@+id/contacts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"

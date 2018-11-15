@@ -83,7 +83,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeButtons();
         initializeListView();
         loader.setVisibility(View.VISIBLE);
-        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id());
+        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getMarket_id());
     }
 
     private void setupFieldsWithData() {

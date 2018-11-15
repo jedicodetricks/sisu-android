@@ -241,6 +241,12 @@ public class DataController {
 
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+        boolean contactEdited = false;
+        boolean signedEdited = false;
+        boolean showingEdited = false;
+        boolean contractEdited = false;
+        boolean closedEdited = false;
+        boolean firstAppointmentEdited = false;
 
         for(int i = 0; i < counters.length; i++) {
             if (counters[i].getCoalesce() != null) {
@@ -275,37 +281,105 @@ public class DataController {
                     contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
                     contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contact);
+                    contactEdited = true;
                     break;
                 case "BSGND":
                     signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
                     signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(signed);
+                    signedEdited = true;
                     break;
                 case "SSGND":
                     showing.setCurrentNum(showing.getCurrentNum() + metric.getCurrentNum());
                     showing.setGoalNum(showing.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(showing);
+                    showingEdited = true;
                     break;
                 case "BUNDC":
                 case "SUNDC":
                     contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
                     contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contract);
+                    contactEdited = true;
                     break;
                 case "BCLSD":
                 case "SCLSD":
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(closed);
+                    closedEdited = true;
                     break;
                 case "BAPPT":
                 case "SAPPT":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(firstAppointment);
+                    firstAppointmentEdited = true;
                     break;
             }
         }
+
+        //TODO: Right now I just need contact because Rick isn't sending that down correctly
+        if(!contactEdited) {
+            for(AgentGoalsObject ago : goals) {
+                if(ago.getGoal_id().equals("CONTA")) {
+                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+                    setupMetricGoals(contact);
+                    break;
+                }
+            }
+        }
+//        if(!signedEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!closedEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!contractEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!showingEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!firstAppointmentEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
 
         scoreboardObject.add(firstAppointment);
         scoreboardObject.add(closed);
@@ -678,14 +752,33 @@ public class DataController {
         }
         else {
             this.agent.setAgentGoalsObject(agentGoalsObject);
-//            for(AgentGoalsObject ago : agentGoalsObject) {
-//                for(Metric m : scoreboardObject) {
-//                    if(ago.getGoal_id().equals(m.getType())) {
-//                        m.setGoalNum(Integer.parseInt(ago.getValue()));
-//                        break;
-//                    }
-//                }
-//            }
+            for(AgentGoalsObject ago : agentGoalsObject) {
+                for(int i = 0; i < scoreboardObject.size(); i++) {
+                    if(ago.getGoal_id().equals(scoreboardObject.get(i).getType())) {
+                        if(ago.getGoal_id().equals("CONTA")) {
+                            Log.e("TEST","TES");
+                        }
+                        scoreboardObject.get(i).setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(scoreboardObject.get(i));
+                        break;
+                    }
+                }
+
+                for(Metric m : activitiesObject) {
+                    if(ago.getGoal_id().equals(m.getType())) {
+                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(m);
+                        break;
+                    }
+                }
+                for(Metric m : masterActivitiesObject) {
+                    if(ago.getGoal_id().equals(m.getType())) {
+                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(m);
+                        break;
+                    }
+                }
+            }
         }
     }
 

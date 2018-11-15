@@ -186,9 +186,9 @@ public class ActionBarManager {
                     }
                 }
                 else {
-                    teamBlock.setVisibility(View.GONE);
-                    teamLetter.setVisibility(View.GONE);
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    teamBlock.setVisibility(View.GONE);
+//                    teamLetter.setVisibility(View.GONE);
+//                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 }
             }
         });
