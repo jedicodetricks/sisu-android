@@ -9,12 +9,17 @@ import java.util.List;
 public class AsyncUpdateSettingsJsonObject {
     int type;
     int id;
-    List<UpdateSettingsObject> parameters;
+    List<UpdateSettingsObject> record_activities;
 
-    public AsyncUpdateSettingsJsonObject(int type, int id, List<UpdateSettingsObject> parameters) {
+    public AsyncUpdateSettingsJsonObject(int type, int id, List<UpdateSettingsObject> record_activities) {
         this.type = type;
         this.id = id;
-        this.parameters = parameters;
+        this.record_activities = record_activities;
+    }
+
+    public AsyncUpdateSettingsJsonObject(int id, List<UpdateSettingsObject> record_activities) {
+        this.id = id;
+        this.record_activities = record_activities;
     }
 
     public AsyncUpdateSettingsJsonObject() {
@@ -36,11 +41,11 @@ public class AsyncUpdateSettingsJsonObject {
         this.id = id;
     }
 
-    public List<UpdateSettingsObject> getParameters() {
-        return parameters;
+    public List<UpdateSettingsObject> getRecord_activities() {
+        return record_activities;
     }
 
-    public void setParameters(List<UpdateSettingsObject> parameters) {
-        this.parameters = parameters;
+    public void setRecord_activities(List<UpdateSettingsObject> record_activities) {
+        this.record_activities = record_activities;
     }
 }

@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,6 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -161,8 +161,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 if(editMode) {
                     //This would save the editing of priority
                     dataController.sortSelectedActivities(currentActivitiesSorting);
-//                    saveSorting();
-                    saveSettings();
+                    saveSorting();
                 }
                 else {
                     saveSettings();
@@ -189,13 +188,13 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         for(AsyncActivitySettingsObject s : currentActivitiesSorting) {
             for(Metric m : allActivities) {
-                if(m.getWeight() < 80) {
-                    if(m.getType().equalsIgnoreCase(s.getActivity_type())) {
-                        m.setWeight(currentActivitiesSorting.length - weightCounter);
-                        weightCounter++;
-                        break;
-                    }
+//                if(m.getWeight() < 80) {
+                if(m.getType().equalsIgnoreCase(s.getActivity_type())) {
+                    m.setWeight(currentActivitiesSorting.length - weightCounter);
+                    weightCounter++;
+                    break;
                 }
+//                }
             }
         }
         updateRecordedActivities(allActivities);
@@ -219,6 +218,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 case "SCLSD":
                 case "BAPPT":
                 case "SAPPT":
+                case "CONTA":
                     break;
                 default:
                     updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(dataController.getAgent().getAgent_id()), m.getWeight()));
@@ -229,31 +229,44 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         updateActivitiesModels.toArray(array);
 
         activitiesJsonObject.setActivities(array);
-
-        apiManager.sendAsyncUpdateActivities(this, dataController.getAgent().getAgent_id(), activitiesJsonObject, parentActivity.getCurrentTeam().getMarket_id());
+        dataController.setActivitiesSelected(currentActivitiesSorting);
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getCurrentTeam().getMarket_id());
     }
 
     private void saveSettings() {
-        //TODO: Gotta saveß
-//        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()));
+        List<AsyncActivitySettingsObject> updatedSettings = new ArrayList<>();
+        AsyncActivitySettingsObject[] currentActivitySettings = dataController.getActivitiesSelected();
+        for(int i = 0; i < mItemArray.size(); i++) {
+            Pair<Long, SelectedActivities> currentPair = (Pair<Long, SelectedActivities>) mItemArray.get(i);
+            SelectedActivities selectedActivity = currentPair.second;
+            for(AsyncActivitySettingsObject setting : currentActivitySettings) {
+                if(selectedActivity.getType().equalsIgnoreCase(setting.getActivity_type())) {
+                    setting.setValue(selectedActivity.getValue());
+                }
+            }
+        }
+        dataController.setActivitiesSelected(currentActivitySettings);
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getCurrentTeam().getMarket_id());
     }
 
-    private AsyncUpdateSettingsJsonObject createUpdateObject(LinkedHashMap<String, SelectedActivities> selectedActivities) {
-        String valueString = "{";
+    private String createUpdateObject(AsyncActivitySettingsObject[] selectedActivities) {
+        String valueString = "{\"record_activities\":[";
         int counter = 0;
-        for (String key : selectedActivities.keySet()) {
-            SelectedActivities activity = selectedActivities.get(key);
-            valueString += "\"" + activity.getType() + "\"" + ":" + activity.getValue();
-            if(counter < selectedActivities.size() - 1) {
-                valueString += ",";
+        for(AsyncActivitySettingsObject setting: selectedActivities) {
+            valueString += "{\"activity_type\":\"" + setting.getActivity_type() + "\", \"value\":" + setting.getValue();
+            if(counter < selectedActivities.length - 1) {
+                valueString += "},";
+            }
+            else {
+                valueString += "}";
             }
             counter++;
         }
-        valueString += "}";
-        List<UpdateSettingsObject> list = new ArrayList<>();
-        list.add(new UpdateSettingsObject("record_activities", valueString, 7));
-        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), list);
-        return asyncUpdateSettingsJsonObject;
+        valueString += "]}";
+//        List<UpdateSettingsObject> list = new ArrayList<>();
+//        list.add(new UpdateSettingsObject("record_activities", valueString));
+//        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(Integer.valueOf(dataController.getAgent().getAgent_id()), list);
+        return valueString;
     }
 
     @Override
@@ -372,5 +385,13 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             }
         }
         currentActivitiesSorting = newSorting.toArray(new AsyncActivitySettingsObject[0]);
+        setupLocalWeighting(currentActivitiesSorting);
+    }
+
+    private void setupLocalWeighting(AsyncActivitySettingsObject[] currentActivitiesSorting) {
+
+        for(int i = 0; i < currentActivitiesSorting.length; i++) {
+            currentActivitiesSorting[i].setDisplay_order(currentActivitiesSorting.length - i);
+        }
     }
 }

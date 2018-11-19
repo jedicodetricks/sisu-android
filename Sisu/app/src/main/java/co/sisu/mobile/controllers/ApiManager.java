@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import co.sisu.mobile.api.AsyncActivateClientSettings;
@@ -51,6 +52,7 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
+import co.sisu.mobile.models.UpdateSettingsObject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.Cache;
@@ -114,9 +116,9 @@ public class ApiManager {
         new AsyncActivitySettings(cb, url, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int marketId) {
         getJWT(agentId);
-        new AsyncUpdateActivitySettings(cb, url, updateObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivitySettings(cb, url, updateObject, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
