@@ -324,31 +324,50 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void displayListData() {
         listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
+        listDataChild = new HashMap<>();
         colorCounter = 0;
         Collections.sort(leaderBoardSections, new LeaderboardComparator());
+        int addedSections = 0;
 
         for(int i = 0; i < leaderBoardSections.size(); i++) {
             leaderBoardSections.get(i).setColor(teamColors[colorCounter]);
-            listDataHeader.add(leaderBoardSections.get(i));
-            List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
-
-            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
-                    LeaderboardItemsObject item = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
-                    LeaderboardAgentModel agent = agents.get(item.getAgent_id());
-                    item.setImage(agent.getBitmap());
-                    leaderboardItems.add(item);
+            boolean isEmpty = false;
+            if(leaderBoardSections.get(i).getLeaderboardItemsObject().length != 0) {
+                for(LeaderboardItemsObject leaderboardObject : leaderBoardSections.get(i).getLeaderboardItemsObject()) {
+                    if(!leaderboardObject.getValue().equalsIgnoreCase("0")) {
+                        isEmpty = false;
+                        break;
+                    }
+                    else {
+                        isEmpty = true;
+                    }
                 }
+
+                if(isEmpty) {
+                    continue;
+                }
+                listDataHeader.add(leaderBoardSections.get(i));
+                List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
+
+                for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                    if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                        LeaderboardItemsObject item = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
+                        LeaderboardAgentModel agent = agents.get(item.getAgent_id());
+                        item.setImage(agent.getBitmap());
+                        leaderboardItems.add(item);
+                    }
+                }
+
+                listDataChild.put(listDataHeader.get(addedSections), leaderboardItems);
+                if(colorCounter == teamColors.length - 1) {
+                    colorCounter = 0;
+                }
+                else {
+                    colorCounter++;
+                }
+                addedSections++;
             }
 
-            listDataChild.put(listDataHeader.get(i), leaderboardItems);
-            if(colorCounter == teamColors.length - 1) {
-                colorCounter = 0;
-            }
-            else {
-                colorCounter++;
-            }
         }
 
         //Collections.sort(listDataHeader, new LeaderboardComparator());
@@ -378,7 +397,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         if(asyncReturnType.equals("Leaderboard Image")) {
             LeaderboardAgentModel leaderboardAgentModel = (LeaderboardAgentModel) returnObject;
             if (leaderboardAgentModel.getBitmap() != null) {
-                Log.e("ADDING BITMAP", leaderboardAgentModel.getProfile() + " || " + leaderboardAgentModel.getBitmap());
                 parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
             agentDisplayCounting();
