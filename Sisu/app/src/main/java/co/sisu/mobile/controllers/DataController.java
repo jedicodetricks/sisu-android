@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

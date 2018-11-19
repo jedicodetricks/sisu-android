@@ -3,8 +3,6 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
 
 import okhttp3.MediaType;

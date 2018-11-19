@@ -1,6 +1,5 @@
 package co.sisu.mobile.adapters;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;

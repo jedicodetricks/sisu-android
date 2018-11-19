@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.PushModel;
-import co.sisu.mobile.models.TeamObject;
 import okhttp3.Response;
 
 /**

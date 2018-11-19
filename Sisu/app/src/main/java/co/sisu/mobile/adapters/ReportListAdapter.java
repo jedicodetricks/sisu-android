@@ -3,9 +3,7 @@ package co.sisu.mobile.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,6 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.models.SelectedActivities;
 
 /**
  * Created by Brady Groharing on 2/24/2018.

@@ -2,7 +2,6 @@ package co.sisu.mobile.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.google.gson.Gson;

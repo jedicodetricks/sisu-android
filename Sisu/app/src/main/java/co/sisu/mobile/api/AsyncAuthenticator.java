@@ -6,20 +6,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncAgentJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import co.sisu.mobile.system.SaveSharedPreference;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

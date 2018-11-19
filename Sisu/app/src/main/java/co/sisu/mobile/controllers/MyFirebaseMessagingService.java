@@ -2,12 +2,9 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -15,17 +12,10 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.logging.Handler;
-
-import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ForgotPasswordActivity;
-import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.NotificationActivity;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.FirebaseDeviceObject;
-import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/24/18.

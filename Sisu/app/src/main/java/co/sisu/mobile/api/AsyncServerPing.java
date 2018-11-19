@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.models.JWTObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -1,31 +1,22 @@
 package co.sisu.mobile.fragments;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.HashMap;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.activities.SplashScreenActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -42,6 +33,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Button submitButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +52,13 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         initUI();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        submitButton.setTextColor(colorSchemeManager.getButtonText());
     }
 
     public void initUI() {
@@ -72,7 +71,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         confirmPassword = getView().findViewById(R.id.confirmPassword);
         confirmPassword.setTransformationMethod(new PasswordTransformationMethod()); //this is needed to set the input type to Password. if we do it in the xml we lose styling.
 
-        Button submitButton = getView().findViewById(R.id.changePasswordSubmitButton);
+        submitButton = getView().findViewById(R.id.changePasswordSubmitButton);
         submitButton.setOnClickListener(this);
     }
 

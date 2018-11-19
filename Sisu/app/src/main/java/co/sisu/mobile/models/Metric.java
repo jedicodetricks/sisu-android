@@ -1,8 +1,5 @@
 package co.sisu.mobile.models;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 /**
  * Created by Jeff on 2/21/2018.
  */

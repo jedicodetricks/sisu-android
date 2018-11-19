@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.models.UpdateSettingsObject;
 
 /**
  * Created by Jeff on 4/18/2018.

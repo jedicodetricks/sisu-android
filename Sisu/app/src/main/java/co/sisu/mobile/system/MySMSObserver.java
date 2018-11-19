@@ -1,9 +1,6 @@
 package co.sisu.mobile.system;
 
-import android.content.ContentResolver;
 import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 

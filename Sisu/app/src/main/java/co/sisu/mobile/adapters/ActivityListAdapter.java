@@ -2,8 +2,8 @@ package co.sisu.mobile.adapters;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;

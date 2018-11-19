@@ -1,7 +1,5 @@
 package co.sisu.mobile.models;
 
-import java.util.Date;
-
 /**
  * Created by Brady Groharing on 4/17/2018.
  */

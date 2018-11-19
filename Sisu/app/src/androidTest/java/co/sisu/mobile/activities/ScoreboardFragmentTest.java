@@ -1,7 +1,6 @@
 package co.sisu.mobile.activities;
 
 
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.espresso.ViewInteraction;
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,18 +32,11 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.StringContains.containsString;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
