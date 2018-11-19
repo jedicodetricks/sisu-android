@@ -285,7 +285,7 @@ public class ActionBarManager {
     }
 
     public int getSelectedTeamId() {
-        int teamId = -1;
+        int teamId = 0;
         if(teamsList != null) {
             teamId = teamsList.get(selectedTeam).getId();
 

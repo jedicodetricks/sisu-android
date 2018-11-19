@@ -124,19 +124,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
-//        Bundle bundle = getIntent().getExtras();
-//        if (bundle != null) {
-//            for (String key : bundle.keySet()) {
-//                Object value = bundle.get(key);
-//                Log.e("BUNDLE", String.format("%s %s (%s)", key,
-//                        value.toString(), value.getClass().getName()));
-//            }
-//        }
+
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
-        if(!pushNotificationTitle.equals("") && !pushNotificationBody.equals("")) {
-            shouldDisplayPushNotification = true;
+        if(pushNotificationTitle != null && pushNotificationBody != null) {
+            if(!pushNotificationTitle.equals("") && !pushNotificationBody.equals("")) {
+                shouldDisplayPushNotification = true;
+            }
         }
+
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
@@ -292,7 +288,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
     }
 
     @Override
@@ -373,26 +369,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                     if(dataController.getTeamsObject().size() > 0) {
+                        navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                         dataController.setMessageCenterVisible(true);
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                         apiManager.sendAsyncClients(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getMarket_id());
-                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
+                        SaveSharedPreference.setTeam(ParentActivity.this, getSelectedTeamId() + "");
                         if(settingsFinished) {
-                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
-                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                         }
                     }
                     else {
+                        apiManager.sendAsyncClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                         dataController.setMessageCenterVisible(false);
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }
                     teamsFinished = true;
-                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getCurrentTeam().getId());
+                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getCurrentTeam().getMarket_id());
+                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamMarketId());
                 }
             });
         }
@@ -468,8 +465,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
             if(teamsFinished) {
-                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
-                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
             }
             navigateToScoreboard();
         }
@@ -746,6 +743,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return teamId;
     }
 
+    public int getSelectedTeamMarketId() {
+        int marketId = navigationManager.getMarketId();
+        return marketId;
+    }
+
     public NavigationManager getNavigationManager() {
         return navigationManager;
     }
@@ -764,10 +766,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean imageExists(Context context, String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
-    }
-
-    public int getMarketId() {
-        return navigationManager.getMarketId();
     }
 
     public HashMap<String, String> getLabels() {

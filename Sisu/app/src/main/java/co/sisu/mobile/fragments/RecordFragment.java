@@ -80,7 +80,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -218,7 +218,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, parentActivity.getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, parentActivity.getSelectedTeamMarketId());
         loader.setVisibility(View.VISIBLE);
     }
 

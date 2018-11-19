@@ -99,7 +99,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId());
+        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getSelectedTeamId());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();

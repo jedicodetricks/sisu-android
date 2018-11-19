@@ -289,34 +289,35 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void prepareListData() {
 
-        for(int i = 0; i < leaderBoardSections.size(); i++) {
+        if(leaderBoardSections != null) {
+            for(int i = 0; i < leaderBoardSections.size(); i++) {
+                for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                    if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
 
-            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                        LeaderboardItemsObject currentAgent = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
 
-                    LeaderboardItemsObject currentAgent = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
-
-                    if(!agents.containsKey(currentAgent.getAgent_id())) {
-                        agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        if(!agents.containsKey(currentAgent.getAgent_id())) {
+                            agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
+                                    /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        }
                     }
+                }
+
+                if(colorCounter == teamColors.length - 1) {
+                    colorCounter = 0;
+                }
+                else {
+                    colorCounter++;
                 }
             }
 
-            if(colorCounter == teamColors.length - 1) {
-                colorCounter = 0;
+            //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
+            //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
+            agentCounter = 0;
+            for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
+            {
+                initLeaderBoardImages(entry.getValue());
             }
-            else {
-                colorCounter++;
-            }
-        }
-
-        //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
-        //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
-        agentCounter = 0;
-        for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
-        {
-            initLeaderBoardImages(entry.getValue());
         }
 
 

@@ -81,7 +81,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeButtons();
         initializeListView();
         loader.setVisibility(View.VISIBLE);
-        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId());
     }
 
     private void setupFieldsWithData() {
@@ -230,7 +230,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         activitiesJsonObject.setActivities(array);
         dataController.setActivitiesSelected(currentActivitiesSorting);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getSelectedTeamMarketId());
     }
 
     private void saveSettings() {
@@ -246,7 +246,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             }
         }
         dataController.setActivitiesSelected(currentActivitySettings);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getCurrentTeam().getMarket_id());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getSelectedTeamMarketId());
     }
 
     private String createUpdateObject(AsyncActivitySettingsObject[] selectedActivities) {
