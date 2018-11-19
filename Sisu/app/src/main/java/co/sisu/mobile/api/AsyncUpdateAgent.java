@@ -46,7 +46,6 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
             String jsonInString = "";
             if(!income.equals("") && !reason.equals("")) {
                 jsonInString = "{\"vision_statement\":\"" + reason + "\", \"desired_income\":\"" + income + "\"}";
@@ -64,7 +63,7 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/edit-agent/" + agentId + "/" + teamId)
+                    .url(url + "api/v1/agent/edit-agent/" + agentId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

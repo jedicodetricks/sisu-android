@@ -72,6 +72,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private boolean pastTimeline;
     private Spinner spinner;
     private CircularProgressBar contact, appointments, signed, listing, underContract, closed;
+    private String formattedStartTime;
+    private String formattedEndTime;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -87,6 +89,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+        loader.setVisibility(View.VISIBLE);
+        apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
     }
 
 
@@ -477,13 +481,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
 
 
-                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
                 apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
-                //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }
 
             @Override

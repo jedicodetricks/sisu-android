@@ -118,7 +118,9 @@
     <string name="buyers_under_contract_hint">Buyers Under Contract</string>
     <string name="sellers_under_contract_hint">Sellers Under Contract</string>
     <string name="buyers_closed_hint">Buyers Closed</string>
-    <string name="sellers_closed_hint">Sellers Closed</string>
+    <string name="sellers_closed_hint">Listings Closed</string>
+    <string name="closed_volume_hint">Closed Volume</string>
+    <string name="under_contract_volume_hint">Under Contract Volume</string>
     <string name="signed_listings_hint">Signed Listings</string>
     <string name="under_contract_hint">Under Contract</string>
     <string name="closed_hint">Closed</string>

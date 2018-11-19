@@ -45,7 +45,7 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
  */
 public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
-    private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
+    private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, closedVolumeGoal, underContractVolumeGoal;
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
@@ -56,7 +56,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
     private TextInputLayout desiredIncomeLayout, trackingReasonsLayout, sClosedLayout, bClosedLayout, bAppointmentsLayout, sAppointmentsLayout, bSignedLayout, sSignedLayout,
-                            bContractLayout, sContractLayout, contactsLayout;
+                            bContractLayout, sContractLayout, contactsLayout, closedVolumeLayout, underContractVolumeLayout;
     private AgentModel agent;
     private AgentGoalsObject[] currentGoalsObject;
     private String income = "";
@@ -119,6 +119,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.seller_appt_hint)));
         bAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyer_appt_hint)));
         contactsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.contacts)));
+        closedVolumeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.closed_volume_hint)));
+        underContractVolumeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.under_contract_volume_hint)));
 
     }
 
@@ -136,6 +138,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
         activityTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         goalsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        closedVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
+        underContractVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getIconActive());
@@ -148,6 +152,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getIconActive());
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -185,6 +191,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
+        }
+        else {
+            Log.e("NULL SAVE", "SHIT");
         }
     }
 
@@ -250,6 +259,12 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                         case "BCLSD":
                             bClosed.setText(value);
                             break;
+                        case "CLSDV":
+                            closedVolumeGoal.setText(value);
+                            break;
+                        case "UNCTV":
+                            underContractVolumeGoal.setText(value);
+                            break;
                     }
                 }
                 dateSwap = false;
@@ -292,6 +307,13 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sClosed = getView().findViewById(R.id.sellersClosed);
         sClosed.addTextChangedListener(this);
         fieldsObject.add(sClosed);
+        closedVolumeGoal = getView().findViewById(R.id.closedVolume);
+        closedVolumeGoal.addTextChangedListener(this);
+        fieldsObject.add(closedVolumeGoal);
+        underContractVolumeGoal = getView().findViewById(R.id.underContractVolume);
+        underContractVolumeGoal.addTextChangedListener(this);
+        fieldsObject.add(underContractVolumeGoal);
+
         activityTitle = getView().findViewById(R.id.activityTitle);
         goalsLabel = getView().findViewById(R.id.goalsLabel);
 
@@ -306,6 +328,8 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         bContractLayout = getView().findViewById(R.id.buyersUnderContractLayout);
         sContractLayout = getView().findViewById(R.id.sellersUnderContractLayout);
         contactsLayout = getView().findViewById(R.id.contactsLayout);
+        closedVolumeLayout = getView().findViewById(R.id.closedVolumeLayout);
+        underContractVolumeLayout = getView().findViewById(R.id.underContractVolumeLayout);
 
         //unitGoal = getView().findViewById(R.id.unitGoal);
         //volumeGoal = getView().findViewById(R.id.volumeGoal);
@@ -384,6 +408,14 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             {
                 updateField("SCLSD", Integer.valueOf(String.valueOf(s)));
             }
+            else if(closedVolumeGoal.getText().hashCode() == s.hashCode())
+            {
+                updateField("CLSDV", Integer.valueOf(String.valueOf(s)));
+            }
+            else if(underContractVolumeGoal.getText().hashCode() == s.hashCode())
+            {
+                updateField("UNCTV", Integer.valueOf(String.valueOf(s)));
+            }
             else if (desiredIncome.getText().hashCode() == s.hashCode()) {
                 updateProfile("Income", s.toString());
             }
@@ -416,7 +448,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, String.valueOf(value));
 
         if(selectedGoal == null) {
-
             currentGoalsObject[currentGoalsLength] = selectedGoal;
             updatedGoals.put(fieldName, toUpdate);
         }

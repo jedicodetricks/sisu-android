@@ -166,7 +166,7 @@ public class ActionBarManager {
                 teamIcon = parentActivity.findViewById(R.id.team_icon);
                 View homeButton= parentActivity.findViewById(R.id.action_bar_home);
                 homeButton.setOnClickListener(parentActivity);
-                if(teamsList != null && titleString.equals("Leaderboard")) {
+                if(teamsList != null) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
                     if(colorSchemeManager.getIcon() != null) {
@@ -206,8 +206,6 @@ public class ActionBarManager {
                     pageTitle.setText(parentActivity.localizeLabel(title));
                 }
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-
-
             }
         });
     }

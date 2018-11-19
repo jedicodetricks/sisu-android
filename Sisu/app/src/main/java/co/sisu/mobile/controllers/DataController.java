@@ -757,9 +757,6 @@ public class DataController {
             for(AgentGoalsObject ago : agentGoalsObject) {
                 for(int i = 0; i < scoreboardObject.size(); i++) {
                     if(ago.getGoal_id().equals(scoreboardObject.get(i).getType())) {
-                        if(ago.getGoal_id().equals("CONTA")) {
-                            Log.e("TEST","TES");
-                        }
                         scoreboardObject.get(i).setGoalNum(Integer.parseInt(ago.getValue()));
                         setupMetricGoals(scoreboardObject.get(i));
                         break;
