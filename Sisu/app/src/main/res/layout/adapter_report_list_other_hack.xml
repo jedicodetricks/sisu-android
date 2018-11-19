@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:textSize="@dimen/font_normal"
             tools:text="Title" />
 
@@ -74,9 +75,9 @@
         android:id="@+id/otherText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/report_list_thumbnail"
         android:layout_centerHorizontal="true"
-        android:text="Other" />
+        android:text="Other"
+        android:layout_marginBottom="8dp"/>
 
 
 </RelativeLayout>

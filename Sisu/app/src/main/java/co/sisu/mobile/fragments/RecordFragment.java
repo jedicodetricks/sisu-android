@@ -161,7 +161,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager, dataController.getFirstOtherActivity());
             mListView.setAdapter(adapter);
         }
 

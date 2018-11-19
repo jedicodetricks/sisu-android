@@ -19,6 +19,7 @@ import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
@@ -57,6 +58,7 @@ public class DataController {
 
     private String slackInfo;
     private boolean messageCenterVisible = false;
+    private AsyncActivitySettingsObject[] activitySettings;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -220,7 +222,7 @@ public class DataController {
                 recordObject.add(m);
             }
         }
-        recordObject = sortActivitesObjectByWeight(recordObject);
+        recordObject = sortActivitiesObjectByWeight(recordObject);
     }
 
     public List<Metric> getRecordActivities() {
@@ -413,49 +415,49 @@ public class DataController {
 
             Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
-            switch(counters[i].getActivity_type()) {
-                case "CONTA":
-                    metric.setWeight(99);
-                    break;
-                case "BSGND":
-                    metric.setWeight(96);
-                    break;
-                case "SSGND":
-                    metric.setWeight(95);
-                    break;
-                case "BUNDC":
-                    metric.setWeight(94);
-                    break;
-                case "SUNDC":
-                    metric.setWeight(93);
-                    break;
-                case "BCLSD":
-                    metric.setWeight(92);
-                    break;
-                case "SCLSD":
-                    metric.setWeight(91);
-                    break;
-                case "BAPPT":
-                    metric.setWeight(98);
-                    break;
-                case "SAPPT":
-                    metric.setWeight(97);
-                    break;
-            }
+//            switch(counters[i].getActivity_type()) {
+//                case "CONTA":
+//                    metric.setWeight(99);
+//                    break;
+//                case "BSGND":
+//                    metric.setWeight(96);
+//                    break;
+//                case "SSGND":
+//                    metric.setWeight(95);
+//                    break;
+//                case "BUNDC":
+//                    metric.setWeight(94);
+//                    break;
+//                case "SUNDC":
+//                    metric.setWeight(93);
+//                    break;
+//                case "BCLSD":
+//                    metric.setWeight(92);
+//                    break;
+//                case "SCLSD":
+//                    metric.setWeight(91);
+//                    break;
+//                case "BAPPT":
+//                    metric.setWeight(98);
+//                    break;
+//                case "SAPPT":
+//                    metric.setWeight(97);
+//                    break;
+//            }
             masterActivitiesObject.add(metric);
 
-            if(activitiesSelected.containsKey(metric.getType())) {
-                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
-                selectedActivities.setName(metric.getTitle());
-                if(selectedActivities.getValue().equals("0")) {
-                    continue;
-                }
-            }
+//            if(activitiesSelected.containsKey(metric.getType())) {
+//                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+//                selectedActivities.setName(metric.getTitle());
+//                if(selectedActivities.getValue().equals("0")) {
+//                    continue;
+//                }
+//            }
             activitiesObject.add(metric);
 
         }
 
-        activitiesObject = sortActivitesObjectByWeight(activitiesObject);
+        activitiesObject = sortActivitiesObjectByWeight(activitiesObject);
     }
 
     private void setupMetricGoals(Metric m) {
@@ -465,7 +467,7 @@ public class DataController {
         m.setYearlyGoalNum(goalNum * 12);
     }
 
-    private List<Metric> sortActivitesObjectByWeight(List<Metric> activities) {
+    private List<Metric> sortActivitiesObjectByWeight(List<Metric> activities) {
         Metric[] array = new Metric[activities.size()];
         activities.toArray(array);
         Arrays.sort(array);
@@ -479,7 +481,7 @@ public class DataController {
         List<Metric> importantList = new ArrayList<>();
         List<Metric> otherList = new ArrayList<>();
         for(Metric m : activities) {
-            if(m.getWeight() > 80) {
+            if(!isSelectableActivity(m.getType())) {
                 importantList.add(m);
             }
             else {
@@ -496,14 +498,14 @@ public class DataController {
         int weightCounter = 0;
         for(String s : sortedList) {
             for(Metric m : otherList) {
-                if(m.getWeight() < 80) {
+//                if(m.getWeight() < 80) {
                     if(m.getType().equalsIgnoreCase(s)) {
                         finalList.add(m);
 //                        m.setWeight(sortedList.size() - weightCounter);
 //                        weightCounter++;
                         break;
                     }
-                }
+//                }
             }
         }
 
@@ -884,10 +886,10 @@ public class DataController {
                     relevantSettings.add(s);
                     break;
                 case "record_activities":
-                    if(s.getValue().equals("{}")) {
-                        s = setDefaultActivitesSelected();
-                    }
-                    setupSelectedActivities(s);
+//                    if(s.getValue().equals("{}")) {
+//                        s = setDefaultActivitesSelected();
+//                    }
+//                    setupSelectedActivities(s);
                     break;
             }
         }
@@ -895,42 +897,41 @@ public class DataController {
 
     }
 
-    private void setupSelectedActivities(ParameterObject s) {
+    private void setupSelectedActivities(AsyncActivitySettingsObject[] s) {
         activitiesSelected = new LinkedHashMap<>();
-        if(s != null) {
-            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
-            String[] splitString = formattedString.split(",");
-
-            if(splitString.length > 1) {
-                for(String setting : splitString) {
-                    String[] splitSetting = setting.split(":");
-//                    Log.e("Setting up", splitSetting[1] + " " + splitSetting[0]);
-
-                    activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
-                }
-            }
-
-
-            if(masterActivitiesObject.size() > 0) {
-                for(Metric m : masterActivitiesObject) {
-                    if(activitiesSelected.containsKey(m.getType())) {
-                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
-                        selectedActivities.setName(m.getTitle());
-                        if(selectedActivities.getValue().equals("0")) {
-                            continue;
-                        }
-                    }
-                    else {
-//                        This is to reconcile the object to make sure it's got the new stuff in it.
-                        if (isSelectableActivity(m.getType())) {
-                            Log.e("PUTTING", m.getTitle());
-                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
-                        }
+//        if(s != null) {
+//            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
+//            String[] splitString = formattedString.split(",");
+//
+//            if(splitString.length > 1) {
+                for(AsyncActivitySettingsObject setting : s) {
+                    if(setting.getValue()) {
+                        activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
                     }
                 }
-            }
-        }
-
+//            }
+//
+//
+//            if(masterActivitiesObject.size() > 0) {
+//                for(Metric m : masterActivitiesObject) {
+//                    if(activitiesSelected.containsKey(m.getType())) {
+//                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
+//                        selectedActivities.setName(m.getTitle());
+//                        if(selectedActivities.getValue().equals("0")) {
+//                            continue;
+//                        }
+//                    }
+//                    else {
+////                        This is to reconcile the object to make sure it's got the new stuff in it.
+//                        if (isSelectableActivity(m.getType())) {
+//                            Log.e("PUTTING", m.getTitle());
+//                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
     }
 
     public boolean isSelectableActivity(String type) {
@@ -945,6 +946,12 @@ public class DataController {
             case "SUNDC":
             case "BCLSD":
             case "SCLSD":
+            case "SGND":
+            case "1TAPT":
+            case "CLSD":
+            case "UCNTR":
+            case "LSTT":
+            case "BBSGD":
                 return false;
         }
 
@@ -959,15 +966,17 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public LinkedHashMap<String, SelectedActivities> getActivitiesSelected() {
-        return activitiesSelected;
+    public AsyncActivitySettingsObject[] getActivitiesSelected() {
+        return activitySettings;
     }
 
-    public void setActivitiesSelected(ParameterObject activitiesSelected) {
-        if(activitiesSelected == null || activitiesSelected.getValue().equals("{}")) {
-            activitiesSelected = setDefaultActivitesSelected();
-        }
-        setupSelectedActivities(activitiesSelected);
+    public void setActivitiesSelected(AsyncActivitySettingsObject[] activitiesSelected) {
+        //TODO: Reinstate the defaults
+//        if(activitiesSelected == null) {
+//            activitiesSelected = setDefaultActivitesSelected();
+//        }
+        this.activitySettings = activitiesSelected;
+        setupSelectedActivities(activitySettings);
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {
@@ -1192,15 +1201,32 @@ public class DataController {
         return masterActivitiesObject;
     }
 
-    public void sortSelectedActivities(List<String> currentActivitiesSorting) {
+    public void sortSelectedActivities(AsyncActivitySettingsObject[] currentActivitiesSorting) {
         LinkedHashMap<String, SelectedActivities> itemArray = new LinkedHashMap<>();
         for(int i = 0; i < activitiesSelected.size(); i++) {
-            itemArray.put(currentActivitiesSorting.get(i), activitiesSelected.get(currentActivitiesSorting.get(i)));
+            itemArray.put(currentActivitiesSorting[i].getActivity_type(), activitiesSelected.get(currentActivitiesSorting[i]));
         }
         activitiesSelected = itemArray;
     }
 
     public void setMessageCenterVisible(boolean b) {
         messageCenterVisible = b;
+    }
+
+    public AsyncActivitySettingsObject getFirstOtherActivity() {
+        AsyncActivitySettingsObject firstOtherActivity = null;
+        for(AsyncActivitySettingsObject setting : activitySettings) {
+            if(setting.getValue()) {
+                if(firstOtherActivity == null) {
+                    firstOtherActivity = setting;
+                }
+                else {
+                    if(setting.getDisplay_order() > firstOtherActivity.getDisplay_order()) {
+                        firstOtherActivity = setting;
+                    }
+                }
+            }
+        }
+        return firstOtherActivity;
     }
 }

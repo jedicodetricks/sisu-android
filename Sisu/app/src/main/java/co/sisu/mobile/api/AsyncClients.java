@@ -43,7 +43,7 @@ public class AsyncClients extends AsyncTask<String, String, String> {
             Gson gson = new Gson();
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/get-clients/" + agentId + "/" + marketId)
+                    .url(url + "api/v2/agent/get-clients/" + agentId + "/" + marketId)
                     .get()
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

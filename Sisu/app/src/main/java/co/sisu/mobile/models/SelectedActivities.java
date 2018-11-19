@@ -6,26 +6,26 @@ package co.sisu.mobile.models;
  */
 
 public class SelectedActivities {
-    String value;
+    boolean value;
     String name;
     String type;
 
-    public SelectedActivities(String value, String type) {
+    public SelectedActivities(boolean value, String type) {
         this.value = value;
         this.type = type;
     }
 
-    public SelectedActivities(String value, String type, String name) {
+    public SelectedActivities(boolean value, String type, String name) {
         this.value = value;
         this.type = type;
         this.name = name;
     }
 
-    public String getValue() {
+    public boolean getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(boolean value) {
         this.value = value;
     }
 

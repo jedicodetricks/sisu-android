@@ -637,6 +637,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
+        newClient.setMarket_id(String.valueOf(parentActivity.getCurrentTeam().getMarket_id()));
+
         apiManager.sendAsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient);
     }
 

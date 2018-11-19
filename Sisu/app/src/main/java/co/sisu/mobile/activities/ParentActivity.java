@@ -53,6 +53,8 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
@@ -86,6 +88,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
+    private boolean activitySettingsParamFinished = false;
     private boolean settingsFinished = false;
     private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
@@ -323,7 +326,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && noNavigation) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -337,6 +340,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             colorSchemeFinished = false;
             labelsFinished = false;
             noNavigation = true;
+            activitySettingsParamFinished = false;
         }
     }
 
@@ -388,8 +392,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     teamsFinished = true;
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getCurrentTeam().getId());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
+                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getCurrentTeam().getMarket_id());
                 }
             });
+        }
+        else if(asyncReturnType.equals("Activity Settings")) {
+            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            dataController.setActivitiesSelected(settings);
+            activitySettingsParamFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Get Firebase Device")) {
             AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;

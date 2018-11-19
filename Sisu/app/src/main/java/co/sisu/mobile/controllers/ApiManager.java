@@ -111,7 +111,7 @@ public class ApiManager {
 
     public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId, int marketId) {
         getJWT(agentId);
-        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivitySettings(cb, url, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
@@ -279,7 +279,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
+        expDate.add(Calendar.DATE, 30);
 
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)

@@ -54,7 +54,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
 //        Pair<Long, Object> thing = mItemList.get(position);
         final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
         if(selectedActivity.getType().equals("ADDDB")) {
-            Log.e("ADDDB", selectedActivity.getValue());
+            Log.e("ADDDB", String.valueOf(selectedActivity.getValue()));
         }
         holder.itemView.setTag(mItemList.get(position));
 
@@ -63,12 +63,12 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
         activitySwitch = holder.itemView.findViewById(R.id.activity_list_switch);
 
         titleTextView.setText(selectedActivity.getName());
-        activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
+        activitySwitch.setChecked(selectedActivity.getValue());
         activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.e("CHANGED", String.valueOf(isChecked));
-                selectedActivity.setValue(jsonIsChecked(isChecked));
+                selectedActivity.setValue(isChecked);
             }
         });
 

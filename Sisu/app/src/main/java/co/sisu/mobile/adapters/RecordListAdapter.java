@@ -22,6 +22,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -34,13 +35,15 @@ public class RecordListAdapter extends BaseAdapter {
     private ArrayList<Metric> mDataSource;
     private RecordEventHandler mRecordEventHandler;
     private ColorSchemeManager colorSchemeManager;
+    private AsyncActivitySettingsObject firstOtherActivity;
 
-    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler, ColorSchemeManager colorSchemeManager) {
+    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecordEventHandler = recordEventHandler;
         this.colorSchemeManager = colorSchemeManager;
+        this.firstOtherActivity = firstOtherActivity;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class RecordListAdapter extends BaseAdapter {
         View rowView = null;
         final Metric metric = (Metric) getItem(position);
 
-        if(metric.getType().equals("CLSD") && position != getCount() - 1) {
+        if(metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type()) && position != getCount() - 1) {
             rowView = mInflater.inflate(R.layout.adapter_record_list_other_hack, parent, false);
             TextView otherText = rowView.findViewById(R.id.otherText);
             otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
