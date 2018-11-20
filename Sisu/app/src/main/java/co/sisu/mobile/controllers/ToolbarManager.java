@@ -14,13 +14,21 @@ import co.sisu.mobile.activities.ParentActivity;
 public class ToolbarManager {
     private ParentActivity parentActivity;
     private ColorSchemeManager colorSchemeManager;
+    private String currentActivity = "Scoreboard";
 
     public ToolbarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
         this.colorSchemeManager = parentActivity.getColorSchemeManager();
     }
 
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        resetToolbarImages(currentActivity);
+    }
+
     public void resetToolbarImages(String inputActivity) {
+        currentActivity = inputActivity;
+
         ImageView scoreBoardButton = parentActivity.findViewById(R.id.scoreboardView);
         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);

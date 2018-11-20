@@ -62,6 +62,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     public void teamSwap() {
         loader.setVisibility(View.VISIBLE);
         apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+        setColorScheme();
     }
 
 

@@ -136,7 +136,6 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
             fragmentTag = "More";
-            isDrawerEnabled = DISABLE_DRAWER;
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
             fragmentTag = "Scoreboard";
@@ -328,5 +327,11 @@ public class NavigationManager {
 
     public void updateSelectedTeam(int position) {
         actionBarManager.updateSelectedTeam(position);
+    }
+
+    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        actionBarManager.updateColorSchemeManager(colorSchemeManager);
+        toolbarManager.updateColorSchemeManager(colorSchemeManager);
     }
 }

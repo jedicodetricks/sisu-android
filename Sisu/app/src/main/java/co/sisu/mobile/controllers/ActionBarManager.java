@@ -244,6 +244,7 @@ public class ActionBarManager {
         if(isDrawerEnabled) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             teamBlock.setOnClickListener(parentActivity);
+            teamIcon.setOnClickListener(parentActivity);
             if(teamsList != null) {
 //                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
@@ -318,6 +319,9 @@ public class ActionBarManager {
             teamLetter.setText(team.getTeamLetter());
             teamLetter.setBackgroundColor(team.getColor());
             teamBlock.setBackgroundColor(team.getColor());
+            teamBlock.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.VISIBLE);
+            teamIcon.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -365,6 +369,25 @@ public class ActionBarManager {
             marketId = teamsList.get(selectedTeam).getMarket_id();
         }
         return marketId;
+    }
+
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        if(colorSchemeManager.getIcon() != null) {
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+            //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+            teamIcon.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.GONE);
+            teamBlock.setBackgroundColor(Color.TRANSPARENT);
+            SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+        } else {
+            teamLetter.setText(currentTeam.getTeamLetter());
+            teamLetter.setBackgroundColor(currentTeam.getColor());
+            teamBlock.setBackgroundColor(currentTeam.getColor());
+            teamBlock.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.VISIBLE);
+            teamIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
 

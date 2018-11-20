@@ -189,6 +189,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
                     parentLoader.getIndeterminateDrawable().setBounds(bounds);
                 }
+                navigationManager.updateColorScheme(colorSchemeManager);
             }
         });
     }
@@ -242,6 +243,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(!teamSwap) {
             switch (v.getId()) {
                 case R.id.action_bar_home:
+                case R.id.team_icon:
                     navigationManager.toggleDrawer();
                     break;
                 case R.id.scoreboardView:
@@ -296,15 +298,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
     }
 
+    private TeamObject updatedTeam;
+    private int updateTeamPosition;
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //This is what goes off when you click a new team.
         parentLoader.setVisibility(View.VISIBLE);
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-        navigationManager.updateTeam(team);
+        updatedTeam = team;
+        updateTeamPosition = position;
+        navigationManager.updateTeam(updatedTeam);
+        navigationManager.updateSelectedTeam(updateTeamPosition);
         FragmentManager fragmentManager = getSupportFragmentManager();
         f = fragmentManager.findFragmentById(R.id.your_placeholder);
-        navigationManager.updateSelectedTeam(position);
+
         sendTeamSwapApiCalls(team);
 
         navigationManager.closeDrawer();
@@ -325,7 +333,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void executeTeamSwap() {
         if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
             parentLoader.setVisibility(View.INVISIBLE);
-
             clientFinished = false;
             goalsFinished = false;
             settingsFinished = false;

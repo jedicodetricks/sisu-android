@@ -91,6 +91,14 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
         loader.setVisibility(View.VISIBLE);
         apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setColorScheme();
+                setupLabels();
+            }
+        });
+
     }
 
 
