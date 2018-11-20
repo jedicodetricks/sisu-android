@@ -599,7 +599,7 @@ public class DataController {
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
                 default:
-                    metric.setThumbnailId(R.drawable.leaderboard_icon);
+                    metric.setThumbnailId(R.drawable.home_icon);
                     break;
             }
         }

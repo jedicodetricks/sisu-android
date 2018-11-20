@@ -113,10 +113,10 @@
     <string name="contacts_hint">Contacts</string>
     <string name="signed_buyers_hint">Buyers Signed</string>
     <string name="buyer_appt_hint">Buyer Appointments</string>
-    <string name="seller_appt_hint">Seller Appointments</string>
-    <string name="signed_sellers_hint">Sellers Signed</string>
+    <string name="seller_appt_hint">Listings Appointments</string>
+    <string name="signed_sellers_hint">Listings Signed</string>
     <string name="buyers_under_contract_hint">Buyers Under Contract</string>
-    <string name="sellers_under_contract_hint">Sellers Under Contract</string>
+    <string name="sellers_under_contract_hint">Listings Under Contract</string>
     <string name="buyers_closed_hint">Buyers Closed</string>
     <string name="sellers_closed_hint">Listings Closed</string>
     <string name="closed_volume_hint">Closed Volume</string>

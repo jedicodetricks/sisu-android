@@ -193,7 +193,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             saveButton.setOnClickListener(this);
         }
         else {
-            Log.e("NULL SAVE", "SHIT");
+            Log.e("NULL SAVE", "FARTS");
         }
     }
 
