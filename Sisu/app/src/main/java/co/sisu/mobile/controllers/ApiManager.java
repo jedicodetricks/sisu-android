@@ -108,9 +108,9 @@ public class ApiManager {
         new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId, int marketId) {
+    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId, int teamId) {
         getJWT(agentId);
-        new AsyncActivitySettings(cb, url, agentId, marketId).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivitySettings(cb, url, agentId, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int marketId) {

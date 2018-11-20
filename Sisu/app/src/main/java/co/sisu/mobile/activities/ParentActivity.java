@@ -94,6 +94,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean teamsFinished = false;
     private boolean labelsFinished = false;
     private boolean noNavigation = true;
+    private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
     private String timeline = "month";
     private int timelineSelection = 5;
@@ -111,6 +112,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isNoteFragment = false;
     private String pushNotificationTitle = "";
     private String pushNotificationBody = "";
+    private Fragment f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,34 +239,37 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             updateRecordedActivities();
         }
 
-        switch (v.getId()) {
-            case R.id.action_bar_home:
-                navigationManager.toggleDrawer();
-                break;
-            case R.id.scoreboardView:
-                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                break;
-            case R.id.reportView:
-                noNavigation = false;
-                navigationManager.clearStackReplaceFragment(ReportFragment.class);
-                break;
-            case R.id.recordView:
-                noNavigation = false;
-                navigationManager.clearStackReplaceFragment(RecordFragment.class);
-                break;
-            case R.id.leaderBoardView:
-                noNavigation = false;
-                navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                break;
-            case R.id.moreView:
-                noNavigation = false;
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                break;
-            case R.id.cancelButton:
-                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-            default:
-                break;
+        if(!teamSwap) {
+            switch (v.getId()) {
+                case R.id.action_bar_home:
+                    navigationManager.toggleDrawer();
+                    break;
+                case R.id.scoreboardView:
+                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    break;
+                case R.id.reportView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
+                    break;
+                case R.id.recordView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(RecordFragment.class);
+                    break;
+                case R.id.leaderBoardView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
+                    break;
+                case R.id.moreView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(MoreFragment.class);
+                    break;
+                case R.id.cancelButton:
+                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                default:
+                    break;
+            }
         }
+
     }
 
     public void updateRecordedActivities() {
@@ -294,27 +299,58 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //This is what goes off when you click a new team.
+        parentLoader.setVisibility(View.VISIBLE);
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
         navigationManager.updateTeam(team);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
+        f = fragmentManager.findFragmentById(R.id.your_placeholder);
         navigationManager.updateSelectedTeam(position);
-        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-        switch (f.getTag()) {
-            case "Scoreboard":
-                ((ScoreboardFragment) f).teamSwap();
-                break;
-            case "Record":
-                ((RecordFragment) f).teamSwap();
-                break;
-            case "Report":
-                ((ReportFragment) f).teamSwap();
-                break;
-            case "Leaderboard":
-                ((LeaderboardFragment) f).teamSwap();
-                break;
-        }
+        sendTeamSwapApiCalls(team);
+
         navigationManager.closeDrawer();
+    }
+
+    private void sendTeamSwapApiCalls(TeamObject team) {
+
+        teamSwap = true;
+
+        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
+        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
+    }
+
+    private void executeTeamSwap() {
+        if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
+            parentLoader.setVisibility(View.INVISIBLE);
+
+            clientFinished = false;
+            goalsFinished = false;
+            settingsFinished = false;
+            teamParamFinished = false;
+            colorSchemeFinished = false;
+            labelsFinished = false;
+            noNavigation = true;
+            activitySettingsParamFinished = false;
+            teamSwap = false;
+
+            switch (f.getTag()) {
+                case "Scoreboard":
+                    ((ScoreboardFragment) f).teamSwap();
+                    break;
+                case "Record":
+                    ((RecordFragment) f).teamSwap();
+                    break;
+                case "Report":
+                    ((ReportFragment) f).teamSwap();
+                    break;
+                case "Leaderboard":
+                    ((LeaderboardFragment) f).teamSwap();
+                    break;
+            }
+        }
     }
 
     public TeamObject getCurrentTeam() {
@@ -363,7 +399,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Teams")) {
+        if(teamSwap) {
+            swappingTeamData(returnObject, asyncReturnType);
+        }
+        else if(asyncReturnType.equals("Teams")) {
             dataController.setTeamsObject(ParentActivity.this, returnObject);
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -389,7 +428,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     teamsFinished = true;
                     apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamMarketId());
+                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId());
                 }
             });
         }
@@ -504,6 +543,55 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.setClientListObject(returnObject);
             clientFinished = true;
             navigateToScoreboard();
+        }
+    }
+
+    private void swappingTeamData(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Activity Settings")) {
+            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            dataController.setActivitiesSelected(settings);
+            activitySettingsParamFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Goals")) {
+            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
+            goalsFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Team Parameters")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            if(settingsJson.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settingsJson.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Clients")) {
+            dataController.setClientListObject(returnObject);
+            clientFinished = true;
+            executeTeamSwap();
         }
     }
 

@@ -53,9 +53,6 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
         holder.setIsRecyclable(false);
 //        Pair<Long, Object> thing = mItemList.get(position);
         final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
-        if(selectedActivity.getType().equals("ADDDB")) {
-            Log.e("ADDDB", String.valueOf(selectedActivity.getValue()));
-        }
         holder.itemView.setTag(mItemList.get(position));
 
         // Get title element

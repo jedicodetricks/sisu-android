@@ -52,13 +52,16 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private ProgressBar loader;
     private Spinner spinner;
     private boolean pastTimeline;
+    private String formattedStartTime;
+    private String formattedEndTime;
 
     public ReportFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-//        initializeListView(dataController.updateRecordMetrics());
+        loader.setVisibility(View.VISIBLE);
+        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
     }
 
 
@@ -248,8 +251,8 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     formattedEndMonth = "0" + selectedEndMonth;
                 }
 
-                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
                 apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
                 //will need to refresh page with fresh data based on api call here determined by timeline value selected
             }

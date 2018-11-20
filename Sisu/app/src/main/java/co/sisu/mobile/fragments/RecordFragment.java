@@ -60,7 +60,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     public void teamSwap() {
-//        initializeListView(dataController.updateRecordMetrics());
+        loader.setVisibility(View.VISIBLE);
+        Date d = calendar.getTime();
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
     }
 
 

@@ -893,18 +893,19 @@ public class DataController {
 
     }
 
-    private void setupSelectedActivities(AsyncActivitySettingsObject[] s) {
+    private LinkedHashMap<String, SelectedActivities> setupSelectedActivities(AsyncActivitySettingsObject[] s) {
         activitiesSelected = new LinkedHashMap<>();
 //        if(s != null) {
 //            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
 //            String[] splitString = formattedString.split(",");
 //
 //            if(splitString.length > 1) {
-                for(AsyncActivitySettingsObject setting : s) {
-                    if(setting.getValue()) {
-                        activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
-                    }
-                }
+        for(AsyncActivitySettingsObject setting : s) {
+            if(setting.getValue() == true) {
+                activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
+            }
+        }
+        return activitiesSelected;
 //            }
 //
 //
@@ -972,7 +973,7 @@ public class DataController {
 //            activitiesSelected = setDefaultActivitesSelected();
 //        }
         this.activitySettings = activitiesSelected;
-        setupSelectedActivities(activitySettings);
+        this.activitiesSelected = setupSelectedActivities(activitiesSelected);
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {

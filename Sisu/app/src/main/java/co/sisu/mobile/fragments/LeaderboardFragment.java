@@ -252,9 +252,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         listAdapter = null;
         expListView.setAdapter(listAdapter);
         getLeaderboard(selectedYear, selectedMonth + 1);
-        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
-        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
-        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getId());
+//        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+//        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
+//        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getId());
         SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
     }
 

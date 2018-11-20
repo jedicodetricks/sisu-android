@@ -21,13 +21,13 @@ public class AsyncActivitySettings extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
     private String agentId;
     private String url;
-    private int marketId;
+    private int teamId;
 
-    public AsyncActivitySettings(AsyncServerEventListener cb, String url, String agentId, int marketId) {
+    public AsyncActivitySettings(AsyncServerEventListener cb, String url, String agentId, int teamId) {
         callback = cb;
         this.agentId = agentId;
         this.url = url;
-        this.marketId = marketId;
+        this.teamId = teamId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AsyncActivitySettings extends AsyncTask<String, String, String> {
                 .build();
 
         Request request = new Request.Builder()
-                .url(url + "api/v1/agent/record-activities/"+ agentId + "/" + marketId)
+                .url(url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId)
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
