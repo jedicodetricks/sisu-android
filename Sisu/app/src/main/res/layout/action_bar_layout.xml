@@ -17,7 +17,6 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </View>
 
     <TextView
@@ -32,8 +31,8 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/font_larger"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/action_bar_home"
-        app:layout_constraintStart_toStartOf="@+id/action_bar_home"
+        app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+        app:layout_constraintStart_toStartOf="@id/action_bar_home"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -46,8 +45,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="@+id/action_bar_home"
-        app:layout_constraintStart_toStartOf="@+id/action_bar_home"
+        app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+        app:layout_constraintStart_toStartOf="@id/action_bar_home"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

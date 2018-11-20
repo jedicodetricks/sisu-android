@@ -30,6 +30,8 @@ public class NavigationManager {
     private String fragmentTag;
     private Stack<Class> backStack;
     private ColorSchemeManager colorSchemeManager;
+    private static final boolean ENABLE_DRAWER = true;
+    private static final boolean DISABLE_DRAWER = false;
 
     public NavigationManager(ParentActivity parentActivity) {
         this.colorSchemeManager = parentActivity.colorSchemeManager;
@@ -65,23 +67,23 @@ public class NavigationManager {
     private void manageActionBar(Class fragmentClass) {
         if(fragmentClass.getSimpleName().equals("AddClientFragment") || fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
             if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-                actionBarManager.swapToAddClientBar(null);
+                actionBarManager.swapToAddClientBar(null, DISABLE_DRAWER);
             }
             else {
                 if(parentActivity.getIsNoteFragment()) {
-                    actionBarManager.swapToAddClientBar("Send Slack Message");
+                    actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
                 }
                 else {
-                    actionBarManager.swapToAddClientBar("Send Push Notification");
+                    actionBarManager.swapToAddClientBar("Send Push Notification", DISABLE_DRAWER);
                 }
             }
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
             if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
-                actionBarManager.swapToClientListBar(null);
+                actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
             }
             else {
-                actionBarManager.swapToClientListBar("Client Notes");
+                actionBarManager.swapToClientListBar("Client Notes", DISABLE_DRAWER);
             }
         }
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
@@ -90,7 +92,7 @@ public class NavigationManager {
             sortTitleBar(fragmentClass);
         }
         else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
-            actionBarManager.swapToEditClientBar();
+            actionBarManager.swapToEditClientBar(DISABLE_DRAWER);
         }
         else {
             sortSaveActionBar(fragmentClass);
@@ -101,37 +103,40 @@ public class NavigationManager {
     private void sortSaveActionBar(Class fragmentClass) {
         if(fragmentClass.getSimpleName().equals("RecordFragment")) {
             fragmentTag = "Record";
-            actionBarManager.swapToSaveAction("Record");
+            actionBarManager.swapToSaveAction("Record", ENABLE_DRAWER);
             toolbarManager.resetToolbarImages(fragmentTag);
         }
         else if(fragmentClass.getSimpleName().equals("MyProfileFragment")) {
             fragmentTag = "MyProfile";
-            actionBarManager.swapToSaveAction("My Profile");
+            actionBarManager.swapToSaveAction("My Profile", DISABLE_DRAWER);
         }
         else if(fragmentClass.getSimpleName().equals("GoalSetupFragment")) {
             fragmentTag = "GoalSetup";
-            actionBarManager.swapToSaveAction("Goal Setup");
+            actionBarManager.swapToSaveAction("Goal Setup", DISABLE_DRAWER);
         }
         else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
             fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveEditAction("Activity Settings");
+            actionBarManager.swapToSaveEditAction("Activity Settings", DISABLE_DRAWER);
         }
         else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
             fragmentTag = "Settings";
-            actionBarManager.swapToSaveAction("Settings");
+            actionBarManager.swapToSaveAction("Settings", DISABLE_DRAWER);
         }
         else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
             fragmentTag = "Add Client Note";
-            actionBarManager.swapToSaveAction("Add Client Note");
+            actionBarManager.swapToSaveAction("Add Client Note", DISABLE_DRAWER);
         }
     }
 
     private void sortTitleBar(Class fragmentClass) {
+        boolean isDrawerEnabled = ENABLE_DRAWER;
         if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
             fragmentTag = "Feedback";
+            isDrawerEnabled = DISABLE_DRAWER;
         }
         else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
             fragmentTag = "More";
+            isDrawerEnabled = DISABLE_DRAWER;
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
             fragmentTag = "Scoreboard";
@@ -144,11 +149,12 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
             fragmentTag = "Change Password";
+            isDrawerEnabled = DISABLE_DRAWER;
         }
 //        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
 //            fragmentTag = "Add Client Note";
 //        }
-        actionBarManager.swapToTitleBar(fragmentTag);
+        actionBarManager.swapToTitleBar(fragmentTag, isDrawerEnabled);
         toolbarManager.resetToolbarImages(fragmentTag);
     }
 
@@ -193,7 +199,7 @@ public class NavigationManager {
         }
         // Insert the fragment by replacing any existing fragment
         backStack.add(ClientListFragment.class);
-        actionBarManager.swapToClientListBar(null);
+        actionBarManager.swapToClientListBar(null, ENABLE_DRAWER);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
@@ -212,7 +218,7 @@ public class NavigationManager {
         }
         backStack.add(ClientListFragment.class);
         // Insert the fragment by replacing any existing fragment
-        actionBarManager.swapToClientListBar(tab);
+        actionBarManager.swapToClientListBar(tab, ENABLE_DRAWER);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
@@ -276,8 +282,8 @@ public class NavigationManager {
             }
         } else {
             backStack.pop();
-            Log.e("BACK STACK", String.valueOf(backStack.size()));
-            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
+//            Log.e("BACK STACK", String.valueOf(backStack.size()));
+//            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
             replaceFragment(backStack.get(backStack.size() - 1));
         }
     }
