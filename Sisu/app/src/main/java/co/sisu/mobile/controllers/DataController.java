@@ -414,35 +414,35 @@ public class DataController {
 
             Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
-//            switch(counters[i].getActivity_type()) {
-//                case "CONTA":
-//                    metric.setWeight(99);
-//                    break;
-//                case "BSGND":
-//                    metric.setWeight(96);
-//                    break;
-//                case "SSGND":
-//                    metric.setWeight(95);
-//                    break;
-//                case "BUNDC":
-//                    metric.setWeight(94);
-//                    break;
-//                case "SUNDC":
-//                    metric.setWeight(93);
-//                    break;
-//                case "BCLSD":
-//                    metric.setWeight(92);
-//                    break;
-//                case "SCLSD":
-//                    metric.setWeight(91);
-//                    break;
-//                case "BAPPT":
-//                    metric.setWeight(98);
-//                    break;
-//                case "SAPPT":
-//                    metric.setWeight(97);
-//                    break;
-//            }
+            switch(counters[i].getActivity_type()) {
+                case "CONTA":
+                    metric.setWeight(99);
+                    break;
+                case "BSGND":
+                    metric.setWeight(96);
+                    break;
+                case "SSGND":
+                    metric.setWeight(95);
+                    break;
+                case "BUNDC":
+                    metric.setWeight(94);
+                    break;
+                case "SUNDC":
+                    metric.setWeight(93);
+                    break;
+                case "BCLSD":
+                    metric.setWeight(92);
+                    break;
+                case "SCLSD":
+                    metric.setWeight(91);
+                    break;
+                case "BAPPT":
+                    metric.setWeight(98);
+                    break;
+                case "SAPPT":
+                    metric.setWeight(97);
+                    break;
+            }
             masterActivitiesObject.add(metric);
 
 //            if(activitiesSelected.containsKey(metric.getType())) {

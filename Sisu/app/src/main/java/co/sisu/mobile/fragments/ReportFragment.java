@@ -368,7 +368,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private void initializeListView() {
         mListView = getView().findViewById(R.id.report_list_view);
         mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        mListView.setDividerHeight(0);
     }
 
     private void setData(List<Metric> metricList) {
@@ -376,9 +376,10 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
         for(Metric metric: metricList) {
             metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
-//            if(metric.getCurrentNum() > 0|| metric.getWeight() > 40) {
-            prunedList.add(metric);
-//            }
+            if(metric.getCurrentNum() > 0 || partOfImportantList(metric)) {
+                metric.setTitle(dataController.localizeLabel(metric.getTitle()));
+                prunedList.add(metric);
+            }
         }
 
         if(getContext() != null) {
@@ -389,6 +390,29 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             mListView.setAdapter(adapter);
         }
 
+    }
+
+    private boolean partOfImportantList(Metric metric) {
+        switch (metric.getType()) {
+            case "CONTA":
+            case "BAPPT":
+            case "SAPPT":
+            case "BSGND":
+            case "SSGND":
+            case "BUNDC":
+            case "SUNDC":
+            case "BCLSD":
+            case "SCLSD":
+            case "SGND":
+            case "1TAPT":
+            case "CLSD":
+            case "UCNTR":
+            case "LSTT":
+            case "BBSGD":
+                return true;
+        }
+
+        return false;
     }
 
     @Override

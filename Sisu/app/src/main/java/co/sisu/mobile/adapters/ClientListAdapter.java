@@ -29,7 +29,7 @@ public class ClientListAdapter extends BaseAdapter {
     private ClientMessagingEvent mClientMessagingEvent;
     private ColorSchemeManager colorSchemeManager;
     private TextView titleTextView, subtitleTextView;
-    private ImageView textImage, phoneImage, emailImage;
+    private ImageView textImage, phoneImage, emailImage, thumbnail;
 
     public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent, ColorSchemeManager colorSchemeManager) {
         mContext = context;
@@ -72,7 +72,7 @@ public class ClientListAdapter extends BaseAdapter {
         }
 
         // Get view for row item
-        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
+        thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
 
         if(clientObject.getType_id().equalsIgnoreCase("b")) {
             thumbnail.setImageResource(R.drawable.buyer_icon);
@@ -154,24 +154,31 @@ public class ClientListAdapter extends BaseAdapter {
         subtitleTextView.setText("$" + clientObject.getCommission_amt());
 
 
-        setColorScheme(rowView);
+        setColorScheme(rowView, clientObject);
         return rowView;
     }
 
-    private void setColorScheme(View rowView) {
+    private void setColorScheme(View rowView, ClientObject clientObject) {
         titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
         subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         Drawable drawable = rowView.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
         textImage.setImageDrawable(drawable);
 
         drawable = rowView.getResources().getDrawable(R.drawable.email_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
         emailImage.setImageDrawable(drawable);
 
         drawable = rowView.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
         phoneImage.setImageDrawable(drawable);
+
+        if(!clientObject.getType_id().equalsIgnoreCase("b")) {
+            drawable = rowView.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
+            drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+            thumbnail.setImageDrawable(drawable);
+        }
+
     }
 }

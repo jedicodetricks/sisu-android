@@ -125,12 +125,12 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
         int[] thumbColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         int[] trackColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         DrawableCompat.setTintList(DrawableCompat.wrap(reminderSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));

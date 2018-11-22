@@ -86,12 +86,12 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
 
         int[] thumbColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         int[] trackColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));

@@ -52,7 +52,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ProgressBar loader;
     private ArrayList mItemArray = new ArrayList<>();
     private boolean editMode = false;
-    private TextView saveButton, editButton;
+    private TextView saveButton, editButton, title;
     private boolean activitySaveComplete = false;
     private boolean settingsSaveComplete = false;
 
@@ -75,11 +75,21 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
-        loader = view.findViewById(R.id.activitySettingsLoader);
+        loader = parentActivity.findViewById(R.id.parentLoader);
         initializeButtons();
         initializeListView();
+        initializeFields();
         loader.setVisibility(View.VISIBLE);
         apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+        setColorScheme();
+    }
+
+    private void initializeFields() {
+        title = getView().findViewById(R.id.activity_settings_title);
+    }
+
+    private void setColorScheme() {
+        title.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
     private void setupFieldsWithData() {

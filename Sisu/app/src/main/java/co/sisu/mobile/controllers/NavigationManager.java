@@ -116,7 +116,7 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
             fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveEditAction("Activity Settings", DISABLE_DRAWER);
+            actionBarManager.swapToSaveEditAction("Record Settings", DISABLE_DRAWER);
         }
         else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
             fragmentTag = "Settings";
