@@ -116,4 +116,13 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         startActivity(intent);
         parentActivity.finish();
     }
+
+    public void teamSwap() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeListView();
+            }
+        });
+    }
 }

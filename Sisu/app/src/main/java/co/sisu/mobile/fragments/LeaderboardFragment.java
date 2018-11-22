@@ -249,43 +249,18 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     public void teamSwap() {
-        listAdapter = null;
-        expListView.setAdapter(listAdapter);
-        getLeaderboard(selectedYear, selectedMonth + 1);
-//        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
-//        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
-//        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), parentActivity.getCurrentTeam().getId());
-        SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listAdapter = null;
+                expListView.setAdapter(listAdapter);
+                getLeaderboard(selectedYear, selectedMonth + 1);
+                SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
+            }
+        });
+
     }
 
-    private List<String> initSpinnerArray() {
-        List<String> spinnerArray = new ArrayList<>();
-//        spinnerArray.add("Today");
-//        spinnerArray.add("Last Week");
-//        spinnerArray.add("This Week");
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
-
-        String thisMonth = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.MONTH, -1);
-        String lastMonth = sdf.format(calendar.getTime());
-        spinnerArray.add(lastMonth);
-        spinnerArray.add(thisMonth);
-
-        calendar = Calendar.getInstance();
-        sdf = new SimpleDateFormat("yyyy");
-        String thisYear = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.YEAR, -1);
-        String lastYear = sdf.format(calendar.getTime());
-        spinnerArray.add(lastYear);
-        spinnerArray.add(thisYear);
-//        spinnerArray.add("All Records");
-
-        return spinnerArray;
-    }
 
     private void prepareListData() {
 

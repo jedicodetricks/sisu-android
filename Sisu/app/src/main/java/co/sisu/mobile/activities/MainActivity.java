@@ -139,8 +139,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void getSavedData() {
         if(SaveSharedPreference.getUserId(this).length() > 0) {
             apiManager.getColorScheme(this, SaveSharedPreference.getUserId(this), Integer.parseInt(SaveSharedPreference.getTeam(this)), SaveSharedPreference.getLights(this));
-            if(SaveSharedPreference.getLogo(this).length() > 0) {
-                Picasso.with(this).load(Uri.parse(SaveSharedPreference.getLogo(this))).into(logo);
+            String currentLogo = SaveSharedPreference.getLogo(this);
+            if(currentLogo.length() > 0 && !currentLogo.equalsIgnoreCase("sisu-logo-lg")) {
+                Picasso.with(this).load(Uri.parse(currentLogo)).into(logo);
                 sisuPowerLogo.setVisibility(View.VISIBLE);
             }
         }

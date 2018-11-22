@@ -342,7 +342,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             noNavigation = true;
             activitySettingsParamFinished = false;
             teamSwap = false;
-
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
             switch (f.getTag()) {
                 case "Scoreboard":
                     ((ScoreboardFragment) f).teamSwap();
@@ -356,6 +356,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case "Leaderboard":
                     ((LeaderboardFragment) f).teamSwap();
                     break;
+                case "More":
+                    ((MoreFragment) f).teamSwap();
+                    break;
+
             }
         }
     }
@@ -534,6 +538,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             setActivityColors();
             colorSchemeFinished = true;
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Get Labels")) {

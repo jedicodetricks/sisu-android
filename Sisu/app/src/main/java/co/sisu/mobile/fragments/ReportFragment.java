@@ -388,6 +388,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             }
             ReportListAdapter adapter = new ReportListAdapter(getContext(), prunedList, parentActivity.getTimeline(), colorSchemeManager, dataController.getFirstOtherActivity());
             mListView.setAdapter(adapter);
+
         }
 
     }
