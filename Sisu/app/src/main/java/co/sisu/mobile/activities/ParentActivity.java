@@ -908,4 +908,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setShouldDisplayPushNotification(boolean b) {
         shouldDisplayPushNotification = b;
     }
+
+    public boolean isTeamSwapOccurring() {
+        return teamSwap;
+    }
 }

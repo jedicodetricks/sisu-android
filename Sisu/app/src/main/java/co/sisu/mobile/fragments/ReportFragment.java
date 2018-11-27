@@ -377,7 +377,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         for(Metric metric: metricList) {
             metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
             if(metric.getCurrentNum() > 0 || partOfImportantList(metric)) {
-                metric.setTitle(dataController.localizeLabel(metric.getTitle()));
+//                metric.setTitle(dataController.localizeLabel(metric.getTitle()));
                 prunedList.add(metric);
             }
         }

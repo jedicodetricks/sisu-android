@@ -1,6 +1,7 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -43,15 +44,17 @@ public class AsyncLabels extends AsyncTask<String, String, String> {
                 .addHeader("Client-Timestamp", strings[1])
                 .addHeader("Transaction-Id", strings[2])
                 .build();
+        String returnString = null;
         try {
             response = client.newCall(request).execute();
-            //Log.d("LABELASYNC", response.body().string());
+            returnString = response.body().string();
+            Log.e("LABELASYNC", returnString);
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
-                AsyncLabelsJsonObject labelObject = gson.fromJson(response.body().charStream(), AsyncLabelsJsonObject.class);
+                AsyncLabelsJsonObject labelObject = gson.fromJson(returnString, AsyncLabelsJsonObject.class);
 
                 callback.onEventCompleted(labelObject, "Get Labels");
             }

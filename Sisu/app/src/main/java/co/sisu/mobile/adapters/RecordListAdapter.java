@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
@@ -35,15 +36,17 @@ public class RecordListAdapter extends BaseAdapter {
     private ArrayList<Metric> mDataSource;
     private RecordEventHandler mRecordEventHandler;
     private ColorSchemeManager colorSchemeManager;
+    private ParentActivity parentActivity;
     private AsyncActivitySettingsObject firstOtherActivity;
 
-    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity) {
+    public RecordListAdapter(Context context, List<Metric> items, RecordEventHandler recordEventHandler, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity, ParentActivity parentActivity) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRecordEventHandler = recordEventHandler;
         this.colorSchemeManager = colorSchemeManager;
         this.firstOtherActivity = firstOtherActivity;
+        this.parentActivity = parentActivity;
     }
 
     @Override
@@ -110,22 +113,29 @@ public class RecordListAdapter extends BaseAdapter {
         plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
         plusButton.invalidate();
 
+
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int minusOne = metric.getCurrentNum();
-                if(minusOne > 0) {
-                    minusOne -= 1;
+                if(!parentActivity.isTeamSwapOccurring()) {
+                    int minusOne = metric.getCurrentNum();
+                    if(minusOne > 0) {
+                        minusOne -= 1;
+                    }
+                    rowCounter.setText(String.valueOf(minusOne));
                 }
-                rowCounter.setText(String.valueOf(minusOne));
+
             }
         });
 
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int plusOne = metric.getCurrentNum() + 1;
-                rowCounter.setText(String.valueOf(plusOne));
+                if(!parentActivity.isTeamSwapOccurring()) {
+                    int plusOne = metric.getCurrentNum() + 1;
+                    rowCounter.setText(String.valueOf(plusOne));
+                }
+
             }
         });
 

@@ -115,8 +115,8 @@
     <string name="buyer_appt_hint">Buyer Appointments</string>
     <string name="seller_appt_hint">Listings Appointments</string>
     <string name="signed_sellers_hint">Listings Signed</string>
-    <string name="buyers_under_contract_hint">Buyers Under Contract</string>
-    <string name="sellers_under_contract_hint">Listings Under Contract</string>
+    <string name="buyers_under_contract_hint">Buyer U/C</string>
+    <string name="sellers_under_contract_hint">Listings U/C</string>
     <string name="buyers_closed_hint">Buyers Closed</string>
     <string name="sellers_closed_hint">Listings Closed</string>
     <string name="closed_volume_hint">Closed Volume</string>

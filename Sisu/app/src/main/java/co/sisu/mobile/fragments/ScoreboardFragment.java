@@ -806,31 +806,34 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addView:
-                launchAddClient();
-                break;
-            case R.id.contactsProgressMark:
-                navigateToClientList("pipeline");
-                break;
-            case R.id.appointmentsProgressMark:
-                navigateToClientList("pipeline");
-                break;
-            case R.id.bbSignedProgressMark:
-                navigateToClientList("signed");
-                break;
-            case R.id.listingsTakenProgressMark:
-                navigateToClientList("signed");
-                break;
-            case R.id.underContractProgressMark:
-                navigateToClientList("contract");
-                break;
-            case R.id.closedProgressMark:
-                navigateToClientList("closed");
-                break;
-            default:
-                break;
+        if(!parentActivity.isTeamSwapOccurring()) {
+            switch (v.getId()) {
+                case R.id.addView:
+                    launchAddClient();
+                    break;
+                case R.id.contactsProgressMark:
+                    navigateToClientList("pipeline");
+                    break;
+                case R.id.appointmentsProgressMark:
+                    navigateToClientList("pipeline");
+                    break;
+                case R.id.bbSignedProgressMark:
+                    navigateToClientList("signed");
+                    break;
+                case R.id.listingsTakenProgressMark:
+                    navigateToClientList("signed");
+                    break;
+                case R.id.underContractProgressMark:
+                    navigateToClientList("contract");
+                    break;
+                case R.id.closedProgressMark:
+                    navigateToClientList("closed");
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
     private void navigateToClientList(String tabName){
