@@ -40,6 +40,8 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AgentGoalsObject;
+import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
@@ -249,73 +251,50 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     public void teamSwap() {
-        listAdapter = null;
-        expListView.setAdapter(listAdapter);
-        getLeaderboard(selectedYear, selectedMonth + 1);
-        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
-        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dataController.getColorSchemeId());
-        SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listAdapter = null;
+                expListView.setAdapter(listAdapter);
+                getLeaderboard(selectedYear, selectedMonth + 1);
+                SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
+            }
+        });
+
     }
 
-    private List<String> initSpinnerArray() {
-        List<String> spinnerArray = new ArrayList<>();
-//        spinnerArray.add("Today");
-//        spinnerArray.add("Last Week");
-//        spinnerArray.add("This Week");
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
-
-        String thisMonth = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.MONTH, -1);
-        String lastMonth = sdf.format(calendar.getTime());
-        spinnerArray.add(lastMonth);
-        spinnerArray.add(thisMonth);
-
-        calendar = Calendar.getInstance();
-        sdf = new SimpleDateFormat("yyyy");
-        String thisYear = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.YEAR, -1);
-        String lastYear = sdf.format(calendar.getTime());
-        spinnerArray.add(lastYear);
-        spinnerArray.add(thisYear);
-//        spinnerArray.add("All Records");
-
-        return spinnerArray;
-    }
 
     private void prepareListData() {
 
-        for(int i = 0; i < leaderBoardSections.size(); i++) {
+        if(leaderBoardSections != null) {
+            for(int i = 0; i < leaderBoardSections.size(); i++) {
+                for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                    if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
 
-            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                        LeaderboardItemsObject currentAgent = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
 
-                    LeaderboardItemsObject currentAgent = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
-
-                    if(!agents.containsKey(currentAgent.getAgent_id())) {
-                        agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                        /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        if(!agents.containsKey(currentAgent.getAgent_id())) {
+                            agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
+                                    /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                        }
                     }
+                }
+
+                if(colorCounter == teamColors.length - 1) {
+                    colorCounter = 0;
+                }
+                else {
+                    colorCounter++;
                 }
             }
 
-            if(colorCounter == teamColors.length - 1) {
-                colorCounter = 0;
+            //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
+            //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
+            agentCounter = 0;
+            for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
+            {
+                initLeaderBoardImages(entry.getValue());
             }
-            else {
-                colorCounter++;
-            }
-        }
-
-        //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
-        //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
-        agentCounter = 0;
-        for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
-        {
-            initLeaderBoardImages(entry.getValue());
         }
 
 
@@ -323,31 +302,50 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void displayListData() {
         listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<LeaderboardObject, List<LeaderboardItemsObject>>();
+        listDataChild = new HashMap<>();
         colorCounter = 0;
         Collections.sort(leaderBoardSections, new LeaderboardComparator());
+        int addedSections = 0;
 
         for(int i = 0; i < leaderBoardSections.size(); i++) {
             leaderBoardSections.get(i).setColor(teamColors[colorCounter]);
-            listDataHeader.add(leaderBoardSections.get(i));
-            List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
-
-            for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
-                if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
-                    LeaderboardItemsObject item = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
-                    LeaderboardAgentModel agent = agents.get(item.getAgent_id());
-                    item.setImage(agent.getBitmap());
-                    leaderboardItems.add(item);
+            boolean isEmpty = false;
+            if(leaderBoardSections.get(i).getLeaderboardItemsObject().length != 0) {
+                for(LeaderboardItemsObject leaderboardObject : leaderBoardSections.get(i).getLeaderboardItemsObject()) {
+                    if(!leaderboardObject.getValue().equalsIgnoreCase("0")) {
+                        isEmpty = false;
+                        break;
+                    }
+                    else {
+                        isEmpty = true;
+                    }
                 }
+
+                if(isEmpty) {
+                    continue;
+                }
+                listDataHeader.add(leaderBoardSections.get(i));
+                List<LeaderboardItemsObject> leaderboardItems = new ArrayList<>();
+
+                for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
+                    if(!leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getValue().equals("0")) {
+                        LeaderboardItemsObject item = leaderBoardSections.get(i).getLeaderboardItemsObject()[j];
+                        LeaderboardAgentModel agent = agents.get(item.getAgent_id());
+                        item.setImage(agent.getBitmap());
+                        leaderboardItems.add(item);
+                    }
+                }
+
+                listDataChild.put(listDataHeader.get(addedSections), leaderboardItems);
+                if(colorCounter == teamColors.length - 1) {
+                    colorCounter = 0;
+                }
+                else {
+                    colorCounter++;
+                }
+                addedSections++;
             }
 
-            listDataChild.put(listDataHeader.get(i), leaderboardItems);
-            if(colorCounter == teamColors.length - 1) {
-                colorCounter = 0;
-            }
-            else {
-                colorCounter++;
-            }
         }
 
         //Collections.sort(listDataHeader, new LeaderboardComparator());
@@ -377,11 +375,14 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         if(asyncReturnType.equals("Leaderboard Image")) {
             LeaderboardAgentModel leaderboardAgentModel = (LeaderboardAgentModel) returnObject;
             if (leaderboardAgentModel.getBitmap() != null) {
-                Log.e("ADDING BITMAP", leaderboardAgentModel.getProfile() + " || " + leaderboardAgentModel.getBitmap());
                 parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
             agentDisplayCounting();
-
+        }
+        else if(asyncReturnType.equals("Goals")) {
+            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
         }
 //        else if(asyncReturnType.equals("Leaderboard")){
 //            AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);

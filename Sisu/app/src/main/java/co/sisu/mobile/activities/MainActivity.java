@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         apiManager = new ApiManager(this);
         colorSchemeManager = new ColorSchemeManager();
         setContentView(R.layout.activity_main);
-        Log.e("Screen Density: ", getDeviceDensity(this));
 //        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 //        getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
@@ -144,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getSavedData() {
         if(SaveSharedPreference.getUserId(this).length() > 0) {
-            Log.e("SAVE DATA", "GOT EEM");
             apiManager.getColorScheme(this, SaveSharedPreference.getUserId(this), Integer.parseInt(SaveSharedPreference.getTeam(this)), SaveSharedPreference.getLights(this));
-            if(SaveSharedPreference.getLogo(this).length() > 0) {
-                Picasso.with(this).load(Uri.parse(SaveSharedPreference.getLogo(this))).into(logo);
+            String currentLogo = SaveSharedPreference.getLogo(this);
+            if(currentLogo.length() > 0 && !currentLogo.equalsIgnoreCase("sisu-logo-lg")) {
+                Picasso.with(this).load(Uri.parse(currentLogo)).into(logo);
                 sisuPowerLogo.setVisibility(View.VISIBLE);
             }
         }
@@ -296,7 +294,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         loader.setVisibility(View.GONE);
                     }
                 });
-                Log.e("AGENT OBJECT", agent.getAgent_id());
                 SaveSharedPreference.setUserId(this, agent.getAgent_id());
                 SaveSharedPreference.setUserName(this, emailAddress);
                 try {
@@ -328,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         if(asyncReturnType.equals("Authenticator")) {
-            if(authRetry == 2) {
+            if(authRetry >= 2) {
                 this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -33,6 +34,7 @@ import java.util.TimeZone;
 
 import co.sisu.mobile.ApiReturnTypes;
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -71,6 +73,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private boolean pastTimeline;
     private Spinner spinner;
     private CircularProgressBar contact, appointments, signed, listing, underContract, closed;
+    private String formattedStartTime;
+    private String formattedEndTime;
 
     private CircularProgressBar contactsProgress, contactsProgressMark, appointmentsProgress, appointmentsProgressMark, bbSignedProgress, bbSignedProgressMark,
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
@@ -86,6 +90,16 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+        loader.setVisibility(View.VISIBLE);
+        apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setColorScheme();
+                setupLabels();
+            }
+        });
+
     }
 
 
@@ -111,6 +125,17 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         calculateVolumes();
         setColorScheme();
         setupLabels();
+
+        if(parentActivity.shouldDisplayPushNotification()) {
+            parentActivity.setShouldDisplayPushNotification(false);
+            String title = parentActivity.getPushNotificationTitle();
+            String body = parentActivity.getPushNotificationBody();
+            Intent intent = new Intent(parentActivity, NotificationActivity.class);
+            intent.putExtra("title", title);
+            intent.putExtra("body", body);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     private void setupLabels() {
@@ -465,13 +490,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
 
 
-                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
-                //will need to refresh page with fresh data based on api call here determined by timeline value selected
+                apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
             }
 
             @Override
@@ -783,31 +807,34 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addView:
-                launchAddClient();
-                break;
-            case R.id.contactsProgressMark:
-                navigateToClientList("pipeline");
-                break;
-            case R.id.appointmentsProgressMark:
-                navigateToClientList("pipeline");
-                break;
-            case R.id.bbSignedProgressMark:
-                navigateToClientList("signed");
-                break;
-            case R.id.listingsTakenProgressMark:
-                navigateToClientList("signed");
-                break;
-            case R.id.underContractProgressMark:
-                navigateToClientList("contract");
-                break;
-            case R.id.closedProgressMark:
-                navigateToClientList("closed");
-                break;
-            default:
-                break;
+        if(!parentActivity.isTeamSwapOccurring()) {
+            switch (v.getId()) {
+                case R.id.addView:
+                    launchAddClient();
+                    break;
+                case R.id.contactsProgressMark:
+                    navigateToClientList("pipeline");
+                    break;
+                case R.id.appointmentsProgressMark:
+                    navigateToClientList("pipeline");
+                    break;
+                case R.id.bbSignedProgressMark:
+                    navigateToClientList("signed");
+                    break;
+                case R.id.listingsTakenProgressMark:
+                    navigateToClientList("signed");
+                    break;
+                case R.id.underContractProgressMark:
+                    navigateToClientList("contract");
+                    break;
+                case R.id.closedProgressMark:
+                    navigateToClientList("closed");
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
     private void navigateToClientList(String tabName){

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -431,11 +430,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         Drawable inactive = getResources().getDrawable(R.drawable.rounded_button);
         switch (v.getId()) {
             case R.id.cancelButton:
-                Log.e("CANCEL", "YES");
                 parentActivity.onBackPressed();
                 break;
             case R.id.addClientSaveButton:
-                Log.e("SAVE", "YES");
                 saveClient();
                     //animation of confirmation
 //                    onBackPressed();
@@ -639,6 +636,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         if(!settlementDisplay.getText().equals("")) {
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
+
+        newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
 
         apiManager.sendAsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient);
     }

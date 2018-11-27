@@ -14,13 +14,21 @@ import co.sisu.mobile.activities.ParentActivity;
 public class ToolbarManager {
     private ParentActivity parentActivity;
     private ColorSchemeManager colorSchemeManager;
+    private String currentActivity = "Scoreboard";
 
     public ToolbarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
         this.colorSchemeManager = parentActivity.getColorSchemeManager();
     }
 
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        resetToolbarImages(currentActivity);
+    }
+
     public void resetToolbarImages(String inputActivity) {
+        currentActivity = inputActivity;
+
         ImageView scoreBoardButton = parentActivity.findViewById(R.id.scoreboardView);
         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
@@ -49,29 +57,29 @@ public class ToolbarManager {
         switch (inputActivity) {
             case "Scoreboard":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 scoreBoardButton.setImageDrawable(drawable);
                 break;
             case "Report":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 reportButton.setImageDrawable(drawable);
                 break;
             case "Record":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 recordButton.setImageDrawable(drawable);
                 break;
             case "Leaderboard":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 leaderBoardButton.setImageDrawable(drawable);
                 break;
             case "More":
             case "Add Client Note":
             case "Feedback":
                 drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
                 moreButton.setImageDrawable(drawable);
                 break;
         }

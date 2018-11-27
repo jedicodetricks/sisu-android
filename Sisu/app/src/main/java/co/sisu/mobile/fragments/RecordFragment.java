@@ -61,7 +61,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     public void teamSwap() {
-//        initializeListView(dataController.updateRecordMetrics());
+        loader.setVisibility(View.VISIBLE);
+        Date d = calendar.getTime();
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
     }
 
 
@@ -81,7 +83,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d);
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -162,7 +164,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
             mListView.setAdapter(adapter);
         }
 
@@ -219,7 +221,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate);
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, parentActivity.getSelectedTeamMarketId());
         loader.setVisibility(View.VISIBLE);
     }
 

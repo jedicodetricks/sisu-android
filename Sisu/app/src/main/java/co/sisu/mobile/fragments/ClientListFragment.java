@@ -99,7 +99,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         colorSchemeManager = parentActivity.getColorSchemeManager();
         AgentModel agent = dataController.getAgent();
         initializeTabView();
-        apiManager.getClients(this, agent.getAgent_id());
+        apiManager.getClients(this, agent.getAgent_id(), parentActivity.getSelectedTeamMarketId());
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);

@@ -3,16 +3,11 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
 import android.util.LruCache;
 
 import java.io.File;
 
 import okhttp3.internal.cache.DiskLruCache;
-
-import static android.os.Environment.isExternalStorageRemovable;
 
 public class CacheManager {
 

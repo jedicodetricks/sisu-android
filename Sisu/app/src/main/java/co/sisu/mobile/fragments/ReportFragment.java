@@ -53,13 +53,17 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private ProgressBar loader;
     private Spinner spinner;
     private boolean pastTimeline;
+    private String formattedStartTime;
+    private String formattedEndTime;
 
     public ReportFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-//        initializeListView(dataController.updateRecordMetrics());
+        loader.setVisibility(View.VISIBLE);
+        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+        setColorScheme();
     }
 
 
@@ -249,10 +253,9 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                     formattedEndMonth = "0" + selectedEndMonth;
                 }
 
-                String formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-                String formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime);
-                //will need to refresh page with fresh data based on api call here determined by timeline value selected
+                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -365,21 +368,52 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private void initializeListView() {
         mListView = getView().findViewById(R.id.report_list_view);
         mListView.setDivider(null);
-        mListView.setDividerHeight(30);
+        mListView.setDividerHeight(0);
     }
 
     private void setData(List<Metric> metricList) {
+        List<Metric> prunedList = new ArrayList<>();
+
         for(Metric metric: metricList) {
             metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
+            if(metric.getCurrentNum() > 0 || partOfImportantList(metric)) {
+//                metric.setTitle(dataController.localizeLabel(metric.getTitle()));
+                prunedList.add(metric);
+            }
         }
+
         if(getContext() != null) {
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
             }
-            ReportListAdapter adapter = new ReportListAdapter(getContext(), metricList, parentActivity.getTimeline(), colorSchemeManager);
+            ReportListAdapter adapter = new ReportListAdapter(getContext(), prunedList, parentActivity.getTimeline(), colorSchemeManager, dataController.getFirstOtherActivity());
             mListView.setAdapter(adapter);
+
         }
 
+    }
+
+    private boolean partOfImportantList(Metric metric) {
+        switch (metric.getType()) {
+            case "CONTA":
+            case "BAPPT":
+            case "SAPPT":
+            case "BSGND":
+            case "SSGND":
+            case "BUNDC":
+            case "SUNDC":
+            case "BCLSD":
+            case "SCLSD":
+            case "SGND":
+            case "1TAPT":
+            case "CLSD":
+            case "UCNTR":
+            case "LSTT":
+            case "BBSGD":
+                return true;
+        }
+
+        return false;
     }
 
     @Override

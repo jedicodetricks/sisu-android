@@ -3,7 +3,6 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,10 +104,26 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private void initAddButton() {
         addButton = parentActivity.findViewById(R.id.addClientButton);
         if(addButton != null) {
-            addButton.setVisibility(View.VISIBLE);
-            addButton.setOnClickListener(this);
-            TextView edit = parentActivity.findViewById(R.id.editClientListButton);
-            edit.setVisibility(View.GONE);
+            if(parentActivity.getIsNoteFragment()) {
+                addButton.setVisibility(View.VISIBLE);
+                addButton.setOnClickListener(this);
+                TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                edit.setVisibility(View.GONE);
+            }
+            else {
+                if(parentActivity.getCurrentTeam().getRole() != null && parentActivity.getCurrentTeam().getRole().equals("ADMIN")) {
+                    addButton.setVisibility(View.VISIBLE);
+                    addButton.setOnClickListener(this);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+                else {
+                    addButton.setVisibility(View.INVISIBLE);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 
@@ -171,26 +186,28 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addClientButton:
-                if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
+                if(parentActivity.getIsNoteFragment()) {
                     parentActivity.setSelectedNote(null);
                     navigationManager.stackReplaceFragment(AddNoteFragment.class);
+                    break;
                 }
-                break;
+                else {
+                    parentActivity.setSelectedNote(null);
+                    navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    break;
+                }
+
         }
     }
 
     @Override
     public void editButtonClicked(NotesObject noteObject) {
-        if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
-            parentActivity.setSelectedNote(noteObject);
-            navigationManager.stackReplaceFragment(AddNoteFragment.class);
-        }
+        parentActivity.setSelectedNote(noteObject);
+        navigationManager.stackReplaceFragment(AddNoteFragment.class);
     }
 
     @Override
     public void deleteButtonClicked(NotesObject noteObject) {
-        if(!parentActivity.getSelectedClient().getIs_locked().equals("1")) {
-            apiManager.deleteNote(this, dataController.getAgent().getAgent_id(), noteObject.getId());
-        }
+        apiManager.deleteNote(this, dataController.getAgent().getAgent_id(), noteObject.getId());
     }
 }

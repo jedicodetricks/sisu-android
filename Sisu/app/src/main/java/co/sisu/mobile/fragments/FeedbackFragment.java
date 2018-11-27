@@ -4,6 +4,7 @@ package co.sisu.mobile.fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -13,15 +14,19 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import co.sisu.mobile.ApiReturnTypes;
+import com.squareup.picasso.Picasso;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +40,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private ColorSchemeManager colorSchemeManager;
     private TextView feedbackHelpTextTop, feedbackHelpTextBottom;
     private Button feedbackButton;
+    private ImageView sisuPowerLogo, sisuLogo;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -83,6 +89,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
         feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
+        if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(sisuLogo);
+            SaveSharedPreference.setLogo(parentActivity, colorSchemeManager.getLogo());
+            sisuPowerLogo.setVisibility(View.VISIBLE);
+        }
         //TODO: This shouldn't work like this. Discuss current design with Rick.
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             feedback.setBackgroundResource(R.drawable.light_input_text_box);
@@ -95,6 +106,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private void initFields() {
         feedbackHelpTextTop = getView().findViewById(R.id.feedbackHelpTextTop);
         feedbackHelpTextBottom = getView().findViewById(R.id.feedbackHelpTextBottom);
+        sisuPowerLogo = getView().findViewById(R.id.sisuPowerLogo);
+        sisuLogo = getView().findViewById(R.id.sisuLogo);
     }
 
     public void hideKeyboard(View view) {

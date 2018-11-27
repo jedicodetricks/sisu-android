@@ -36,6 +36,7 @@ public class ActionBarManager {
     private List<TeamObject> teamsList;
     int selectedTeam = 0;
     private ClientObject selectedClient;
+    private TeamObject currentTeam;
 
 
     public ActionBarManager(ParentActivity parentActivity) {
@@ -97,7 +98,7 @@ public class ActionBarManager {
         }
     }
 
-    public void swapToSaveAction(final String titleString) {
+    public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -107,7 +108,6 @@ public class ActionBarManager {
                 backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 TextView saveButton = parentActivity.findViewById(R.id.saveButton);
                 saveButton.setTextColor(colorSchemeManager.getActionbarText());
-
 
                 if(titleString == null) {
                     String displayName = "";
@@ -121,11 +121,13 @@ public class ActionBarManager {
                 } else {
                     backtionTitle.setText(parentActivity.localizeLabel(titleString));
                 }
+
+                manageDrawerEnabled(isDrawerEnabled);
             }
         });
     }
 
-    public void swapToSaveEditAction(final String titleString) {
+    public void swapToSaveEditAction(final String titleString, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -143,11 +145,13 @@ public class ActionBarManager {
                 } else {
                     backtionTitle.setText(titleString);
                 }
+
+                manageDrawerEnabled(isDrawerEnabled);
             }
         });
     }
 
-    public void swapToTitleBar(final String titleString) {
+    public void swapToTitleBar(final String titleString, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -159,42 +163,43 @@ public class ActionBarManager {
 
                 pageTitle = parentActivity.findViewById(R.id.action_bar_title);
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-                teamLetter = parentActivity.findViewById(R.id.team_letter);
-                teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+//                teamLetter = parentActivity.findViewById(R.id.team_letter);
+//                teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+//                teamIcon = parentActivity.findViewById(R.id.team_icon);
                 pageTitle.setText(parentActivity.localizeLabel(titleString));
-                teamIcon = parentActivity.findViewById(R.id.team_icon);
-                View homeButton= parentActivity.findViewById(R.id.action_bar_home);
-                homeButton.setOnClickListener(parentActivity);
-                if(teamsList != null && titleString.equals("Leaderboard")) {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-                    if(colorSchemeManager.getIcon() != null) {
-                        Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
-                        //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
-                        //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
-                        teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
-                        teamIcon.setVisibility(View.VISIBLE);
-                        teamBlock.setVisibility(View.INVISIBLE);
-                        teamLetter.setVisibility(View.GONE);
-                    } else {
-                        teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-                        teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-                        teamBlock.setVisibility(View.VISIBLE);
-                        teamLetter.setVisibility(View.VISIBLE);
-                        teamIcon.setVisibility(View.GONE);
-                    }
-                }
-                else {
-                    teamBlock.setVisibility(View.GONE);
-                    teamLetter.setVisibility(View.GONE);
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                }
+//                View homeButton= parentActivity.findViewById(R.id.action_bar_home);
+//                homeButton.setOnClickListener(parentActivity);
+                manageDrawerEnabled(isDrawerEnabled);
+//                if(teamsList != null) {
+////                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+//                    if(colorSchemeManager.getIcon() != null) {
+//                        Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+//                        //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+//                        //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
+//                        teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
+//                        teamIcon.setVisibility(View.VISIBLE);
+//                        teamBlock.setVisibility(View.INVISIBLE);
+//                        teamLetter.setVisibility(View.GONE);
+//                    } else {
+//                        teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
+//                        teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+//                        teamBlock.setVisibility(View.VISIBLE);
+//                        teamLetter.setVisibility(View.VISIBLE);
+//                        teamIcon.setVisibility(View.GONE);
+//                    }
+//                }
+//                else {
+////                    teamBlock.setVisibility(View.GONE);
+////                    teamLetter.setVisibility(View.GONE);
+////                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                }
             }
         });
 
     }
 
-    public void swapToClientListBar(final String title) {
+    public void swapToClientListBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -206,12 +211,12 @@ public class ActionBarManager {
                 }
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
 
-
+                manageDrawerEnabled(isDrawerEnabled);
             }
         });
     }
 
-    public void swapToAddClientBar(final String title) {
+    public void swapToAddClientBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -226,11 +231,60 @@ public class ActionBarManager {
 
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
 
+                manageDrawerEnabled(isDrawerEnabled);
             }
         });
     }
 
-    public void swapToEditClientBar() {
+    private void manageDrawerEnabled(boolean isDrawerEnabled) {
+        teamLetter = parentActivity.findViewById(R.id.team_letter);
+        teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+        teamIcon = parentActivity.findViewById(R.id.team_icon);
+
+        if(isDrawerEnabled) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            teamBlock.setOnClickListener(parentActivity);
+            teamIcon.setOnClickListener(parentActivity);
+            if(teamsList != null) {
+//                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                if(colorSchemeManager.getIcon() != null) {
+                    Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+                    //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+                    teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
+                    teamIcon.setVisibility(View.VISIBLE);
+                    teamBlock.setVisibility(View.INVISIBLE);
+                    teamLetter.setVisibility(View.GONE);
+                } else {
+                    teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
+                    teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
+                    teamBlock.setVisibility(View.VISIBLE);
+                    teamLetter.setVisibility(View.VISIBLE);
+                    teamIcon.setVisibility(View.GONE);
+                }
+            }
+            else {
+                    teamBlock.setVisibility(View.GONE);
+                    teamLetter.setVisibility(View.GONE);
+                    teamIcon.setVisibility(View.GONE);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        }
+        else {
+            if(teamLetter != null) {
+                teamLetter.setVisibility(View.GONE);
+            }
+            if(teamBlock != null) {
+                teamBlock.setVisibility(View.GONE);
+            }
+            if(teamIcon != null) {
+                teamIcon.setVisibility(View.GONE);
+            }
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+    }
+
+    public void swapToEditClientBar(final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -246,11 +300,14 @@ public class ActionBarManager {
                     displayName += selectedClient.getLast_name();
                 }
                 backtionTitle.setText(parentActivity.localizeLabel(displayName));
+
+                manageDrawerEnabled(isDrawerEnabled);
             }
         });
     }
 
     public void updateTeam(TeamObject team) {
+        currentTeam = team;
         if(colorSchemeManager.getIcon() != null) {
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
             //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
@@ -262,7 +319,14 @@ public class ActionBarManager {
             teamLetter.setText(team.getTeamLetter());
             teamLetter.setBackgroundColor(team.getColor());
             teamBlock.setBackgroundColor(team.getColor());
+            teamBlock.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.VISIBLE);
+            teamIcon.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public TeamObject getCurrentTeam() {
+        return currentTeam;
     }
 
     public void toggleDrawer() {
@@ -279,7 +343,7 @@ public class ActionBarManager {
     }
 
     public int getSelectedTeamId() {
-        int teamId = -1;
+        int teamId = 0;
         if(teamsList != null) {
             teamId = teamsList.get(selectedTeam).getId();
 
@@ -305,6 +369,25 @@ public class ActionBarManager {
             marketId = teamsList.get(selectedTeam).getMarket_id();
         }
         return marketId;
+    }
+
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        if(colorSchemeManager.getIcon() != null) {
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+            //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+            teamIcon.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.GONE);
+            teamBlock.setBackgroundColor(Color.TRANSPARENT);
+            SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+        } else {
+            teamLetter.setText(currentTeam.getTeamLetter());
+            teamLetter.setBackgroundColor(currentTeam.getColor());
+            teamBlock.setBackgroundColor(currentTeam.getColor());
+            teamBlock.setVisibility(View.VISIBLE);
+            teamLetter.setVisibility(View.VISIBLE);
+            teamIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
 

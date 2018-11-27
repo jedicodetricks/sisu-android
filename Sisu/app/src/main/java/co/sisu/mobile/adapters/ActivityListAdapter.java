@@ -2,8 +2,8 @@ package co.sisu.mobile.adapters;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -53,9 +53,6 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
         holder.setIsRecyclable(false);
 //        Pair<Long, Object> thing = mItemList.get(position);
         final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
-        if(selectedActivity.getType().equals("ADDDB")) {
-            Log.e("ADDDB", selectedActivity.getValue());
-        }
         holder.itemView.setTag(mItemList.get(position));
 
         // Get title element
@@ -63,12 +60,12 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
         activitySwitch = holder.itemView.findViewById(R.id.activity_list_switch);
 
         titleTextView.setText(selectedActivity.getName());
-        activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
+        activitySwitch.setChecked(selectedActivity.getValue());
         activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.e("CHANGED", String.valueOf(isChecked));
-                selectedActivity.setValue(jsonIsChecked(isChecked));
+                selectedActivity.setValue(isChecked);
             }
         });
 
@@ -89,12 +86,12 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
 
         int[] thumbColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         int[] trackColors = new int[] {
                 Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
+                colorSchemeManager.getMenuIcon()
         };
 
         DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));

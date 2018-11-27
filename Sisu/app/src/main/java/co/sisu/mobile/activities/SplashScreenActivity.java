@@ -85,8 +85,22 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
             }
             else {
                 AgentModel agent = agentObject.getAgent();
+                Bundle bundle = getIntent().getExtras();
+                String title = "";
+                String body = "";
+
+                if(bundle != null) {
+                    title = bundle.getString("title");
+                    body =  bundle.getString("body");
+                }
+
+
                 intent = new Intent(this, ParentActivity.class);
-                intent.putExtra("Agent", agent);
+                Bundle extras = new Bundle();
+                extras.putParcelable("Agent", agent);
+                extras.putString("title", title);
+                extras.putString("body", body);
+                intent.putExtras(extras);
                 launchActivity();
             }
         }

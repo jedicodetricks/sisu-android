@@ -37,7 +37,9 @@
             android:layout_below="@id/reportConstraint"
             android:id="@+id/report_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:listSelector="@android:color/transparent" />
 
     </RelativeLayout>
 

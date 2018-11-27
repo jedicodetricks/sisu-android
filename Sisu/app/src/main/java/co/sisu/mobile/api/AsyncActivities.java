@@ -7,14 +7,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -32,23 +27,26 @@ public class AsyncActivities extends AsyncTask<String, String, String> {
     private String startDate;
     private String endDate;
     private String url;
+    private int marketId;
 
 
-    public AsyncActivities(AsyncServerEventListener cb, String url, String agent_id, String formattedStartTime, String formattedEndTime) {
+    public AsyncActivities(AsyncServerEventListener cb, String url, String agent_id, String formattedStartTime, String formattedEndTime, int marketId) {
         callback = cb;
         this.agentId = agent_id;
         this.startDate = formattedStartTime;
         this.endDate = formattedEndTime;
         this.url = url;
+        this.marketId = marketId;
     }
 
-    public AsyncActivities(AsyncServerEventListener cb, String url, String agentId, Date startDate, Date endDate) {
+    public AsyncActivities(AsyncServerEventListener cb, String url, String agentId, Date startDate, Date endDate, int marketId) {
         callback = cb;
         this.agentId = agentId;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.startDate = formatter.format(startDate);
         this.endDate = formatter.format(endDate);
         this.url = url;
+        this.marketId = marketId;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class AsyncActivities extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, "{\"start_date\": \"" + startDate + "\",\"end_date\": \"" + endDate + "\",\"include_counts\":1,\"include_activities\":0}");
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/activity/" + agentId)
+                    .url(url + "api/v1/agent/activity/" + agentId + "/" + marketId)
                     .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

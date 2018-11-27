@@ -3,9 +3,7 @@ package co.sisu.mobile.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +19,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -34,13 +33,15 @@ public class ReportListAdapter extends BaseAdapter {
     private ArrayList<Metric> mDataSource;
     private String timeline;
     private ColorSchemeManager colorSchemeManager;
+    private AsyncActivitySettingsObject firstOtherActivity;
 
-    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager) {
+    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.timeline = timeline;
         this.colorSchemeManager = colorSchemeManager;
+        this.firstOtherActivity = firstOtherActivity;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ReportListAdapter extends BaseAdapter {
         View rowView = null;
         Metric metric = (Metric) getItem(position);
 
-        if(metric.getType().equals("SCLSD") && position != getCount() - 1) {
+        if(metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type())) {
             rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
             TextView otherText = rowView.findViewById(R.id.otherText);
             otherText.setTextColor(colorSchemeManager.getDarkerTextColor());

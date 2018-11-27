@@ -18,7 +18,6 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.PushModel;
 
 /**

@@ -18,6 +18,7 @@ import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGet;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
+import co.sisu.mobile.api.AsyncPushMessage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateActivities;
 import co.sisu.mobile.api.AsyncUpdateActivitySettings;
@@ -52,13 +53,14 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "http://staging.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
     public ApiManager(Context context) {
         cache = new Cache(context.getCacheDir(), cacheSize);
     }
+    //TODO Team swap won't work because of the different return types
 
     //TODO: THIS MIGHT BE A SPECIAL CASE BECAUSE OF ASYNC. Keep looking into it.
     public void getLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
@@ -85,11 +87,11 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getAgentGoals(AsyncServerEventListener cb, String agentId) {
+    public void getAgentGoals(AsyncServerEventListener cb, String agentId, int teamId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_GOALS;
-        String currentUrl = url + "api/v1/agent/get-goals/" + agentId;
+        String currentUrl = url + "api/v2/agent/get-goals/"+ agentId + "/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -109,19 +111,20 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getClients(AsyncServerEventListener cb, String agentId) {
+    public void getClients(AsyncServerEventListener cb, String agentId, int marketId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENTS;
-        String currentUrl = url + "api/v1/agent/get-clients/" + agentId;
+        String currentUrl = url + "api/v2/agent/get-clients/" + agentId + "/" + marketId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getActivitySettings(AsyncServerEventListener cb, String agentId) {
+    public void getActivitySettings(AsyncServerEventListener cb, String agentId, int teamId) {
         //GET
+        //TODO: Update subscribers for all marketId and teamId calls
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
-        String currentUrl = url + "api/v1/parameter/edit-parameter/2/"+ agentId +"/record_activities";
+        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -205,16 +208,16 @@ public class ApiManager {
 
     //START OF POST CALLS
 
-    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         //POST
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, startDate, endDate).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, startDate, endDate, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime) {
+    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime, int marketId) {
         //POST
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
@@ -254,16 +257,16 @@ public class ApiManager {
 
     //START OF PUT CALLS
 
-    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
-        //PUT
+
+    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject, int marketId) {
         getJWT(agentId);
-        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int marketId) {
         //PUT
         getJWT(agentId);
-        new AsyncUpdateActivitySettings(cb, url, updateObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivitySettings(cb, url, updateObject, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateClients(AsyncServerEventListener cb, String agentId, ClientObject currentClient) {
@@ -272,16 +275,17 @@ public class ApiManager {
         new AsyncUpdateClients(cb, url, currentClient).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
+    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, int teamId, String income, String reason) {
         //PUT
+        //TODO: I don't know if this needs teamId
         getJWT(agentId);
-        new AsyncUpdateAgent(cb, url, agentId, income, reason).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateAgent(cb, url, agentId, teamId, income, reason).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
+    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, int teamId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
         //PUT
         getJWT(agentId);
-        new AsyncUpdateGoals(cb, url, agentId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateGoals(cb, url, agentId, teamId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncUpdateProfileImage(AsyncServerEventListener cb, String agentId, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
@@ -337,7 +341,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
+        expDate.add(Calendar.DATE, 30);
 
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)
@@ -354,4 +358,8 @@ public class ApiManager {
 //        Log.e("TIME", timestamp);
     }
 
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
+        getJWT(agentId);
+        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
+    }
 }

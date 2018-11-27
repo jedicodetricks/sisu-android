@@ -38,6 +38,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String updated_ts;
     private String is_priority;
     private String activate_client;
+    private String market_id;
 
     public String getActivate_client() {
         return activate_client;
@@ -282,5 +283,13 @@ public class ClientObject implements Comparable<ClientObject>{
 
     public void setIs_priority(String is_priority) {
         this.is_priority = is_priority;
+    }
+
+    public String getMarket_id() {
+        return market_id;
+    }
+
+    public void setMarket_id(String market_id) {
+        this.market_id = market_id;
     }
 }
