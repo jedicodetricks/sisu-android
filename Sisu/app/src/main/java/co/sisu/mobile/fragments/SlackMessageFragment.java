@@ -1,10 +1,10 @@
 package co.sisu.mobile.fragments;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +32,6 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     private ApiManager apiManager;
     private EditText noteText;
     private TextView sendSlackButton, cancelButton;
-    private boolean isUpdate = false;
 
 
     @Override
@@ -53,13 +52,23 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         apiManager = parentActivity.getApiManager();
         initForm();
         initUpdateOrAdd();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        //TODO: This shouldn't work like this. Discuss current design with Rick.
+        if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+            noteText.setBackgroundResource(R.drawable.light_input_text_box);
+        } else {
+            noteText.setBackgroundResource(R.drawable.input_text_box);
+        }
+        noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
     }
 
     private void initUpdateOrAdd() {
         NotesObject notesObject = parentActivity.getSelectedNote();
         if(notesObject != null) {
             noteText.setText(notesObject.getNote());
-            isUpdate = true;
         }
     }
 
@@ -67,6 +76,9 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         noteText = getView().findViewById(R.id.addNoteEditText);
         sendSlackButton = parentActivity.findViewById(R.id.addClientSaveButton);
         if(sendSlackButton != null) {
+            if(!parentActivity.getIsNoteFragment()) {
+                sendSlackButton.setText("Send");
+            }
             sendSlackButton.setOnClickListener(this);
         }
         cancelButton = parentActivity.findViewById(R.id.cancelButton);
@@ -80,8 +92,15 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         switch (view.getId()) {
             case R.id.addClientSaveButton:
                 if(!noteText.getText().toString().equals("")) {
-                    apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
-                    parentActivity.showToast("Sending message to your Slack channel.");
+                    if(parentActivity.getIsNoteFragment()) {
+                        apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
+                        parentActivity.showToast("Sending message to your Slack channel...");
+                    }
+                    else {
+                        //TODO: This will be where we put the apimanager to send the push
+                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
+                        parentActivity.showToast("Sending push notification to your team...");
+                    }
                     hideKeyboard(getView());
                     navigationManager.onBackPressed();
                 }

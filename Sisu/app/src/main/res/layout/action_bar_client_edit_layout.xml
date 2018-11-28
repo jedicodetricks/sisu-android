@@ -7,15 +7,12 @@
 
     <TableRow>
 
-        <TextView
+        <ImageView
             android:id="@+id/archiveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Archive"
-            android:fontFamily="@font/roboto_regular"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="@dimen/font_large"/>
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/trash_icon" />
 
         <TextView
             android:id="@id/actionBarTitle"
@@ -38,6 +35,16 @@
             android:gravity="center"
             android:padding="10dp"
             android:textSize="@dimen/font_large"/>
+
+        <ImageView
+            android:id="@+id/lock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/lock_icon"
+            android:gravity="right"
+            android:visibility="gone"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
     </TableRow>
 

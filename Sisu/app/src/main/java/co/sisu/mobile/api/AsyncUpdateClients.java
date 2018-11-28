@@ -7,13 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,6 +44,8 @@ public class AsyncUpdateClients extends AsyncTask<String, String, String> {
                     .create();
             String jsonInString = gson.toJson(clientObject);
             Log.e("POST CLIENT", jsonInString);
+            jsonInString = jsonInString.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
+            jsonInString = jsonInString.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);

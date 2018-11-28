@@ -1,12 +1,14 @@
 package co.sisu.mobile.models;
 
+import java.util.List;
+
 /**
  * Created by Brady Groharing on 4/8/2018.
  */
 
 public class AsyncLeaderboardJsonObject {
     String date;
-    LeaderboardObject[] leaderboards;
+    List<LeaderboardObject> leaderboards;
 
     public String getDate() {
         return date;
@@ -16,11 +18,11 @@ public class AsyncLeaderboardJsonObject {
         this.date = date;
     }
 
-    public LeaderboardObject[] getLeaderboardObject() {
+    public List<LeaderboardObject> getLeaderboardObject() {
         return leaderboards;
     }
 
-    public void setLeaderboardObject(LeaderboardObject[] leaderboardObject) {
+    public void setLeaderboardObject(List<LeaderboardObject> leaderboardObject) {
         this.leaderboards = leaderboardObject;
     }
 }

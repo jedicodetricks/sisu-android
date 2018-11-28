@@ -1,44 +1,42 @@
 package co.sisu.mobile.adapters;
 
-import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import co.sisu.mobile.R;
-import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.SelectedActivities;
 
 public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, ActivityListAdapter.ViewHolder> {
 
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private ArrayList<SelectedActivities> mDataSource;
+    private ColorSchemeManager colorSchemeManager;
+    private Switch activitySwitch;
+    private TextView titleTextView;
     private int mLayoutId;
     private int mGrabHandleId;
     private boolean mDragOnLongPress;
+    private boolean isEditMode;
 
-    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress) {
+    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ColorSchemeManager colorSchemeManager, boolean isEditMode) {
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         mDragOnLongPress = dragOnLongPress;
+        this.colorSchemeManager = colorSchemeManager;
+        this.isEditMode = isEditMode;
         setItemList(list);
     }
 
@@ -52,22 +50,53 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     @Override
     public void onBindViewHolder(@NonNull ActivityListAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        Pair<Long, Object> thing = mItemList.get(position);
+        holder.setIsRecyclable(false);
+//        Pair<Long, Object> thing = mItemList.get(position);
         final SelectedActivities selectedActivity = (SelectedActivities) mItemList.get(position).second;
         holder.itemView.setTag(mItemList.get(position));
 
         // Get title element
-        TextView titleTextView = holder.itemView.findViewById(R.id.activity_list_title);
-        Switch activitySwitch = holder.itemView.findViewById(R.id.activity_list_switch);
+        titleTextView = holder.itemView.findViewById(R.id.activity_list_title);
+        activitySwitch = holder.itemView.findViewById(R.id.activity_list_switch);
 
         titleTextView.setText(selectedActivity.getName());
-        activitySwitch.setChecked(parseValue(selectedActivity.getValue()));
+        activitySwitch.setChecked(selectedActivity.getValue());
         activitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                selectedActivity.setValue(jsonIsChecked(isChecked));
+                Log.e("CHANGED", String.valueOf(isChecked));
+                selectedActivity.setValue(isChecked);
             }
         });
+
+        if(isEditMode) {
+            activitySwitch.setEnabled(false);
+        }
+
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        activitySwitch.setHighlightColor(colorSchemeManager.getSegmentSelected());
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getMenuIcon()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getMenuIcon()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(activitySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+
     }
 
 //    @Override

@@ -14,11 +14,13 @@
     <string name="version">Version 1.1</string>
 
     <!--Labels-->
+    <string name="archived_reason">Archived Reason:</string>
     <string name="annual_title">Annual Goals</string>
     <string name="appointments">Appointments</string>
     <string name="first_time_appts">1st Time Appts</string>
     <string name="contacts">Contacts</string>
-    <string name="bb_signed">BB Signed</string>
+    <string name="buyers_signed">Buyers Signed</string>
+    <string name="bb_signed">Buyers Signed</string>
     <string name="listings_taken">Listings Taken</string>
     <string name="uc">U / C</string>
     <string name="under_contract">Under Contract</string>
@@ -46,6 +48,7 @@
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
     <string name="appointmentDateTitle">Initial Appt Date:</string>
+    <string name="addAppointmentDateTitle">Add Appointment:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>
@@ -60,12 +63,13 @@
     <string name="dailyReminder">Daily Reminder</string>
     <string name="reminderTime">Reminder Time:</string>
     <string name="timezone">Time Zone:</string>
-    <string name="lights">Lights</string>
+    <string name="lights">Lighter Theme</string>
     <string name="touchId">Touch/Face Id</string>
     <string name="monthlyTitle">Monthly Goals</string>
     <string name="yearlyTitle">Yearly Goals</string>
 
     <!--Buttons/Links-->
+    <string name="activate">Activate</string>
     <string name="calculate">Calculate</string>
     <string name="archive">Archive</string>
     <string name="notes">Notes</string>
@@ -109,12 +113,14 @@
     <string name="contacts_hint">Contacts</string>
     <string name="signed_buyers_hint">Buyers Signed</string>
     <string name="buyer_appt_hint">Buyer Appointments</string>
-    <string name="seller_appt_hint">Seller Appointments</string>
-    <string name="signed_sellers_hint">Sellers Signed</string>
-    <string name="buyers_under_contract_hint">Buyers Under Contract</string>
-    <string name="sellers_under_contract_hint">Sellers Under Contract</string>
+    <string name="seller_appt_hint">Listings Appointments</string>
+    <string name="signed_sellers_hint">Listings Signed</string>
+    <string name="buyers_under_contract_hint">Buyer U/C</string>
+    <string name="sellers_under_contract_hint">Listings U/C</string>
     <string name="buyers_closed_hint">Buyers Closed</string>
-    <string name="sellers_closed_hint">Sellers Closed</string>
+    <string name="sellers_closed_hint">Listings Closed</string>
+    <string name="closed_volume_hint">Closed Volume</string>
+    <string name="under_contract_volume_hint">Under Contract Volume</string>
     <string name="signed_listings_hint">Signed Listings</string>
     <string name="under_contract_hint">Under Contract</string>
     <string name="closed_hint">Closed</string>

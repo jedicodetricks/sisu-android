@@ -1,20 +1,14 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.UUID;
 
-import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
-import co.sisu.mobile.models.FirebaseDeviceObject;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**

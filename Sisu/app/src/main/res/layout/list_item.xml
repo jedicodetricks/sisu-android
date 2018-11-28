@@ -19,7 +19,7 @@
         android:padding="16dp"
         android:text="Red"
         android:textColor="@android:color/white"
-        android:textSize="20sp"/>
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/item_right"
@@ -32,7 +32,7 @@
         android:padding="16dp"
         android:text="Blue"
         android:textColor="@android:color/white"
-        android:textSize="20sp"/>
+        android:textSize="20dp"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/list_item_parent"

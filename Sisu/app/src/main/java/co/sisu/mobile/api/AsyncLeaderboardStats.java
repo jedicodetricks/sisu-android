@@ -1,17 +1,12 @@
 package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
+
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -60,6 +55,7 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
                     .addHeader("Transaction-Id", strings[2])
                     .build();
 
+            String responseString = "";
             try {
                 response = client.newCall(request).execute();
             } catch (IOException e) {
@@ -67,7 +63,8 @@ public class AsyncLeaderboardStats extends AsyncTask<String, String, String> {
             }
             if (response != null) {
                 if (response.code() == 200) {
-                    AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(response.body().charStream(), AsyncLeaderboardJsonObject.class);
+                    responseString = response.body().string();
+                    AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);
                     callback.onEventCompleted(leaderboardObject, "Leaderboard");
                 } else {
                     callback.onEventFailed(null, "Leaderboard");

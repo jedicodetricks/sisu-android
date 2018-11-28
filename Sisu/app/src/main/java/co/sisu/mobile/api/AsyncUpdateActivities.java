@@ -6,13 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,12 +24,14 @@ public class AsyncUpdateActivities extends AsyncTask<String, String, String> {
     private String agentId;
     private AsyncUpdateActivitiesJsonObject updateActivitiesModels;
     private String url;
+    private int marketId;
 
-    public AsyncUpdateActivities(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels) {
+    public AsyncUpdateActivities(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateActivitiesJsonObject updateActivitiesModels, int marketId) {
         callback = cb;
         this.agentId = agentId;
         this.updateActivitiesModels = updateActivitiesModels;
         this.url = url;
+        this.marketId = marketId;
     }
 
     @Override
@@ -53,7 +50,7 @@ public class AsyncUpdateActivities extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/activity/" + agentId)
+                    .url(url + "api/v1/agent/activity/" + agentId + "/" + marketId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

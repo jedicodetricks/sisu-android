@@ -2,7 +2,6 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -18,6 +18,7 @@ import co.sisu.mobile.models.ActivitiesCounterModel;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.ClientObject;
@@ -52,7 +53,11 @@ public class DataController {
     private List<Metric> updatedRecords;
     private List<ParameterObject> settings;
     private LinkedHashMap<String, SelectedActivities> activitiesSelected;
+    private HashMap<String, String> labels;
+
     private String slackInfo;
+    private boolean messageCenterVisible = false;
+    private AsyncActivitySettingsObject[] activitySettings;
 
     public DataController(){
         teamsObject = new ArrayList<>();
@@ -65,6 +70,7 @@ public class DataController {
         archivedList = new ArrayList<>();
         updatedRecords = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
+        labels = new HashMap<>();
     }
 
     private void initializeMorePageObject() {
@@ -78,6 +84,9 @@ public class DataController {
         morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
         if(slackInfo != null) {
             morePage.add(new MorePageContainer("Slack", "Send a Slack message", R.drawable.slack_icon));
+        }
+        if(messageCenterVisible) {
+            morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.text_message_icon_active));
         }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
@@ -93,7 +102,7 @@ public class DataController {
         TeamJsonObject[] teams = teamsObjects.getTeams();
         int colorCounter = 0;
         for(int i = 0; i < teams.length; i++) {
-            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter])));
+            teamsObject.add(new TeamObject(teams[i].getName(), Integer.valueOf(teams[i].getTeam_id()), ContextCompat.getColor(context, teamColors[colorCounter]), Integer.valueOf(teams[i].getMarket_id()), teams[i].getRole()));
             if(colorCounter == teamColors.length - 1) {
                 colorCounter = 0;
             }
@@ -119,6 +128,7 @@ public class DataController {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
@@ -155,7 +165,8 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+//            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
@@ -211,7 +222,7 @@ public class DataController {
                 recordObject.add(m);
             }
         }
-        recordObject = sortActivitesObjectByWeight(recordObject);
+        recordObject = sortActivitiesObjectByWeight(recordObject);
     }
 
     public List<Metric> getRecordActivities() {
@@ -222,15 +233,22 @@ public class DataController {
         scoreboardObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
+
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
-        Metric signed = new Metric("BB Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
+        Metric signed = new Metric("Buyers Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
+        boolean contactEdited = false;
+        boolean signedEdited = false;
+        boolean showingEdited = false;
+        boolean contractEdited = false;
+        boolean closedEdited = false;
+        boolean firstAppointmentEdited = false;
 
         for(int i = 0; i < counters.length; i++) {
             if (counters[i].getCoalesce() != null) {
@@ -258,44 +276,113 @@ public class DataController {
                 }
             }
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+//            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
                 case "CONTA":
                     contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
                     contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contact);
+                    contactEdited = true;
                     break;
                 case "BSGND":
                     signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
                     signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(signed);
+                    signedEdited = true;
                     break;
                 case "SSGND":
                     showing.setCurrentNum(showing.getCurrentNum() + metric.getCurrentNum());
                     showing.setGoalNum(showing.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(showing);
+                    showingEdited = true;
                     break;
                 case "BUNDC":
                 case "SUNDC":
                     contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
                     contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contract);
+                    contactEdited = true;
                     break;
                 case "BCLSD":
                 case "SCLSD":
                     closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
                     closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(closed);
+                    closedEdited = true;
                     break;
                 case "BAPPT":
                 case "SAPPT":
                     firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(firstAppointment);
+                    firstAppointmentEdited = true;
                     break;
             }
         }
+
+        //TODO: Right now I just need contact because Rick isn't sending that down correctly
+        if(!contactEdited) {
+            for(AgentGoalsObject ago : goals) {
+                if(ago.getGoal_id().equals("CONTA")) {
+                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+                    setupMetricGoals(contact);
+                    break;
+                }
+            }
+        }
+//        if(!signedEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!closedEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!contractEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!showingEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
+//        if(!firstAppointmentEdited) {
+//            for(AgentGoalsObject ago : goals) {
+//                if(ago.getGoal_id().equals("CONTA")) {
+//                    contact.setCurrentNum(contact.getCurrentNum() + contact.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + contact.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
+//                }
+//            }
+//        }
 
         scoreboardObject.add(firstAppointment);
         scoreboardObject.add(closed);
@@ -327,7 +414,8 @@ public class DataController {
             }
 
 
-            Metric metric = new Metric(counters[i].getName(), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+//            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
+            Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch(counters[i].getActivity_type()) {
                 case "CONTA":
@@ -360,18 +448,18 @@ public class DataController {
             }
             masterActivitiesObject.add(metric);
 
-            if(activitiesSelected.containsKey(metric.getType())) {
-                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
-                selectedActivities.setName(metric.getTitle());
-                if(selectedActivities.getValue().equals("0")) {
-                    continue;
-                }
-            }
+//            if(activitiesSelected.containsKey(metric.getType())) {
+//                SelectedActivities selectedActivities = activitiesSelected.get(metric.getType());
+//                selectedActivities.setName(metric.getTitle());
+//                if(selectedActivities.getValue().equals("0")) {
+//                    continue;
+//                }
+//            }
             activitiesObject.add(metric);
 
         }
 
-        activitiesObject = sortActivitesObjectByWeight(activitiesObject);
+        activitiesObject = sortActivitiesObjectByWeight(activitiesObject);
     }
 
     private void setupMetricGoals(Metric m) {
@@ -381,7 +469,7 @@ public class DataController {
         m.setYearlyGoalNum(goalNum * 12);
     }
 
-    private List<Metric> sortActivitesObjectByWeight(List<Metric> activities) {
+    private List<Metric> sortActivitiesObjectByWeight(List<Metric> activities) {
         Metric[] array = new Metric[activities.size()];
         activities.toArray(array);
         Arrays.sort(array);
@@ -395,7 +483,7 @@ public class DataController {
         List<Metric> importantList = new ArrayList<>();
         List<Metric> otherList = new ArrayList<>();
         for(Metric m : activities) {
-            if(m.getWeight() > 80) {
+            if(!isSelectableActivity(m.getType())) {
                 importantList.add(m);
             }
             else {
@@ -412,14 +500,14 @@ public class DataController {
         int weightCounter = 0;
         for(String s : sortedList) {
             for(Metric m : otherList) {
-                if(m.getWeight() < 80) {
+//                if(m.getWeight() < 80) {
                     if(m.getType().equalsIgnoreCase(s)) {
                         finalList.add(m);
 //                        m.setWeight(sortedList.size() - weightCounter);
 //                        weightCounter++;
                         break;
                     }
-                }
+//                }
             }
         }
 
@@ -514,7 +602,7 @@ public class DataController {
                     metric.setThumbnailId(R.drawable.appointment_icon);
                     break;
                 default:
-                    metric.setThumbnailId(R.drawable.leaderboard_icon);
+                    metric.setThumbnailId(R.drawable.home_icon);
                     break;
             }
         }
@@ -668,6 +756,30 @@ public class DataController {
         }
         else {
             this.agent.setAgentGoalsObject(agentGoalsObject);
+            for(AgentGoalsObject ago : agentGoalsObject) {
+                for(int i = 0; i < scoreboardObject.size(); i++) {
+                    if(ago.getGoal_id().equals(scoreboardObject.get(i).getType())) {
+                        scoreboardObject.get(i).setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(scoreboardObject.get(i));
+                        break;
+                    }
+                }
+
+                for(Metric m : activitiesObject) {
+                    if(ago.getGoal_id().equals(m.getType())) {
+                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(m);
+                        break;
+                    }
+                }
+                for(Metric m : masterActivitiesObject) {
+                    if(ago.getGoal_id().equals(m.getType())) {
+                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        setupMetricGoals(m);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -687,7 +799,6 @@ public class DataController {
         List<ParameterObject> newSettings = new ArrayList<>();
         List<ParameterObject> relevantSettings = new ArrayList<>();
 
-
         for (ParameterObject s : settings) {
             switch (s.getName()) {
                 case "local_timezone":
@@ -698,7 +809,10 @@ public class DataController {
                     existingSettings.add("daily_reminder_time");
                     newSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    existingSettings.add("lights");
+                    newSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     existingSettings.add("daily_reminder");
@@ -734,10 +848,11 @@ public class DataController {
             arraySize++;
         }
 
+        if(!existingSettings.contains("lights")) {
+            newSettings.add(getDefaultLights());
+            arraySize++;
+        }
 
-//        if(settings.length < 4) {
-//            settings = setDefaultSettingsObject(settings);
-//        }
         ParameterObject[] array = new ParameterObject[arraySize];
 
         settings = newSettings.toArray(array);
@@ -756,7 +871,12 @@ public class DataController {
                     }
                     relevantSettings.add(s);
                     break;
-//                    case "lights":
+                case "lights":
+                    if(s.getValue().equals("{}")) {
+                        s.setValue("0");
+                    }
+                    relevantSettings.add(s);
+                    break;
 //                    case "biometrics":
                 case "daily_reminder":
                     if(s.getValue().equals("{}")) {
@@ -765,54 +885,53 @@ public class DataController {
                     relevantSettings.add(s);
                     break;
                 case "record_activities":
-                    if(s.getValue().equals("{}")) {
-                        s = setDefaultActivitesSelected();
-                    }
-                    setupSelectedActivities(s);
+//                    if(s.getValue().equals("{}")) {
+//                        s = setDefaultActivitesSelected();
+//                    }
+//                    setupSelectedActivities(s);
                     break;
             }
-
-
-            this.settings = relevantSettings;
         }
+        this.settings = relevantSettings;
+
     }
 
-    private void setupSelectedActivities(ParameterObject s) {
+    private LinkedHashMap<String, SelectedActivities> setupSelectedActivities(AsyncActivitySettingsObject[] s) {
         activitiesSelected = new LinkedHashMap<>();
-        if(s != null) {
-            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
-            String[] splitString = formattedString.split(",");
-
-            if(splitString.length > 1) {
-                for(String setting : splitString) {
-                    String[] splitSetting = setting.split(":");
-//                    Log.e("Setting up", splitSetting[1] + " " + splitSetting[0]);
-
-                    activitiesSelected.put(splitSetting[0], new SelectedActivities(splitSetting[1], splitSetting[0]));
-                }
-            }
-
-
-            if(masterActivitiesObject.size() > 0) {
-                for(Metric m : masterActivitiesObject) {
-                    if(activitiesSelected.containsKey(m.getType())) {
-                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
-                        selectedActivities.setName(m.getTitle());
-                        if(selectedActivities.getValue().equals("0")) {
-                            continue;
-                        }
-                    }
-                    else {
-//                        This is to reconcile the object to make sure it's got the new stuff in it.
-                        if (isSelectableActivity(m.getType())) {
-                            Log.e("PUTTING", m.getTitle());
-                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
-                        }
-                    }
-                }
+//        if(s != null) {
+//            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
+//            String[] splitString = formattedString.split(",");
+//
+//            if(splitString.length > 1) {
+        for(AsyncActivitySettingsObject setting : s) {
+            if(setting.getValue() == true) {
+                activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
             }
         }
-
+        return activitiesSelected;
+//            }
+//
+//
+//            if(masterActivitiesObject.size() > 0) {
+//                for(Metric m : masterActivitiesObject) {
+//                    if(activitiesSelected.containsKey(m.getType())) {
+//                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
+//                        selectedActivities.setName(m.getTitle());
+//                        if(selectedActivities.getValue().equals("0")) {
+//                            continue;
+//                        }
+//                    }
+//                    else {
+////                        This is to reconcile the object to make sure it's got the new stuff in it.
+//                        if (isSelectableActivity(m.getType())) {
+//                            Log.e("PUTTING", m.getTitle());
+//                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
     }
 
     public boolean isSelectableActivity(String type) {
@@ -827,6 +946,12 @@ public class DataController {
             case "SUNDC":
             case "BCLSD":
             case "SCLSD":
+            case "SGND":
+            case "1TAPT":
+            case "CLSD":
+            case "UCNTR":
+            case "LSTT":
+            case "BBSGD":
                 return false;
         }
 
@@ -841,18 +966,21 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public LinkedHashMap<String, SelectedActivities> getActivitiesSelected() {
-        return activitiesSelected;
+    public AsyncActivitySettingsObject[] getActivitiesSelected() {
+        return activitySettings;
     }
 
-    public void setActivitiesSelected(ParameterObject activitiesSelected) {
-        if(activitiesSelected == null || activitiesSelected.getValue().equals("{}")) {
-            activitiesSelected = setDefaultActivitesSelected();
-        }
-        setupSelectedActivities(activitiesSelected);
+    public void setActivitiesSelected(AsyncActivitySettingsObject[] activitiesSelected) {
+        //TODO: Reinstate the defaults
+//        if(activitiesSelected == null) {
+//            activitiesSelected = setDefaultActivitesSelected();
+//        }
+        this.activitySettings = activitiesSelected;
+        this.activitiesSelected = setupSelectedActivities(activitiesSelected);
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {
+        //TODO: This doesn't work with agent goals v2
         List<String> addedGoals = new ArrayList<>();
         AgentGoalsObject[] updatedAgentGoalsObject = new AgentGoalsObject[9];
 
@@ -896,50 +1024,50 @@ public class DataController {
                     break;
             }
         }
-        if(!addedGoals.contains("CONTA")) {
-            updatedAgentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
-
-        }
-
-        if(!addedGoals.contains("BAPPT")) {
-            updatedAgentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
-
-        }
-
-        if(!addedGoals.contains("SAPPT")) {
-            updatedAgentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
-
-        }
-
-        if(!addedGoals.contains("BSGND")) {
-            updatedAgentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
-
-        }
-
-        if(!addedGoals.contains("SSGND")) {
-            updatedAgentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
-
-        }
-
-        if(!addedGoals.contains("BUNDC")) {
-            updatedAgentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
-
-        }
-
-        if(!addedGoals.contains("SUNDC")) {
-            updatedAgentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
-
-        }
-
-        if(!addedGoals.contains("BCLSD")) {
-            updatedAgentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
-
-        }
-
-        if(!addedGoals.contains("SCLSD")) {
-            updatedAgentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
-
-        }
+//        if(!addedGoals.contains("CONTA")) {
+//            updatedAgentGoalsObject[0] = new AgentGoalsObject(agent.getAgent_id(), "CONTA", "Contacts", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BAPPT")) {
+//            updatedAgentGoalsObject[1] = new AgentGoalsObject(agent.getAgent_id(), "BAPPT", "Buyer Appointments", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SAPPT")) {
+//            updatedAgentGoalsObject[2] = new AgentGoalsObject(agent.getAgent_id(), "SAPPT", "Seller Appointments", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BSGND")) {
+//            updatedAgentGoalsObject[3] = new AgentGoalsObject(agent.getAgent_id(), "BSGND", "Buyers Signed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SSGND")) {
+//            updatedAgentGoalsObject[4] = new AgentGoalsObject(agent.getAgent_id(), "SSGND", "Sellers Signed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BUNDC")) {
+//            updatedAgentGoalsObject[5] = new AgentGoalsObject(agent.getAgent_id(), "BUNDC", "Buyers Under Contract", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SUNDC")) {
+//            updatedAgentGoalsObject[6] = new AgentGoalsObject(agent.getAgent_id(), "SUNDC", "Sellers Under Contract", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("BCLSD")) {
+//            updatedAgentGoalsObject[7] = new AgentGoalsObject(agent.getAgent_id(), "BCLSD", "Buyers Closed", "0");
+//
+//        }
+//
+//        if(!addedGoals.contains("SCLSD")) {
+//            updatedAgentGoalsObject[8] = new AgentGoalsObject(agent.getAgent_id(), "SCLSD", "Sellers Closed", "0");
+//
+//        }
 
         this.agent.setAgentGoalsObject(updatedAgentGoalsObject);
     }
@@ -958,6 +1086,10 @@ public class DataController {
 
     private ParameterObject getDefaultRecordActivities() {
         return new ParameterObject("record_activities", "N", "{\"THANX\":1,\"APPTT\":1,\"SHWNG\":1,\"REFFR\":1,\"REFFC\":1,\"ADDDB\":1,\"5STAR\":1,\"EXERS\":1,\"PCMAS\":1,\"OPENH\":1,\"APPTS\":1,\"HOURP\":1,\"DIALS\":1,\"BSHNG\":1,\"MEDIT\":1}", "7");
+    }
+
+    private ParameterObject getDefaultLights() {
+        return new ParameterObject("lights", "N", "0", "5");
     }
 
     private ParameterObject[] setDefaultSettingsObject(ParameterObject[] settings) {
@@ -1027,15 +1159,74 @@ public class DataController {
         return slackInfo;
     }
 
+    public String getColorSchemeId() {
+        if(settings.size() > 0) {
+            for (ParameterObject p : settings) {
+                if(p.getName().equalsIgnoreCase("lights")) {
+                    return p.getValue();
+                }
+            }
+        }
+        return "0";
+    }
+
+    public HashMap<String, String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(HashMap<String, String> labels) {
+        if(labels != null) {
+            this.labels = labels;
+        }
+    }
+
+    public String localizeLabel(String toCheck) {
+        String value = toCheck;
+        if (labels.containsKey(toCheck)) {
+            value = labels.get(toCheck);
+        }
+        return value;
+    }
+
+    public Metric getContactsMetric() {
+        for (Metric m : scoreboardObject) {
+            if (m.getType().equalsIgnoreCase("CONTA")) {
+                return m;
+            }
+        }
+        return null;
+    }
+
     public List<Metric> getMasterActivitiesObject() {
         return masterActivitiesObject;
     }
 
-    public void sortSelectedActivities(List<String> currentActivitiesSorting) {
+    public void sortSelectedActivities(AsyncActivitySettingsObject[] currentActivitiesSorting) {
         LinkedHashMap<String, SelectedActivities> itemArray = new LinkedHashMap<>();
         for(int i = 0; i < activitiesSelected.size(); i++) {
-            itemArray.put(currentActivitiesSorting.get(i), activitiesSelected.get(currentActivitiesSorting.get(i)));
+            itemArray.put(currentActivitiesSorting[i].getActivity_type(), activitiesSelected.get(currentActivitiesSorting[i]));
         }
         activitiesSelected = itemArray;
+    }
+
+    public void setMessageCenterVisible(boolean b) {
+        messageCenterVisible = b;
+    }
+
+    public AsyncActivitySettingsObject getFirstOtherActivity() {
+        AsyncActivitySettingsObject firstOtherActivity = null;
+        for(AsyncActivitySettingsObject setting : activitySettings) {
+            if(setting.getValue()) {
+                if(firstOtherActivity == null) {
+                    firstOtherActivity = setting;
+                }
+                else {
+                    if(setting.getDisplay_order() > firstOtherActivity.getDisplay_order()) {
+                        firstOtherActivity = setting;
+                    }
+                }
+            }
+        }
+        return firstOtherActivity;
     }
 }

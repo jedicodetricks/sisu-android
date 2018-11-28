@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,13 +22,11 @@ import okhttp3.Response;
 
 public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
     private AsyncServerEventListener callback;
-    private String profile;
     private String url;
     private LeaderboardAgentModel leaderboardAgentModel;
 
     public AsyncLeaderboardImage(AsyncServerEventListener cb, String url, LeaderboardAgentModel leaderboardAgentModel) {
         callback = cb;
-        this.profile = profile;
         this.url = url;
         this.leaderboardAgentModel = leaderboardAgentModel;
     }
@@ -46,6 +43,7 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
+        Log.e("IMAGE", leaderboardAgentModel.getProfile());
         Request request = new Request.Builder()
                 .url(url + "api/v1/image/" + leaderboardAgentModel.getProfile())
                 .get()
@@ -53,18 +51,18 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .addHeader("Client-Timestamp", strings[1])
                 .addHeader("Transaction-Id", strings[2])
                 .build();
+        String responseString = "";
         try {
             response = client.newCall(request).execute();
-//            Log.e("PROFILE PIC", response.body().string());
+//            responseString = response.body().string();
+//            Log.e("PROFILE PIC", responseString);
         } catch (IOException e) {
             e.printStackTrace();
         }
         if(response != null) {
             if(response.code() == 200) {
-//                AsyncProfileImageJsonObject profileObject = new AsyncProfileImageJsonObject();
                 InputStream inputStream = response.body().byteStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                profileObject.setData(String.valueOf(response.body().charStream()));\
                 if(bitmap != null) {
                     Log.e("bmp response", bitmap.toString());
                     leaderboardAgentModel.setBitmap(bitmap);

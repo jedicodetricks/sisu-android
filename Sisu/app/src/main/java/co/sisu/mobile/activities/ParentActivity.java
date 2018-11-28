@@ -13,37 +13,39 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.FileIO;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.fragments.ErrorMessageFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -51,16 +53,21 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
+import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -74,44 +81,67 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    public ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
-    private ProgressBar parentLoader;
+    public ProgressBar parentLoader;
     private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
+    private boolean activitySettingsParamFinished = false;
     private boolean settingsFinished = false;
+    private boolean colorSchemeFinished = false;
+    private boolean teamsFinished = false;
+    private boolean labelsFinished = false;
+    private boolean noNavigation = true;
+    private boolean teamSwap = false;
+    private boolean shouldDisplayPushNotification = false;
     private String timeline = "month";
     private int timelineSelection = 5;
     private AgentModel agent;
-    private ErrorMessageFragment errorFragment;
-    private FileIO io;
     private NotesObject selectedNote;
-    private CacheManager cacheManager;
     private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
+    private ConstraintLayout layout;
+    private Toolbar toolbar;
+    private NavigationView navView;
+    private ListView navViewList;
+    private TextView navTitle;
+    private boolean isNoteFragment = false;
+    private String pushNotificationTitle = "";
+    private String pushNotificationBody = "";
+    private Fragment f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorCorporateGrey)));
+
+        parentLoader = findViewById(R.id.parentLoader);
 
         dataController = new DataController();
+        colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
+
+        pushNotificationTitle = getIntent().getStringExtra("title");
+        pushNotificationBody = getIntent().getStringExtra("body");
+        if(pushNotificationTitle != null && pushNotificationBody != null) {
+            if(!pushNotificationTitle.equals("") && !pushNotificationBody.equals("")) {
+                shouldDisplayPushNotification = true;
+            }
+        }
+
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
-        errorFragment = new ErrorMessageFragment();
-        parentLoader = findViewById(R.id.parentLoader);
-        io = new FileIO(ParentActivity.this);
-
+        initParentFields();
         initializeButtons();
         apiManager.sendAsyncTeams(this, agent.getAgent_id());
-        apiManager.sendAsyncClients(this, agent.getAgent_id());
 
 
         // Get max available VM memory, exceeding this amount will throw an
@@ -132,8 +162,37 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         };
     }
 
+    private void initParentFields() {
+        layout = findViewById(R.id.parentLayout);
+        toolbar = findViewById(R.id.toolbar);
+        navViewList = findViewById(R.id.navViewList);
+        navTitle = findViewById(R.id.nav_title);
+    }
 
-
+    public void setActivityColors() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+                toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+                //change parentLoader here, if needed
+                parentLoader = findViewById(R.id.parentLoader);
+                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                } else {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                }
+                navigationManager.updateColorScheme(colorSchemeManager);
+            }
+        });
+    }
 
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -181,30 +240,38 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             updateRecordedActivities();
         }
 
-        switch (v.getId()) {
-            case R.id.action_bar_home:
-                navigationManager.toggleDrawer();
-                break;
-            case R.id.scoreboardView:
-                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                break;
-            case R.id.reportView:
-                navigationManager.clearStackReplaceFragment(ReportFragment.class);
-                break;
-            case R.id.recordView:
-                navigationManager.clearStackReplaceFragment(RecordFragment.class);
-                break;
-            case R.id.leaderBoardView:
-                navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                break;
-            case R.id.moreView:
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                break;
-            case R.id.cancelButton:
-                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-            default:
-                break;
+        if(!teamSwap) {
+            switch (v.getId()) {
+                case R.id.action_bar_home:
+                case R.id.team_icon:
+                    navigationManager.toggleDrawer();
+                    break;
+                case R.id.scoreboardView:
+                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    break;
+                case R.id.reportView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
+                    break;
+                case R.id.recordView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(RecordFragment.class);
+                    break;
+                case R.id.leaderBoardView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
+                    break;
+                case R.id.moreView:
+                    noNavigation = false;
+                    navigationManager.clearStackReplaceFragment(MoreFragment.class);
+                    break;
+                case R.id.cancelButton:
+                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                default:
+                    break;
+            }
         }
+
     }
 
     public void updateRecordedActivities() {
@@ -228,37 +295,81 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject);
+        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
     }
+
+    private TeamObject updatedTeam;
+    private int updateTeamPosition;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //This is what goes off when you click a new team.
+        parentLoader.setVisibility(View.VISIBLE);
         TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-        navigationManager.updateTeam(team);
+        updatedTeam = team;
+        updateTeamPosition = position;
+        navigationManager.updateTeam(updatedTeam);
+        navigationManager.updateSelectedTeam(updateTeamPosition);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment f = fragmentManager.findFragmentById(R.id.your_placeholder);
-        navigationManager.updateSelectedTeam(position);
-        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-        switch (f.getTag()) {
-            case "Scoreboard":
-                ((ScoreboardFragment) f).teamSwap();
-                break;
-            case "Record":
-                ((RecordFragment) f).teamSwap();
-                break;
-            case "Report":
-                ((ReportFragment) f).teamSwap();
-                break;
-            case "Leaderboard":
-                ((LeaderboardFragment) f).teamSwap();
-                break;
-        }
+        f = fragmentManager.findFragmentById(R.id.your_placeholder);
+
+        sendTeamSwapApiCalls(team);
+
         navigationManager.closeDrawer();
     }
 
+    private void sendTeamSwapApiCalls(TeamObject team) {
+
+        teamSwap = true;
+
+        apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.sendAsyncClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
+        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
+    }
+
+    private void executeTeamSwap() {
+        if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
+            parentLoader.setVisibility(View.INVISIBLE);
+            clientFinished = false;
+            goalsFinished = false;
+            settingsFinished = false;
+            teamParamFinished = false;
+            colorSchemeFinished = false;
+            labelsFinished = false;
+            noNavigation = true;
+            activitySettingsParamFinished = false;
+            teamSwap = false;
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+            switch (f.getTag()) {
+                case "Scoreboard":
+                    ((ScoreboardFragment) f).teamSwap();
+                    break;
+                case "Record":
+                    ((RecordFragment) f).teamSwap();
+                    break;
+                case "Report":
+                    ((ReportFragment) f).teamSwap();
+                    break;
+                case "Leaderboard":
+                    ((LeaderboardFragment) f).teamSwap();
+                    break;
+                case "More":
+                    ((MoreFragment) f).teamSwap();
+                    break;
+
+            }
+        }
+    }
+
+    public TeamObject getCurrentTeam() {
+        return navigationManager.getCurrentTeam();
+    }
+
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -269,6 +380,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             goalsFinished = false;
             settingsFinished = false;
             teamParamFinished = false;
+            colorSchemeFinished = false;
+            labelsFinished = false;
+            noNavigation = true;
+            activitySettingsParamFinished = false;
         }
     }
 
@@ -295,23 +410,45 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Teams")) {
+        if(teamSwap) {
+            swappingTeamData(returnObject, asyncReturnType);
+        }
+        else if(asyncReturnType.equals("Teams")) {
             dataController.setTeamsObject(ParentActivity.this, returnObject);
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     navigationManager.initializeTeamBar(dataController.getTeamsObject());
                     if(dataController.getTeamsObject().size() > 0) {
+                        navigationManager.updateTeam(dataController.getTeamsObject().get(0));
+                        dataController.setMessageCenterVisible(true);
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                        apiManager.sendAsyncClients(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getMarket_id());
+                        SaveSharedPreference.setTeam(ParentActivity.this, getSelectedTeamId() + "");
+                        if(settingsFinished) {
+                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                        }
                     }
                     else {
+                        apiManager.sendAsyncClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                        dataController.setMessageCenterVisible(false);
                         teamParamFinished = true;
                         dataController.setSlackInfo(null);
                     }
-                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id());
+                    teamsFinished = true;
+                    apiManager.sendAsyncAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                     apiManager.sendAsyncSettings(ParentActivity.this, agent.getAgent_id());
+                    apiManager.sendAsyncActivitySettings(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId());
                 }
             });
+        }
+        else if(asyncReturnType.equals("Activity Settings")) {
+            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            dataController.setActivitiesSelected(settings);
+            activitySettingsParamFinished = true;
+            navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Get Firebase Device")) {
             AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = (AsyncFirebaseDeviceJsonObject) returnObject;
@@ -326,7 +463,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
-            if(firebaseDeviceId.equals("")) {
+            if(firebaseDeviceId.equals("") || currentDevice == null) {
                 myFirebaseMessagingService.initFirebase();
             }
             else {
@@ -359,7 +496,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         try{
                             hour = Integer.parseInt(values[0]);
                             minute = Integer.parseInt(values[1]);
-                            Log.e("ALARM TIME", hour + " " + minute);
                         } catch(NumberFormatException nfe) {
                             hour = 17;
                             minute = 0;
@@ -378,6 +514,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(reminderActive == 1) {
                 createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
             }
+            if(teamsFinished) {
+                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+            }
             navigateToScoreboard();
         }
         else if(asyncReturnType.equals("Team Parameters")) {
@@ -392,6 +532,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamParamFinished = true;
             navigateToScoreboard();
         }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+            navigateToScoreboard();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
+            navigateToScoreboard();
+        }
         else if(asyncReturnType.equals("Update Activities")) {
             dataController.clearUpdatedRecords();
         }
@@ -399,6 +555,55 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.setClientListObject(returnObject);
             clientFinished = true;
             navigateToScoreboard();
+        }
+    }
+
+    private void swappingTeamData(Object returnObject, String asyncReturnType) {
+        if(asyncReturnType.equals("Activity Settings")) {
+            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            dataController.setActivitiesSelected(settings);
+            activitySettingsParamFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Goals")) {
+            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
+            dataController.setAgentGoals(agentGoalsObject);
+            goalsFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Team Parameters")) {
+            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
+            if(settingsJson.getStatus_code().equals("-1")) {
+                dataController.setSlackInfo(null);
+            }
+            else {
+                ParameterObject params = settingsJson.getParameter();
+                dataController.setSlackInfo(params.getValue());
+            }
+            teamParamFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
+            colorSchemeFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Get Labels")) {
+            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
+            HashMap<String, String> labels = labelObject.getMarket();
+            dataController.setLabels(labels);
+            labelsFinished = true;
+            executeTeamSwap();
+        }
+        else if(asyncReturnType.equals("Clients")) {
+            dataController.setClientListObject(returnObject);
+            clientFinished = true;
+            executeTeamSwap();
         }
     }
 
@@ -417,12 +622,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
 
         if(currentTimeInMillis > calendar.getTimeInMillis()) {
-            Log.e("Calendar", "Calendar can't be set in the past");
             calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
         }
 
-        Log.e("CALENDAR SET", calendar.getTime().toString());
-        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
@@ -432,8 +634,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventFailed(Object returnObject, String asyncReturnType) {
 
         Log.e("FAILURE", asyncReturnType);
-        errorFragment.setMessage(asyncReturnType + " cause this failure.");
-        navigationManager.clearStackReplaceFragment(ErrorMessageFragment.class);
 
     }
 
@@ -608,6 +808,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setSelectedClient(ClientObject client) {
+        if(client.getIs_locked() == null) {
+            client.setIs_locked("0");
+        }
         navigationManager.setSelectedClient(client);
     }
 
@@ -640,6 +843,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return teamId;
     }
 
+    public int getSelectedTeamMarketId() {
+        int marketId = navigationManager.getMarketId();
+        return marketId;
+    }
+
     public NavigationManager getNavigationManager() {
         return navigationManager;
     }
@@ -652,20 +860,56 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return apiManager;
     }
 
-    public Bitmap getImage(String profile) { return io.getImage(profile, 1024); }//size here should be cache size i think
+    public ColorSchemeManager getColorSchemeManager() {
+        return colorSchemeManager;
+    }
 
-    public void saveImage(byte[] image, String profile) { io.addImage(profile, image); }
-
-    public boolean imageExists(Context context,  String id) {
+    public boolean imageExists(Context context, String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
     }
 
-    public CacheManager getCacheManager() {
-        return cacheManager;
+    public HashMap<String, String> getLabels() {
+        return dataController.getLabels();
     }
 
-    public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+    public String localizeLabel(String toCheck) {
+        String toReturn = "";
+        if(toCheck != null) {
+            toReturn = dataController.localizeLabel(toCheck);
+        }
+        return toReturn;
     }
 
+    public boolean getIsNoteFragment() {
+        return isNoteFragment;
+    }
+
+    public void setNoteOrMessage(String type) {
+        if(type.equals("Message")) {
+            isNoteFragment = false;
+        }
+        else {
+            isNoteFragment = true;
+        }
+    }
+
+    public boolean shouldDisplayPushNotification() {
+        return shouldDisplayPushNotification;
+    }
+
+    public String getPushNotificationTitle() {
+        return pushNotificationTitle;
+    }
+
+    public String getPushNotificationBody() {
+        return pushNotificationBody;
+    }
+
+    public void setShouldDisplayPushNotification(boolean b) {
+        shouldDisplayPushNotification = b;
+    }
+
+    public boolean isTeamSwapOccurring() {
+        return teamSwap;
+    }
 }

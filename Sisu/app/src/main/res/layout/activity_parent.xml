@@ -2,21 +2,20 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_height="match_parent"
         android:layout_width="150dp">
-        <android.support.v4.widget.NestedScrollView android:layout_height="match_parent"
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
             android:layout_width="match_parent">
-            <LinearLayout android:layout_height="match_parent"
-                android:layout_width="match_parent">
-
-
-            </LinearLayout>
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 
@@ -41,10 +40,6 @@
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="54dp"
-            android:background="@color/colorDarkGrey"
-            android:backgroundTint="@color/colorDarkGrey"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -87,7 +82,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/record_icon" />
 
         <ImageView
@@ -110,10 +105,9 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginTop="10dp"
-            android:backgroundTint="@color/colorDarkGrey"
             android:contentDescription="scoreboard"
             app:layout_constraintStart_toStartOf="@+id/guideline15"
-            app:layout_constraintTop_toTopOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="@id/toolbar"
             app:srcCompat="@drawable/home_icon" />
 
         <android.support.constraint.Guideline
@@ -141,7 +135,6 @@
             android:id="@+id/parentLoader"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            style="@style/ProgressBarStyle"
             android:indeterminateDrawable="@drawable/progress"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -157,12 +150,12 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
         <TextView
+            android:id="@+id/nav_title"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:text="@string/navbarTitle"
             android:textSize="@dimen/font_large"
             android:layout_marginTop="80dp"
-            android:background="@color/colorAlmostBlack"
             android:textAlignment="center"/>
         <ListView
             android:id="@+id/navViewList"
@@ -170,7 +163,6 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="110dp"
-            android:background="@color/colorDarkGrey"
             />
     </android.support.design.widget.NavigationView>
 

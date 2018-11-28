@@ -6,13 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
-import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,13 +20,17 @@ import okhttp3.Response;
 public class AsyncUpdateActivitySettings extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
-    private AsyncUpdateSettingsJsonObject updateSettingsModel;
+    private String updateSettingsModel;
     private String url;
+    private String agentId;
+    private int marketId;
 
-    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, String url, AsyncUpdateSettingsJsonObject updateSettingsModel) {
+    public AsyncUpdateActivitySettings(AsyncServerEventListener cb, String url, String updateSettingsModel, String agentId, int marketId) {
         callback = cb;
         this.updateSettingsModel = updateSettingsModel;
         this.url = url;
+        this.agentId = agentId;
+        this.marketId = marketId;
     }
 
     @Override
@@ -42,15 +40,15 @@ public class AsyncUpdateActivitySettings extends AsyncTask<String, String, Strin
             Response response = null;
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
-            String jsonInString = gson.toJson(updateSettingsModel);
+            String jsonInString = updateSettingsModel;
             Log.e("POST ACTIVITY SETTINGS", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/parameter/edit-parameter")
-                    .put(body)
+                    .url(url + "api/v1/agent/record-activities/"+ agentId + "/" + marketId)
+                    .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
                     .addHeader("Content-Type", "application/json")

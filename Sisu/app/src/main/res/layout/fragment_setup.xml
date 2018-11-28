@@ -75,6 +75,7 @@
 
             <EditText
                 android:id="@+id/desiredIncome"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -104,6 +105,7 @@
 
             <EditText
                 android:id="@+id/goalsReason"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -202,7 +204,7 @@
             app:layout_constraintTop_toBottomOf="@id/goalsReasonLayout"/>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/sellersClosedLayout"
+            android:id="@+id/closedVolumeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -214,7 +216,62 @@
             app:layout_constraintTop_toBottomOf="@+id/activityTitle">
 
             <EditText
+                android:id="@+id/closedVolume"
+                android:importantForAutofill="noExcludeDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/closed_volume_hint"
+                android:inputType="number"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/underContractVolumeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/closedVolumeLayout">
+
+            <EditText
+                android:id="@+id/underContractVolume"
+                android:importantForAutofill="noExcludeDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/under_contract_volume_hint"
+                android:inputType="number"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/sellersClosedLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:theme="@style/EditTextTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underContractVolumeLayout">
+
+            <EditText
                 android:id="@+id/sellersClosed"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -222,7 +279,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/sellers_closed_hint"
-                android:maxLength="3"
                 android:inputType="number"
                 />
 
@@ -242,6 +298,7 @@
 
             <EditText
                 android:id="@+id/buyersClosed"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -249,7 +306,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/buyers_closed_hint"
-                android:maxLength="3"
                 android:inputType="number"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -268,6 +324,7 @@
 
             <EditText
                 android:id="@+id/sellersUnderContract"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -275,7 +332,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/sellers_under_contract_hint"
-                android:maxLength="3"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
@@ -294,6 +350,7 @@
 
             <EditText
                 android:id="@+id/buyersUnderContract"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -301,7 +358,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/buyers_under_contract_hint"
-                android:maxLength="3"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
@@ -320,6 +376,7 @@
 
             <EditText
                 android:id="@+id/signedSellers"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -327,7 +384,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/signed_sellers_hint"
-                android:maxLength="3"
                 android:inputType="number"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -346,6 +402,7 @@
 
             <EditText
                 android:id="@+id/signedBuyers"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -353,7 +410,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/signed_buyers_hint"
-                android:maxLength="3"
                 android:inputType="number"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -372,6 +428,7 @@
 
             <EditText
                 android:id="@+id/sellerAppts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -379,7 +436,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/seller_appt_hint"
-                android:maxLength="3"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
@@ -398,6 +454,7 @@
 
             <EditText
                 android:id="@+id/buyerAppts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -405,7 +462,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/buyer_appt_hint"
-                android:maxLength="3"
                 android:inputType="number"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -424,6 +480,7 @@
 
             <EditText
                 android:id="@+id/contacts"
+                android:importantForAutofill="noExcludeDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -431,7 +488,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/contacts_hint"
-                android:maxLength="3"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>

@@ -5,13 +5,8 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -51,14 +46,20 @@ public class AsyncTeams extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(teamsResponse.code() == 200) {
-            AsyncTeamsJsonObject teams = gson.fromJson(teamsResponse.body().charStream(), AsyncTeamsJsonObject.class);
-            callback.onEventCompleted(teams, "Teams");
+        if(teamsResponse != null) {
+            if(teamsResponse.code() == 200) {
+                AsyncTeamsJsonObject teams = gson.fromJson(teamsResponse.body().charStream(), AsyncTeamsJsonObject.class);
+                callback.onEventCompleted(teams, "Teams");
+            }
+            else {
+                callback.onEventFailed(null, "Teams");
+            }
+            teamsResponse.body().close();
         }
         else {
             callback.onEventFailed(null, "Teams");
         }
-        teamsResponse.body().close();
+
         return null;
     }
 }

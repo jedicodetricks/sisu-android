@@ -2,7 +2,11 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,9 +27,9 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.RecordListAdapter;
-import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
@@ -45,15 +49,20 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
+    private TextView dateDisplay, otherLabel;
+    private ImageView calendarLauncher;
 
     public RecordFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-//        initializeListView(dataController.updateRecordMetrics());
+        loader.setVisibility(View.VISIBLE);
+        Date d = calendar.getTime();
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
     }
 
 
@@ -70,9 +79,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
         Date d = calendar.getTime();
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d);
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -81,11 +91,36 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(save != null) {
             save.setOnClickListener(this);
         }
+        setColorScheme();
+    }
+
+    private void setLabels() {
+        for(Metric metric: metricList) {
+            metric.setTitle(parentActivity.localizeLabel(metric.getTitle()));
+        }
+    }
+
+    private void setColorScheme() {
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
+        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        calendarLauncher.setImageDrawable(drawable);
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
     }
 
     private void initializeCalendarHandler() {
-        final ImageView calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-        final TextView dateDisplay = getView().findViewById(R.id.record_date);
+        calendarLauncher = getView().findViewById(R.id.calender_date_picker);
+        dateDisplay = getView().findViewById(R.id.record_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -95,6 +130,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         calendarLauncher.setOnClickListener(this);
         dateDisplay.setOnClickListener(this);
+
     }
 
     private void updateDisplayDate(int year, int month, int day) {
@@ -127,7 +163,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
             mListView.setAdapter(adapter);
         }
 
@@ -174,7 +210,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     private void updateRecordInfo() {
         String formattedMonth = String.valueOf(selectedMonth + 1);
-        if(selectedMonth < 10) {
+        if(selectedMonth + 1 < 10) {
             formattedMonth = "0" + formattedMonth;
         }
         String formattedDay = String.valueOf(selectedDay);
@@ -184,7 +220,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
         parentActivity.updateSelectedRecordDate(formattedDate);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate);
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, parentActivity.getSelectedTeamMarketId());
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -253,6 +289,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 public void run() {
                     loader.setVisibility(View.GONE);
                     metricList = dataController.getRecordActivities();
+                    setLabels();
                     initializeListView(metricList);
                 }
             });

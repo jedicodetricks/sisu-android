@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- sizes -->
-    <dimen name="font_largest">32sp</dimen>
-    <dimen name="font_larger">22sp</dimen>
-    <dimen name="font_large">18sp</dimen>
-    <dimen name="font_normal">15sp</dimen>
-    <dimen name="font_small">12sp</dimen>
-    <dimen name="font_smaller">10sp</dimen>
+    <dimen name="font_largest">32dp</dimen>
+    <dimen name="font_larger">22dp</dimen>
+    <dimen name="font_large">18dp</dimen>
+    <dimen name="font_normal">15dp</dimen>
+    <dimen name="font_small">12dp</dimen>
+    <dimen name="font_smaller">10dp</dimen>
 
     <!-- spacing between two views -->
     <dimen name="spacing_huge">40dp</dimen>

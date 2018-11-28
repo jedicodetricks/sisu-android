@@ -1,13 +1,13 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import co.sisu.mobile.api.AsyncActivateClientSettings;
 import co.sisu.mobile.api.AsyncActivities;
 import co.sisu.mobile.api.AsyncActivitySettings;
 import co.sisu.mobile.api.AsyncAddClient;
@@ -19,11 +19,15 @@ import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncClients;
 import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
+import co.sisu.mobile.api.AsyncGet;
 import co.sisu.mobile.api.AsyncGetFirebaseDevices;
 import co.sisu.mobile.api.AsyncGetNotes;
+import co.sisu.mobile.api.AsyncGetTeamColorScheme;
+import co.sisu.mobile.api.AsyncLabels;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncLeaderboardStats;
 import co.sisu.mobile.api.AsyncProfileImage;
+import co.sisu.mobile.api.AsyncPushMessage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncSettings;
 import co.sisu.mobile.api.AsyncTeamParameters;
@@ -61,7 +65,7 @@ public class ApiManager {
     private String transactionID;
     private String timestamp;
     private String jwtStr;
-    private String url = "http://staging.sisu.co/";
+    private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
 
@@ -69,19 +73,19 @@ public class ApiManager {
         cache = new Cache(context.getCacheDir(), cacheSize);
     }
 
-    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate) {
+    public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, startDate, endDate).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, startDate, endDate, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime) {
+    public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime, int marketId) {
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncAgentGoals(AsyncServerEventListener cb, String agentId, int teamId) {
         getJWT(agentId);
-        new AsyncAgentGoals(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncAgentGoals(cb, url, agentId, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncSettings(AsyncServerEventListener cb, String agentId) {
@@ -94,24 +98,24 @@ public class ApiManager {
         new AsyncTeams(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncClients(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncClients(AsyncServerEventListener cb, String agentId, int marketId) {
         getJWT(agentId);
-        new AsyncClients(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncClients(cb, url, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject) {
+    public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject, int marketId) {
         getJWT(agentId);
-        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivities(cb, url, agentId, activitiesJsonObject, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId) {
+    public void sendAsyncActivitySettings(AsyncServerEventListener cb, String agentId, int teamId) {
         getJWT(agentId);
-        new AsyncActivitySettings(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+        new AsyncActivitySettings(cb, url, agentId, teamId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject updateObject) {
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int marketId) {
         getJWT(agentId);
-        new AsyncUpdateActivitySettings(cb, url, updateObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateActivitySettings(cb, url, updateObject, agentId, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
@@ -127,7 +131,6 @@ public class ApiManager {
     public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
         getJWT(agentId);
         if(slackUrl != null) {
-            Log.e("GOING TO SLACK", "YES");
             new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
         }
         else {
@@ -140,14 +143,14 @@ public class ApiManager {
         new AsyncAgent(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, String income, String reason) {
+    public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, int teamId, String income, String reason) {
         getJWT(agentId);
-        new AsyncUpdateAgent(cb, url, agentId, income, reason).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateAgent(cb, url, agentId, teamId, income, reason).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
+    public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, int teamId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
         getJWT(agentId);
-        new AsyncUpdateGoals(cb, url, agentId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
+        new AsyncUpdateGoals(cb, url, agentId, teamId, asyncUpdateAgentGoalsJsonObject).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
@@ -190,31 +193,6 @@ public class ApiManager {
         new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getJWT(String agentId) {
-        transactionID = UUID.randomUUID().toString();
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.SECOND, -60);
-        timestamp = String.valueOf(date.getTimeInMillis());
-
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-
-        jwtStr = Jwts.builder()
-                .claim("Client-Timestamp", timestamp)
-                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
-                .setIssuedAt(date.getTime())
-                .setExpiration(expDate.getTime())
-                .claim("Transaction-Id", transactionID)
-                .claim("agent_id", agentId)
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-
-//        Log.e("JWT", jwtStr);
-//        Log.e("TRANS", transactionID);
-//        Log.e("TIME", timestamp);
-
-    }
-
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         getJWT(agentId);
         new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
@@ -244,17 +222,82 @@ public class ApiManager {
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         getJWT(agent.getAgent_id());
         new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
-
     }
 
     public void refreshFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token, FirebaseDeviceObject currentDevice) {
         getJWT(agent.getAgent_id());
-        new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
-
+        if(currentDevice != null) {
+            new AsyncUpdateFirebaseDevice(cb, url, context, agent, token, currentDevice).execute(jwtStr, timestamp, transactionID);
+        }
     }
 
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
         getJWT(agentId);
         new AsyncGetFirebaseDevices(cb, url, agentId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getColorScheme(AsyncServerEventListener cb, String agentId, int selectedTeamId, String isLightTheme) {
+        if(selectedTeamId == -1) {
+            selectedTeamId = 0;
+        }
+        getJWT(agentId);
+        new AsyncGetTeamColorScheme(cb, url, selectedTeamId, isLightTheme).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getLabels(AsyncServerEventListener cb, String agentId, int teamId) {
+        if(teamId == -1) {
+            teamId = 0;
+        }
+        getJWT(agentId);
+        new AsyncLabels(cb, url, teamId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void setClientParameter(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject activateClientObject) {
+        getJWT(agentId);
+        new AsyncUpdateSettings(cb, url, agentId, activateClientObject).execute(jwtStr, timestamp, transactionID);
+    }
+
+
+    public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
+        getJWT(agentId);
+        new AsyncActivateClientSettings(cb, url, clientId).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
+        getJWT(agentId);
+        //TODO: Mimic this across the board and create an enum class that holds all these.
+        String returnString = "Get Message Center";
+        String currentUrl = url + "api/v1/agent/push-message/" + agentId;
+        new AsyncGet(cb, currentUrl, returnString).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getJWT(String agentId) {
+        transactionID = UUID.randomUUID().toString();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.SECOND, -60);
+        timestamp = String.valueOf(date.getTimeInMillis());
+
+        Calendar expDate = Calendar.getInstance();
+        expDate.add(Calendar.DATE, 30);
+
+        jwtStr = Jwts.builder()
+                .claim("Client-Timestamp", timestamp)
+                .setIssuer("sisu-android:8c535552-bf1f-4e46-bd70-ea5cb71fef4d")
+                .setIssuedAt(date.getTime())
+                .setExpiration(expDate.getTime())
+                .claim("Transaction-Id", transactionID)
+                .claim("agent_id", agentId)
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+
+//        Log.e("JWT", jwtStr);
+//        Log.e("TRANS", transactionID);
+//        Log.e("TIME", timestamp);
+
+    }
+
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
+        getJWT(agentId);
+        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
     }
 }

@@ -3,14 +3,13 @@ package co.sisu.mobile.fragments;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,15 +17,18 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.adapters.NoteListAdapter;
+import co.sisu.mobile.adapters.PushModelListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.models.PushModel;
+import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 7/17/18.
@@ -41,6 +43,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private NavigationManager navigationManager;
     private ConstraintLayout contentView;
     private TextView addButton;
+    private Gson gson;
 
     public ClientNoteFragment() {
         // Required empty public constructor
@@ -59,11 +62,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         initListView();
+        gson = new Gson();
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
-        apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        if(parentActivity.getIsNoteFragment()) {
+            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
+        else {
+            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id());
+        }
         initAddButton();
     }
 
@@ -73,7 +82,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     private void fillListViewWithData(List<NotesObject> noteList) {
         if(getContext() != null) {
-            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this);
+            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this, parentActivity.colorSchemeManager);
+            mListView.setAdapter(adapter);
+
+//            mListView.setOnItemClickListener(this);
+        }
+
+    }
+
+    private void fillListViewWithMessageCenterData(List<PushModel> pushModelList) {
+        if(getContext() != null) {
+            PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, parentActivity.colorSchemeManager);
             mListView.setAdapter(adapter);
 
 //            mListView.setOnItemClickListener(this);
@@ -84,11 +103,26 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private void initAddButton() {
         addButton = parentActivity.findViewById(R.id.addClientButton);
         if(addButton != null) {
-            addButton.setVisibility(View.VISIBLE);
-            addButton.setOnClickListener(this);
-        }
-        else {
-//            addButton.setVisibility(View.GONE);
+            if(parentActivity.getIsNoteFragment()) {
+                addButton.setVisibility(View.VISIBLE);
+                addButton.setOnClickListener(this);
+                TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                edit.setVisibility(View.GONE);
+            }
+            else {
+                if(parentActivity.getCurrentTeam().getRole() != null && parentActivity.getCurrentTeam().getRole().equals("ADMIN")) {
+                    addButton.setVisibility(View.VISIBLE);
+                    addButton.setOnClickListener(this);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+                else {
+                    addButton.setVisibility(View.INVISIBLE);
+                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+                    edit.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 
@@ -97,7 +131,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         if(asyncReturnType.equals("Get Notes")) {
             AsyncNotesJsonObject asyncNotesJsonObject = (AsyncNotesJsonObject) returnObject;
             final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
-            Log.e("SIZE", String.valueOf(allNotes.length));
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -108,6 +141,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         else if(asyncReturnType.equals("Delete Notes")) {
             parentActivity.showToast("Note has been deleted");
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
+        else if(asyncReturnType.equals("Get Message Center")) {
+//            Log.e("BEING RETURNED", (Response) returnObject);
+            AsyncMessageCenterObject messageCenterObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncMessageCenterObject.class);
+            final PushModel[] pushModels = messageCenterObject.getPush_messages();
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    fillListViewWithMessageCenterData(new ArrayList<>(Arrays.asList(pushModels)));
+                }
+            });
         }
     }
 
@@ -121,9 +165,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addClientButton:
-                parentActivity.setSelectedNote(null);
-                navigationManager.stackReplaceFragment(AddNoteFragment.class);
-                break;
+                if(parentActivity.getIsNoteFragment()) {
+                    parentActivity.setSelectedNote(null);
+                    navigationManager.stackReplaceFragment(AddNoteFragment.class);
+                    break;
+                }
+                else {
+                    parentActivity.setSelectedNote(null);
+                    navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    break;
+                }
+
         }
     }
 

@@ -1,7 +1,11 @@
 package co.sisu.mobile.fragments;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,18 +20,17 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.api.AsyncAgent;
-import co.sisu.mobile.api.AsyncAgentGoals;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncUpdateAgent;
-import co.sisu.mobile.api.AsyncUpdateGoals;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
@@ -42,15 +45,18 @@ import co.sisu.mobile.models.UpdateAgentGoalsObject;
  */
 public class GoalSetupFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
-    private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, volumeGoal;
+    private EditText desiredIncome, trackingReasons, contacts, bAppointments, sAppointments, bSigned, sSigned, bContract, sContract, bClosed, sClosed, unitGoal, closedVolumeGoal, underContractVolumeGoal;
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
-    private TextView activityTitle, saveButton;
+    private ColorSchemeManager colorSchemeManager;
+    private TextView activityTitle, goalsLabel, saveButton;
     private boolean dateSwap;
     private List<EditText> fieldsObject;
     private HashMap<String, UpdateAgentGoalsObject> updatedGoals;
+    private TextInputLayout desiredIncomeLayout, trackingReasonsLayout, sClosedLayout, bClosedLayout, bAppointmentsLayout, sAppointmentsLayout, bSignedLayout, sSignedLayout,
+                            bContractLayout, sContractLayout, contactsLayout, closedVolumeLayout, underContractVolumeLayout;
     private AgentModel agent;
     private AgentGoalsObject[] currentGoalsObject;
     private String income = "";
@@ -81,6 +87,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         updatedGoals = new HashMap<>();
         initFields();
         initEditText();
@@ -92,14 +99,101 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id());
+        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getSelectedTeamId());
         apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        setLabels();
+        setColorScheme();
+    }
+
+    private void setLabels() {
+        activityTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.monthlyTitle)));
+        goalsLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.goals)));
+        desiredIncomeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.desired_income_hint)));
+        trackingReasonsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.goals_reason_hint)));
+        sClosedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.sellers_closed_hint)));
+        bClosedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyers_closed_hint)));
+        sContractLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.sellers_under_contract_hint)));
+        bContractLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyers_under_contract_hint)));
+        sSignedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.signed_sellers_hint)));
+        bSignedLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.signed_buyers_hint)));
+        sAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.seller_appt_hint)));
+        bAppointmentsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.buyer_appt_hint)));
+        contactsLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.contacts)));
+        closedVolumeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.closed_volume_hint)));
+        underContractVolumeLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.under_contract_volume_hint)));
+
+    }
+
+    private void setColorScheme() {
+        desiredIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
+        trackingReasons.setTextColor(colorSchemeManager.getDarkerTextColor());
+        contacts.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bContract.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sContract.setTextColor(colorSchemeManager.getDarkerTextColor());
+        bClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
+        sClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
+        activityTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        goalsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        closedVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
+        underContractVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getIconActive());
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
+    }
+
+
+    private void setInputTextLayoutColor(TextInputLayout layout, int color) {
+        try {
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+//            Field fDefaultLineColor = TextInputLayout.class.getDeclaredField("")
+
+            Field fFocusedTextColor = TextInputLayout.class.getDeclaredField("mFocusedTextColor");
+            fFocusedTextColor.setAccessible(true);
+            fFocusedTextColor.set(layout, new ColorStateList(new int[][]{{0}}, new int[]{ color }));
+
+            Method method = layout.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(layout, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initSwitchAndButtons() {
         saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
+        }
+        else {
+            Log.e("NULL SAVE", "FARTS");
         }
     }
 
@@ -165,6 +259,12 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                         case "BCLSD":
                             bClosed.setText(value);
                             break;
+                        case "CLSDV":
+                            closedVolumeGoal.setText(value);
+                            break;
+                        case "UNCTV":
+                            underContractVolumeGoal.setText(value);
+                            break;
                     }
                 }
                 dateSwap = false;
@@ -207,7 +307,29 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         sClosed = getView().findViewById(R.id.sellersClosed);
         sClosed.addTextChangedListener(this);
         fieldsObject.add(sClosed);
+        closedVolumeGoal = getView().findViewById(R.id.closedVolume);
+        closedVolumeGoal.addTextChangedListener(this);
+        fieldsObject.add(closedVolumeGoal);
+        underContractVolumeGoal = getView().findViewById(R.id.underContractVolume);
+        underContractVolumeGoal.addTextChangedListener(this);
+        fieldsObject.add(underContractVolumeGoal);
+
         activityTitle = getView().findViewById(R.id.activityTitle);
+        goalsLabel = getView().findViewById(R.id.goalsLabel);
+
+        desiredIncomeLayout = getView().findViewById(R.id.desiredIncomeLayout);
+        trackingReasonsLayout = getView().findViewById(R.id.goalsReasonLayout);
+        sClosedLayout = getView().findViewById(R.id.sellersClosedLayout);
+        bClosedLayout = getView().findViewById(R.id.buyersClosedLayout);
+        bAppointmentsLayout = getView().findViewById(R.id.buyerApptsLayout);
+        sAppointmentsLayout = getView().findViewById(R.id.sellerApptsLayout);
+        bSignedLayout = getView().findViewById(R.id.signedBuyersLayout);
+        sSignedLayout = getView().findViewById(R.id.signedSellersLayout);
+        bContractLayout = getView().findViewById(R.id.buyersUnderContractLayout);
+        sContractLayout = getView().findViewById(R.id.sellersUnderContractLayout);
+        contactsLayout = getView().findViewById(R.id.contactsLayout);
+        closedVolumeLayout = getView().findViewById(R.id.closedVolumeLayout);
+        underContractVolumeLayout = getView().findViewById(R.id.underContractVolumeLayout);
 
         //unitGoal = getView().findViewById(R.id.unitGoal);
         //volumeGoal = getView().findViewById(R.id.volumeGoal);
@@ -286,6 +408,14 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             {
                 updateField("SCLSD", Integer.valueOf(String.valueOf(s)));
             }
+            else if(closedVolumeGoal.getText().hashCode() == s.hashCode())
+            {
+                updateField("CLSDV", Integer.valueOf(String.valueOf(s)));
+            }
+            else if(underContractVolumeGoal.getText().hashCode() == s.hashCode())
+            {
+                updateField("UNCTV", Integer.valueOf(String.valueOf(s)));
+            }
             else if (desiredIncome.getText().hashCode() == s.hashCode()) {
                 updateProfile("Income", s.toString());
             }
@@ -308,7 +438,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         AgentGoalsObject selectedGoal = null;
 
         int currentGoalsLength = currentGoalsObject.length;
-        Log.e("LENGTH", String.valueOf(currentGoalsObject.length));
 
         for(AgentGoalsObject ago : currentGoalsObject) {
             if(ago.getGoal_id().equals(fieldName)) {
@@ -319,7 +448,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, String.valueOf(value));
 
         if(selectedGoal == null) {
-
             currentGoalsObject[currentGoalsLength] = selectedGoal;
             updatedGoals.put(fieldName, toUpdate);
         }
@@ -341,10 +469,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), new AsyncUpdateAgentGoalsJsonObject(array));
+                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), new AsyncUpdateAgentGoalsJsonObject(array));
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), income, reason);
+                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), income, reason);
                 }
                 break;
         }
@@ -357,7 +485,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 updatedGoals = new HashMap<>();
                 parentActivity.showToast("Goals have been updated");
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//                navigationManager.swapToTitleBar("More");
             }
         }
         else if(asyncReturnType.equals("Goals")) {

@@ -3,15 +3,8 @@ package co.sisu.mobile.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,13 +22,15 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
     private String income;
     private String reason;
     private String url;
+    private int teamId;
 
-    public AsyncUpdateAgent(AsyncServerEventListener cb, String url, String agentId, String income, String reason) {
+    public AsyncUpdateAgent(AsyncServerEventListener cb, String url, String agentId, int teamId, String income, String reason) {
         callback = cb;
         this.agentId = agentId;
         this.income = income;
         this.reason = reason;
         this.url = url;
+        this.teamId = teamId;
     }
 
     @Override
@@ -44,7 +39,6 @@ public class AsyncUpdateAgent extends AsyncTask<String, String, String> {
         try {
             Response response = null;
             OkHttpClient client = new OkHttpClient();
-            Gson gson = new Gson();
             String jsonInString = "";
             if(!income.equals("") && !reason.equals("")) {
                 jsonInString = "{\"vision_statement\":\"" + reason + "\", \"desired_income\":\"" + income + "\"}";

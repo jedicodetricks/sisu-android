@@ -84,7 +84,6 @@
         android:id="@+id/otherText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/record_list_thumbnail"
         android:layout_centerHorizontal="true"
         android:text="Other" />
 </RelativeLayout>

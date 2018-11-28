@@ -6,9 +6,13 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,11 +35,16 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
+import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,17 +52,21 @@ import co.sisu.mobile.models.UpdateSettingsObject;
 public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, AsyncServerEventListener {
 
     private Switch notificationSwitch, reminderSwitch, lightsSwitch, idSwitch;
-    private TextView timeZoneDisplay;
-    private ImageView timeSelector;
-    private TextView reminderTimeTitle, displayTime, version;
+    private ImageView timeSelector, settingsLogo, sisuPowerLogo;
+    private TextView reminderTimeTitle, displayTime, version, timeZoneDisplay, reminderLabel, lightsLabel, timeZoneTitle;
     private int currentSelectedHour, currentSelectedMinute;
     private int alarmId = 1412;
     private String selectedPeriod;
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
+    private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private PendingIntent pendingIntent;
     private List<ParameterObject> settings;
+    private boolean settingsFinished = false;
+    private boolean colorFinished = false;
+    private TeamColorSchemeObject[] colorScheme;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -61,9 +76,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        parentActivity = (ParentActivity) getActivity();
-        dataController = parentActivity.getDataController();
-        apiManager = parentActivity.getApiManager();
+
         ConstraintLayout contentView = (ConstraintLayout) inflater.inflate(R.layout.fragment_settings, container, false);
         ConstraintLayout.LayoutParams viewLayout = new ConstraintLayout.LayoutParams(container.getWidth(), container.getHeight());
         contentView.setLayoutParams(viewLayout);
@@ -72,6 +85,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        parentActivity = (ParentActivity) getActivity();
+        dataController = parentActivity.getDataController();
+        apiManager = parentActivity.getApiManager();
+        navigationManager = parentActivity.getNavigationManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         initAdditionalFields();
         initTimeSelector();
         initNotificationAlarm();
@@ -80,14 +98,57 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         if(b != null) {
             b.setOnClickListener(this);
         }
+
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+
+        reminderTimeTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        displayTime.setTextColor(colorSchemeManager.getDarkerTextColor());
+        version.setTextColor(colorSchemeManager.getDarkerTextColor());
+        timeZoneDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        reminderLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        lightsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        timeZoneTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
+            //Picasso.with(parentActivity).load(Uri.parse("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg")).into(settingsLogo);
+            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(settingsLogo);
+            SaveSharedPreference.setLogo(parentActivity, colorSchemeManager.getLogo());
+            sisuPowerLogo.setVisibility(View.VISIBLE);
+        }
+
+        int[][] states = new int[][] {
+                new int[] {-android.R.attr.state_checked},
+                new int[] {android.R.attr.state_checked},
+        };
+
+        int[] thumbColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getMenuIcon()
+        };
+
+        int[] trackColors = new int[] {
+                Color.GRAY,
+                colorSchemeManager.getMenuIcon()
+        };
+
+        DrawableCompat.setTintList(DrawableCompat.wrap(reminderSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(reminderSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
+        settingsLogo = getView().findViewById(R.id.settingsLogo);
+        sisuPowerLogo = getView().findViewById(R.id.sisuPowerLogo);
         version = getView().findViewById(R.id.versionLabel);
         version.setText("Version: " + BuildConfig.VERSION_NAME + " | Build: " + BuildConfig.VERSION_CODE);
-        
+        reminderLabel = getView().findViewById(R.id.reminderLabel);
+        lightsLabel = getView().findViewById(R.id.lightsLabel);
+        timeZoneTitle = getView().findViewById(R.id.timeZoneTitle);
     }
 
     private void fillFieldsWithData() {
@@ -108,10 +169,9 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         displayTime.setText(formatTimeFrom24H(s.getValue()));
                     break;
                 //Keep these, we'll need them for V2
-
-//                case "lights":
-//                    lightsSwitch.setChecked(isChecked(s));
-//                    break;
+                case "lights":
+                    lightsSwitch.setChecked(isChecked(s));
+                    break;
 //                case "biometrics":
 //                    idSwitch.setChecked(isChecked(s));
 //                    break;
@@ -165,14 +225,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         //Keep these, we'll need them for V2
 
         reminderSwitch = getView().findViewById(R.id.reminderSwitch);
-//        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
+        lightsSwitch = getView().findViewById(R.id.lightsSwitch);
 //        idSwitch = getView().findViewById(R.id.idSwitch);
 
         fillFieldsWithData();
 
         //idSwitch.setOnCheckedChangeListener(this);
         reminderSwitch.setOnCheckedChangeListener(this);
-        //lightsSwitch.setOnCheckedChangeListener(this);
+        lightsSwitch.setOnCheckedChangeListener(this);
 
 
     }
@@ -193,15 +253,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                 }
                 break;
-                //Keep these, we'll need them for V2
-//            case R.id.lightsSwitch:
-//                for(ParameterObject so : settings) {
-//                    if(so.getName().equals("lights")) {
-//                        so.setValue(isCheckedBinaryValue(so));
-//                    }
-//                }
-//                Log.d("CHECK LISTENER", "LIGHTS");
-//                break;
+            case R.id.lightsSwitch:
+                activateLights(isChecked);
+                for(ParameterObject so : settings) {
+                    if(so.getName().equalsIgnoreCase("lights")) {
+                        so.setValue(isCheckedBinaryValue(so));
+                    }
+                }
+
+                break;
+            //Keep this, we'll need it for V2
 //            case R.id.idSwitch:
 //                for(ParameterObject so : settings) {
 //                    if(so.getName().equals("biometrics")) {
@@ -213,6 +274,15 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
 
 
+    }
+
+    private void activateLights(Boolean isChecked) {
+        String lightsOn = "0";
+        if(isChecked) {
+            lightsOn = "1";
+        }
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), lightsOn);
+        SaveSharedPreference.setLights(parentActivity, lightsOn);
     }
 
     @Override
@@ -240,11 +310,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 case "daily_reminder_time":
                     s.setValue(formatTimeTo24H(displayTime.getText().toString()));
                     break;
-                //Keep these, we'll need them for V2
-
-//                case "lights":
-//                    lightsSwitch.setChecked(isChecked(s));
-//                    break;
+                case "lights":
+                    lightsSwitch.setChecked(isChecked(s));
+                    break;
+                //Keep this, we'll need them for V2
 //                case "biometrics":
 //                    idSwitch.setChecked(isChecked(s));
 //                    break;
@@ -272,16 +341,19 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private String formatTimeFrom24H(String displayTime) {
         String standardTime = "";
-        String timePeriod = "AM";
-        String[] milTimeSplit = displayTime.split(":");
-        int hour = Integer.parseInt(milTimeSplit[0]);
-        if(hour > 11) {
-            timePeriod = "PM";
-            hour -= 12;
+        if(!displayTime.equals("")) {
+            String timePeriod = "AM";
+            String[] milTimeSplit = displayTime.split(":");
+            int hour = Integer.parseInt(milTimeSplit[0]);
+            if(hour > 11) {
+                timePeriod = "PM";
+                hour -= 12;
+            }
+
+
+            standardTime = String.valueOf(hour) + ":" + milTimeSplit[1] + " " + timePeriod;
         }
 
-
-        standardTime = String.valueOf(hour) + ":" + milTimeSplit[1] + " " + timePeriod;
 
         return standardTime;
     }
@@ -354,9 +426,24 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     ParameterObject[] array = new ParameterObject[settings.size()];
                     dataController.setSettings(settings.toArray(array));
-                    parentActivity.showToast("Your settings have been updated");
+                    colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+                    parentActivity.setActivityColors();
+                    setColorScheme();
+                    if(colorFinished) {
+                        navigationManager.onBackPressed();
+                        parentActivity.showToast("Your settings have been updated");
+                    }
+                    settingsFinished = true;
                 }
             });
+        }
+        else if(asyncReturnType.equals("Get Color Scheme")) {
+            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
+            colorScheme = colorJson.getTheme();
+            if(settingsFinished) {
+                parentActivity.showToast("Your settings have been updated");
+            }
+            colorFinished = true;
         }
     }
 

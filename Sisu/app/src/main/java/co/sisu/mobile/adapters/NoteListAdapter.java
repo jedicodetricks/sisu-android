@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -19,8 +17,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ClientNoteEvent;
-import co.sisu.mobile.fragments.ClientNoteFragment;
-import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.NotesObject;
 
 /**
@@ -32,9 +29,11 @@ public class NoteListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<NotesObject> mDataSource;
     private ClientNoteEvent clientNoteEvent;
+    private ColorSchemeManager colorSchemeManager;
 
 
-    public NoteListAdapter(Context context, List<NotesObject> noteList, ClientNoteEvent clientNoteEvent) {
+    public NoteListAdapter(Context context, List<NotesObject> noteList, ClientNoteEvent clientNoteEvent, ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
         mContext = context;
         mDataSource = (ArrayList<NotesObject>) noteList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,11 +62,15 @@ public class NoteListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.note_list_title);
+        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         TextView subTitleTextView = rowView.findViewById(R.id.note_list_subtitle);
+        subTitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         ImageView deleteNoteButton = rowView.findViewById(R.id.deleteNoteIcon);
+        deleteNoteButton.setColorFilter(colorSchemeManager.getButtonBorder());
         ImageView editNoteButton = rowView.findViewById(R.id.editNoteIcon);
+        editNoteButton.setColorFilter(colorSchemeManager.getButtonBorder());
 
 
         final NotesObject noteObject = (NotesObject) getItem(position);

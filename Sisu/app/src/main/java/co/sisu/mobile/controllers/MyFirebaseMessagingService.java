@@ -1,10 +1,10 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -12,12 +12,10 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.FirebaseDeviceObject;
-import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/24/18.
@@ -63,8 +61,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.e("Firebase", "From: " + remoteMessage.getFrom());
@@ -82,12 +78,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             }
 
         }
-
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e("Firebase", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
-            Utils.generateNotification(getApplicationContext(), remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            Intent intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("title", remoteMessage.getNotification().getTitle());
+            intent.putExtra("body", remoteMessage.getNotification().getBody());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplicationContext().startActivity(intent);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -112,10 +111,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
                 String token = task.getResult().getToken();
 
                 // Log and toast
-                if(currentDevice != null) {
+//                if(currentDevice != null) {
                     apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
                     Log.e("Firebase TOKEN REFRESH", token);
-                }
+//                }
 
             }
         });
@@ -141,11 +140,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-
+        Log.e("FIREBASE COMPLETE", asyncReturnType);
     }
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-
+        Log.e("FIREBASE FAILURE", asyncReturnType);
     }
 }

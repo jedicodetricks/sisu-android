@@ -6,13 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.UUID;
 
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
-import co.sisu.mobile.models.JWTObject;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,12 +24,14 @@ public class AsyncUpdateGoals extends AsyncTask<String, String, String> {
     private String agentId;
     private AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject;
     private String url;
+    private int teamId;
 
-    public AsyncUpdateGoals(AsyncServerEventListener cb, String url, String agentId, AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject) {
+    public AsyncUpdateGoals(AsyncServerEventListener cb, String url, String agentId, int teamId, AsyncUpdateAgentGoalsJsonObject updateAgentGoalsJsonObject) {
         callback = cb;
         this.agentId = agentId;
         this.updateAgentGoalsJsonObject = updateAgentGoalsJsonObject;
         this.url = url;
+        this.teamId = teamId;
     }
 
     @Override
@@ -51,7 +48,7 @@ public class AsyncUpdateGoals extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/agent/goal/" + agentId)
+                    .url(url + "api/v1/agent/goal/" + agentId + "/" + teamId)
                     .put(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])

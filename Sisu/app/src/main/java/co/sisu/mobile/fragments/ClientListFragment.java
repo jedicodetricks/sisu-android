@@ -3,21 +3,21 @@ package co.sisu.mobile.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragItem;
@@ -29,35 +29,39 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.ClientItemAdapter;
 import co.sisu.mobile.adapters.ClientListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.Metric;
 
-public class ClientListFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener {
+public class ClientListFragment extends Fragment implements android.support.v7.widget.SearchView.OnQueryTextListener, View.OnClickListener, AsyncServerEventListener, TabLayout.OnTabSelectedListener, ClientMessagingEvent, DragListView.DragListListener, AdapterView.OnItemClickListener {
 
-    private DragListView mListView;
+//    private DragListView mListView;
+    private ListView mListView;
     private String searchText = "";
-    private SearchView clientSearch;
+    private android.support.v7.widget.SearchView clientSearch;
     private TextView total;
     private ParentActivity parentActivity;
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
     private List<ClientObject> currentList = new ArrayList<>();
     private TabLayout tabLayout;
     private static String selectedTab = "pipeline";
-    private TextView addButton, editListButton;
+    private TextView addButton, editListButton, priorityLabel;
     private ConstraintLayout contentView;
     private boolean editMode = false;
     private int priorityPosition = 0;
     private int pipelinePosition = 0;
+    private RelativeLayout divider;
 
     public ClientListFragment() {
         // Required empty public constructor
@@ -89,21 +93,55 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         AgentModel agent = dataController.getAgent();
         initializeTabView();
-        apiManager.sendAsyncClients(this, agent.getAgent_id());
+        apiManager.sendAsyncClients(this, agent.getAgent_id(), parentActivity.getSelectedTeamMarketId());
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
         initAddButton();
-
-        //TODO: V2 we need to figure out how we want the client page to act. api calls? manage locally?
-//        currentList = parentActivity.getPipelineList();
-//        loader.setVisibility(View.GONE);
+        loadColorScheme();
 
     }
 
+    private void loadColorScheme() {
+        tabLayout.setTabTextColors(colorSchemeManager.getMenuText(), colorSchemeManager.getMenuSelectedText());
+        tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
+        total.setTextColor(colorSchemeManager.getDarkerTextColor());
+        divider.setBackgroundColor(colorSchemeManager.getLine());
+        priorityLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+
+        // TODO: 9/25/2018  
+        //THIS IS THE SEARCH BAR COLORING AND MAY NEED TO CHANGE WHEN WE CONFIRM DB COLORS FOR THEMES
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            clientSearch.setBackgroundColor(colorSchemeManager.getProgressBackground());
+            android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            search.setTextColor(colorSchemeManager.getDarkerTextColor());
+            search.setHighlightColor(colorSchemeManager.getProgressBackground());
+            search.setHintTextColor(colorSchemeManager.getProgressBackground());
+        } else {
+            clientSearch.setBackgroundColor(colorSchemeManager.getButtonBorder());
+            android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            search.setTextColor(colorSchemeManager.getDarkerTextColor());
+            search.setHighlightColor(colorSchemeManager.getButtonBorder());
+            search.setHintTextColor(colorSchemeManager.getButtonBorder());
+        }
+
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        } else {
+            Rect bounds = loader.getIndeterminateDrawable().getBounds();
+            loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+            loader.getIndeterminateDrawable().setBounds(bounds);
+        }
+    }
+
     private void initAddButton() {
+        priorityLabel = parentActivity.findViewById(R.id.priorityLabel);
         addButton = parentActivity.findViewById(R.id.addClientButton);
         editListButton = parentActivity.findViewById(R.id.editClientListButton);
 
@@ -112,6 +150,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         if(editListButton != null) {
+            editListButton.setVisibility(View.GONE);
             editListButton.setOnClickListener(this);
         }
 
@@ -127,15 +166,24 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     private void initializeTabView() {
         tabLayout = getView().findViewById(R.id.tabHost);
         tabLayout.addOnTabSelectedListener(this);
+        for(int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setText(parentActivity.localizeLabel((String)tabLayout.getTabAt(i).getText()));
+        }
         total = getView().findViewById(R.id.total);
     }
 
 
     private void initListView() {
         mListView = getView().findViewById(R.id.clientListView);
-        mListView.setDragListListener(this);
-        mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
-        mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
+//        mListView.setDragListListener(this);
+//        mListView.setLayoutManager(new LinearLayoutManager(parentActivity));
+//        mListView.getRecyclerView().setVerticalScrollBarEnabled(true);
+        mListView.setDivider(null);
+        mListView.setDividerHeight(30);
+        mListView.setOnItemClickListener(this);
+        total = getView().findViewById(R.id.total);
+        divider = getView().findViewById(R.id.divider);
+
     }
 
     private void fillListViewWithData(List<ClientObject> metricList) {
@@ -159,31 +207,28 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 //            priorityPosition = counter;
 //            counter++;
             for(int i = 0; i < priorityArray.size(); i++) {
-                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
+                mItemArray.add(priorityArray.get(i));
                 counter++;
             }
 
-            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
-            pipelinePosition = counter;
+//            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
+//            pipelinePosition = counter;
             counter++;
             for(int i = 0; i < commonArray.size(); i++) {
-                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
+                mItemArray.add(commonArray.get(i));
                 counter++;
             }
+            ClientListAdapter adapter = new ClientListAdapter(getContext(), mItemArray, this, colorSchemeManager);
+            mListView.setAdapter(adapter);
 
+//            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
+//
+//            mListView.setDragEnabled(false);
+//            mListView.setAdapter(clientItemAdapter, true);
+//            mListView.setCanDragHorizontally(false);
+////            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
+//            mListView.setCustomDragItem(null);
 
-
-//            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
-//            mListView.setAdapter(adapter);
-
-            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
-            mListView.setDragEnabled(false);
-            mListView.setAdapter(clientItemAdapter, true);
-            mListView.setCanDragHorizontally(false);
-//            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
-            mListView.setCustomDragItem(null);
-
-//            mListView.setOnItemClickListener(this);
         }
 
     }
@@ -223,62 +268,61 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
                 break;
             case R.id.searchClient:
                 break;
-            case R.id.editClientListButton:
-                Log.e("EDIT LIST", "PLS");
-                if(!editMode) {
-                    changeToEditList(currentList);
-                    editMode = true;
-                }
-                else {
-                    fillListViewWithData(currentList);
-                    editMode = false;
-                }
-                break;
+//            case R.id.editClientListButton:
+//                if(!editMode) {
+//                    changeToEditList(currentList);
+//                    editMode = true;
+//                }
+//                else {
+//                    fillListViewWithData(currentList);
+//                    editMode = false;
+//                }
+//                break;
         }
     }
 
     private void changeToEditList(List<ClientObject> metricList) {
-        ArrayList mItemArray = new ArrayList<>();
-        if(getContext() != null) {
-            ArrayList priorityArray = new ArrayList<>();
-            ArrayList commonArray = new ArrayList<>();
-
-            for(ClientObject clientObject : metricList) {
-                if(clientObject.getIs_priority().equals("0")) {
-                    commonArray.add(clientObject);
-                }
-                else {
-                    priorityArray.add(clientObject);
-                }
-            }
-            int counter = 0;
-//            mItemArray.add(new Pair<>((long) counter, "Priority"));
-//            priorityPosition = counter;
+//        ArrayList mItemArray = new ArrayList<>();
+//        if(getContext() != null) {
+//            ArrayList priorityArray = new ArrayList<>();
+//            ArrayList commonArray = new ArrayList<>();
+//
+//            for(ClientObject clientObject : metricList) {
+//                if(clientObject.getIs_priority().equals("0")) {
+//                    commonArray.add(clientObject);
+//                }
+//                else {
+//                    priorityArray.add(clientObject);
+//                }
+//            }
+//            int counter = 0;
+////            mItemArray.add(new Pair<>((long) counter, "Priority"));
+////            priorityPosition = counter;
+////            counter++;
+//            for(int i = 0; i < priorityArray.size(); i++) {
+//                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
+//                counter++;
+//            }
+//
+//            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
+//            pipelinePosition = counter;
 //            counter++;
-            for(int i = 0; i < priorityArray.size(); i++) {
-                mItemArray.add(new Pair<>((long) counter, priorityArray.get(i)));
-                counter++;
-            }
-
-            mItemArray.add(new Pair<>((long) counter, "Pipeline"));
-            pipelinePosition = counter;
-            counter++;
-            for(int i = 0; i < commonArray.size(); i++) {
-                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
-                counter++;
-            }
-//            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
-//            mListView.setAdapter(adapter);
-
-            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.edit_list_item, R.id.editButton, false, this);
-            mListView.setDragEnabled(true);
-            mListView.setAdapter(clientItemAdapter, true);
-            mListView.setCanDragHorizontally(false);
-//            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
-            mListView.setCustomDragItem(null);
-
-//            mListView.setOnItemClickListener(this);
-        }
+//            for(int i = 0; i < commonArray.size(); i++) {
+//                mItemArray.add(new Pair<>((long) counter, commonArray.get(i)));
+//                counter++;
+//            }
+////            ClientListAdapter adapter = new ClientListAdapter(getContext(), metricList, this);
+////            mListView.setAdapter(adapter);
+//
+//            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.edit_list_item, R.id.editButton, false, this);
+//            mListView.setDragEnabled(true);
+//            mListView.setAdapter(clientItemAdapter, true);
+//            mListView.setCanDragHorizontally(false);
+////            mListView.setCustomDragItem(new MyDragItem(getContext(), R.layout.list_item));
+//            mListView.setCustomDragItem(null);
+//
+////            mListView.setOnItemClickListener(this);
+//        }
     }
 
     @Override
@@ -361,24 +405,24 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
         if(mListView != null) {
 //            mListView.setAdapter(null);
         }
-        switch ((String) tab.getText()) {
-            case "Pipeline":
+        switch ((int) tab.getPosition()) {
+            case 0:
                 currentList = dataController.getPipelineList();
                 selectedTab = "pipeline";
                 break;
-            case "Signed":
+            case 1:
                 currentList = dataController.getSignedList();
                 selectedTab = "signed";
                 break;
-            case "Contract":
+            case 2:
                 currentList = dataController.getContractList();
                 selectedTab = "contract";
                 break;
-            case "Closed":
+            case 3:
                 currentList = dataController.getClosedList();
                 selectedTab = "closed";
                 break;
-            case "Archived":
+            case 4:
                 currentList = dataController.getArchivedList();
                 selectedTab = "archived";
                 break;
@@ -395,8 +439,17 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onTabReselected(TabLayout.Tab tab) {}
 
+    private void addOneToContacts() {
+        Metric contactMetric = dataController.getContactsMetric();
+        contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
+        dataController.setRecordUpdated(contactMetric);
+        parentActivity.updateRecordedActivities();
+        parentActivity.showToast("+1 to your contacts");
+    }
+
     @Override
     public void onPhoneClicked(String number, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "PHONE");
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + number));
@@ -405,6 +458,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onTextClicked(String number, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "TEXTM");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
@@ -413,6 +467,7 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onEmailClicked(String email, ClientObject client) {
+        addOneToContacts();
         apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), email, "EMAIL");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
@@ -454,6 +509,13 @@ public class ClientListFragment extends Fragment implements SearchView.OnQueryTe
             }
 
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
+        parentActivity.setSelectedClient(selectedClient);
+        navigationManager.stackReplaceFragment(ClientEditFragment.class);
     }
 
     private static class MyDragItem extends DragItem {

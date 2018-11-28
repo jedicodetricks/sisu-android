@@ -15,6 +15,11 @@ public class UpdateSettingsObject {
         this.parameter_type_id = parameter_type_id;
     }
 
+    public UpdateSettingsObject(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }

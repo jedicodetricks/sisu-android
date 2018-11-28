@@ -1,6 +1,7 @@
 package co.sisu.mobile.fragments;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -53,7 +53,23 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         initForm();
+        setColors();
         initUpdateOrAdd();
+    }
+
+    private void setColors() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+                    Log.e("NOTE", "WHITE");
+                    noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.light_input_text_box));
+                } else {
+                    noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.input_text_box));
+                }
+                noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
+            }
+        });
     }
 
     private void initUpdateOrAdd() {

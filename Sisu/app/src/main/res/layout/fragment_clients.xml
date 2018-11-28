@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="co.sisu.mobile.fragments.ClientListFragment">
 
-        <SearchView
+        <android.support.v7.widget.SearchView
             android:id="@+id/searchClient"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            style="@style/ClientLabelText"
             android:text="Priority"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +39,14 @@
             app:layout_constraintBottom_toTopOf="@id/divider"
             >
 
-                <com.woxthebox.draglistview.DragListView
+                <!--<com.woxthebox.draglistview.DragListView-->
+                    <!--android:id="@+id/clientListView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:clickable="true"/>-->
+
+                <ListView
                     android:id="@+id/clientListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

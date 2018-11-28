@@ -15,7 +15,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
-import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.MorePageContainer;
@@ -31,6 +31,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private DataController dataController;
     private ParentActivity parentActivity;
     private NavigationManager navigationManager;
+    private ColorSchemeManager colorSchemeManager;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -46,11 +47,13 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         return toReturn;
 
     }
+    
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
         initializeListView();
     }
 
@@ -62,7 +65,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
 
         final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer();
 
-        MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList);
+        MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList, colorSchemeManager);
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
@@ -72,43 +75,42 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
-
-        switch(value.getTitle()) {
-            case "Teams":
-
-                break;
-            case "Clients":
-                navigationManager.stackReplaceFragment(ClientListFragment.class);
-//                navigationManager.swapToClientListBar(null);
-                break;
-            case "My Profile":
-                navigationManager.stackReplaceFragment(MyProfileFragment.class);
-//                navigationManager.swapToBacktionBar("My Profile", null);
-                break;
-            case "Goal Setup":
-                navigationManager.stackReplaceFragment(GoalSetupFragment.class);
-//                navigationManager.swapToBacktionBar("Goal Setup", null);
-                break;
-            case "Activity Settings":
-                navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
-//                navigationManager.swapToBacktionBar("Activity Settings", null);
-                break;
-            case "Settings":
-                navigationManager.stackReplaceFragment(SettingsFragment.class);
-//                navigationManager.swapToBacktionBar("Settings", null);
-                break;
-            case "Feedback":
-                navigationManager.stackReplaceFragment(FeedbackFragment.class);
-//                navigationManager.swapToTitleBar("Feedback");
-                break;
-            case "Slack":
-                navigationManager.stackReplaceFragment(SlackMessageFragment.class);
-                break;
-            case "Logout":
-                logout();
-                SaveSharedPreference.setUserName(getContext(), "");
-                break;
+        if(!parentActivity.isTeamSwapOccurring()) {
+            switch(value.getTitle()) {
+                case "Teams":
+                    break;
+                case "Clients":
+                    navigationManager.stackReplaceFragment(ClientListFragment.class);
+                    break;
+                case "My Profile":
+                    navigationManager.stackReplaceFragment(MyProfileFragment.class);
+                    break;
+                case "Goal Setup":
+                    navigationManager.stackReplaceFragment(GoalSetupFragment.class);
+                    break;
+                case "Activity Settings":
+                    navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
+                    break;
+                case "Settings":
+                    navigationManager.stackReplaceFragment(SettingsFragment.class);
+                    break;
+                case "Feedback":
+                    navigationManager.stackReplaceFragment(FeedbackFragment.class);
+                    break;
+                case "Slack":
+                    navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    break;
+                case "Message Center":
+                    parentActivity.setNoteOrMessage("Message");
+                    navigationManager.stackReplaceFragment(ClientNoteFragment.class);
+                    break;
+                case "Logout":
+                    logout();
+                    SaveSharedPreference.setUserName(getContext(), "");
+                    break;
+            }
         }
+
     }
 
     public void logout() {
@@ -116,5 +118,14 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         parentActivity.finish();
+    }
+
+    public void teamSwap() {
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeListView();
+            }
+        });
     }
 }

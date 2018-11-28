@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/action_bar_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorAlmostBlack"
-    style="@style/ActionBar">
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/action_bar_home"
@@ -18,7 +17,6 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </View>
 
     <TextView
@@ -33,8 +31,22 @@
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/font_larger"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/action_bar_home"
-        app:layout_constraintStart_toStartOf="@+id/action_bar_home"
+        app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+        app:layout_constraintStart_toStartOf="@id/action_bar_home"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/team_icon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:elevation="1dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+        app:layout_constraintStart_toStartOf="@id/action_bar_home"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
