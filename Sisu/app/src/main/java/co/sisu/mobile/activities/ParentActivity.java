@@ -137,6 +137,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
+
+        //MOCKING AN AGENT
+//        agent.setAgent_id("4149");
+//        dataController.setAgent(agent);
+        //
+        
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
         initParentFields();
