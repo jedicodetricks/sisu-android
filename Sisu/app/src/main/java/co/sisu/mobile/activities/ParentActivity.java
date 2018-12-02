@@ -120,12 +120,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String pushNotificationTitle = "";
     private String pushNotificationBody = "";
     private Fragment f;
+    private Animator mCurrentAnimator;
+    private float startScale;
+    private final Rect startBounds = new Rect();
+    private final Rect finalBounds = new Rect();
+    private final Point globalOffset = new Point();
+    private int mShortAnimationDuration;
+    private TeamObject updatedTeam;
+    private int updateTeamPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
-//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorCorporateGrey)));
 
         parentLoader = findViewById(R.id.parentLoader);
         gson = new Gson();
@@ -150,6 +157,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         apiManager.getTeams(this, agent.getAgent_id());
 
+        initCache();
+    }
+
+    private void initCache() {
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
         // int in its constructor.
@@ -200,14 +211,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemCache(key) == null) {
             mMemoryCache.put(key, bitmap);
         }
         else {
             Log.e("Key already exists", "Replacing " + key);
-//            mMemoryCache.remove(key);
             mMemoryCache.put(key, bitmap);
         }
     }
@@ -215,12 +224,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public Bitmap getBitmapFromMemCache(String key) {
         return mMemoryCache.get(key);
     }
-
-//    private void testSMSObserver() {
-//        Log.e("TURNING ON SMS", "THIS IS A TEST");
-//        ContentResolver contentResolver = getContentResolver();
-//        contentResolver.registerContentObserver(Uri.parse("content://sms"), true, new MySMSObserver(new Handler(), this));
-//    }
 
     private void initializeButtons(){
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
@@ -241,7 +244,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
@@ -304,9 +306,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
     }
 
-    private TeamObject updatedTeam;
-    private int updateTeamPosition;
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //This is what goes off when you click a new team.
@@ -325,7 +324,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void sendTeamSwapApiCalls(TeamObject team) {
-
         teamSwap = true;
 
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
@@ -650,15 +648,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-        Log.e("FAILURE", returnType.name());
+        if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {}
+        else if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {}
+        else if(returnType == ApiReturnTypes.GET_SETTINGS) {}
+        else if(returnType == ApiReturnTypes.GET_TEAMS) {}
+        else if(returnType == ApiReturnTypes.GET_CLIENTS) {}
+        else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {}
+        else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {}
+        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+        }
+        else if(returnType == ApiReturnTypes.GET_LABELS) {
+        }
     }
-
-    private Animator mCurrentAnimator;
-    float startScale;
-    final Rect startBounds = new Rect();
-    final Rect finalBounds = new Rect();
-    final Point globalOffset = new Point();
-    int mShortAnimationDuration;
 
     public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp) {
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);

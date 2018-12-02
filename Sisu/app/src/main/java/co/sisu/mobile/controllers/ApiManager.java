@@ -2,6 +2,9 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ import co.sisu.mobile.api.AsyncDeleteNotes;
 import co.sisu.mobile.api.AsyncFeedback;
 import co.sisu.mobile.api.AsyncGet;
 import co.sisu.mobile.api.AsyncLeaderboardImage;
+import co.sisu.mobile.api.AsyncPost;
 import co.sisu.mobile.api.AsyncPushMessage;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.api.AsyncUpdateActivities;
@@ -38,9 +42,12 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
+import co.sisu.mobile.system.SaveSharedPreference;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import okhttp3.Cache;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by Brady Groharing on 6/2/2018.
@@ -56,9 +63,11 @@ public class ApiManager {
     private String url = "https://api.sisu.co/";
     int cacheSize = 10 * 1024 * 1024; // 10MB
     Cache cache;
+    private Gson gson;
 
     public ApiManager(Context context) {
         cache = new Cache(context.getCacheDir(), cacheSize);
+        gson = new Gson();
     }
     //TODO Team swap won't work because of the different return types
 
@@ -67,6 +76,12 @@ public class ApiManager {
         //GET
         getJWT(agentId);
         new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
+        //POST (PROBS NEED THIS ONE)
+        getJWT(agentId);
+        new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
     //START OF GET CALLS
@@ -209,51 +224,93 @@ public class ApiManager {
     //START OF POST CALLS
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
-        //POST
+        //POST TODO: fix returns for all POSTs
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, startDate, endDate, marketId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITIES;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedStartTime = formatter.format(startDate);
+        String formattedEndTime = formatter.format(endDate);
+
+        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\",\"include_counts\":1,\"include_activities\":0}";
+        String currentUrl = url + "api/v1/agent/activity/" + agentId + "/" + marketId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncActivities(cb, url, agentId, startDate, endDate, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime, int marketId) {
         //POST
         getJWT(agentId);
-        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITIES;
+        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\",\"include_counts\":1,\"include_activities\":0}";
+        String currentUrl = url + "api/v1/agent/activity/" + agentId + "/" + marketId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncActivities(cb, url, agentId, formattedStartTime, formattedEndTime, marketId).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
         //POST
         getJWT(agentId);
-        new AsyncAddClient(cb, url, agentId, newClient).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.CREATE_CLIENT;
+        String body = gson.toJson(newClient);
+        body = body.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
+        body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
+        String currentUrl = url + "api/v1/client/edit-client/" + agentId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncAddClient(cb, url, agentId, newClient).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
         //POST
         getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.SEND_FEEDBACK;
+        String body;
+
+
+        String currentUrl = url + "api/v1/feedback/add-feedback/" + agentId;
+
         if(slackUrl != null) {
-            new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
+            body = "{\"feedback\":\"" + feedback +"\"}";
+            new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//            new AsyncFeedback(cb, slackUrl, agentId, feedback, true).execute(jwtStr, timestamp, transactionID);
         }
         else {
-            new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
+            body = "{\"text\":\"" + feedback + "\"}";
+            new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//            new AsyncFeedback(cb, url, agentId, feedback, false).execute(jwtStr, timestamp, transactionID);
         }
-    }
-
-    public void sendAuth(AsyncServerEventListener cb, String agentId, String email, String password) {
-        //POST (PROBS NEED THIS ONE)
-        getJWT(agentId);
-        new AsyncAuthenticatorNEW(cb, url, email, password).execute(jwtStr, timestamp, transactionID);
     }
 
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         //POST
         getJWT(agentId);
-        new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.CREATE_NOTE;
+        String body = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\"}";
+        String currentUrl = url + "api/v1/client/logs/" + clientId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncAddNotes(cb, url, clientId, note, noteType).execute(jwtStr, timestamp, transactionID);
     }
 
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         //POST
         getJWT(agent.getAgent_id());
-        new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
+        ApiReturnTypes returnType = ApiReturnTypes.SEND_FIREBASE_TOKEN;
+        FirebaseDeviceObject firebaseDeviceObject = generateFirebaseObject(agent, token, context);
+        String body = gson.toJson(firebaseDeviceObject);
+        String currentUrl = url + "api/v1/agent/device/" + agent.getAgent_id();
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncAddFirebaseDevice(cb, url, context, agent, token).execute(jwtStr, timestamp, transactionID);
     }
+
+    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
+        //POST
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.SEND_PUSH_NOTIFICATION;
+        String body = "{\"body\":\"" + message + "\", \"title\":\"Message from Team Administrator\"}";
+        String currentUrl = url + "api/v1/team/push-message/" + teamId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+//        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
+    }
+
 
     //START OF PUT CALLS
 
@@ -358,8 +415,19 @@ public class ApiManager {
 //        Log.e("TIME", timestamp);
     }
 
-    public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
-        getJWT(agentId);
-        new AsyncPushMessage(cb, url, teamId, message, false).execute(jwtStr, timestamp, transactionID);
+    private FirebaseDeviceObject generateFirebaseObject(AgentModel agent, String token, Context context) {
+        String uuid = UUID.randomUUID().toString();
+        String deviceId = agent.getAgent_id() + "-" + uuid;
+        String deviceName = agent.getAgent_id() + "'s android";
+        if(agent.getFirst_name() != null && agent.getLast_name() != null) {
+            deviceName = agent.getAgent_id() + "-" + agent.getFirst_name() + " " + agent.getLast_name() + " android " + uuid;
+        }
+        else if(agent.getLast_name() != null) {
+            deviceName = agent.getAgent_id() + " " + agent.getLast_name() + "s android " + uuid;
+        }
+        SaveSharedPreference.setFirebaseDeviceId(context, deviceId);
+        FirebaseDeviceObject firebaseDeviceObject = new FirebaseDeviceObject("Android", deviceId, deviceName, token);
+
+        return firebaseDeviceObject;
     }
 }
