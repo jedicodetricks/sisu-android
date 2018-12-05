@@ -217,7 +217,7 @@ public class NavigationManager {
         }
         backStack.add(ClientListFragment.class);
         // Insert the fragment by replacing any existing fragment
-        actionBarManager.swapToClientListBar(tab, ENABLE_DRAWER);
+        actionBarManager.swapToClientListBar(tab, DISABLE_DRAWER);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
