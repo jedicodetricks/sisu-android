@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
@@ -35,8 +35,6 @@ import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.models.UpdateSettingsObject;
-import okhttp3.Response;
 
 /**
  * Created by Jeff on 4/18/2018.
@@ -298,43 +296,43 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 //            });
 //        }
 
-        if(asyncReturnType.equals("Update Settings")) {
-            if(editMode) {
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        settingsSaveComplete = true;
-//                        if(activitySaveComplete) {
-                        editMode = false;
-                        saveButton.setText("Save");
-                        editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitiesSelected());
-//                        }
-
-                    }
-                });
-
-            }
-            else {
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                parentActivity.showToast("Activity updates saved");
-            }
-        }
-        else if(asyncReturnType.equals("Update Activities")) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    activitySaveComplete = true;
-                    if(settingsSaveComplete) {
-                        editMode = false;
-                        saveButton.setText("Save");
-                        editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitiesSelected());
-                    }
-
-                }
-            });
-        }
+//        if(asyncReturnType.equals("Update Settings")) {
+//            if(editMode) {
+//                parentActivity.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        settingsSaveComplete = true;
+////                        if(activitySaveComplete) {
+//                        editMode = false;
+//                        saveButton.setText("Save");
+//                        editButton.setVisibility(View.VISIBLE);
+//                        fillListViewWithData(dataController.getActivitiesSelected());
+////                        }
+//
+//                    }
+//                });
+//
+//            }
+//            else {
+//                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+//                parentActivity.showToast("Activity updates saved");
+//            }
+//        }
+//        else if(asyncReturnType.equals("Update Activities")) {
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    activitySaveComplete = true;
+//                    if(settingsSaveComplete) {
+//                        editMode = false;
+//                        saveButton.setText("Save");
+//                        editButton.setVisibility(View.VISIBLE);
+//                        fillListViewWithData(dataController.getActivitiesSelected());
+//                    }
+//
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -352,6 +350,40 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                     fillListViewWithData(dataController.getActivitiesSelected());
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activitySaveComplete = true;
+                    if(settingsSaveComplete) {
+                        editMode = false;
+                        saveButton.setText("Save");
+                        editButton.setVisibility(View.VISIBLE);
+                        fillListViewWithData(dataController.getActivitiesSelected());
+                    }
+
+                }
+            });
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
+            if(editMode) {
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        settingsSaveComplete = true;
+                        editMode = false;
+                        saveButton.setText("Save");
+                        editButton.setVisibility(View.VISIBLE);
+                        fillListViewWithData(dataController.getActivitiesSelected());
+                    }
+                });
+
+            }
+            else {
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+                parentActivity.showToast("Activity updates saved");
+            }
         }
     }
 

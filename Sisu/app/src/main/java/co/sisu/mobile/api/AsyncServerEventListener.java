@@ -1,6 +1,6 @@
 package co.sisu.mobile.api;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 
 /**
  * Created by bradygroharing on 3/22/18.

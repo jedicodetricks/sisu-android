@@ -6,28 +6,24 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import co.sisu.mobile.enums.ApiReturnTypes;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
  * Created by Brady Groharing on 5/5/2018.
  */
 
-public class AsyncPost extends AsyncTask<String, String, String> {
+public class AsyncDelete extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String url;
     private ApiReturnTypes returnType;
-    private String jsonInString;
 
-    public AsyncPost(AsyncServerEventListener cb, String url, ApiReturnTypes returnType, String jsonInString) {
+    public AsyncDelete(AsyncServerEventListener cb, String url, ApiReturnTypes returnType) {
         callback = cb;
         this.url = url;
         this.returnType = returnType;
-        this.jsonInString = jsonInString;
     }
 
     @Override
@@ -40,12 +36,9 @@ public class AsyncPost extends AsyncTask<String, String, String> {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, jsonInString);
-
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .delete()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
                 .addHeader("Content-Type", "application/json")

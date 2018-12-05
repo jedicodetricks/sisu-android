@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
@@ -220,7 +220,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void getLeaderboard(int year, int month) {
-        if(parentActivity.getSelectedTeamId() == -1) {
+        if(parentActivity.getSelectedTeamId() == 0) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -288,13 +288,18 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 }
             }
 
-            //TODO: If it's the beginning of the month and nobody has any records, the leaderboard page won't work as intended.
-            //TODO: If you leave the leaderboard page and go to "more" the progress bar won't go away.
-            agentCounter = 0;
-            for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
-            {
-                initLeaderBoardImages(entry.getValue());
+            if(agents.size() > 0) {
+                agentCounter = 0;
+                for (HashMap.Entry<String, LeaderboardAgentModel> entry : agents.entrySet())
+                {
+                    initLeaderBoardImages(entry.getValue());
+                }
             }
+            else {
+                parentActivity.showToast("There is no info to display so far this month");
+                displayListData();
+            }
+
         }
 
 

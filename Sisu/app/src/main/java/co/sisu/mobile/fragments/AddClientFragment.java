@@ -41,7 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -962,7 +962,21 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Add Client")) {
+//        if(asyncReturnType.equals("Add Client")) {
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    parentActivity.showToast("Client Saved");
+//                    navigationManager.navigateToClientListAndClearStack(currentStatus);
+//                }
+//            });
+////            parentActivity.navigateToClientList(currentStatus, null);
+//        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.CREATE_CLIENT) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -970,13 +984,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                     navigationManager.navigateToClientListAndClearStack(currentStatus);
                 }
             });
-//            parentActivity.navigateToClientList(currentStatus, null);
         }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     @Override

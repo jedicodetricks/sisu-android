@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.NoteListAdapter;
@@ -129,22 +129,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Get Notes")) {
-//            AsyncNotesJsonObject asyncNotesJsonObject = gson.fromJson(response.body().charStream(), AsyncNotesJsonObject.class);
-//            AsyncNotesJsonObject asyncNotesJsonObject = (AsyncNotesJsonObject) returnObject;
-//            final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
-//            Log.e("SIZE", String.valueOf(allNotes.length));
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
-//                }
-//            });
-//        }
-        if(asyncReturnType.equals("Delete Notes")) {
-            parentActivity.showToast("Note has been deleted");
-            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
-        }
     }
 
     @Override
@@ -168,6 +152,10 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                     fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.DELETE_NOTE) {
+            parentActivity.showToast("Note has been deleted");
+            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
     }
 

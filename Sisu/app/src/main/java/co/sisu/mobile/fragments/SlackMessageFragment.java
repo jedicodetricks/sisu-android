@@ -12,7 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -98,7 +98,6 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
                         parentActivity.showToast("Sending message to your Slack channel...");
                     }
                     else {
-                        //TODO: This will be where we put the apimanager to send the push
                         apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
                         parentActivity.showToast("Sending push notification to your team...");
                     }
@@ -136,7 +135,15 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.SEND_FEEDBACK) {
 
+        }
+        else if(returnType == ApiReturnTypes.SEND_PUSH_NOTIFICATION) {
+
+        }
+        else if(returnType == ApiReturnTypes.CREATE_NOTE) {
+
+        }
     }
 
     @Override

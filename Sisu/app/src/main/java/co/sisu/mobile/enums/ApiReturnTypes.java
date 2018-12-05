@@ -1,4 +1,4 @@
-package co.sisu.mobile;
+package co.sisu.mobile.enums;
 
 /**
  * Created by Brady Groharing on 10/15/2018.
@@ -26,5 +26,17 @@ public enum ApiReturnTypes {
     SEND_FEEDBACK,
     CREATE_NOTE,
     SEND_FIREBASE_TOKEN,
-    SEND_PUSH_NOTIFICATION
+    SEND_PUSH_NOTIFICATION,
+    UPDATE_ACTIVITIES,
+    UPDATE_ACTIVITY_SETTINGS,
+    UPDATE_AGENT,
+    UPDATE_GOALS,
+    UPDATE_PROFILE_IMAGE,
+    UPDATE_PROFILE,
+    UPDATE_SETTINGS,
+    UPDATE_NOTE,
+    UPDATE_FIREBASE,
+    UPDATE_CLIENT,
+    ACTIVATE_CLIENT,
+    DELETE_NOTE
 }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ClientListAdapter;
@@ -330,9 +330,9 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if (asyncReturnType.equals("Add Notes")) {
-
-        }
+//        if (asyncReturnType.equals("Add Notes")) {
+//
+//        }
 //        else {
 //            dataController.setClientListObject(returnObject);
 //
@@ -363,6 +363,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                 }
             });
         }
+        else if(returnType == ApiReturnTypes.CREATE_NOTE) {}
     }
 
     @Override

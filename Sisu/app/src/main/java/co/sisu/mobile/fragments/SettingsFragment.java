@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -422,7 +422,19 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Update Settings")) {
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+            colorScheme = colorJson.getTheme();
+            if(settingsFinished) {
+                parentActivity.showToast("Your settings have been updated");
+            }
+            colorFinished = true;
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -438,26 +450,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     settingsFinished = true;
                 }
             });
-        }
-//        else if(asyncReturnType.equals("Get Color Scheme")) {
-//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-//            colorScheme = colorJson.getTheme();
-//            if(settingsFinished) {
-//                parentActivity.showToast("Your settings have been updated");
-//            }
-//            colorFinished = true;
-//        }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
-            AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
-            colorScheme = colorJson.getTheme();
-            if(settingsFinished) {
-                parentActivity.showToast("Your settings have been updated");
-            }
-            colorFinished = true;
         }
     }
 

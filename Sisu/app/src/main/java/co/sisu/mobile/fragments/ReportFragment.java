@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.DropdownAdapter;
@@ -30,7 +30,9 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
+import okhttp3.Response;
 
 
 /**
@@ -418,8 +420,23 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Activities")) {
-            dataController.setActivitiesObject(returnObject);
+//        if(asyncReturnType.equals("Activities")) {
+//            dataController.setActivitiesObject(returnObject);
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loader.setVisibility(View.GONE);
+//                    setData(dataController.getActivitiesObject());
+//                }
+//            });
+//        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
+            AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
+            dataController.setActivitiesObject(activitiesObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -428,11 +445,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 }
             });
         }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     @Override

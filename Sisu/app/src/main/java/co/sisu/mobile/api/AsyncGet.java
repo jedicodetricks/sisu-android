@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import com.squareup.picasso.Picasso;
 
 import co.sisu.mobile.R;
@@ -129,18 +129,20 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        feedback.setText("");
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.showToast("Thank you for your feedback");
-            }
-        });
+
     }
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.SEND_FEEDBACK) {
+            feedback.setText("");
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.showToast("Thank you for your feedback");
+                }
+            });
+        }
     }
 
     @Override

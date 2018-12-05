@@ -44,7 +44,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -416,32 +416,6 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Profile Image")) {
-//            Log.e("GOT THE PIC", "WOOT");
-//            AsyncProfileImageJsonObject profileObject = gson.fromJson(response.body().charStream(), AsyncProfileImageJsonObject.class);
-//            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    decodeBase64Image(profileObject.getData());
-//                }
-//            });
-//        }
-        if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Your profile has been updated");
-            navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//            navigationManager.swapToTitleBar("More");
-        }
-//        else if(asyncReturnType.equals("Get Agent")) {
-//            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
-//            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
-//            AgentModel agentModel = agentJsonObject.getAgent();
-//            dataController.setAgent(agentModel);
-//            agent = dataController.getAgent();
-//            fillInAgentInfo();
-//        }
-
     }
 
     @Override
@@ -461,6 +435,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                     decodeBase64Image(profileObject.getData());
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_PROFILE) {
+            parentActivity.showToast("Your profile has been updated");
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
     }
 

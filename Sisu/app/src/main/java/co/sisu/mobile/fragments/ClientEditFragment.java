@@ -49,7 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -1131,31 +1131,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Add Notes")) {
-            updateCurrentClient(!currentClient.getStatus().equals("D"));
-            saveClient();
-        }
-        else if(asyncReturnType.equals("Update Settings")) {
-            loader.setVisibility(View.GONE);
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    parentActivity.onBackPressed();
-                    parentActivity.showToast("Client has been archived");
-                }
-            });
-        }
-        else {
-            loader.setVisibility(View.GONE);
-//        parentActivity.navigateToClientList(statusList, null);
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    parentActivity.onBackPressed();
-                    parentActivity.showToast("Client updates saved");
-                }
-            });
-        }
     }
 
     @Override
@@ -1171,6 +1146,29 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 public void run() {
                     initializeClient();
                     loader.setVisibility(View.GONE);
+                }
+            });
+        }
+        else if(returnType == ApiReturnTypes.CREATE_NOTE) {
+            updateCurrentClient(!currentClient.getStatus().equals("D"));
+            saveClient();
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.onBackPressed();
+                    parentActivity.showToast("Client updates saved");
+                }
+            });
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_SETTINGS) {
+            loader.setVisibility(View.GONE);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.onBackPressed();
+                    parentActivity.showToast("Client has been archived");
                 }
             });
         }

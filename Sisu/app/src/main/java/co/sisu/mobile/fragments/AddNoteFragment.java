@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -117,21 +117,20 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Add Notes")) {
-            hideKeyboard(getView());
-            parentActivity.showToast("Added note");
-            navigationManager.onBackPressed();
-        }
-        else if(asyncReturnType.equals("Update Notes")) {
-            hideKeyboard(getView());
-            parentActivity.showToast("Updated note");
-            navigationManager.onBackPressed();
-        }
     }
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.CREATE_NOTE) {
+            hideKeyboard(getView());
+            parentActivity.showToast("Added note");
+            navigationManager.onBackPressed();
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_NOTE) {
+            hideKeyboard(getView());
+            parentActivity.showToast("Updated note");
+            navigationManager.onBackPressed();
+        }
     }
 
     @Override

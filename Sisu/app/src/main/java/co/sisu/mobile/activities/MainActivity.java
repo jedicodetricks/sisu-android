@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -41,7 +41,6 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
-import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 import okhttp3.Response;
@@ -72,10 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         apiManager = new ApiManager(this);
         colorSchemeManager = new ColorSchemeManager();
         setContentView(R.layout.activity_main);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
-//        getSupportActionBar().setElevation(0);
         loader = findViewById(R.id.signInLoader);
         initializeButtons();
         initFields();
@@ -262,52 +257,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("JWT")) {
-            JWTObject jwt = (JWTObject) returnObject;
-            SaveSharedPreference.setJWT(this, jwt.getJwt());
-            SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
-            SaveSharedPreference.setTransId(this, jwt.getTransId());
-        }
-//        else if(asyncReturnType.equals("Get Color Scheme")) {
-//            AsyncTeamColorSchemeObject asyncTeamColorSchemeObject = gson.fromJson(response.body().charStream(), AsyncTeamColorSchemeObject.class);
-//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-//            colorScheme = colorJson.getTheme();
-//            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
-//            setColors();
-//        }
-        else {
-            AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-            agent = agentObject.getAgent();
-            if (agentObject.getStatus_code().equals("-1")) {
-                this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loader.setVisibility(View.GONE);
-                        showToast("Incorrect username or password");
-                    }
-                });
-            }
-            else {
-                this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loader.setVisibility(View.GONE);
-                    }
-                });
-                SaveSharedPreference.setUserId(this, agent.getAgent_id());
-                SaveSharedPreference.setUserName(this, emailAddress);
-                try {
-                    //TODO: We need to encrypt this in some way
-                    SaveSharedPreference.setUserPassword(this, passwordText);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
+        agent = agentObject.getAgent();
+        if (agentObject.getStatus_code().equals("-1")) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                    showToast("Incorrect username or password");
                 }
-
-                Intent intent = new Intent(this, ParentActivity.class);
-                intent.putExtra("Agent", agent);
-                startActivity(intent);
-                finish();
+            });
+        }
+        else {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                }
+            });
+            SaveSharedPreference.setUserId(this, agent.getAgent_id());
+            SaveSharedPreference.setUserName(this, emailAddress);
+            try {
+                //TODO: We need to encrypt this in some way
+                SaveSharedPreference.setUserPassword(this, passwordText);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            Intent intent = new Intent(this, ParentActivity.class);
+            intent.putExtra("Agent", agent);
+            startActivity(intent);
+            finish();
         }
     }
 

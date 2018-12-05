@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import java.util.HashMap;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -116,15 +116,14 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 apiManager.sendAsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields);
             }
         }
-        else if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Password successfully changed");
-            navigationManager.onBackPressed();
-        }
     }
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.UPDATE_PROFILE) {
+            parentActivity.showToast("Password successfully changed");
+            navigationManager.onBackPressed();
+        }
     }
 
     @Override

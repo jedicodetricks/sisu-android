@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -482,45 +482,6 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Update Goals")) {
-            if(!agentUpdating) {
-                updatedGoals = new HashMap<>();
-                parentActivity.showToast("Goals have been updated");
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-            }
-        }
-//        else if(asyncReturnType.equals("Goals")) {
-//            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
-//            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-//            dataController.setAgentGoals(agentGoalsObject);
-//            goalsUpdated = true;
-//            if(agentUpdated) {
-//                setupFieldsWithGoalData();
-//            }
-//        }
-        else if(asyncReturnType.equals("Update Agent")) {
-            agentUpdating = false;
-            updatedGoals = new HashMap<>();
-            parentActivity.showToast("Goals have been updated");
-            navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//            navigationManager.swapToTitleBar("More");
-        }
-//        else if(asyncReturnType.equals("Get Agent")) {
-//            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
-//            AgentModel agentModel = agentJsonObject.getAgent();
-//            dataController.setAgentIncomeAndReason(agentModel);
-//            agent = dataController.getAgent();
-//            agentUpdated = true;
-//            if(goalsUpdated) {
-//                setupFieldsWithGoalData();
-//            }
-//        }
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loader.setVisibility(View.GONE);
-            }
-        });
     }
 
     @Override
@@ -543,6 +504,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             if(goalsUpdated) {
                 setupFieldsWithGoalData();
             }
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_GOALS) {
+            if(!agentUpdating) {
+                updatedGoals = new HashMap<>();
+                parentActivity.showToast("Goals have been updated");
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+            }
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_AGENT) {
+            agentUpdating = false;
+            updatedGoals = new HashMap<>();
+            parentActivity.showToast("Goals have been updated");
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
         parentActivity.runOnUiThread(new Runnable() {
             @Override

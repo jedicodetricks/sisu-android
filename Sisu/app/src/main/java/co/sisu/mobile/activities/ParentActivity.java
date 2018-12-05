@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -250,6 +250,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        parentLoader.setVisibility(View.GONE);
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
@@ -419,16 +420,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if (asyncReturnType.equals("Update Activities")) {
-            dataController.clearUpdatedRecords();
-        }
-    }
+    public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(teamSwap) {
             swappingTeamData(returnObject, returnType);
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
+            dataController.clearUpdatedRecords();
         }
         else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);

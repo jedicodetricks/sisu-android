@@ -12,7 +12,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.models.AgentModel;
@@ -146,7 +146,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.SEND_FIREBASE_TOKEN) {
+            Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
+        }
+        else if(returnType == ApiReturnTypes.UPDATE_FIREBASE) {
+            Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
+        }
     }
 
     @Override

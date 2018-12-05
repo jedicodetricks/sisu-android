@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import co.sisu.mobile.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
@@ -42,9 +42,11 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.utils.CircularProgressBar;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -847,9 +849,26 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Activities")) {
-            dataController.setScoreboardActivities(returnObject);
-            dataController.setActivitiesObject(returnObject);
+//        if(asyncReturnType.equals("Activities")) {
+//            dataController.setScoreboardActivities(returnObject);
+//            dataController.setActivitiesObject(returnObject);
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loader.setVisibility(View.GONE);
+//                    animateProgressBars(dataController.getScoreboardObject());
+//                    calculateVolumes();
+//                }
+//            });
+//        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
+            AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
+            dataController.setScoreboardActivities(activitiesObject);
+            dataController.setActivitiesObject(activitiesObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -859,11 +878,6 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 }
             });
         }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
     }
 
     @Override
