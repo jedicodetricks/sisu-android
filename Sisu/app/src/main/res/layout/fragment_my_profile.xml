@@ -64,6 +64,7 @@
 
                 <EditText
                     android:id="@+id/profileUsername"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -89,6 +90,7 @@
 
                 <EditText
                     android:id="@+id/profileFirstName"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -114,6 +116,7 @@
 
                 <EditText
                     android:id="@+id/profileLastName"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -139,6 +142,7 @@
 
                 <EditText
                     android:id="@+id/profilePhone"
+                    android:importantForAutofill="noExcludeDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

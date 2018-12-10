@@ -151,7 +151,7 @@ public class ClientListAdapter extends BaseAdapter {
             lastName = clientObject.getLast_name();
         }
         titleTextView.setText(firstName + " " + lastName);
-        subtitleTextView.setText("$" + clientObject.getCommission_amt());
+        subtitleTextView.setText(clientObject.getCommission_amt() != null ? "$" + clientObject.getCommission_amt() : "");
 
 
         setColorScheme(rowView, clientObject);

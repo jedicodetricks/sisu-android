@@ -550,6 +550,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setType_id(typeSelected);
         currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
         currentClient.setIs_priority(prioritySwitch.isChecked() ? "1" : "0");
+//        currentClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));

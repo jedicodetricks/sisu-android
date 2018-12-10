@@ -43,7 +43,7 @@ public class AsyncUpdateClients extends AsyncTask<String, String, String> {
                     .serializeNulls()
                     .create();
             String jsonInString = gson.toJson(clientObject);
-            Log.e("POST CLIENT", jsonInString);
+            Log.e("PUT CLIENT", jsonInString);
             jsonInString = jsonInString.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
             jsonInString = jsonInString.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
 

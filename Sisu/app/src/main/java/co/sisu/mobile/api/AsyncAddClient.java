@@ -48,7 +48,7 @@ public class AsyncAddClient extends AsyncTask<String, String, String> {
             RequestBody body = RequestBody.create(mediaType, jsonInString);
 
             Request request = new Request.Builder()
-                    .url(url + "api/v1/client/edit-client/" + agentId)
+                    .url(url + "api/v2/client/edit-client/" + agentId)
                     .post(body)
                     .addHeader("Authorization", strings[0])
                     .addHeader("Client-Timestamp", strings[1])
