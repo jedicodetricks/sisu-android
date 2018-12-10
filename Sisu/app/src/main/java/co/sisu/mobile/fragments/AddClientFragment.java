@@ -621,7 +621,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         newClient.setUc_dt(null);
         newClient.setClosed_dt(null);
         newClient.setType_id(typeSelected);
-        newClient.setIs_priority(prioritySwitch.isChecked() ? "1" : "0");
+        newClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
         newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
 
         if(!appointmentDisplay.getText().equals("")) {

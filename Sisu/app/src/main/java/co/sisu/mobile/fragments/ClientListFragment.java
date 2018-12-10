@@ -194,7 +194,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             ArrayList commonArray = new ArrayList<>();
 
             for(ClientObject clientObject : metricList) {
-                if(clientObject.getIs_priority().equals("0")) {
+                if(clientObject.getIs_priority() == 0) {
                     commonArray.add(clientObject);
                 }
                 else {
