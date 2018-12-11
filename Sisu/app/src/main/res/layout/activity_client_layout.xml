@@ -108,6 +108,7 @@
 
             <EditText
                 android:id="@+id/editFirstName"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,6 +137,7 @@
 
             <EditText
                 android:id="@+id/editLastName"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -163,6 +165,7 @@
 
             <EditText
                 android:id="@+id/editTransAmount"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,6 +197,7 @@
 
             <EditText
                 android:id="@+id/editGci"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,6 +223,7 @@
 
             <EditText
                 android:id="@+id/editGciPercent"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -257,6 +262,7 @@
 
             <EditText
                 android:id="@+id/editPaidIncome"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -285,6 +291,7 @@
 
             <EditText
                 android:id="@+id/editPaidIncomePercent"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -322,6 +329,7 @@
 
             <EditText
                 android:id="@+id/editEmail"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -350,6 +358,7 @@
 
             <EditText
                 android:id="@+id/editPhone"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -421,6 +430,7 @@
 
             <EditText
                 android:id="@+id/editNotes"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

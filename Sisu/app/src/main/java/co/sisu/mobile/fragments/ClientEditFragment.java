@@ -130,7 +130,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
         setupLabels();
         setColorScheme();
-        if(currentClient.getIs_locked() != null && currentClient.getIs_locked().equals("1")) {
+        if(currentClient.getIs_locked() == 1) {
             parentActivity.showToast("This client account has been locked by your team administrator.");
         }
     }
@@ -495,10 +495,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
         noteText.setText(currentClient.getNote());
-        prioritySwitch.setChecked(currentClient.getIs_priority().equals("1") ? true : false);
+        prioritySwitch.setChecked(currentClient.getIs_priority() == 1 ? true : false);
         updateStatus();
         //calculatePercentage();
-        if(currentClient.getIs_locked() != null && currentClient.getIs_locked().equals("1")) {
+        if(currentClient.getIs_locked() == 1) {
             lockClient();
         }
     }
@@ -555,7 +555,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setClosed_dt(null);
         currentClient.setType_id(typeSelected);
         currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
-        currentClient.setIs_priority(prioritySwitch.isChecked() ? "1" : "0");
+        currentClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
+        currentClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
 
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));

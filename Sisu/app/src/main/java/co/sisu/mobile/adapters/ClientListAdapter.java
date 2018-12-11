@@ -66,7 +66,7 @@ public class ClientListAdapter extends BaseAdapter {
         View rowView = mInflater.inflate(R.layout.adapter_client_list, parent, false);
 
         if(nextClientObject != null) {
-            if(clientObject.getIs_priority().equals("1") && nextClientObject.getIs_priority().equals("0")) {
+            if(clientObject.getIs_priority() == 1 && nextClientObject.getIs_priority() == 0) {
                 rowView = mInflater.inflate(R.layout.adapter_client_list_other_hack, parent, false);
             }
         }
@@ -151,7 +151,7 @@ public class ClientListAdapter extends BaseAdapter {
             lastName = clientObject.getLast_name();
         }
         titleTextView.setText(firstName + " " + lastName);
-        subtitleTextView.setText("$" + clientObject.getCommission_amt());
+        subtitleTextView.setText(clientObject.getCommission_amt() != null ? "$" + clientObject.getCommission_amt() : "");
 
 
         setColorScheme(rowView, clientObject);

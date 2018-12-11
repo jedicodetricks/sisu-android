@@ -21,7 +21,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String first_name;
     private String gross_commission_amt;
     private String home_phone;
-    private String is_locked;
+    private int is_locked;
     private String last_name;
     private String lead_type_id;
     private String mobile_phone;
@@ -36,7 +36,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String type_id_dscr;
     private String uc_dt;
     private String updated_ts;
-    private String is_priority;
+    private int is_priority;
     private String activate_client;
     private String market_id;
 
@@ -152,11 +152,11 @@ public class ClientObject implements Comparable<ClientObject>{
         this.home_phone = home_phone;
     }
 
-    public String getIs_locked() {
+    public int getIs_locked() {
         return is_locked;
     }
 
-    public void setIs_locked(String is_locked) {
+    public void setIs_locked(int is_locked) {
         this.is_locked = is_locked;
     }
 
@@ -277,11 +277,11 @@ public class ClientObject implements Comparable<ClientObject>{
         return (this.getLast_name().compareTo(c.last_name));
     }
 
-    public String getIs_priority() {
+    public int getIs_priority() {
         return is_priority;
     }
 
-    public void setIs_priority(String is_priority) {
+    public void setIs_priority(int is_priority) {
         this.is_priority = is_priority;
     }
 

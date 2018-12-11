@@ -197,7 +197,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             ArrayList commonArray = new ArrayList<>();
 
             for(ClientObject clientObject : metricList) {
-                if(clientObject.getIs_priority().equals("0")) {
+                if(clientObject.getIs_priority() == 0) {
                     commonArray.add(clientObject);
                 }
                 else {
@@ -379,7 +379,13 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     private int calculateTotalCommission() {
         int totalValue = 0;
         for(int i = 0; i < currentList.size(); i++) {
-            totalValue += Integer.parseInt(currentList.get(i).getCommission_amt());
+            try {
+                ClientObject iterClient = currentList.get(i);
+                totalValue += Integer.parseInt(iterClient.getCommission_amt() != null ? iterClient.getCommission_amt() : "0");
+            } catch (NumberFormatException nfe) {
+                totalValue += 0;
+            }
+
         }
         return totalValue;
     }
