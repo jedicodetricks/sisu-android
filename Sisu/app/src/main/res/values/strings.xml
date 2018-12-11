@@ -47,7 +47,7 @@
     <string name="add_client">Add Client</string>
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
-    <string name="appointmentDateTitle">Initial Appt Date:</string>
+    <string name="appointmentDateTitle">Initial Appointment Date:</string>
     <string name="addAppointmentDateTitle">Add Appointment:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
@@ -102,8 +102,8 @@
     <string name="name_hint">Name</string>
     <string name="phone_hint">Phone</string>
     <string name="phone_hint_non_req">Phone</string>
-    <string name="transaction_amount_hint">Transaction Amount</string>
-    <string name="commission_hint">Paid Income</string>
+    <string name="transaction_amount_hint">Transaction Amount:</string>
+    <string name="commission_hint">Paid Income:</string>
     <string name="logs">Logs</string>
     <string name="gci_hint">GCI</string>
     <string name="first_name_hint">First Name*</string>
@@ -113,10 +113,10 @@
     <string name="contacts_hint">Contacts</string>
     <string name="signed_buyers_hint">Buyers Signed</string>
     <string name="buyer_appt_hint">Buyer Appointments</string>
-    <string name="seller_appt_hint">Listings Appointments</string>
+    <string name="seller_appt_hint">Listing Appointments</string>
     <string name="signed_sellers_hint">Listings Signed</string>
-    <string name="buyers_under_contract_hint">Buyer U/C</string>
-    <string name="sellers_under_contract_hint">Listings U/C</string>
+    <string name="buyers_under_contract_hint">Buyers Under Contract</string>
+    <string name="sellers_under_contract_hint">Listings Under Contract</string>
     <string name="buyers_closed_hint">Buyers Closed</string>
     <string name="sellers_closed_hint">Listings Closed</string>
     <string name="closed_volume_hint">Closed Volume</string>

@@ -1,6 +1,7 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -433,6 +434,7 @@ public class ApiManager {
 
         Calendar expDate = Calendar.getInstance();
         expDate.add(Calendar.DATE, 1);
+        
         //TODO: The issuer is supposed to be random I think
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)
