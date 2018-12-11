@@ -1,6 +1,7 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -278,7 +279,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 30);
+        expDate.add(Calendar.DATE, 1);
 
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)

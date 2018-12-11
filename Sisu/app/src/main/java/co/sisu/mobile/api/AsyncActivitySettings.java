@@ -54,7 +54,7 @@ public class AsyncActivitySettings extends AsyncTask<String, String, String> {
         try {
             response = client.newCall(request).execute();
             responseBody = response.body().string();
-            Log.e("ACTIVITY SETTINGS", responseBody);
+//            Log.e("ACTIVITY SETTINGS", responseBody);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -41,7 +41,7 @@ public class AsyncUpdateActivitySettings extends AsyncTask<String, String, Strin
             OkHttpClient client = new OkHttpClient();
             Gson gson = new Gson();
             String jsonInString = updateSettingsModel;
-            Log.e("POST ACTIVITY SETTINGS", jsonInString);
+//            Log.e("POST ACTIVITY SETTINGS", jsonInString);
 
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, jsonInString);
