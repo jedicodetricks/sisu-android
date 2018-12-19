@@ -37,6 +37,9 @@
         <activity android:name=".activities.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
+        <activity android:name=".activities.HtmlNotificationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
         <activity android:name=".activities.ParentActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
         android:screenOrientation="portrait"

@@ -434,7 +434,7 @@ public class ApiManager {
 
         Calendar expDate = Calendar.getInstance();
         expDate.add(Calendar.DATE, 1);
-        
+
         //TODO: The issuer is supposed to be random I think
         jwtStr = Jwts.builder()
                 .claim("Client-Timestamp", timestamp)
@@ -453,7 +453,6 @@ public class ApiManager {
 
 
     //Helper methods
-
 
     private FirebaseDeviceObject generateFirebaseObject(AgentModel agent, String token, Context context) {
         String uuid = UUID.randomUUID().toString();

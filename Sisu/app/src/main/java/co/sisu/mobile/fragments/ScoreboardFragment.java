@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import co.sisu.mobile.activities.HtmlNotificationActivity;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.NotificationActivity;
@@ -844,7 +845,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     }
 
     private void launchAddClient() {
-        navigationManager.stackReplaceFragment(AddClientFragment.class);
+        //TODO: Change this back
+//        navigationManager.stackReplaceFragment(AddClientFragment.class);
+        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
