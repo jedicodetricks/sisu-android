@@ -147,19 +147,19 @@ public class DataController {
                     if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
 
                         if (ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
-                            closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            closed.setGoalNum(closed.getGoalNum() + Double.parseDouble(ago.getValue()));
                         }
                         else if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
-                            contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            contract.setGoalNum(contract.getGoalNum() + Double.parseDouble(ago.getValue()));
                         }
                         else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
-                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Double.parseDouble(ago.getValue()));
                         }
                         else if(ago.getGoal_id().equals("SSGND") || ago.getGoal_id().equals("BSGND")) {
-                            signed.setGoalNum(signed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            signed.setGoalNum(signed.getGoalNum() + Double.parseDouble(ago.getValue()));
                         }
                         else {
-                            counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+                            counters[i].setGoalNum(Double.parseDouble(ago.getValue()));
                         }
                     }
                 }
@@ -260,17 +260,17 @@ public class DataController {
                     if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
 
                         if (ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
-                            closed.setGoalNum(closed.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            closed.setGoalNum(closed.getGoalNum() + Double.parseDouble(ago.getValue()));
                         } else if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
-                            contract.setGoalNum(contract.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            contract.setGoalNum(contract.getGoalNum() + Double.parseDouble(ago.getValue()));
                         } else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
-                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Integer.parseInt(ago.getValue()));
+                            firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Double.parseDouble(ago.getValue()));
                         }
                         else if(ago.getGoal_id().equals("SSGND")) {
-                            showing.setGoalNum(Integer.parseInt(ago.getValue()));
+                            showing.setGoalNum(Double.parseDouble(ago.getValue()));
                         }
                         else {
-                            counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+                            counters[i].setGoalNum(Double.parseDouble(ago.getValue()));
                         }
                     }
                 }
@@ -408,7 +408,7 @@ public class DataController {
             if(goals != null) {
                 for(AgentGoalsObject ago : goals) {
                     if(counters[i].getActivity_type().equals(ago.getGoal_id())) {
-                        counters[i].setGoalNum(Integer.parseInt(ago.getValue()));
+                        counters[i].setGoalNum(Double.parseDouble(ago.getValue()));
                     }
                 }
             }
@@ -463,7 +463,7 @@ public class DataController {
     }
 
     private void setupMetricGoals(Metric m) {
-        int goalNum = m.getGoalNum();
+        double goalNum = m.getGoalNum();
         m.setDailyGoalNum(goalNum / 30);
         m.setWeeklyGoalNum(goalNum / 4);
         m.setYearlyGoalNum(goalNum * 12);
@@ -759,7 +759,7 @@ public class DataController {
             for(AgentGoalsObject ago : agentGoalsObject) {
                 for(int i = 0; i < scoreboardObject.size(); i++) {
                     if(ago.getGoal_id().equals(scoreboardObject.get(i).getType())) {
-                        scoreboardObject.get(i).setGoalNum(Integer.parseInt(ago.getValue()));
+                        scoreboardObject.get(i).setGoalNum(Double.parseDouble(ago.getValue()));
                         setupMetricGoals(scoreboardObject.get(i));
                         break;
                     }
@@ -767,14 +767,14 @@ public class DataController {
 
                 for(Metric m : activitiesObject) {
                     if(ago.getGoal_id().equals(m.getType())) {
-                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        m.setGoalNum(Double.parseDouble(ago.getValue()));
                         setupMetricGoals(m);
                         break;
                     }
                 }
                 for(Metric m : masterActivitiesObject) {
                     if(ago.getGoal_id().equals(m.getType())) {
-                        m.setGoalNum(Integer.parseInt(ago.getValue()));
+                        m.setGoalNum(Double.parseDouble(ago.getValue()));
                         setupMetricGoals(m);
                         break;
                     }

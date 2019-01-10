@@ -29,12 +29,14 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import okhttp3.Response;
 
 /**
  * Created by Jeff on 4/18/2018.
@@ -338,7 +340,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
-            AsyncActivitySettingsJsonObject settingsJson = (AsyncActivitySettingsJsonObject) returnObject;
+            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
             currentActivitiesSorting = dataController.getActivitiesSelected();

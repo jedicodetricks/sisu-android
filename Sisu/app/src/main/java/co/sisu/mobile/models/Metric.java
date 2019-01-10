@@ -8,16 +8,16 @@ public class Metric implements Comparable<Metric>{
     private String title;
     private String type;
     private int currentNum;
-    private int goalNum;
+    private double goalNum;
     private int thumbnailId;
     private int color;
     private int weight;
-    private int yearlyGoalNum;
-    private int dailyGoalNum;
-    private int weeklyGoalNum;
+    private double yearlyGoalNum;
+    private double dailyGoalNum;
+    private double weeklyGoalNum;
 
 
-    public Metric(String title, String type, int currentNum, int goalNum, int thumbnailId, int color, int weight){
+    public Metric(String title, String type, int currentNum, double goalNum, int thumbnailId, int color, int weight){
         this.title = title;
         this.type = type;
         this.currentNum = currentNum;
@@ -28,10 +28,6 @@ public class Metric implements Comparable<Metric>{
         this.thumbnailId = thumbnailId;
         this.color = color;
         this.weight = weight;
-    }
-
-    public Metric() {
-
     }
 
     public int getPercentComplete(String timeline){
@@ -106,11 +102,11 @@ public class Metric implements Comparable<Metric>{
         this.currentNum = currentNum;
     }
 
-    public int getGoalNum() {
+    public double getGoalNum() {
         return goalNum;
     }
 
-    public void setGoalNum(int goalNum) {
+    public void setGoalNum(double goalNum) {
         this.goalNum = goalNum;
     }
 
@@ -146,27 +142,27 @@ public class Metric implements Comparable<Metric>{
         this.weight = weight;
     }
 
-    public int getYearlyGoalNum() {
+    public double getYearlyGoalNum() {
         return yearlyGoalNum;
     }
 
-    public void setYearlyGoalNum(int yearlyGoalNum) {
+    public void setYearlyGoalNum(double yearlyGoalNum) {
         this.yearlyGoalNum = yearlyGoalNum;
     }
 
-    public int getDailyGoalNum() {
+    public double getDailyGoalNum() {
         return dailyGoalNum;
     }
 
-    public void setDailyGoalNum(int dailyGoalNum) {
+    public void setDailyGoalNum(double dailyGoalNum) {
         this.dailyGoalNum = dailyGoalNum;
     }
 
-    public int getWeeklyGoalNum() {
+    public double getWeeklyGoalNum() {
         return weeklyGoalNum;
     }
 
-    public void setWeeklyGoalNum(int weeklyGoalNum) {
+    public void setWeeklyGoalNum(double weeklyGoalNum) {
         this.weeklyGoalNum = weeklyGoalNum;
     }
 

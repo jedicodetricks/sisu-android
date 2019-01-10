@@ -376,47 +376,47 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         if(!dateSwap && !s.toString().equals("")) {
             if(contacts.getText().hashCode() == s.hashCode())
             {
-                updateField("CONTA", Integer.valueOf(String.valueOf(s)));
+                updateField("CONTA", (String.valueOf(s)));
             }
             else if(bAppointments.getText().hashCode() == s.hashCode())
             {
-                updateField("BAPPT", Integer.valueOf(String.valueOf(s)));
+                updateField("BAPPT", (String.valueOf(s)));
             }
             else if(sAppointments.getText().hashCode() == s.hashCode())
             {
-                updateField("SAPPT", Integer.valueOf(String.valueOf(s)));
+                updateField("SAPPT", (String.valueOf(s)));
             }
             else if(bSigned.getText().hashCode() == s.hashCode())
             {
-                updateField("BSGND", Integer.valueOf(String.valueOf(s)));
+                updateField("BSGND", (String.valueOf(s)));
             }
             else if(sSigned.getText().hashCode() == s.hashCode())
             {
-                updateField("SSGND", Integer.valueOf(String.valueOf(s)));
+                updateField("SSGND", (String.valueOf(s)));
             }
             else if(bContract.getText().hashCode() == s.hashCode())
             {
-                updateField("BUNDC", Integer.valueOf(String.valueOf(s)));
+                updateField("BUNDC", (String.valueOf(s)));
             }
             else if(sContract.getText().hashCode() == s.hashCode())
             {
-                updateField("SUNDC", Integer.valueOf(String.valueOf(s)));
+                updateField("SUNDC", (String.valueOf(s)));
             }
             else if(bClosed.getText().hashCode() == s.hashCode())
             {
-                updateField("BCLSD", Integer.valueOf(String.valueOf(s)));
+                updateField("BCLSD", (String.valueOf(s)));
             }
             else if(sClosed.getText().hashCode() == s.hashCode())
             {
-                updateField("SCLSD", Integer.valueOf(String.valueOf(s)));
+                updateField("SCLSD", (String.valueOf(s)));
             }
             else if(closedVolumeGoal.getText().hashCode() == s.hashCode())
             {
-                updateField("CLSDV", Integer.valueOf(String.valueOf(s)));
+                updateField("CLSDV", (String.valueOf(s)));
             }
             else if(underContractVolumeGoal.getText().hashCode() == s.hashCode())
             {
-                updateField("UNCTV", Integer.valueOf(String.valueOf(s)));
+                updateField("UNCTV", (String.valueOf(s)));
             }
             else if (desiredIncome.getText().hashCode() == s.hashCode()) {
                 updateProfile("Income", s.toString());
@@ -436,7 +436,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         }
     }
 
-    private void updateField(String fieldName, int value) {
+    private void updateField(String fieldName, String value) {
         AgentGoalsObject selectedGoal = null;
 
         int currentGoalsLength = currentGoalsObject.length;
@@ -447,14 +447,14 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 break;
             }
         }
-        UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, String.valueOf(value));
+        UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, (value));
 
         if(selectedGoal == null) {
             currentGoalsObject[currentGoalsLength] = selectedGoal;
             updatedGoals.put(fieldName, toUpdate);
         }
         else {
-            selectedGoal.setValue(String.valueOf(value));
+            selectedGoal.setValue((value));
             updatedGoals.put(fieldName, toUpdate);
         }
 

@@ -268,7 +268,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private int calculateProgressOnTrack(Metric metric) {
         int positionPercent = 0; //will determine blue
-        int goalNum = metric.getGoalNum(); //monthly goal
+        double goalNum = metric.getGoalNum(); //monthly goal
         Calendar calendar = Calendar.getInstance();
         switch (parentActivity.getTimeline()) {
             case "day":

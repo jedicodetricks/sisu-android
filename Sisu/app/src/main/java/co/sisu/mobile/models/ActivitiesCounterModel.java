@@ -11,7 +11,7 @@ public class ActivitiesCounterModel implements Comparable<ActivitiesCounterModel
     String name;
     int records;
     int weight;
-    int goalNum;
+    double goalNum;
 
     public String getActivity_type() {
         return activity_type;
@@ -61,11 +61,11 @@ public class ActivitiesCounterModel implements Comparable<ActivitiesCounterModel
         this.coalesce = coalesce;
     }
 
-    public int getGoalNum() {
+    public double getGoalNum() {
         return goalNum;
     }
 
-    public void setGoalNum(int goalNum) {
+    public void setGoalNum(double goalNum) {
         this.goalNum = goalNum;
     }
 

@@ -440,9 +440,14 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     ParameterObject[] array = new ParameterObject[settings.size()];
                     dataController.setSettings(settings.toArray(array));
-                    colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-                    parentActivity.setActivityColors();
-                    setColorScheme();
+                    if(colorScheme != null) {
+                        colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+                        parentActivity.setActivityColors();
+                        setColorScheme();
+                    }
+                    else {
+                        colorFinished = true;
+                    }
                     if(colorFinished) {
                         navigationManager.onBackPressed();
                         parentActivity.showToast("Your settings have been updated");

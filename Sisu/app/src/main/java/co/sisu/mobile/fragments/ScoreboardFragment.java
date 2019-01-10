@@ -653,7 +653,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progress.setProgressWithAnimation(metric.getPercentComplete(parentActivity.getTimeline()), ANIMATION_DURATION);
             currentNumber.setText(String.valueOf(metric.getCurrentNum()));
-            int goalNum = 0;
+            double goalNum = 0;
             String displayNum = "0";
             switch (parentActivity.getTimeline()) {
                 case "day":
@@ -762,7 +762,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private int calculateProgressOnTrack(Metric metric) {
         int positionPercent = 0; //will determine blue
-        int goalNum = metric.getGoalNum(); //monthly goal
+        double goalNum = metric.getGoalNum(); //monthly goal
         Calendar calendar = Calendar.getInstance();
         switch (parentActivity.getTimeline()) {
             case "day":
