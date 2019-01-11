@@ -579,14 +579,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
             activitySettingsParamFinished = true;
-            executeTeamSwap();
         }
         else if(asyncReturnType == ApiReturnTypes.GET_AGENT_GOALS) {
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject);
             goalsFinished = true;
-            executeTeamSwap();
         }
         else if(asyncReturnType == ApiReturnTypes.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
@@ -598,7 +596,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 dataController.setSlackInfo(params.getValue());
             }
             teamParamFinished = true;
-            executeTeamSwap();
         }
         else if(asyncReturnType == ApiReturnTypes.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
@@ -606,21 +603,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             setActivityColors();
             colorSchemeFinished = true;
-            executeTeamSwap();
         }
         else if(asyncReturnType == ApiReturnTypes.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
             labelsFinished = true;
-            executeTeamSwap();
         }
         else if(asyncReturnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject);
             clientFinished = true;
-            executeTeamSwap();
         }
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                executeTeamSwap();
+            }
+        });
     }
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
@@ -661,10 +661,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {}
         else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {}
         else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {}
-        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
-        }
-        else if(returnType == ApiReturnTypes.GET_LABELS) {
-        }
+        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {}
+        else if(returnType == ApiReturnTypes.GET_LABELS) {}
     }
 
     public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp) {

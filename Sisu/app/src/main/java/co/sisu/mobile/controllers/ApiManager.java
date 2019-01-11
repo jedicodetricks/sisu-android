@@ -284,12 +284,12 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int marketId) {
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int teamId) {
         //POST
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS;
         String body = updateObject;
-        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + marketId;
+        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
