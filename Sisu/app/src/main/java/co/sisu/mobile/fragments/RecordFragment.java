@@ -290,7 +290,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             dataController.setActivitiesObject(activitiesObject);
-            dataController.setRecordActivities(activitiesObject);
+            dataController.setRecordActivities(activitiesObject, parentActivity.getSelectedTeamMarketId());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

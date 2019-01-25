@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- sizes -->
+    <dimen name="font_mega">48dp</dimen>
     <dimen name="font_largest">24dp</dimen>
     <dimen name="font_larger">20dp</dimen>
     <dimen name="font_large">16dp</dimen>

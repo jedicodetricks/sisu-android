@@ -52,6 +52,7 @@ import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
+import co.sisu.mobile.fragments.RecruitingScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
@@ -262,7 +263,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.toggleDrawer();
                     break;
                 case R.id.scoreboardView:
-                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    if(isRecruiting()) {
+                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    }
                     break;
                 case R.id.reportView:
                     noNavigation = false;
@@ -356,7 +362,24 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
             switch (f.getTag()) {
                 case "Scoreboard":
-                    ((ScoreboardFragment) f).teamSwap();
+                    try {
+                        if(isRecruiting()) {
+                            ((RecruitingScoreboardFragment) f).teamSwap();
+                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        }
+                        else {
+                            ((ScoreboardFragment) f).teamSwap();
+                        }
+                    }
+                    catch(Exception e) {
+                        if(isRecruiting()) {
+                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        }
+                    }
+
                     break;
                 case "Record":
                     ((RecordFragment) f).teamSwap();
@@ -384,7 +407,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    if(isRecruiting()) {
+                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    }
                 }
             });
             clientFinished = false;
@@ -936,6 +964,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean isTeamSwapOccurring() {
         return teamSwap;
+    }
+
+    public boolean isRecruiting() {
+        if(getSelectedTeamMarketId() == 2) {
+            return true;
+        }
+        return false;
     }
 }
 

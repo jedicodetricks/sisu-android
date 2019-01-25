@@ -88,7 +88,8 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
-                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
+                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment") ||
+                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
             sortTitleBar(fragmentClass);
         }
         else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
@@ -138,6 +139,9 @@ public class NavigationManager {
             fragmentTag = "More";
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
+            fragmentTag = "Scoreboard";
+        }
+        else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
             fragmentTag = "Scoreboard";
         }
         else if(fragmentClass.getSimpleName().equals("ReportFragment")) {

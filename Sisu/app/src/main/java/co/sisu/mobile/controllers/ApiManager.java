@@ -433,7 +433,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
+        expDate.add(Calendar.DATE, 365);
 
         //TODO: The issuer is supposed to be random I think
         jwtStr = Jwts.builder()

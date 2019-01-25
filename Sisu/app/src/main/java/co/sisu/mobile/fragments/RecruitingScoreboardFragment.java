@@ -32,8 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import co.sisu.mobile.activities.HtmlNotificationActivity;
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
@@ -43,6 +41,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.Metric;
@@ -52,7 +51,7 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScoreboardFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
+public class RecruitingScoreboardFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener {
 
     private ParentActivity parentActivity;
     private DataController dataController;
@@ -87,14 +86,14 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private TextView pendingVolumeDisplay, closedVolumeDisplay;
 
-    public ScoreboardFragment() {
+    public RecruitingScoreboardFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
         loader.setVisibility(View.VISIBLE);
-        apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(RecruitingScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -109,7 +108,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_scoreboard, container, false);
+        return inflater.inflate(R.layout.activity_recruiting_scoreboard, container, false);
     }
 
     @Override
@@ -144,10 +143,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     private void setupLabels() {
 
         TextView pendingVolume = parentActivity.findViewById(R.id.pendingVolumeLabel);
-        pendingVolume.setText(parentActivity.localizeLabel(getResources().getString(R.string.pending_volume)));
+        String pendingVolumeLocalized = parentActivity.localizeLabel(getResources().getString(R.string.pending_volume));
+        pendingVolume.setText(parentActivity.localizeLabel(pendingVolumeLocalized));
 
         TextView closedVolume = parentActivity.findViewById(R.id.closedVolumeLabel);
-        closedVolume.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed_volume)));
+        String closedVolumeLocalized = parentActivity.localizeLabel(getResources().getString(R.string.closed_volume));
+        closedVolume.setText(parentActivity.localizeLabel(closedVolumeLocalized));
 
         TextView contacts = parentActivity.findViewById(R.id.contactsProgressText);
         contacts.setText(parentActivity.localizeLabel(getResources().getString(R.string.contacts)));
@@ -156,7 +157,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         buyerSigned.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyers_signed)));
 
         TextView underContract = parentActivity.findViewById(R.id.underContractProgressText);
-        underContract.setText(parentActivity.localizeLabel(getResources().getString(R.string.under_contract)));
+        underContract.setText("Agents Lost");
 
         TextView appointments = parentActivity.findViewById(R.id.appointmentsProgressText);
         appointments.setText(parentActivity.localizeLabel(getResources().getString(R.string.first_time_appts)));
@@ -165,7 +166,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         listingsTaken.setText(parentActivity.localizeLabel(getResources().getString(R.string.listings_taken)));
 
         TextView closed = parentActivity.findViewById(R.id.closedProgressText);
-        closed.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
+        closed.setText("Net Agents");
     }
 
     private void setColorScheme() {
@@ -214,8 +215,8 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         appointmentsProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         bbSignedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         listingsTakenProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        underContractProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+//        underContractProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+//        closedProgress.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
 
         contactsCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         contactsCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -239,13 +240,13 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
         underContractCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         underContractCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
-        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        underContractGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+//        underContractGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         closedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
-        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+//        closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
         spinner.getBackground().setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
@@ -498,7 +499,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
                 selectedStartTime = getDateFromFormattedTime(formattedStartTime);
                 selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-                apiManager.sendAsyncActivities(ScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+                apiManager.sendAsyncActivities(RecruitingScoreboardFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
             }
 
             @Override
@@ -593,15 +594,15 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         listingsTakenCurrentNumber = getView().findViewById(R.id.listingsTakenCurrentNumber);
         listingsTakenGoalNumber = getView().findViewById(R.id.listingsTakenGoalNumber);
 
-        underContractProgress = getView().findViewById(R.id.underContractProgress);
+//        underContractProgress = getView().findViewById(R.id.underContractProgress);
         underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
         underContractCurrentNumber = getView().findViewById(R.id.underContractCurrentNumber);
-        underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
+//        underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
 
-        closedProgress = getView().findViewById(R.id.closedProgress);
+//        closedProgress = getView().findViewById(R.id.closedProgress);
         closedProgressMark = getView().findViewById(R.id.closedProgressMark);
         closedCurrentNumber = getView().findViewById(R.id.closedCurrentNumber);
-        closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
+//        closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
     }
 
     private void animateProgressBars(List<Metric> metricList){
@@ -630,12 +631,12 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
                 case "UCNTR":
                     Metric underContractMetric = metricList.get(i);
-                    setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
+//                    setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
                     break;
 
                 case "CLSD":
                     Metric closedMetric = metricList.get(i);
-                    setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
+//                    setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
                     break;
             }
         }
@@ -872,12 +873,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
-            if(parentActivity.isRecruiting()) {
-
-            }
-            else {
-                dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());
-            }
+            dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());
             dataController.setActivitiesObject(activitiesObject);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override

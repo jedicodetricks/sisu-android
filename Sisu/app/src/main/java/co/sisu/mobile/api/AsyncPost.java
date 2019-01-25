@@ -70,7 +70,7 @@ public class AsyncPost extends AsyncTask<String, String, String> {
             callback.onEventFailed(null, returnType);
         }
 
-        response.body().close();
+//        response.body().close();
         return null;
     }
 }
