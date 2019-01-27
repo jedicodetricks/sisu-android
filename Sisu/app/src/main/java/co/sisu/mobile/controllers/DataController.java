@@ -1392,4 +1392,8 @@ public class DataController {
         }
         return firstOtherActivity;
     }
+
+    public int getNumOfActiveAgents() {
+        return pipelineList.size() + signedList.size() + contractList.size() + closedList.size();
+    }
 }

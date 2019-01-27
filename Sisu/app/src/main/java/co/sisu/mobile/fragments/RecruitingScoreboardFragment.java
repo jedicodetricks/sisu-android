@@ -82,7 +82,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
             listingsTakenProgress, listingsTakenProgressMark, underContractProgress, underContractProgressMark, closedProgress, closedProgressMark;
 
     private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
-            listingsTakenCurrentNumber, listingsTakenGoalNumber, underContractCurrentNumber, underContractGoalNumber, closedCurrentNumber, closedGoalNumber;
+            listingsTakenCurrentNumber, listingsTakenGoalNumber, agentsLostNumber, netAgentsNumber;
 
     private TextView pendingVolumeDisplay, closedVolumeDisplay;
 
@@ -97,8 +97,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setColorScheme();
-                setupLabels();
+                setupUiVisuals();
             }
         });
 
@@ -109,6 +108,16 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_recruiting_scoreboard, container, false);
+    }
+
+    private void setupUiVisuals() {
+        setColorScheme();
+        setupLabels();
+    }
+
+    private void initOtherStats() {
+        agentsLostNumber.setText("" + dataController.getArchivedList().size());
+        netAgentsNumber.setText("" + dataController.getNumOfActiveAgents());
     }
 
     @Override
@@ -124,9 +133,10 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         spinner.setSelection(parentActivity.getTimelineSelection());
         initializeButtons();
         initProgressBars();
+        initOtherStats();
         calculateVolumes();
-        setColorScheme();
-        setupLabels();
+        setupUiVisuals();
+
 
         if(parentActivity.shouldDisplayPushNotification()) {
             parentActivity.setShouldDisplayPushNotification(false);
@@ -238,13 +248,13 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         listingsTakenGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         listingsTakenGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        underContractCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        underContractCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        agentsLostNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        agentsLostNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 //        underContractGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
 //        underContractGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        closedCurrentNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedCurrentNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
+        netAgentsNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        netAgentsNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 //        closedGoalNumber.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
 //        closedGoalNumber.setTextColor(colorSchemeManager.getDarkerTextColor());
 
@@ -596,12 +606,12 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
 //        underContractProgress = getView().findViewById(R.id.underContractProgress);
         underContractProgressMark = getView().findViewById(R.id.underContractProgressMark);
-        underContractCurrentNumber = getView().findViewById(R.id.underContractCurrentNumber);
+        agentsLostNumber = getView().findViewById(R.id.underContractCurrentNumber);
 //        underContractGoalNumber = getView().findViewById(R.id.underContactGoalNumber);
 
 //        closedProgress = getView().findViewById(R.id.closedProgress);
         closedProgressMark = getView().findViewById(R.id.closedProgressMark);
-        closedCurrentNumber = getView().findViewById(R.id.closedCurrentNumber);
+        netAgentsNumber = getView().findViewById(R.id.closedCurrentNumber);
 //        closedGoalNumber = getView().findViewById(R.id.closedGoalNumber);
     }
 
@@ -631,12 +641,12 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
                 case "UCNTR":
                     Metric underContractMetric = metricList.get(i);
-//                    setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, underContractCurrentNumber, underContractGoalNumber);
+//                    setupProgressBar(underContractMetric, underContractProgress, underContractProgressMark, agentsLostNumber, underContractGoalNumber);
                     break;
 
                 case "CLSD":
                     Metric closedMetric = metricList.get(i);
-//                    setupProgressBar(closedMetric, closedProgress, closedProgressMark, closedCurrentNumber, closedGoalNumber);
+//                    setupProgressBar(closedMetric, closedProgress, closedProgressMark, netAgentsNumber, closedGoalNumber);
                     break;
             }
         }
