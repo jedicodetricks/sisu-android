@@ -62,6 +62,9 @@ public class ActivitiesCounterModel implements Comparable<ActivitiesCounterModel
     }
 
     public double getGoalNum() {
+        if(String.valueOf(goalNum).contains(".0")) {
+
+        }
         return goalNum;
     }
 

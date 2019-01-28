@@ -653,39 +653,31 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progress.setProgressWithAnimation(metric.getPercentComplete(parentActivity.getTimeline()), ANIMATION_DURATION);
             currentNumber.setText(String.valueOf(metric.getCurrentNum()));
-            double goalNum = 0;
             String displayNum = "0";
             switch (parentActivity.getTimeline()) {
                 case "day":
-                    goalNum = metric.getDailyGoalNum();
-                    displayNum = String.valueOf(metric.getDailyGoalNum());
-                    if(goalNum == 0) {
-                        displayNum = "1";
-                    }
+                    displayNum = formatGoalNumber(metric.getDailyGoalNum());
+//                    goalNum = metric.getDailyGoalNum();
+//                    displayNum = String.valueOf(metric.getDailyGoalNum());
                     goalNumber.setText(displayNum);
                     break;
                 case "week":
-                    goalNum = metric.getWeeklyGoalNum();
-                    displayNum = String.valueOf(metric.getWeeklyGoalNum());
-                    if(goalNum == 0) {
-                        displayNum = "1";
-                    }
+                    displayNum = formatGoalNumber(metric.getWeeklyGoalNum());
+//                    goalNum = metric.getWeeklyGoalNum();
+//                    displayNum = String.valueOf(metric.getWeeklyGoalNum());
                     goalNumber.setText(displayNum);
                     break;
                 case "month":
-                    goalNum = metric.getGoalNum();
-                    displayNum = String.valueOf(metric.getGoalNum());
-                    if(goalNum == 0) {
-                        displayNum = "1";
-                    }
+                    displayNum = formatGoalNumber(metric.getGoalNum());
+
+//                    goalNum = metric.getGoalNum();
+//                    displayNum = String.valueOf(metric.getGoalNum());
                     goalNumber.setText(displayNum);
                     break;
                 case "year":
-                    goalNum = metric.getYearlyGoalNum();
-                    displayNum = String.valueOf(metric.getYearlyGoalNum());
-                    if(goalNum == 0) {
-                        displayNum = "1";
-                    }
+                    displayNum = formatGoalNumber(metric.getYearlyGoalNum());
+
+//                    goalNum = metric.getYearlyGoalNum();
                     goalNumber.setText(displayNum);
                     break;
             }
@@ -694,7 +686,23 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
             progressMark.setProgressWithAnimation(1, 0);
         }
+    }
 
+    private String formatGoalNumber(Double number) {
+        String displayNum = String.valueOf(number);
+        if(number == 0) {
+            displayNum = "1";
+        }
+
+        if(!displayNum.startsWith("0") && displayNum.contains(".0")) {
+            displayNum = displayNum.replace(".0", "");
+        }
+
+        if(displayNum.length() > 6) {
+            displayNum = displayNum.substring(0, 5);
+        }
+
+        return displayNum;
     }
 
     private int calculateProgressMarkPosition() {
@@ -846,10 +854,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         //TODO: Change this back
-        navigationManager.stackReplaceFragment(AddClientFragment.class);
-//        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
+//        navigationManager.stackReplaceFragment(AddClientFragment.class);
+        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

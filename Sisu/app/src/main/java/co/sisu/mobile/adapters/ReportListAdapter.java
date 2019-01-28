@@ -113,6 +113,15 @@ public class ReportListAdapter extends BaseAdapter {
             if(goalNum.equals("0")) {
                 goalNum = "1";
             }
+
+            if(!goalNum.startsWith("0") && goalNum.contains(".0")) {
+                goalNum = goalNum.replace(".0", "");
+            }
+
+            if(goalNum.length() > 6) {
+                goalNum = goalNum.substring(0, 5);
+            }
+
             if(metric.getType().equals("CONTA") ||
                 metric.getType().equals("BUNDC") ||
                 metric.getType().equals("SUNDC") ||

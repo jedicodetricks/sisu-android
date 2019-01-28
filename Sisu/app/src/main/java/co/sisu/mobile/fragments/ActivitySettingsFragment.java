@@ -282,59 +282,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Activity Settings")) {
-//            AsyncParameterJsonObject settings = gson.fromJson(responseBody, AsyncParameterJsonObject.class);
-//            AsyncParameterJsonObject settingsJson = (AsyncParameterJsonObject) returnObject;
-//            ParameterObject settings = settingsJson.getParameter();
-//            dataController.setActivitiesSelected(settings);
-//            currentActivitiesSorting = setupCurrentSorting(dataController.getActivitiesSelected());
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.setVisibility(View.GONE);
-//                    setupFieldsWithData();
-//                    fillListViewWithData(dataController.getActivitiesSelected());
-//                }
-//            });
-//        }
 
-//        if(asyncReturnType.equals("Update Settings")) {
-//            if(editMode) {
-//                parentActivity.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        settingsSaveComplete = true;
-////                        if(activitySaveComplete) {
-//                        editMode = false;
-//                        saveButton.setText("Save");
-//                        editButton.setVisibility(View.VISIBLE);
-//                        fillListViewWithData(dataController.getActivitiesSelected());
-////                        }
-//
-//                    }
-//                });
-//
-//            }
-//            else {
-//                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//                parentActivity.showToast("Activity updates saved");
-//            }
-//        }
-//        else if(asyncReturnType.equals("Update Activities")) {
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    activitySaveComplete = true;
-//                    if(settingsSaveComplete) {
-//                        editMode = false;
-//                        saveButton.setText("Save");
-//                        editButton.setVisibility(View.VISIBLE);
-//                        fillListViewWithData(dataController.getActivitiesSelected());
-//                    }
-//
-//                }
-//            });
-//        }
     }
 
     @Override

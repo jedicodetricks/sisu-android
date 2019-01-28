@@ -80,6 +80,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 case "Teams":
                     break;
                 case "Clients":
+                case "Recruits":
                     navigationManager.stackReplaceFragment(ClientListFragment.class);
                     break;
                 case "My Profile":
