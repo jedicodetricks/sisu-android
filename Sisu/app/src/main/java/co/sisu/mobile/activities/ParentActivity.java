@@ -120,6 +120,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Gson gson;
     private String pushNotificationTitle = "";
     private String pushNotificationBody = "";
+    private String pushNotificationIsHTML = "";
+    private String pushNotificationPushId = "";
     private Fragment f;
     private Animator mCurrentAnimator;
     private float startScale;
@@ -144,6 +146,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
+        pushNotificationIsHTML = getIntent().getStringExtra("has_html");
+        pushNotificationPushId = getIntent().getStringExtra("push_id");
         if(pushNotificationTitle != null && pushNotificationBody != null) {
             if(!pushNotificationTitle.equals("") && !pushNotificationBody.equals("")) {
                 shouldDisplayPushNotification = true;
@@ -956,6 +960,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public String getPushNotificationBody() {
         return pushNotificationBody;
+    }
+
+    public String getPushNotificationIsHTML() {
+        return  pushNotificationIsHTML;
+    }
+
+    public String getPushNotificationPushId() {
+        return pushNotificationPushId;
     }
 
     public void setShouldDisplayPushNotification(boolean b) {

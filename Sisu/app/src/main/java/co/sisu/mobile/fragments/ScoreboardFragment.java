@@ -133,11 +133,19 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             parentActivity.setShouldDisplayPushNotification(false);
             String title = parentActivity.getPushNotificationTitle();
             String body = parentActivity.getPushNotificationBody();
-            Intent intent = new Intent(parentActivity, NotificationActivity.class);
-            intent.putExtra("title", title);
-            intent.putExtra("body", body);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            String is_html = parentActivity.getPushNotificationIsHTML();
+            String pushId = parentActivity.getPushNotificationPushId();
+            if(is_html.equals("true")) {
+                //TODO: This will have to make an api call with pushId
+            }
+            else {
+                Intent intent = new Intent(parentActivity, NotificationActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("body", body);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+
         }
     }
 

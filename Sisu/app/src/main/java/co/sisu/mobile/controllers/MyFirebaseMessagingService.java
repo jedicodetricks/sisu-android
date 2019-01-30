@@ -11,6 +11,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.activities.NotificationActivity;
@@ -83,6 +85,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         if (remoteMessage.getNotification() != null) {
             Log.e("Firebase", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
+
+            JsonParser parser = new JsonParser();
+
+            JsonObject jsonBody = (JsonObject) parser.parse(remoteMessage.getNotification().getBody());
+
+            Log.e("Firebase", "Message Notification has_html: " + jsonBody.get("has_html"));
             Intent intent = new Intent(this, NotificationActivity.class);
             intent.putExtra("title", remoteMessage.getNotification().getTitle());
             intent.putExtra("body", remoteMessage.getNotification().getBody());
