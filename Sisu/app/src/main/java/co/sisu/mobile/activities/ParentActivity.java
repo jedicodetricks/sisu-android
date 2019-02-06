@@ -158,7 +158,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
 
         //MOCKING AN AGENT
-//        agent.setAgent_id("4411");
+//        agent.setAgent_id("4726");
 //        dataController.setAgent(agent);
         //
         
@@ -573,7 +573,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
 
             for(FirebaseDeviceObject fdo : devices) {
-                if(fdo.getDevice_id().equals(firebaseDeviceId)) {
+                if(fdo.getDevice_id() != null && fdo.getDevice_id().equals(firebaseDeviceId)) {
                     Log.e("Current Device", fdo.getDevice_id());
                     currentDevice = fdo;
                 }

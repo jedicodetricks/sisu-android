@@ -889,7 +889,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
         if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             if(parentActivity.isRecruiting()) {
-
+                dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());
             }
             else {
                 dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());

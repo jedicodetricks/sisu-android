@@ -84,7 +84,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
     private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
             listingsTakenCurrentNumber, listingsTakenGoalNumber, agentsLostNumber, netAgentsNumber;
 
-    private TextView pendingVolumeDisplay, closedVolumeDisplay;
+    private TextView totalAgentDisplay, closedVolumeDisplay;
 
     public RecruitingScoreboardFragment() {
         // Required empty public constructor
@@ -116,8 +116,25 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
     }
 
     private void initOtherStats() {
-        agentsLostNumber.setText("" + dataController.getArchivedList().size());
-        netAgentsNumber.setText("" + dataController.getNumOfActiveAgents());
+        List<ClientObject> lostAgents = dataController.getArchivedList();
+        int numOfLostAgents = lostAgents.size();
+//        for(ClientObject co: lostAgents) {
+//            if(insideSelectedTimeRange(co.getArc())) {
+//                numOfLostAgents++;
+//            }
+//        }
+
+        List<ClientObject> closedAgents = dataController.getClosedList();
+        int numOfCurrentAgents = 0;
+
+        for(ClientObject co: closedAgents) {
+            if(insideSelectedTimeRange(co.getClosed_dt())) {
+                numOfCurrentAgents += 1;
+            }
+        }
+
+        agentsLostNumber.setText("" + numOfLostAgents);
+        netAgentsNumber.setText("" + numOfCurrentAgents);
     }
 
     @Override
@@ -133,7 +150,6 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         spinner.setSelection(parentActivity.getTimelineSelection());
         initializeButtons();
         initProgressBars();
-        initOtherStats();
         calculateVolumes();
         setupUiVisuals();
 
@@ -207,8 +223,8 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         closedProgressText.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedProgressText.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        pendingVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        pendingVolumeDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        totalAgentDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        totalAgentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         closedVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         closedVolumeDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -284,14 +300,8 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
             closedVolume = 0;
 
             //Pending
-            List<ClientObject> underContractClients = dataController.getContractList();
-            for(ClientObject co : underContractClients) {
-                pendingVolume += Integer.valueOf(co.getTrans_amt());
-            }
-            NumberFormat format = NumberFormat.getNumberInstance();
-
-            pendingVolumeDisplay = getView().findViewById(R.id.underContractAmount);
-            pendingVolumeDisplay.setText("$" + format.format(pendingVolume));
+            totalAgentDisplay = getView().findViewById(R.id.underContractAmount);
+            totalAgentDisplay.setText("" + dataController.getNumOfActiveAgents());
 
 
             //Closed
@@ -302,6 +312,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
                     closedVolume += Integer.valueOf(co.getTrans_amt());
                 }
             }
+            NumberFormat format = NumberFormat.getNumberInstance();
 
             closedVolumeDisplay = getView().findViewById(R.id.closedAmount);
             closedVolumeDisplay.setText("$" + format.format(closedVolume));
@@ -890,6 +901,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
                 public void run() {
                     loader.setVisibility(View.GONE);
                     animateProgressBars(dataController.getScoreboardObject());
+                    initOtherStats();
                     calculateVolumes();
                 }
             });

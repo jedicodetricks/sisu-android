@@ -63,7 +63,6 @@ public class AsyncDelete extends AsyncTask<String, String, String> {
             callback.onEventFailed(null, returnType);
         }
 
-        response.body().close();
         return null;
     }
 }

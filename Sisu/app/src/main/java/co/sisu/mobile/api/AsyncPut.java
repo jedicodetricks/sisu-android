@@ -1,4 +1,4 @@
-package co.sisu.mobile.api;
+ package co.sisu.mobile.api;
 
 import android.os.AsyncTask;
 
@@ -70,7 +70,6 @@ public class AsyncPut extends AsyncTask<String, String, String> {
             callback.onEventFailed(null, returnType);
         }
 
-        response.body().close();
         return null;
     }
 }
