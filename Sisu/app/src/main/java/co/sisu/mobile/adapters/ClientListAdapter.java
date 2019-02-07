@@ -30,13 +30,15 @@ public class ClientListAdapter extends BaseAdapter {
     private ColorSchemeManager colorSchemeManager;
     private TextView titleTextView, subtitleTextView;
     private ImageView textImage, phoneImage, emailImage, thumbnail;
+    private boolean isRecruiting;
 
-    public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent, ColorSchemeManager colorSchemeManager) {
+    public ClientListAdapter(Context context, List<ClientObject> items, ClientMessagingEvent clientMessagingEvent, ColorSchemeManager colorSchemeManager, boolean recruiting) {
         mContext = context;
         mDataSource = (ArrayList<ClientObject>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mClientMessagingEvent = clientMessagingEvent;
         this.colorSchemeManager = colorSchemeManager;
+        this.isRecruiting = recruiting;
     }
 
     @Override
@@ -151,7 +153,12 @@ public class ClientListAdapter extends BaseAdapter {
             lastName = clientObject.getLast_name();
         }
         titleTextView.setText(firstName + " " + lastName);
-        subtitleTextView.setText(clientObject.getCommission_amt() != null ? "$" + clientObject.getCommission_amt() : "");
+        if(isRecruiting) {
+            subtitleTextView.setText(clientObject.getGross_commission_amt() != null ? "$" + clientObject.getGross_commission_amt() : "");
+        }
+        else {
+            subtitleTextView.setText(clientObject.getCommission_amt() != null ? "$" + clientObject.getCommission_amt() : "");
+        }
 
 
         setColorScheme(rowView, clientObject);

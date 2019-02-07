@@ -221,7 +221,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                 mItemArray.add(commonArray.get(i));
                 counter++;
             }
-            ClientListAdapter adapter = new ClientListAdapter(getContext(), mItemArray, this, colorSchemeManager);
+            ClientListAdapter adapter = new ClientListAdapter(getContext(), mItemArray, this, colorSchemeManager, parentActivity.isRecruiting());
             mListView.setAdapter(adapter);
 
 //            ClientItemAdapter clientItemAdapter = new ClientItemAdapter(mItemArray, R.layout.list_item, R.id.client_list_thumbnail, false, this);
@@ -380,8 +380,14 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         int totalValue = 0;
         for(int i = 0; i < currentList.size(); i++) {
             try {
-                ClientObject iterClient = currentList.get(i);
-                totalValue += Integer.parseInt(iterClient.getCommission_amt() != null ? iterClient.getCommission_amt() : "0");
+                if(parentActivity.isRecruiting()) {
+                    ClientObject iterClient = currentList.get(i);
+                    totalValue += Integer.parseInt(iterClient.getGross_commission_amt() != null ? iterClient.getGross_commission_amt() : "0");
+                }
+                else {
+                    ClientObject iterClient = currentList.get(i);
+                    totalValue += Integer.parseInt(iterClient.getCommission_amt() != null ? iterClient.getCommission_amt() : "0");
+                }
             } catch (NumberFormatException nfe) {
                 totalValue += 0;
             }
