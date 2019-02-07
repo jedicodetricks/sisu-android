@@ -84,7 +84,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
     private TextView contactsCurrentNumber, contactsGoalNumber, appointmentsCurrentNumber, appointmentsGoalNumber, bbSignedCurrentNumber, bbSignedGoalNumber,
             listingsTakenCurrentNumber, listingsTakenGoalNumber, agentsLostNumber, netAgentsNumber;
 
-    private TextView totalAgentDisplay, closedVolumeDisplay;
+    private TextView totalAgentDisplay, companyDollarDisplay;
 
     public RecruitingScoreboardFragment() {
         // Required empty public constructor
@@ -226,8 +226,8 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         totalAgentDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
         totalAgentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        closedVolumeDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        closedVolumeDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        companyDollarDisplay.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
+        companyDollarDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         TextView pendingVolumeLabel = getView().findViewById(R.id.pendingVolumeLabel);
         pendingVolumeLabel.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
@@ -312,10 +312,11 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
                     closedVolume += Integer.valueOf(co.getTrans_amt());
                 }
             }
+            //TODO: This needs to go and get the actual number
             NumberFormat format = NumberFormat.getNumberInstance();
 
-            closedVolumeDisplay = getView().findViewById(R.id.closedAmount);
-            closedVolumeDisplay.setText("$" + format.format(closedVolume));
+            companyDollarDisplay = getView().findViewById(R.id.closedAmount);
+            companyDollarDisplay.setText("$" + format.format(closedVolume));
         }
 
     }
@@ -895,7 +896,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());
-            dataController.setActivitiesObject(activitiesObject);
+            dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

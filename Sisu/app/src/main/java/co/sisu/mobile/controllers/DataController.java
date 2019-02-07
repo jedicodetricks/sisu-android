@@ -129,16 +129,17 @@ public class DataController {
         return scoreboardObject;
     }
 
-    public void setRecordActivities(Object returnObject, int marketId) {
+    public void setRecordActivities(Object returnObject, boolean isRecruiting) {
         recordObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
         Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 99);
+        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
+        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
+        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
+
+        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
 
         AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
@@ -149,7 +150,7 @@ public class DataController {
 
             if (goals != null) {
                 for (AgentGoalsObject ago : goals) {
-                    if(marketId == 2) {
+                    if(isRecruiting) {
                         //TODO: Recruiting shit here
                         if(ago != null) {
                             if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
@@ -228,10 +229,12 @@ public class DataController {
             }
         }
 
+        if(!isRecruiting) {
+            recordObject.add(contract);
+            recordObject.add(signed);
+        }
         recordObject.add(contact);
         recordObject.add(firstAppointment);
-        recordObject.add(signed);
-        recordObject.add(contract);
         recordObject.add(closed);
         for(Metric m : activitiesObject) {
             switch(m.getType()) {
@@ -375,18 +378,13 @@ public class DataController {
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
+        // Needed with recruiting
         Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric signed = new Metric("Buyers Signed", "BBSGD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric showing = new Metric("Listings Taken", "LSTT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
-        if(isRecruiting) {
-
-
-        }
-        else {
-
-        }
+        // Not needed in recruiting
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 0);
 
@@ -534,7 +532,7 @@ public class DataController {
         scoreboardObject.add(signed);
     }
 
-    public void setActivitiesObject(Object returnObject) {
+    public void setActivitiesObject(Object returnObject, boolean isRecruiting) {
         activitiesObject = new ArrayList<>();
         masterActivitiesObject = new ArrayList<>();
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
@@ -559,38 +557,40 @@ public class DataController {
             }
 
 
-//            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
-            switch(counters[i].getActivity_type()) {
-                case "CONTA":
-                    metric.setWeight(99);
-                    break;
-                case "BSGND":
-                    metric.setWeight(96);
-                    break;
-                case "SSGND":
-                    metric.setWeight(95);
-                    break;
-                case "BUNDC":
-                    metric.setWeight(94);
-                    break;
-                case "SUNDC":
-                    metric.setWeight(93);
-                    break;
-                case "BCLSD":
-                    metric.setWeight(92);
-                    break;
-                case "SCLSD":
-                    metric.setWeight(91);
-                    break;
-                case "BAPPT":
-                    metric.setWeight(98);
-                    break;
-                case "SAPPT":
-                    metric.setWeight(97);
-                    break;
+            if(!isRecruiting) {
+                switch(counters[i].getActivity_type()) {
+                    case "CONTA":
+                        metric.setWeight(99);
+                        break;
+                    case "BSGND":
+                        metric.setWeight(96);
+                        break;
+                    case "SSGND":
+                        metric.setWeight(95);
+                        break;
+                    case "BUNDC":
+                        metric.setWeight(94);
+                        break;
+                    case "SUNDC":
+                        metric.setWeight(93);
+                        break;
+                    case "BCLSD":
+                        metric.setWeight(92);
+                        break;
+                    case "SCLSD":
+                        metric.setWeight(91);
+                        break;
+                    case "BAPPT":
+                        metric.setWeight(98);
+                        break;
+                    case "SAPPT":
+                        metric.setWeight(97);
+                        break;
+                }
             }
+
             masterActivitiesObject.add(metric);
 
 //            if(activitiesSelected.containsKey(metric.getType())) {
@@ -600,7 +600,38 @@ public class DataController {
 //                    continue;
 //                }
 //            }
-            activitiesObject.add(metric);
+            if(isRecruiting) {
+                boolean toAdd = true;
+                switch(counters[i].getActivity_type()) {
+                    case "CONTA":
+                        metric.setWeight(99);
+                        break;
+                    case "BCLSD":
+                        metric.setWeight(92);
+                        break;
+                    case "SCLSD":
+                        metric.setWeight(91);
+                        break;
+                    case "BAPPT":
+                        metric.setWeight(96);
+                        break;
+                    case "SAPPT":
+                        metric.setWeight(95);
+                        break;
+                    case "BUNDC":
+                    case "SUNDC":
+                    case "BSGND":
+                    case "SSGND":
+                        toAdd = false;
+                        break;
+                }
+                if(toAdd) {
+                    activitiesObject.add(metric);
+                }
+            }
+            else {
+                activitiesObject.add(metric);
+            }
 
         }
 

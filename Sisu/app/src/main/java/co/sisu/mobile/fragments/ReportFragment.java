@@ -109,11 +109,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         List<String> spinnerArray = initSpinnerArray();
         DropdownAdapter adapter = new DropdownAdapter(getContext(), R.layout.spinner_item, spinnerArray, colorSchemeManager);
 
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                getActivity(),
-//                R.layout.spinner_item,
-//                spinnerArray
-//        );
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -436,7 +431,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
-            dataController.setActivitiesObject(activitiesObject);
+            dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

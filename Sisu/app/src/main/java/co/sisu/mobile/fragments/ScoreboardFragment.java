@@ -894,7 +894,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             else {
                 dataController.setScoreboardActivities(activitiesObject, parentActivity.isRecruiting());
             }
-            dataController.setActivitiesObject(activitiesObject);
+            dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
