@@ -551,7 +551,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
-            dataController.setClientListObject(clientObject);
+            dataController.setClientListObject(clientObject, isRecruiting());
             clientFinished = true;
             navigateToScoreboard();
         }
@@ -644,7 +644,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(asyncReturnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
-            dataController.setClientListObject(clientObject);
+            dataController.setClientListObject(clientObject, isRecruiting());
             clientFinished = true;
         }
         this.runOnUiThread(new Runnable() {

@@ -33,6 +33,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -118,8 +119,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         counter = 1;
         currentClient = parentActivity.getSelectedClient();
         view.clearFocus();
-        initializeForm();
         initializeButtons();
+        initializeForm();
         initializeCalendar();
         if(currentClient.getStatus().equals("D")) {
             apiManager.getClientParams(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id());
@@ -728,7 +729,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         archivedStatus = getView().findViewById(R.id.archivedButton);
         buyer = getView().findViewById(R.id.buyerButton);
         seller = getView().findViewById(R.id.sellerButton);
-        exportContact = getView().findViewById(R.id.exportContactButton);
         noteText = getView().findViewById(R.id.editNotes);
 
         prioritySwitch = getView().findViewById(R.id.prioritySwitch);
@@ -754,6 +754,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         gciEquals = getView().findViewById(R.id.gciEquals);
 
         priorityText = getView().findViewById(R.id.priorityText);
+
+        RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
+        ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
+        ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
+
+        if(parentActivity.isRecruiting()) {
+            paidIncomeLayout.setVisibility(View.GONE);
+            commissionInputLayout.setVisibility(View.GONE);
+            calculateIncomePercent.setVisibility(View.GONE);
+            underContractSection.setVisibility(View.GONE);
+            signedDateSection.setVisibility(View.GONE);
+            percentSign2.setVisibility(View.GONE);
+            commissionEquals.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -935,6 +949,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         appointmentClear.setOnClickListener(this);
 //        appointmentAdd = getView().findViewById(R.id.addAppointmentDateButton);
 //        appointmentAdd.setOnClickListener(this);
+        exportContact = getView().findViewById(R.id.exportContactButton);
         exportContact.setOnClickListener(this);
         saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
@@ -958,7 +973,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
         calculateIncomePercent.setOnClickListener(this);
-
 
     }
 

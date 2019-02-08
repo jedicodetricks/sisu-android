@@ -87,10 +87,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
 
             JsonParser parser = new JsonParser();
+            try {
+                JsonObject jsonBody = (JsonObject) parser.parse(remoteMessage.getNotification().getBody());
+                Log.e("Firebase", "Message Notification has_html: " + jsonBody.get("has_html"));
+            } catch(Exception e) {
 
-            JsonObject jsonBody = (JsonObject) parser.parse(remoteMessage.getNotification().getBody());
+            }
 
-            Log.e("Firebase", "Message Notification has_html: " + jsonBody.get("has_html"));
             Intent intent = new Intent(this, NotificationActivity.class);
             intent.putExtra("title", remoteMessage.getNotification().getTitle());
             intent.putExtra("body", remoteMessage.getNotification().getBody());

@@ -171,6 +171,25 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         tabLayout.addOnTabSelectedListener(this);
         for(int i = 0; i < tabLayout.getTabCount(); i++) {
             tabLayout.getTabAt(i).setText(parentActivity.localizeLabel((String)tabLayout.getTabAt(i).getText()));
+            if(parentActivity.isRecruiting()) {
+                switch(i) {
+                    case 0:
+                        // Pipeline
+                        break;
+                    case 1:
+                        tabLayout.getTabAt(i).setText("1st Appts");
+                        break;
+                    case 2:
+                        tabLayout.getTabAt(i).setText("Recruits");
+                        break;
+                    case 3:
+                        tabLayout.getTabAt(i).setText("All");
+                        break;
+                    case 4:
+                        // Lost
+                        break;
+                }
+            }
         }
         total = getView().findViewById(R.id.total);
     }
@@ -352,7 +371,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
-            dataController.setClientListObject(clientObject);
+            dataController.setClientListObject(clientObject, parentActivity.isRecruiting());
 
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -405,18 +424,22 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                     currentList = dataController.getPipelineList();
                     break;
                 case "signed":
+                case "1st Appts":
                     tabLayout.getTabAt(1).select();
                     currentList = dataController.getSignedList();
                     break;
                 case "contract":
+                case "recruits":
                     tabLayout.getTabAt(2).select();
                     currentList = dataController.getContractList();
                     break;
                 case "closed":
+                case "all":
                     tabLayout.getTabAt(3).select();
                     currentList = dataController.getClosedList();
                     break;
                 case "archived":
+                case "lost":
                     tabLayout.getTabAt(4).select();
                     currentList = dataController.getArchivedList();
                     break;

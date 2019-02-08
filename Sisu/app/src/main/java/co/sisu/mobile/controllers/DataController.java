@@ -802,7 +802,7 @@ public class DataController {
         }
     }
 
-    public void setClientListObject(Object returnObject) {
+    public void setClientListObject(Object returnObject, boolean isRecruiting) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
         resetClientLists();
@@ -813,7 +813,7 @@ public class DataController {
                 archivedList.add(co);
             }
             else {
-                sortIntoList(co);
+                sortIntoList(co, isRecruiting);
             }
         }
     }
@@ -826,40 +826,72 @@ public class DataController {
         archivedList = new ArrayList<>();
     }
 
-    private void sortIntoList(ClientObject co) {
+    private void sortIntoList(ClientObject co, boolean isRecruiting) {
         boolean isClosed = false, isContract = false, isSigned = false, closedPrevYear = false;
         Date date;
         Calendar currentTime = Calendar.getInstance();
         Calendar updatedTime = Calendar.getInstance();
         int year = Calendar.getInstance().get(Calendar.YEAR);
 
-        if(co.getClosed_dt() != null) {
-            //Closed List
-            date = getFormattedDateFromApiReturn(co.getClosed_dt());
-            updatedTime.setTime(date);
-            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-                isClosed = true;
+        if(isRecruiting) {
+            if(co.getClosed_dt() != null) {
+                //Closed List
+                date = getFormattedDateFromApiReturn(co.getClosed_dt());
+                updatedTime.setTime(date);
+                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                    isContract = true;
+                }
+                if(updatedTime.get(Calendar.YEAR) != year) {
+                    closedPrevYear = true;
+                }
             }
-            if(updatedTime.get(Calendar.YEAR) != year) {
-                closedPrevYear = true;
+            if(co.getAppt_dt() != null) {
+                //Contract List
+                date = getFormattedDateFromApiReturn(co.getAppt_dt());
+                updatedTime.setTime(date);
+                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                    isSigned = true;
+                }
+            }
+//            if(co.getSigned_dt() != null) {
+//                //Signed List
+//                date = getFormattedDateFromApiReturn(co.getSigned_dt());
+//                updatedTime.setTime(date);
+//                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+//                    isSigned = true;
+//                }
+//            }
+        }
+        else {
+            if(co.getClosed_dt() != null) {
+                //Closed List
+                date = getFormattedDateFromApiReturn(co.getClosed_dt());
+                updatedTime.setTime(date);
+                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                    isClosed = true;
+                }
+                if(updatedTime.get(Calendar.YEAR) != year) {
+                    closedPrevYear = true;
+                }
+            }
+            if(co.getUc_dt() != null) {
+                //Contract List
+                date = getFormattedDateFromApiReturn(co.getUc_dt());
+                updatedTime.setTime(date);
+                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                    isContract = true;
+                }
+            }
+            if(co.getSigned_dt() != null) {
+                //Signed List
+                date = getFormattedDateFromApiReturn(co.getSigned_dt());
+                updatedTime.setTime(date);
+                if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
+                    isSigned = true;
+                }
             }
         }
-        if(co.getUc_dt() != null) {
-            //Contract List
-            date = getFormattedDateFromApiReturn(co.getUc_dt());
-            updatedTime.setTime(date);
-            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-                isContract = true;
-            }
-        }
-        if(co.getSigned_dt() != null) {
-            //Signed List
-            date = getFormattedDateFromApiReturn(co.getSigned_dt());
-            updatedTime.setTime(date);
-            if(updatedTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-                isSigned = true;
-            }
-        }
+
 
         if (closedPrevYear) {
             //We'll do nothing with these
@@ -869,13 +901,22 @@ public class DataController {
         }
         else if(isContract) {
             contractList.add(co);
+            if(isRecruiting) {
+                closedList.add(co);
+            }
         }
         else if(isSigned) {
             signedList.add(co);
+            if(isRecruiting) {
+                closedList.add(co);
+            }
         }
         else {
             //Pipeline List
             pipelineList.add(co);
+            if(isRecruiting) {
+                closedList.add(co);
+            }
         }
     }
 

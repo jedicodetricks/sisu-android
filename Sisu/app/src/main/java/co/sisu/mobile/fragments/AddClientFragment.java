@@ -14,6 +14,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -29,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -114,6 +116,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
         transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
         gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
+        if(parentActivity.isRecruiting()) {
+            gciLayout.setHint("Recruit Income");
+        }
         commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
         phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
         emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
@@ -422,6 +427,23 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         commissionEquals = getView().findViewById(R.id.commissionEquals);
         gciEquals = getView().findViewById(R.id.gciEquals);
         priorityText = getView().findViewById(R.id.priorityText);
+
+        RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
+        ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
+        ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
+
+        if(parentActivity.isRecruiting()) {
+            paidIncomeLayout.setVisibility(View.GONE);
+            commissionInputLayout.setVisibility(View.GONE);
+            calculateIncomePercent.setVisibility(View.GONE);
+            statusLabel.setVisibility(View.GONE);
+            statusGroup.setVisibility(View.GONE);
+            underContractSection.setVisibility(View.GONE);
+            signedDateSection.setVisibility(View.GONE);
+            percentSign2.setVisibility(View.GONE);
+            commissionEquals.setVisibility(View.GONE);
+            noteLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override

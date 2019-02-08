@@ -128,8 +128,10 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
         int numOfCurrentAgents = 0;
 
         for(ClientObject co: closedAgents) {
-            if(insideSelectedTimeRange(co.getClosed_dt())) {
-                numOfCurrentAgents += 1;
+            if(co.getClosed_dt() != null) {
+                if(insideSelectedTimeRange(co.getClosed_dt())) {
+                    numOfCurrentAgents += 1;
+                }
             }
         }
 
@@ -307,9 +309,10 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
             //Closed
             List<ClientObject> closedClients = dataController.getClosedList();
             for(ClientObject co : closedClients) {
-
-                if(insideSelectedTimeRange(co.getClosed_dt())) {
-                    closedVolume += Integer.valueOf(co.getTrans_amt());
+                if(co.getClosed_dt() != null) {
+                    if(insideSelectedTimeRange(co.getClosed_dt())) {
+                        closedVolume += Integer.valueOf(co.getTrans_amt());
+                    }
                 }
             }
             //TODO: This needs to go and get the actual number
