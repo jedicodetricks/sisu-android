@@ -111,7 +111,7 @@ public class NavigationManager {
             fragmentTag = "MyProfile";
             actionBarManager.swapToSaveAction("My Profile", DISABLE_DRAWER);
         }
-        else if(fragmentClass.getSimpleName().equals("GoalSetupFragment")) {
+        else if(fragmentClass.getSimpleName().equals("GoalSetupFragment") || fragmentClass.getSimpleName().equals("RecruitingGoalSetupFragment")) {
             fragmentTag = "GoalSetup";
             actionBarManager.swapToSaveAction("Goal Setup", DISABLE_DRAWER);
         }

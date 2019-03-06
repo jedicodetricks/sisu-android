@@ -87,7 +87,12 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     navigationManager.stackReplaceFragment(MyProfileFragment.class);
                     break;
                 case "Goal Setup":
-                    navigationManager.stackReplaceFragment(GoalSetupFragment.class);
+                    if(parentActivity.isRecruiting()) {
+                        navigationManager.stackReplaceFragment(RecruitingGoalSetupFragment.class);
+                    }
+                    else {
+                        navigationManager.stackReplaceFragment(GoalSetupFragment.class);
+                    }
                     break;
                 case "Activity Settings":
                     navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);

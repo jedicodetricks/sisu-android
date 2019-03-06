@@ -967,8 +967,8 @@ public class DataController {
         this.agent = agent;
     }
 
-    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject) {
-        if(agentGoalsObject.length < 9) {
+    public void setAgentGoals(AgentGoalsObject[] agentGoalsObject, boolean isRecruiting) {
+        if(agentGoalsObject.length < 9 && !isRecruiting) {
             setDefaultGoalsObject(agentGoalsObject);
         }
         else {
@@ -1448,6 +1448,6 @@ public class DataController {
     }
 
     public int getNumOfActiveAgents() {
-        return closedList.size();
+        return signedList.size();
     }
 }

@@ -94,6 +94,7 @@
     <!--Hints-->
     <string name="percent">%</string>
     <string name="unit_goal_hint">Unit Goal</string>
+    <string name="mtdRecruit_goal_hint">MTD Net Recruits</string>
     <string name="volume_goal_hint">Volume Goal</string>
     <string name="password_hint">Password*</string>
     <string name="password_hint_non_req">Password</string>

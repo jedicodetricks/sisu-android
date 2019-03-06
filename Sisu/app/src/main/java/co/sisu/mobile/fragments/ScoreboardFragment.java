@@ -862,10 +862,10 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         //TODO: Change this back
-//        navigationManager.stackReplaceFragment(AddClientFragment.class);
-        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        navigationManager.stackReplaceFragment(AddClientFragment.class);
+//        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
     }
 
     @Override

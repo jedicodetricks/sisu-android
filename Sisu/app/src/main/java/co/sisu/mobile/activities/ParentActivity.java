@@ -473,7 +473,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject);
+            dataController.setAgentGoals(agentGoalsObject, isRecruiting());
             goalsFinished = true;
             navigateToScoreboard();
         }
@@ -615,7 +615,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(asyncReturnType == ApiReturnTypes.GET_AGENT_GOALS) {
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject);
+            dataController.setAgentGoals(agentGoalsObject, isRecruiting());
             goalsFinished = true;
         }
         else if(asyncReturnType == ApiReturnTypes.GET_TEAM_PARAMS) {

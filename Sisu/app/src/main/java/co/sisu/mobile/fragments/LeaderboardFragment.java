@@ -387,7 +387,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         else if(asyncReturnType.equals("Goals")) {
             AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject);
+            dataController.setAgentGoals(agentGoalsObject, parentActivity.isRecruiting());
         }
 //        else if(asyncReturnType.equals("Leaderboard")){
 //            AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);
