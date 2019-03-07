@@ -207,7 +207,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }, selectedYear, selectedMonth, selectedDay);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
+        dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         dialog.show();
     }
 

@@ -590,6 +590,20 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private boolean verifyInputFields() {
         boolean isVerified = true;
+
+        if(parentActivity.isRecruiting()) {
+            isVerified = verifyRecruiting();
+        }
+        else {
+            isVerified = verifyMortgage();
+        }
+
+        return isVerified;
+    }
+
+    private boolean verifyMortgage() {
+        boolean isVerified = true;
+
         if(typeSelected.equals("")) {
             parentActivity.showToast("Buyer or Seller is required");
             isVerified = false;
@@ -624,7 +638,46 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             }
 
         }
+
         return isVerified;
+
+    }
+
+    private boolean verifyRecruiting() {
+        boolean isVerified = true;
+
+        if(typeSelected.equals("")) {
+            parentActivity.showToast("New or Experienced Recruit is required");
+            isVerified = false;
+        }
+        else if(firstNameText.getText().toString().equals("")) {
+            parentActivity.showToast("First Name is required");
+            isVerified = false;
+        }
+        else if(lastNameText.getText().toString().equals("")) {
+            parentActivity.showToast("Last Name is required");
+            isVerified = false;
+        }
+        else if(transAmount.getText().toString().equals("")) {
+            parentActivity.showToast("Closed Volume is required");
+            isVerified = false;
+        }
+        else if(gci.getText().toString().equals("")) {
+            parentActivity.showToast("Recruit Income is required");
+            isVerified = false;
+        }
+        else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            if(counter == 1) {
+                parentActivity.showToast("You may want to add your Settlement Date");
+                isVerified = false;
+                counter+=1;
+            } else {
+                isVerified = true;
+            }
+
+        }
+        return isVerified;
+
     }
 
     private void initializeNewClient(ClientObject newClient) {
@@ -632,7 +685,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         newClient.setFirst_name(firstNameText.getText().toString());
         newClient.setLast_name(lastNameText.getText().toString());
         newClient.setTrans_amt(transAmount.getText().toString());
-        newClient.setCommission_amt(paidIncome.getText().toString());
+        if(!parentActivity.isRecruiting()) {
+            newClient.setCommission_amt(paidIncome.getText().toString());
+        }
 
         //These need to be checked for null
         newClient.setGross_commission_amt(gci.getText().toString().equals("") ? null : gci.getText().toString());
@@ -985,16 +1040,17 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Add Client")) {
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    parentActivity.showToast("Client Saved");
-//                    navigationManager.navigateToClientListAndClearStack(currentStatus);
-//                }
-//            });
-////            parentActivity.navigateToClientList(currentStatus, null);
-//        }
+
+        if(asyncReturnType.equals("Add Client")) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    parentActivity.showToast("Client Saved");
+                    navigationManager.navigateToClientListAndClearStack(currentStatus);
+                }
+            });
+//            parentActivity.navigateToClientList(currentStatus, null);
+        }
     }
 
     @Override

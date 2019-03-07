@@ -1,12 +1,18 @@
 package co.sisu.mobile.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.List;
@@ -18,6 +24,7 @@ import co.sisu.mobile.adapters.MoreListAdapter;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -32,6 +39,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private ParentActivity parentActivity;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private String m_Text;
 
     public MoreFragment() {
         // Required empty public constructor
@@ -110,6 +118,9 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     parentActivity.setNoteOrMessage("Message");
                     navigationManager.stackReplaceFragment(ClientNoteFragment.class);
                     break;
+                case "Sisu Login":
+                    popAgentIdDialog("Enter Agent ID", "agentId");
+                    break;
                 case "Logout":
                     logout();
                     SaveSharedPreference.setUserName(getContext(), "");
@@ -117,6 +128,44 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
             }
         }
 
+    }
+
+    private void popAgentIdDialog(String message, String text) {
+        AlertDialog.Builder builder;
+        final EditText input = new EditText(parentActivity);
+        builder = new AlertDialog.Builder(parentActivity, R.style.lightDialog);
+        input.setTextColor(Color.BLACK);
+
+        builder.setTitle(message);
+        final String label = text;
+// Set up the input
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+                if(!m_Text.equals("")) {
+                    AgentModel currentAgent = dataController.getAgent();
+                    currentAgent.setAgent_id(m_Text);
+                    dataController.setAgent(currentAgent);
+                }
+                else {
+                    parentActivity.showToast("Please enter some text in the note field.");
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     public void logout() {
