@@ -313,7 +313,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/calculate"
             android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@id/phoneInputLayout"
+            app:layout_constraintBottom_toTopOf="@id/emailInputLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gciPercentLayout" />
 
@@ -325,7 +325,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phoneInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
 
             <EditText
                 android:id="@+id/editEmail"
@@ -354,7 +354,7 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/emailInputLayout">
 
             <EditText
                 android:id="@+id/editPhone"
@@ -376,6 +376,34 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/leadSourceInputLayout"
+            android:theme="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phoneInputLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/leadSource"
+                android:importantForAutofill="noExcludeDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/lead_source_hint"
+                android:focusableInTouchMode="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editEmail" />
+
+        </android.support.design.widget.TextInputLayout>
+
         <TextView
             android:id="@+id/priorityText"
             android:layout_width="wrap_content"
@@ -385,7 +413,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:text="Priority"
-            app:layout_constraintTop_toBottomOf="@id/emailInputLayout"/>
+            app:layout_constraintTop_toBottomOf="@id/leadSourceInputLayout"/>
 
         <Switch
             android:id="@+id/prioritySwitch"
@@ -393,7 +421,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="32dp"
-            app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/leadSourceInputLayout"
             app:layout_constraintStart_toEndOf="@id/priorityText"/>
 
         <TextView

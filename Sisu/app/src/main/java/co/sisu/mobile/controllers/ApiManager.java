@@ -203,6 +203,16 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void getLeadSources(AsyncServerEventListener cb, String agent_id, int teamId) {
+        if(teamId == -1) {
+            teamId = 0;
+        }
+        getJWT(agent_id);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_LEAD_SOURCES;
+        String currentUrl = url + "api/v1/team/get-lead-sources/" + teamId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+    }
+
     //START OF POST CALLS
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
@@ -234,6 +244,7 @@ public class ApiManager {
         String body = gson.toJson(newClient);
         body = body.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
         body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
+        body = body.replace("\"state\":null", "\"state\":\"\"");
         String currentUrl = url + "api/v1/client/edit-client/" + agentId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
@@ -316,6 +327,8 @@ public class ApiManager {
         String body = gson.toJson(currentClient);
         body = body.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
         body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
+        //TODO: Need this state replacement until Rick fixes the api (It's in the add as well)
+        body = body.replace("\"state\":null", "\"state\":\"\"");
         ApiReturnTypes returnType = ApiReturnTypes.UPDATE_CLIENT;
         String currentUrl = url + "api/v1/client/edit-client/" + currentClient.getClient_id();
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);

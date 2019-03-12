@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,6 +59,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
@@ -74,7 +76,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
     private ClientObject currentClient;
-    private EditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
+    private EditText firstNameText, lastNameText, leadSource, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
     private ImageView lock, archiveButton;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, addAppointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton,
@@ -82,7 +84,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                      percentSign1, percentSign2, statusLabel, priorityText;
     private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentAdd, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
     private Switch prioritySwitch;
-    private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
+    private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
@@ -91,6 +93,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private String statusList = "pipeline";
     private int counter;
     private Gson gson;
+    private LinkedHashMap leadSources;
 
 
     public ClientEditFragment() {
@@ -122,15 +125,17 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         initializeButtons();
         initializeForm();
         initializeCalendar();
+
         if(currentClient.getStatus().equals("D")) {
             apiManager.getClientParams(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id());
         }
         else {
-            initializeClient();
+            apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
             loader.setVisibility(View.GONE);
         }
         setupLabels();
         setColorScheme();
+
         if(currentClient.getIs_locked() == 1) {
             parentActivity.showToast("This client account has been locked by your team administrator.");
         }
@@ -147,6 +152,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
         gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
         commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
+        leadSourceInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.lead_source_hint)));
         phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
         emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
         statusLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.status)));
@@ -175,6 +181,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
         gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
         incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+        leadSource.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
@@ -231,6 +238,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
 
         Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
         imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
@@ -491,6 +499,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         String formattedContractDt = getFormattedDateFromApiReturn(currentClient.getUc_dt());
         String formattedClosedDt = getFormattedDateFromApiReturn(currentClient.getClosed_dt());
 
+        for ( Object key : leadSources.keySet() ) {
+            int formattedKey = Integer.valueOf((String) key);
+            if(formattedKey == currentClient.getLead_type_id()) {
+                leadSource.setText(leadSources.get(key).toString());
+                break;
+            }
+        }
+
         appointmentDisplay.setText(formattedApptDt);
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
@@ -586,6 +602,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         else {
             currentClient.setClosed_dt(null);
         }
+
+        for ( Object key : leadSources.keySet() ) {
+            if(leadSources.get(key).equals(leadSource.getText().toString())) {
+                //TODO: Should probably wrap this in a try catch
+                currentClient.setLead_type_id(Integer.valueOf((String) key));
+                break;
+            }
+        }
+
+
         if(deleteClient) {
             currentClient.setStatus("D");
             currentClient.setActivate_client(m_Text);
@@ -722,6 +748,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         gciPercent.setOnFocusChangeListener(this);
         incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
         incomePercent.setOnFocusChangeListener(this);
+        leadSource = getView().findViewById(R.id.leadSource);
+        leadSource.setOnClickListener(this);
+
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -743,6 +772,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         noteLayout = getView().findViewById(R.id.notesInputLayout);
         gciPercentLayout = getView().findViewById(R.id.gciInputLayout);
         commissionInputLayout = getView().findViewById(R.id.commissionInputLayout);
+        leadSourceInputLayout = getView().findViewById(R.id.leadSourceInputLayout);
 
         dollarSign1 = getView().findViewById(R.id.dollarSign);
         dollarSign2 = getView().findViewById(R.id.dollarSign2);
@@ -928,6 +958,32 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.clientNotesButton:
                 parentActivity.setNoteOrMessage("Note");
                 navigationManager.stackReplaceFragment(ClientNoteFragment.class);
+                break;
+            case R.id.leadSource:
+            case R.id.leadSourceInputLayout:
+                // setup the alert builder
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(parentActivity);
+                builder.setTitle("Choose a lead source");
+
+                // add a list
+                final String[] sources = new String[leadSources.size()];
+                int counter = 0;
+                for ( Object key : leadSources.keySet() ) {
+                    sources[counter] = (String) leadSources.get(key);
+                    counter++;
+                }
+
+                builder.setItems(sources, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        leadSource.setText(sources[which]);
+
+                    }
+                });
+
+                // create and show the alert dialog
+                android.support.v7.app.AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
             default:
                 break;
@@ -1187,6 +1243,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 }
             });
         }
+        else if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
+            AsyncLeadSourcesJsonObject leadSourcesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeadSourcesJsonObject.class);
+            leadSources = leadSourcesObject.getLead_sources();
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeClient();
+                }
+            });
+        }
     }
 
     @Override
@@ -1196,7 +1262,14 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeClient();
+                }
+            });
+        }
     }
 
 

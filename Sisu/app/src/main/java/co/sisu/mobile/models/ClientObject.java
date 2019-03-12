@@ -23,7 +23,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String home_phone;
     private int is_locked;
     private String last_name;
-    private String lead_type_id;
+    private int lead_type_id;
     private String mobile_phone;
     private String note;
     private String paid_dt;
@@ -168,11 +168,11 @@ public class ClientObject implements Comparable<ClientObject>{
         this.last_name = last_name;
     }
 
-    public String getLead_type_id() {
+    public int getLead_type_id() {
         return lead_type_id;
     }
 
-    public void setLead_type_id(String lead_type_id) {
+    public void setLead_type_id(int lead_type_id) {
         this.lead_type_id = lead_type_id;
     }
 

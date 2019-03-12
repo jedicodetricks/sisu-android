@@ -38,5 +38,6 @@ public enum ApiReturnTypes {
     UPDATE_FIREBASE,
     UPDATE_CLIENT,
     ACTIVATE_CLIENT,
-    DELETE_NOTE
+    DELETE_NOTE,
+    GET_LEAD_SOURCES;
 }

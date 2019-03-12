@@ -3,6 +3,7 @@ package co.sisu.mobile.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -21,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 import co.sisu.mobile.enums.ApiReturnTypes;
@@ -51,7 +54,9 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -66,9 +71,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
                      appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
-                     percentSign1, percentSign2, statusLabel, priorityText;
+                     percentSign1, percentSign2, statusLabel, priorityText, leadSource;
     private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
-    private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout;
+    private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -82,6 +87,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private ApiManager apiManager;
     private String currentStatus;
     private ColorSchemeManager colorSchemeManager;
+    private LinkedHashMap leadSources;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +112,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         initActionBar();
         setupLabels();
         setupColorScheme();
+        apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
     }
 
     private void setupLabels() {
@@ -120,6 +127,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             gciLayout.setHint("Recruit Income");
         }
         commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
+        leadSourceInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.lead_source_hint)));
         phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
         emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
         statusLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.status)));
@@ -146,6 +154,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
         gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
         incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+        leadSource.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
@@ -192,6 +201,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
 
         importContactButton.setHighlightColor(colorSchemeManager.getButtonSelected());
         importContactButton.setBackgroundResource(R.drawable.rounded_button);
@@ -400,6 +410,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         gciPercent.setOnFocusChangeListener(this);
         incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
         incomePercent.setOnFocusChangeListener(this);
+        leadSource = getView().findViewById(R.id.leadSource);
+        leadSource.setOnClickListener(this);
+
         pipelineStatus = getView().findViewById(R.id.pipelineButton);
         signedStatus = getView().findViewById(R.id.signedButton);
         underContractStatus = getView().findViewById(R.id.contractButton);
@@ -417,6 +430,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         noteLayout = getView().findViewById(R.id.notesInputLayout);
         gciPercentLayout = getView().findViewById(R.id.gciInputLayout);
         commissionInputLayout = getView().findViewById(R.id.commissionInputLayout);
+        leadSourceInputLayout = getView().findViewById(R.id.leadSourceInputLayout);
+        leadSourceInputLayout.setOnClickListener(this);
 
         dollarSign1 = getView().findViewById(R.id.dollarSign);
         dollarSign2 = getView().findViewById(R.id.dollarSign2);
@@ -567,6 +582,32 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             case R.id.appointmentDateButton:
                 clearDisplayDate("appointment");
                 removeStatusColor(pipelineStatus);
+            case R.id.leadSource:
+            case R.id.leadSourceInputLayout:
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+                builder.setTitle("Choose a lead source");
+
+                // add a list
+                final String[] sources = new String[leadSources.size()];
+                int counter = 0;
+                for ( Object key : leadSources.keySet() ) {
+                    sources[counter] = (String) leadSources.get(key);
+                    counter++;
+                }
+
+                builder.setItems(sources, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        leadSource.setText(sources[which]);
+
+                    }
+                });
+
+            // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                break;
             default:
                 break;
         }
@@ -661,6 +702,14 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         }
 
         newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
+
+        for ( Object key : leadSources.keySet() ) {
+            System.out.println(leadSource.getText().toString());
+            if(leadSources.get(key).equals(leadSource.getText().toString())) {
+                newClient.setLead_type_id(Integer.valueOf((String) key));
+                break;
+            }
+        }
 
         apiManager.sendAsyncAddClient(this, dataController.getAgent().getAgent_id(), newClient);
     }
@@ -985,16 +1034,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Add Client")) {
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    parentActivity.showToast("Client Saved");
-//                    navigationManager.navigateToClientListAndClearStack(currentStatus);
-//                }
-//            });
-////            parentActivity.navigateToClientList(currentStatus, null);
-//        }
     }
 
     @Override
@@ -1007,6 +1046,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                     navigationManager.navigateToClientListAndClearStack(currentStatus);
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
+            AsyncLeadSourcesJsonObject leadSourcesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeadSourcesJsonObject.class);
+            leadSources = leadSourcesObject.getLead_sources();
         }
     }
 

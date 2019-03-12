@@ -102,6 +102,7 @@
     <string name="username_email_hint">Username/Email</string>
     <string name="name_hint">Name</string>
     <string name="phone_hint">Phone</string>
+    <string name="lead_source_hint">Lead Source:</string>
     <string name="phone_hint_non_req">Phone</string>
     <string name="transaction_amount_hint">Transaction Amount:</string>
     <string name="commission_hint">Paid Income:</string>
