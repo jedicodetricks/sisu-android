@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.UpdateAgentGoalsObject;
@@ -500,7 +502,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             }
         }
         else if(returnType == ApiReturnTypes.GET_AGENT) {
-            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
+            AsyncAgentJsonObject agentJsonObject = null;
+            String r = null;
+            try {
+                r = ((Response) returnObject).body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                agentJsonObject = parentActivity.getGson().fromJson(r, AsyncAgentJsonObject.class);
+            } catch(Exception e) {
+                AsyncAgentJsonStringSuperUserObject tempAgent = parentActivity.getGson().fromJson(r, AsyncAgentJsonStringSuperUserObject.class);
+                agentJsonObject = new AsyncAgentJsonObject(tempAgent);
+            }
             AgentModel agentModel = agentJsonObject.getAgent();
             dataController.setAgentIncomeAndReason(agentModel);
             agent = dataController.getAgent();

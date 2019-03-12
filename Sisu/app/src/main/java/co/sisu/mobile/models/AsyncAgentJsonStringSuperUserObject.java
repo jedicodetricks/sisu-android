@@ -2,23 +2,20 @@ package co.sisu.mobile.models;
 
 /**
  * Created by Brady Groharing on 4/8/2018.
+ * This class only exists because Rick is sending down either a boolean or a byte to indicate is_super_user
  */
 
-public class AsyncAgentJsonObject {
-    AgentModel agent;
+public class AsyncAgentJsonStringSuperUserObject {
+    AgentModelStringSuperUser agent;
     String server_time;
     String status;
     String status_code;
 
-    public AsyncAgentJsonObject(AsyncAgentJsonStringSuperUserObject stringSuperUserObject) {
-        this.agent = new AgentModel(stringSuperUserObject.getAgent());
-    }
-
-    public AgentModel getAgent() {
+    public AgentModelStringSuperUser getAgent() {
         return agent;
     }
 
-    public void setAgent(AgentModel agent) {
+    public void setAgent(AgentModelStringSuperUser agent) {
         this.agent = agent;
     }
 

@@ -117,7 +117,12 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
     private void initOtherStats() {
         List<ClientObject> lostAgents = dataController.getArchivedList();
-        int numOfLostAgents = lostAgents.size();
+        int numOfLostAgents = 0;
+        for(ClientObject co : lostAgents) {
+            if(co.getClosed_dt() != null) {
+                numOfLostAgents++;
+            }
+        }
 //        for(ClientObject co: lostAgents) {
 //            if(insideSelectedTimeRange(co.getArc())) {
 //                numOfLostAgents++;

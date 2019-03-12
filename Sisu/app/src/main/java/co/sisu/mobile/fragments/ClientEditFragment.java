@@ -502,13 +502,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         String formattedContractDt = getFormattedDateFromApiReturn(currentClient.getUc_dt());
         String formattedClosedDt = getFormattedDateFromApiReturn(currentClient.getClosed_dt());
 
-        for ( Object key : leadSources.keySet() ) {
-            int formattedKey = Integer.valueOf((String) key);
-            if(formattedKey == currentClient.getLead_type_id()) {
-                leadSource.setText(leadSources.get(key).toString());
-                break;
+        if(leadSources != null) {
+            for ( Object key : leadSources.keySet() ) {
+                int formattedKey = Integer.valueOf((String) key);
+                if(formattedKey == currentClient.getLead_type_id()) {
+                    leadSource.setText(leadSources.get(key).toString());
+                    break;
+                }
             }
         }
+
 
         appointmentDisplay.setText(formattedApptDt);
         signedDisplay.setText(formattedSignedDt);
@@ -608,13 +611,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             currentClient.setClosed_dt(null);
         }
 
-        for ( Object key : leadSources.keySet() ) {
-            if(leadSources.get(key).equals(leadSource.getText().toString())) {
-                //TODO: Should probably wrap this in a try catch
-                currentClient.setLead_type_id(Integer.valueOf((String) key));
-                break;
+        if(leadSources != null) {
+            for ( Object key : leadSources.keySet() ) {
+                if(leadSources.get(key).equals(leadSource.getText().toString())) {
+                    //TODO: Should probably wrap this in a try catch
+                    currentClient.setLead_type_id(Integer.valueOf((String) key));
+                    break;
+                }
             }
         }
+
 
 
         if(deleteClient) {
@@ -1010,7 +1016,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 break;
             case R.id.archiveButton:
                 if(parentActivity.isRecruiting()) {
-                    popReasonDialog("Reason for losing recruit?", "Archived");
+                    popReasonDialog("Reason for Losing Recruit?", "Archived");
                 }
                 else {
                     popReasonDialog("Reason for Archiving Client?", "Archived");

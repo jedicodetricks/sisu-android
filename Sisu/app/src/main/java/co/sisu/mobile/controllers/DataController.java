@@ -94,7 +94,7 @@ public class DataController {
             morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.text_message_icon_active));
         }
 
-        if(agent.getIs_superuser()) {
+        if(agent.getIs_superuser() && agent.getFirst_name().equals("Brady")) {
             morePage.add(new MorePageContainer("Sisu Login", "Login as any agent", R.drawable.sisu_mark));
         }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
@@ -645,8 +645,11 @@ public class DataController {
     private void setupMetricGoals(Metric m) {
         double goalNum = m.getGoalNum();
         m.setDailyGoalNum(goalNum / 30);
+        m.setDailyGoalNum((double)Math.round(m.getDailyGoalNum() * 1000d) / 1000d);
         m.setWeeklyGoalNum(goalNum / 4);
+        m.setWeeklyGoalNum((double)Math.round(m.getWeeklyGoalNum() * 1000d) / 1000d);
         m.setYearlyGoalNum(goalNum * 12);
+        m.setYearlyGoalNum((double)Math.round(m.getYearlyGoalNum() * 1000d) / 1000d);
     }
 
     private List<Metric> sortActivitiesObjectByWeight(List<Metric> activities) {
@@ -1452,6 +1455,6 @@ public class DataController {
     }
 
     public int getNumOfActiveAgents() {
-        return signedList.size();
+        return contractList.size();
     }
 }

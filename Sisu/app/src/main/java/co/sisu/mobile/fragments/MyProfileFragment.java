@@ -39,6 +39,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
 import okhttp3.Response;
@@ -421,7 +423,19 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_AGENT) {
-            AsyncAgentJsonObject agentJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncAgentJsonObject.class);
+            AsyncAgentJsonObject agentJsonObject = null;
+            String r = null;
+            try {
+                r = ((Response) returnObject).body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                agentJsonObject = parentActivity.getGson().fromJson(r, AsyncAgentJsonObject.class);
+            } catch(Exception e) {
+                AsyncAgentJsonStringSuperUserObject tempAgent = parentActivity.getGson().fromJson(r, AsyncAgentJsonStringSuperUserObject.class);
+                agentJsonObject = new AsyncAgentJsonObject(tempAgent);
+            }
             AgentModel agentModel = agentJsonObject.getAgent();
             dataController.setAgent(agentModel);
             agent = dataController.getAgent();

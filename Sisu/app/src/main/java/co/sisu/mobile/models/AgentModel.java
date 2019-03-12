@@ -19,6 +19,19 @@ public class AgentModel implements Parcelable, Cloneable{
     AgentGoalsObject[] agentGoalsObject;
     boolean is_superuser;
 
+    public AgentModel(AgentModelStringSuperUser agent) {
+        this.agent_id = agent.agent_id;
+        this.desired_income = agent.desired_income;
+        this.email = agent.email;
+        this.first_name = agent.first_name;
+        this.last_name = agent.last_name;
+        this.mobile_phone = agent.mobile_phone;
+        this.profile = agent.profile;
+        this.vision_statement = agent.vision_statement;
+        this.agentGoalsObject = agent.agentGoalsObject;
+        this.is_superuser = Integer.parseInt(agent.is_superuser) != 0;
+    }
+
     public boolean getIs_superuser() {
         return is_superuser;
     }
@@ -123,7 +136,7 @@ public class AgentModel implements Parcelable, Cloneable{
      * This constructor is invoked by the method createFromParcel(Parcel source) of
      * the object CREATOR
      **/
-    private AgentModel(Parcel in){
+    public AgentModel(Parcel in){
         this.agent_id = in.readString();
         this.desired_income = in.readString();
         this.email = in.readString();
