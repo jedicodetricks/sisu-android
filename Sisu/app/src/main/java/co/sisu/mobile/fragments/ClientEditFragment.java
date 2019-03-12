@@ -151,6 +151,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
         transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
         gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
+        if(parentActivity.isRecruiting()) {
+            gciLayout.setHint("Recruit Income");
+        }
         commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
         leadSourceInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.lead_source_hint)));
         phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
@@ -417,9 +420,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         return asyncUpdateSettingsJsonObject;
     }
 
-    private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
+    private void calculatePercentage(EditText editPercent, EditText editDollar, EditText transAmount) {
         float percent;
-        if(!transAmount.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
+        if(!editPercent.getText().toString().isEmpty()) {
             percent = Float.parseFloat(editPercent.getText().toString());
             convertPercentToDollar(percent / 100f, editDollar, transAmount);
         } else {
@@ -445,12 +448,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
     }
 
-    private void convertPercentToDollar(float percent, EditText dollarText, EditText parent) {
+    private void convertPercentToDollar(float percent, EditText dollarText, EditText transAmount) {
         float dollar;
-        int transTotal = Integer.parseInt(parent.getText().toString());
+        int transTotal = Integer.parseInt(transAmount.getText().toString());
         if(transTotal != 0 && percent <= 100 && percent > 0) {
             dollar = percent * transTotal;
-            if(dollar <= transTotal && dollar > 0) {
+            if(dollar <= transTotal) {
                 dollarText.setText(String.valueOf(dollar).substring(0,String.valueOf(dollar).indexOf('.')));
             }
         }
@@ -560,7 +563,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setFirst_name(firstNameText.getText().toString());
         currentClient.setLast_name(lastNameText.getText().toString());
         currentClient.setTrans_amt(transAmount.getText().toString());
-        currentClient.setCommission_amt(paidIncome.getText().toString());
+        if(!parentActivity.isRecruiting()) {
+            currentClient.setCommission_amt(paidIncome.getText().toString());
+        }
 
         //These need to be checked for null
         currentClient.setGross_commission_amt(gci.getText().toString().equals("") ? null : gci.getText().toString());
@@ -807,6 +812,20 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     private boolean verifyInputFields() {
         boolean isVerified = true;
+
+        if(parentActivity.isRecruiting()) {
+            isVerified = verifyRecruiting();
+        }
+        else {
+            isVerified = verifyMortgage();
+        }
+
+        return isVerified;
+    }
+
+    private boolean verifyMortgage() {
+        boolean isVerified = true;
+
         if(typeSelected.equals("")) {
             parentActivity.showToast("Buyer or Seller is required");
             isVerified = false;
@@ -839,8 +858,48 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             } else {
                 isVerified = true;
             }
+
+        }
+
+        return isVerified;
+
+    }
+
+    private boolean verifyRecruiting() {
+        boolean isVerified = true;
+
+        if(typeSelected.equals("")) {
+            parentActivity.showToast("New or Experienced Recruit is required");
+            isVerified = false;
+        }
+        else if(firstNameText.getText().toString().equals("")) {
+            parentActivity.showToast("First Name is required");
+            isVerified = false;
+        }
+        else if(lastNameText.getText().toString().equals("")) {
+            parentActivity.showToast("Last Name is required");
+            isVerified = false;
+        }
+        else if(transAmount.getText().toString().equals("")) {
+            parentActivity.showToast("Closed Volume is required");
+            isVerified = false;
+        }
+        else if(gci.getText().toString().equals("")) {
+            parentActivity.showToast("Recruit Income is required");
+            isVerified = false;
+        }
+        else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
+            if(counter == 1) {
+                parentActivity.showToast("You may want to add your Settlement Date");
+                isVerified = false;
+                counter+=1;
+            } else {
+                isVerified = true;
+            }
+
         }
         return isVerified;
+
     }
 
     @Override
@@ -871,10 +930,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
-                calculateTransPercentage(gciPercent, gci);
+                calculatePercentage(gciPercent, gci, transAmount);
                 break;
             case R.id.calculateIncomePercent:
-                calculateGciPercentage(incomePercent, paidIncome);
+                calculatePercentage(incomePercent, paidIncome, transAmount);
                 break;
             case R.id.lock:
                 parentActivity.showToast("This client account has been locked by your team administrator.");
@@ -950,7 +1009,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 startActivityForResult(contactIntent, 1);
                 break;
             case R.id.archiveButton:
-                popReasonDialog("Reason for Archiving Client?", "Archived");
+                if(parentActivity.isRecruiting()) {
+                    popReasonDialog("Reason for losing recruit?", "Archived");
+                }
+                else {
+                    popReasonDialog("Reason for Archiving Client?", "Archived");
+                }
                 break;
             case R.id.activateButton:
                 popReasonDialog("Reason for Activating Client?", "Activated");

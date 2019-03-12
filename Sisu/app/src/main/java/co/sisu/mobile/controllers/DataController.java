@@ -93,6 +93,10 @@ public class DataController {
         if(messageCenterVisible) {
             morePage.add(new MorePageContainer("Message Center", "Review messages", R.drawable.text_message_icon_active));
         }
+
+        if(agent.getIs_superuser()) {
+            morePage.add(new MorePageContainer("Sisu Login", "Login as any agent", R.drawable.sisu_mark));
+        }
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
