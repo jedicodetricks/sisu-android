@@ -859,7 +859,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
                     navigateToClientList("signed");
                     break;
                 case R.id.underContractProgressMark:
-                    navigateToClientList("contract");
+                    navigateToClientList("archived");
                     break;
                 case R.id.closedProgressMark:
                     navigateToClientList("closed");

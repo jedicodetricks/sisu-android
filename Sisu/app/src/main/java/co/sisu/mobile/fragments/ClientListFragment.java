@@ -416,7 +416,12 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     private void selectTab(String selectedTab) {
-        total.setText("Total: $");
+        if(parentActivity.isRecruiting()) {
+            total.setText("Total GCI: $");
+        }
+        else {
+            total.setText("Total: $");
+        }
         if(selectedTab != null) {
             switch (selectedTab.toLowerCase()) {
                 case "pipeline":

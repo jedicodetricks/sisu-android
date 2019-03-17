@@ -15,6 +15,7 @@ import java.util.Stack;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.fragments.ClientListFragment;
+import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.TeamObject;
 
@@ -79,7 +80,11 @@ public class NavigationManager {
             }
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
-            if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
+            if(fragmentClass.getSimpleName().equals("ClientListFragment") && parentActivity.isRecruiting()) {
+                // We're passing in the word Clients so that the label will localize to Recruits
+                actionBarManager.swapToClientListBar("Clients", DISABLE_DRAWER);
+            }
+            else if(fragmentClass.getSimpleName().equals("ClientListFragment") && !parentActivity.isRecruiting()) {
                 actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
             }
             else {
@@ -297,8 +302,16 @@ public class NavigationManager {
         actionBarManager.initializeTeamBar(teamsObject);
     }
 
+    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
+        actionBarManager.initializeTeamAgents(teamAgents);
+    }
+
     public void updateTeam(TeamObject team) {
         actionBarManager.updateTeam(team);
+    }
+
+    public void updateTeamAgents(AgentModelStringSuperUser[] teamAgents) {
+        actionBarManager.updateTeamAgents(teamAgents);
     }
 
     public void toggleDrawer() {

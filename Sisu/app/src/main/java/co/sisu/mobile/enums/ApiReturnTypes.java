@@ -39,5 +39,6 @@ public enum ApiReturnTypes {
     UPDATE_CLIENT,
     ACTIVATE_CLIENT,
     DELETE_NOTE,
-    GET_LEAD_SOURCES;
+    GET_LEAD_SOURCES,
+    GET_TEAM_AGENTS
 }

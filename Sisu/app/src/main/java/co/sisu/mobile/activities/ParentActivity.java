@@ -57,6 +57,7 @@ import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
+import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
@@ -65,6 +66,8 @@ import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncSettingsJsonObject;
+import co.sisu.mobile.models.AsyncTeamAgentJsonStringSuperUserObject;
+import co.sisu.mobile.models.AsyncTeamAgentsJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
@@ -462,6 +465,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
         }
+        else if(returnType == ApiReturnTypes.GET_TEAM_AGENTS) {
+            AsyncTeamAgentJsonStringSuperUserObject teamAgentsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamAgentJsonStringSuperUserObject.class);
+            final AgentModelStringSuperUser[] agents = teamAgentsObject.getAgents();
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    navigationManager.initializeTeamAgents(agents);
+                    navigationManager.updateTeamAgents(agents);
+                }
+            });
+
+            System.out.println("TEST");
+        }
         else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsObject.getRecord_activities();
@@ -546,6 +562,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                     apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                     apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
             });
         }

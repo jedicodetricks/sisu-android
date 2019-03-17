@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncDelete;
@@ -210,6 +211,16 @@ public class ApiManager {
         getJWT(agent_id);
         ApiReturnTypes returnType = ApiReturnTypes.GET_LEAD_SOURCES;
         String currentUrl = url + "api/v1/team/get-lead-sources/" + teamId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getTeamAgents(AsyncServerEventListener cb, String agent_id, int teamId) {
+        if(teamId == -1) {
+            teamId = 0;
+        }
+        getJWT(agent_id);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_AGENTS;
+        String currentUrl = url + "api/v1/team/get-team-agents/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -446,7 +457,7 @@ public class ApiManager {
         timestamp = String.valueOf(date.getTimeInMillis());
 
         Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 365);
+        expDate.add(Calendar.DATE, 1);
 
         //TODO: The issuer is supposed to be random I think
         jwtStr = Jwts.builder()

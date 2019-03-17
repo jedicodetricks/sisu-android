@@ -13,10 +13,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
 import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.adapters.TeamAgentsListAdapter;
 import co.sisu.mobile.adapters.TeamBarAdapter;
+import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -37,6 +41,7 @@ public class ActionBarManager {
     int selectedTeam = 0;
     private ClientObject selectedClient;
     private TeamObject currentTeam;
+    private AgentModelStringSuperUser[] teamAgents;
 
 
     public ActionBarManager(ParentActivity parentActivity) {
@@ -94,6 +99,21 @@ public class ActionBarManager {
 
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
             TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList, colorSchemeManager);
+            mListView.setAdapter(adapter);
+        }
+    }
+
+    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
+        if(teamAgents.length > 0) {
+            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
+            mListView.setDivider(null);
+            mListView.setDividerHeight(30);
+
+            this.teamAgents = teamAgents;
+
+            mListView.setOnItemClickListener(parentActivity);
+
+            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
             mListView.setAdapter(adapter);
         }
     }
@@ -359,6 +379,10 @@ public class ActionBarManager {
         this.selectedClient = selectedClient;
     }
 
+    public void updateTeamAgents(AgentModelStringSuperUser[] teamAgents) {
+        this.teamAgents = teamAgents;
+    }
+
     public ClientObject getSelectedClient() {
         return selectedClient;
     }
@@ -389,6 +413,5 @@ public class ActionBarManager {
             teamIcon.setVisibility(View.INVISIBLE);
         }
     }
-
 
 }

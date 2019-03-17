@@ -9,6 +9,7 @@
 
     <!--Navbar-->
     <string name="navbarTitle">Current Team</string>
+    <string name="teamAgentsTitle">Team Agents</string>
 
     <!--Version-->
     <string name="version">Version 1.1</string>
