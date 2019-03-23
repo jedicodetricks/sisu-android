@@ -142,62 +142,14 @@ public class DataController {
         Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
         Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
         Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
-
         Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
 
-        AgentGoalsObject[] goals = agent.getAgentGoalsObject();
 
         for(int i = 0; i < counters.length; i++) {
-            if (counters[i].getCoalesce() != null) {
-                counters[i].setName(counters[i].getCoalesce());
-            }
+//            if (counters[i].getCoalesce() != null) {
+//                counters[i].setName(counters[i].getCoalesce());
+//            }
 
-            if (goals != null) {
-                for (AgentGoalsObject ago : goals) {
-                    if(isRecruiting) {
-                        //TODO: Recruiting shit here
-                        if(ago != null) {
-                            if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
-
-                                if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
-                                    contract.setGoalNum(contract.getGoalNum() + Double.parseDouble(ago.getValue()));
-                                }
-                                else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
-                                    firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Double.parseDouble(ago.getValue()));
-                                }
-                                else if(ago.getGoal_id().equals("SSGND") || ago.getGoal_id().equals("BSGND")) {
-                                    signed.setGoalNum(signed.getGoalNum() + Double.parseDouble(ago.getValue()));
-                                }
-                                else {
-                                    counters[i].setGoalNum(Double.parseDouble(ago.getValue()));
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
-
-                            if (ago.getGoal_id().equals("SCLSD") || ago.getGoal_id().equals("BCLSD")) {
-                                closed.setGoalNum(closed.getGoalNum() + Double.parseDouble(ago.getValue()));
-                            }
-                            else if (ago.getGoal_id().equals("SUNDC") || ago.getGoal_id().equals("BUNDC")) {
-                                contract.setGoalNum(contract.getGoalNum() + Double.parseDouble(ago.getValue()));
-                            }
-                            else if (ago.getGoal_id().equals("SAPPT") || ago.getGoal_id().equals("BAPPT")) {
-                                firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Double.parseDouble(ago.getValue()));
-                            }
-                            else if(ago.getGoal_id().equals("SSGND") || ago.getGoal_id().equals("BSGND")) {
-                                signed.setGoalNum(signed.getGoalNum() + Double.parseDouble(ago.getValue()));
-                            }
-                            else {
-                                counters[i].setGoalNum(Double.parseDouble(ago.getValue()));
-                            }
-                        }
-                    }
-                }
-            }
-
-//            Metric metric = new Metric(localizeLabel(counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
@@ -233,6 +185,10 @@ public class DataController {
             }
         }
 
+        for(String s : activitiesSelected.keySet()) {
+
+        }
+
         if(!isRecruiting) {
             recordObject.add(contract);
             recordObject.add(signed);
@@ -240,6 +196,9 @@ public class DataController {
         recordObject.add(contact);
         recordObject.add(firstAppointment);
         recordObject.add(closed);
+        List<Metric> secondaryRecordObject = new ArrayList<>();
+        List<Metric> selectedActivitiesRecordObject = new ArrayList<>();
+        List<Metric> formattedSelectedRecordObject = new ArrayList<>();
         for(Metric m : activitiesObject) {
             switch(m.getType()) {
                 case "CONTA":
@@ -252,10 +211,38 @@ public class DataController {
                 case "BAPPT":
                 case "SAPPT":
                     break;
-                    default:
+                default:
+                    secondaryRecordObject.add(m);
+            }
+        }
+
+        int counter = activitiesSelected.size();
+        for(String s : activitiesSelected.keySet()) {
+            SelectedActivities currentActivity = activitiesSelected.get(s);
+            selectedActivitiesRecordObject.add(new Metric(currentActivity.getName(), currentActivity.getType(), 0, 0, R.drawable.sisu_mark, 0, counter));
+            counter--;
+        }
+
+        for(int i = 0; i < secondaryRecordObject.size(); i++) {
+            Metric recordMetric = secondaryRecordObject.get(i);
+            for(int k = 0; k < selectedActivitiesRecordObject.size(); k++) {
+                Metric selectedMetric = selectedActivitiesRecordObject.get(k);
+                if(recordMetric.getType().equalsIgnoreCase(selectedMetric.getType())) {
+                    Metric tempMetric = new Metric(selectedMetric.getTitle(), selectedMetric.getType(), recordMetric.getCurrentNum(), recordMetric.getGoalNum(), recordMetric.getThumbnailId(), recordMetric.getColor(), selectedMetric.getWeight());
+                    recordMetric.setWeight(selectedMetric.getWeight());
+                    selectedActivitiesRecordObject.set(k, tempMetric);
+//                    formattedSelectedRecordObject.add(tempMetric);
+                    break;
+                }
+            }
+        }
+
+        for(Metric m : selectedActivitiesRecordObject) {
+            if(!m.getType().equalsIgnoreCase("CONTA")) {
                 recordObject.add(m);
             }
         }
+
         recordObject = sortActivitiesObjectByWeight(recordObject);
     }
 
@@ -1201,6 +1188,33 @@ public class DataController {
 //        }
         this.activitySettings = activitiesSelected;
         this.activitiesSelected = setupSelectedActivities(activitiesSelected);
+//        addActivitySettingsToRecordActivities();
+    }
+
+    private void addActivitySettingsToRecordActivities() {
+        List<Metric> objectsToAdd = new ArrayList<>();
+        if(recordObject != null) {
+
+            for(String s : activitiesSelected.keySet()) {
+                boolean match = false;
+                SelectedActivities currentActivity = activitiesSelected.get(s);
+                for(Metric m : recordObject) {
+                    if(m.getType().equalsIgnoreCase(currentActivity.getType())) {
+                        match = true;
+                        break;
+                    }
+                }
+                if(!match) {
+                    objectsToAdd.add(new Metric(currentActivity.getName(), currentActivity.getType(), 0, 0, R.drawable.sisu_mark, 0, 0));
+                }
+
+            }
+
+        }
+
+        for(Metric m : objectsToAdd) {
+            recordObject.add(m);
+        }
     }
 
     private void setDefaultGoalsObject(AgentGoalsObject[] agentGoalsObject) {

@@ -118,11 +118,11 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getActivitySettings(AsyncServerEventListener cb, String agentId, int teamId) {
+    public void getActivitySettings(AsyncServerEventListener cb, String agentId, int teamId, int marketId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
-        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId;
+        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId + "/" + marketId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -306,12 +306,12 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int teamId) {
+    public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int teamId, int marketId) {
         //POST
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS;
         String body = updateObject;
-        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId;
+        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId + "/" + marketId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 

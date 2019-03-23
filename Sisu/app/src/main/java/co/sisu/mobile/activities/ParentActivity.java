@@ -161,7 +161,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
 
         //MOCKING AN AGENT
-//        agent.setAgent_id("4726");
+//        agent.setAgent_id("5088");
 //        dataController.setAgent(agent);
         //
         
@@ -348,7 +348,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), getSelectedTeamMarketId());
         apiManager.getClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
         apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
@@ -561,7 +561,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     teamsFinished = true;
                     apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                     apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
                     apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
             });

@@ -35,6 +35,8 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
+import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
 import okhttp3.Response;
 
@@ -57,6 +59,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ProgressBar loader;
     private TextView dateDisplay, otherLabel;
     private ImageView calendarLauncher;
+    private AsyncActivitySettingsObject[] allActivities;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -84,8 +87,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         calendar = Calendar.getInstance();
-        Date d = calendar.getTime();
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+
+//        Date d = calendar.getTime();
+//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -235,16 +240,11 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 showDatePickerDialog();
                 break;
             case R.id.saveButton:
-                updateRecords();
                 saveRecords();
                 break;
             default:
                 break;
         }
-    }
-
-    private void updateRecords() {
-        // TODO: 4/30/2018 set activities object model with current stats
     }
 
     private void saveRecords() {
@@ -300,6 +300,27 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                     initializeListView(metricList);
                 }
             });
+//            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        }
+        else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
+            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            dataController.setActivitiesSelected(settings);
+
+//            currentActivitiesSorting = dataController.getActivitiesSelected();
+//            parentActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    loader.setVisibility(View.GONE);
+//                    metricList = dataController.getRecordActivities();
+//                    setLabels();
+//                    initializeListView(metricList);
+////                    setupFieldsWithData();
+////                    fillListViewWithData(dataController.getActivitiesSelected());
+//                }
+//            });
+            Date d = calendar.getTime();
+            apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         }
     }
 

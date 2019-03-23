@@ -104,18 +104,18 @@ public class ActionBarManager {
     }
 
     public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
-        if(teamAgents.length > 0) {
-            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
-            mListView.setDivider(null);
-            mListView.setDividerHeight(30);
-
-            this.teamAgents = teamAgents;
-
-            mListView.setOnItemClickListener(parentActivity);
-
-            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
-            mListView.setAdapter(adapter);
-        }
+//        if(teamAgents.length > 0) {
+//            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
+//            mListView.setDivider(null);
+//            mListView.setDividerHeight(30);
+//
+//            this.teamAgents = teamAgents;
+//
+//            mListView.setOnItemClickListener(parentActivity);
+//
+//            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
+//            mListView.setAdapter(adapter);
+//        }
     }
 
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {

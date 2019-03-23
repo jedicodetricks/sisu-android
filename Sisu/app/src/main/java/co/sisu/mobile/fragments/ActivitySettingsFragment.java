@@ -83,7 +83,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeListView();
         initializeFields();
         loader.setVisibility(View.VISIBLE);
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
         setColorScheme();
     }
 
@@ -241,7 +241,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         activitiesJsonObject.setActivities(array);
         dataController.setActivitiesSelected(currentActivitiesSorting);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getSelectedTeamId());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
     }
 
     private void saveSettings() {
@@ -257,7 +257,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             }
         }
         dataController.setActivitiesSelected(currentActivitySettings);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getSelectedTeamId());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
     }
 
     private String createUpdateObject(AsyncActivitySettingsObject[] selectedActivities) {
