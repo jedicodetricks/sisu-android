@@ -63,8 +63,8 @@ public class TeamAgentsListAdapter extends BaseAdapter {
         ConstraintLayout layout = v.findViewById(R.id.team_agents_layout);
 
         textViewHome.setText(info.getFirst_name() + " " + info.getLast_name());
-        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-        textViewHome.setBackgroundColor(colorSchemeManager.getAppBackground());
+//        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+//        textViewHome.setBackgroundColor(colorSchemeManager.getAppBackground());
         //TODO: This isn't changing colors correctly for some reason so it's GRAY right now
         textViewHome.setTextColor(Color.GRAY);
 

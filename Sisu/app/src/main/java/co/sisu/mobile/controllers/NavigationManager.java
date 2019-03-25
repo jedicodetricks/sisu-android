@@ -318,6 +318,10 @@ public class NavigationManager {
         actionBarManager.toggleDrawer();
     }
 
+    public void toggleTeamDrawer() {
+        actionBarManager.toggleTeamDrawer();
+    }
+
     public void closeDrawer() {
         actionBarManager.closeDrawer();
     }

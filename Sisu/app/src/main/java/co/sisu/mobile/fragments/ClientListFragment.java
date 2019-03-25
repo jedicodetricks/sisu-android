@@ -471,7 +471,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         if(mListView != null) {
 //            mListView.setAdapter(null);
         }
-        switch ((int) tab.getPosition()) {
+        switch (tab.getPosition()) {
             case 0:
                 currentList = dataController.getPipelineList();
                 selectedTab = "pipeline";

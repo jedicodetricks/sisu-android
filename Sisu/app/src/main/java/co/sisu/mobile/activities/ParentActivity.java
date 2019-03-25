@@ -116,7 +116,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
     private Toolbar toolbar;
-    private NavigationView navView;
     private ListView navViewList;
     private TextView navTitle;
     private boolean isNoteFragment = false;
@@ -295,9 +294,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.cancelButton:
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    break;
+                case R.id.team_agents_title:
+                    navigationManager.toggleTeamDrawer();
+                    break;
                 default:
                     break;
             }
+
         }
 
     }
@@ -328,19 +332,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //This is what goes off when you click a new team.
         parentLoader.setVisibility(View.VISIBLE);
-        TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-        updatedTeam = team;
-        updateTeamPosition = position;
-        navigationManager.updateTeam(updatedTeam);
-        navigationManager.updateSelectedTeam(updateTeamPosition);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        f = fragmentManager.findFragmentById(R.id.your_placeholder);
+        try {
+            TeamObject team = (TeamObject) parent.getItemAtPosition(position);
+            updatedTeam = team;
+            updateTeamPosition = position;
+            navigationManager.updateTeam(updatedTeam);
+            navigationManager.updateSelectedTeam(updateTeamPosition);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            f = fragmentManager.findFragmentById(R.id.your_placeholder);
 
-        sendTeamSwapApiCalls(team);
+            sendTeamSwapApiCalls(team);
 
-        navigationManager.closeDrawer();
+            navigationManager.closeDrawer();
+        } catch ( ClassCastException cce) {
+            //This is what goes off when you click a new team.
+            AgentModelStringSuperUser selectedAgent = (AgentModelStringSuperUser) parent.getItemAtPosition(position);
+            // TODO: This is where changing to a new agent will go
+            System.out.println("HEREHERERE");
+        }
+
     }
 
     private void sendTeamSwapApiCalls(TeamObject team) {

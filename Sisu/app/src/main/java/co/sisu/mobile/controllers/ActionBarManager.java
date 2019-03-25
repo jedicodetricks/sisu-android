@@ -32,7 +32,7 @@ import co.sisu.mobile.system.SaveSharedPreference;
 public class ActionBarManager {
     private ParentActivity parentActivity;
     private ColorSchemeManager colorSchemeManager;
-    private TextView pageTitle, teamLetter, backtionTitle;
+    private TextView pageTitle, teamLetter, backtionTitle, teamAgentsTitle;
     private ImageView teamIcon;
     private View teamBlock;
     private DrawerLayout drawerLayout;
@@ -64,6 +64,7 @@ public class ActionBarManager {
 
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = parentActivity.findViewById(R.id.action_bar_title);
+        teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
         teamLetter = parentActivity.findViewById(R.id.team_letter);
         teamIcon = parentActivity.findViewById(R.id.team_icon);
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
@@ -72,6 +73,7 @@ public class ActionBarManager {
         pageTitle.setText(parentActivity.localizeLabel(fragmentTag));
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
+        teamAgentsTitle.setOnClickListener(parentActivity);
 
         teamBlock.setVisibility(View.GONE);
         teamLetter.setVisibility(View.GONE);
@@ -104,18 +106,18 @@ public class ActionBarManager {
     }
 
     public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
-//        if(teamAgents.length > 0) {
-//            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
-//            mListView.setDivider(null);
-//            mListView.setDividerHeight(30);
-//
-//            this.teamAgents = teamAgents;
-//
-//            mListView.setOnItemClickListener(parentActivity);
-//
-//            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
-//            mListView.setAdapter(adapter);
-//        }
+        if(teamAgents.length > 0) {
+            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
+            mListView.setDivider(null);
+            mListView.setDividerHeight(40);
+
+            this.teamAgents = teamAgents;
+
+            mListView.setOnItemClickListener(parentActivity);
+
+            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
+            mListView.setAdapter(adapter);
+        }
     }
 
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {
@@ -176,44 +178,12 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-//                title = parentActivity.findViewById(R.id.title);
                 parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-//                ConstraintLayout layout = parentActivity.findViewById(R.id.action_bar_parent);
-//                layout.setBackgroundColor(parentActivity.getResources().getColor(R.color.colorClay));
 
                 pageTitle = parentActivity.findViewById(R.id.action_bar_title);
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-//                teamLetter = parentActivity.findViewById(R.id.team_letter);
-//                teamBlock = parentActivity.findViewById(R.id.action_bar_home);
-//                teamIcon = parentActivity.findViewById(R.id.team_icon);
                 pageTitle.setText(parentActivity.localizeLabel(titleString));
-//                View homeButton= parentActivity.findViewById(R.id.action_bar_home);
-//                homeButton.setOnClickListener(parentActivity);
                 manageDrawerEnabled(isDrawerEnabled);
-//                if(teamsList != null) {
-////                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-//                    if(colorSchemeManager.getIcon() != null) {
-//                        Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
-//                        //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
-//                        //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
-//                        teamsList.get(selectedTeam).setIcon(colorSchemeManager.getIcon());
-//                        teamIcon.setVisibility(View.VISIBLE);
-//                        teamBlock.setVisibility(View.INVISIBLE);
-//                        teamLetter.setVisibility(View.GONE);
-//                    } else {
-//                        teamLetter.setText(teamsList.get(selectedTeam).getTeamLetter().toUpperCase());
-//                        teamLetter.setBackgroundColor(teamsList.get(selectedTeam).getColor());
-//                        teamBlock.setVisibility(View.VISIBLE);
-//                        teamLetter.setVisibility(View.VISIBLE);
-//                        teamIcon.setVisibility(View.GONE);
-//                    }
-//                }
-//                else {
-////                    teamBlock.setVisibility(View.GONE);
-////                    teamLetter.setVisibility(View.GONE);
-////                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                }
             }
         });
 
@@ -260,11 +230,12 @@ public class ActionBarManager {
         teamLetter = parentActivity.findViewById(R.id.team_letter);
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
         teamIcon = parentActivity.findViewById(R.id.team_icon);
-
+        teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
         if(isDrawerEnabled) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             teamBlock.setOnClickListener(parentActivity);
             teamIcon.setOnClickListener(parentActivity);
+            teamAgentsTitle.setOnClickListener(parentActivity);
             if(teamsList != null) {
 //                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
@@ -355,6 +326,15 @@ public class ActionBarManager {
         }
         else {
             drawerLayout.openDrawer(Gravity.LEFT);
+        }
+    }
+
+    public void toggleTeamDrawer() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(Gravity.RIGHT);
+        }
+        else {
+            drawerLayout.openDrawer(Gravity.RIGHT);
         }
     }
 
