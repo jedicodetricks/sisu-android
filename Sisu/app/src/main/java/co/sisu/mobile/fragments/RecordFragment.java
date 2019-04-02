@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -9,10 +10,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,6 +38,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
+import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
@@ -240,7 +245,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 showDatePickerDialog();
                 break;
             case R.id.saveButton:
-                saveRecords();
+                if(parentActivity.isAdminMode()) {
+                    popAdminConfirmDialog();
+                }
+                else {
+                    saveRecords();
+                }
                 break;
             default:
                 break;
@@ -255,7 +265,25 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         else {
             parentActivity.showToast("There are no changes to save");
         }
+    }
 
+    private void popAdminConfirmDialog() {
+        String message = "Admin. Do you want to save?";
+        android.support.v7.app.AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        builder.setMessage(message)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        saveRecords();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dataController.clearUpdatedRecords();
+                    }
+                });
+        builder.create();
+        builder.show();
     }
 
     @Override

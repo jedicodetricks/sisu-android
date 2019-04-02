@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
-
-import java.util.Arrays;
 import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -41,7 +39,6 @@ public class ActionBarManager {
     int selectedTeam = 0;
     private ClientObject selectedClient;
     private TeamObject currentTeam;
-    private AgentModelStringSuperUser[] teamAgents;
 
 
     public ActionBarManager(ParentActivity parentActivity) {
@@ -89,7 +86,6 @@ public class ActionBarManager {
 
             this.teamsList = teamsList;
 
-
             mListView.setOnItemClickListener(parentActivity);
             if(colorSchemeManager.getIcon() != null) {
                 //teamsList.get(selectedTeam).setIcon("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg");
@@ -110,8 +106,6 @@ public class ActionBarManager {
             ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
             mListView.setDivider(null);
             mListView.setDividerHeight(40);
-
-            this.teamAgents = teamAgents;
 
             mListView.setOnItemClickListener(parentActivity);
 
@@ -232,10 +226,13 @@ public class ActionBarManager {
         teamIcon = parentActivity.findViewById(R.id.team_icon);
         teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
         if(isDrawerEnabled) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START);
             teamBlock.setOnClickListener(parentActivity);
             teamIcon.setOnClickListener(parentActivity);
-            teamAgentsTitle.setOnClickListener(parentActivity);
+            if(teamAgentsTitle != null) {
+                teamAgentsTitle.setOnClickListener(parentActivity);
+            }
+
             if(teamsList != null) {
 //                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 teamBlock.setBackgroundColor(teamsList.get(selectedTeam).getColor());
@@ -258,7 +255,7 @@ public class ActionBarManager {
                     teamBlock.setVisibility(View.GONE);
                     teamLetter.setVisibility(View.GONE);
                     teamIcon.setVisibility(View.GONE);
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
             }
         }
         else {
@@ -271,7 +268,7 @@ public class ActionBarManager {
             if(teamIcon != null) {
                 teamIcon.setVisibility(View.GONE);
             }
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
         }
     }
 
@@ -314,6 +311,15 @@ public class ActionBarManager {
             teamLetter.setVisibility(View.VISIBLE);
             teamIcon.setVisibility(View.INVISIBLE);
         }
+
+        if(team.getRole().equals("ADMIN")) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+            teamAgentsTitle.setVisibility(View.VISIBLE);
+        }
+        else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+            teamAgentsTitle.setVisibility(View.GONE);
+        }
     }
 
     public TeamObject getCurrentTeam() {
@@ -342,6 +348,10 @@ public class ActionBarManager {
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
+    public void closeTeamAgentsDrawer() {
+        drawerLayout.closeDrawer(Gravity.RIGHT);
+    }
+
     public int getSelectedTeamId() {
         int teamId = 0;
         if(teamsList != null) {
@@ -359,10 +369,6 @@ public class ActionBarManager {
         this.selectedClient = selectedClient;
     }
 
-    public void updateTeamAgents(AgentModelStringSuperUser[] teamAgents) {
-        this.teamAgents = teamAgents;
-    }
-
     public ClientObject getSelectedClient() {
         return selectedClient;
     }
@@ -373,6 +379,17 @@ public class ActionBarManager {
             marketId = teamsList.get(selectedTeam).getMarket_id();
         }
         return marketId;
+    }
+
+    public void setAdminMode(boolean isAdminMode) {
+        if(teamAgentsTitle != null) {
+            if(isAdminMode) {
+                teamAgentsTitle.setText("Return");
+            }
+            else {
+                teamAgentsTitle.setText("Company");
+            }
+        }
     }
 
     public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {

@@ -470,7 +470,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 parentActivity.onBackPressed();
                 break;
             case R.id.addClientSaveButton:
-                saveClient();
+                if(parentActivity.isAdminMode()) {
+                    popAdminConfirmDialog();
+                }
+                else {
+                    saveClient();
+                }
                     //animation of confirmation
 //                    onBackPressed();
                 break;
@@ -611,6 +616,25 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             default:
                 break;
         }
+    }
+
+    private void popAdminConfirmDialog() {
+        String message = "Admin. Do you want to save?";
+        android.support.v7.app.AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        builder.setMessage(message)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        saveClient();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dataController.clearUpdatedRecords();
+                    }
+                });
+        builder.create();
+        builder.show();
     }
 
 

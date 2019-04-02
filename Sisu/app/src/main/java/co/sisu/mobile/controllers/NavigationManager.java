@@ -310,10 +310,6 @@ public class NavigationManager {
         actionBarManager.updateTeam(team);
     }
 
-    public void updateTeamAgents(AgentModelStringSuperUser[] teamAgents) {
-        actionBarManager.updateTeamAgents(teamAgents);
-    }
-
     public void toggleDrawer() {
         actionBarManager.toggleDrawer();
     }
@@ -326,12 +322,20 @@ public class NavigationManager {
         actionBarManager.closeDrawer();
     }
 
+    public void closeTeamAgentsDrawer() {
+        actionBarManager.closeTeamAgentsDrawer();
+    }
+
     public void setSelectedClient(ClientObject selectedClient) {
         actionBarManager.setSelectedClient(selectedClient);
     }
 
     public ClientObject getSelectedClient() {
         return actionBarManager.getSelectedClient();
+    }
+
+    public String getCurrentFragment() {
+        return fragmentTag;
     }
 
     public int getSelectedTeamId() {

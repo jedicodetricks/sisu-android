@@ -945,10 +945,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 parentActivity.showToast("This client account has been locked by your team administrator.");
                 break;
             case R.id.saveButton://notify of success update api
-                if(verifyInputFields()) {
-                    updateCurrentClient(false);
-                    saveClient();
+                if(parentActivity.isAdminMode()) {
+                    popAdminConfirmDialog();
                 }
+                else {
+                    if(verifyInputFields()) {
+                        updateCurrentClient(false);
+                        saveClient();
+                    }
+                }
+
                 break;
             case R.id.signedDatePicker:
             case R.id.signedDateDisplay:
@@ -1058,6 +1064,28 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             default:
                 break;
         }
+    }
+
+    private void popAdminConfirmDialog() {
+        String message = "Admin. Do you want to save?";
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(parentActivity);
+        builder.setMessage(message)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        if(verifyInputFields()) {
+                            updateCurrentClient(false);
+                            saveClient();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dataController.clearUpdatedRecords();
+                    }
+                });
+        builder.create();
+        builder.show();
     }
 
     private void saveClient(){
