@@ -500,150 +500,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clientNotesButton">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/appointmentSetDateSection"
+            <include layout="@layout/client_datepicker_layout"
+                android:id="@+id/client_datepicker_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:id="@+id/appointmentSetDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/appointmentSetDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/appointmentSetDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/appointmentSetDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/appointmentSetDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/appointmentSetDateTitle" />
-
-                <ImageView
-                    android:id="@+id/appointmentSetDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/appointmentSetDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/appointmentDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appointmentSetDateSection">
-
-                <TextView
-                    android:id="@+id/appointmentDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/appointmentDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/appointmentDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/appointmentDateTitle" />
-
-                <ImageView
-                    android:id="@+id/appointmentDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/appointmentDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </android.support.constraint.ConstraintLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <!--<android.support.constraint.ConstraintLayout-->
-                <!--android:id="@+id/addAppointmentDateSection"-->
+                <!--android:id="@+id/appointmentSetDateSection"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_marginStart="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">-->
+                <!--app:layout_constraintStart_toStartOf="parent">-->
 
                 <!--<TextView-->
-                    <!--android:id="@+id/addAppointmentDateTitle"-->
+                    <!--android:id="@+id/appointmentSetDateTitle"-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginStart="20dp"-->
                     <!--android:layout_marginTop="8dp"-->
-                    <!--android:text="@string/addAppointmentDateTitle"-->
+                    <!--android:text="@string/appointmentSetDateTitle"-->
                     <!--android:textSize="@dimen/font_normal"-->
-                    <!--app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/appointmentSetDatePicker"-->
                     <!--app:layout_constraintTop_toTopOf="parent" />-->
 
                 <!--<TextView-->
-                    <!--android:id="@+id/addAppointmentDateDisplay"-->
+                    <!--android:id="@+id/appointmentSetDateDisplay"-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginBottom="8dp"-->
@@ -653,11 +536,11 @@
                     <!--android:hint="@string/temp_date"-->
                     <!--android:textSize="@dimen/font_normal"-->
                     <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"-->
-                    <!--app:layout_constraintTop_toBottomOf="@id/addAppointmentDateTitle" />-->
+                    <!--app:layout_constraintStart_toEndOf="@id/appointmentSetDatePicker"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/appointmentSetDateTitle" />-->
 
                 <!--<ImageView-->
-                    <!--android:id="@+id/addAppointmentDatePicker"-->
+                    <!--android:id="@+id/appointmentSetDatePicker"-->
                     <!--android:layout_width="0dp"-->
                     <!--android:layout_height="0dp"-->
                     <!--android:layout_marginStart="8dp"-->
@@ -668,14 +551,14 @@
                     <!--app:srcCompat="@drawable/appointment_icon" />-->
 
                 <!--<Button-->
-                    <!--android:id="@+id/addAppointmentDateButton"-->
+                    <!--android:id="@+id/appointmentSetDateButton"-->
                     <!--style="@style/ButtonStyle"-->
                     <!--android:layout_width="75dp"-->
                     <!--android:layout_height="40dp"-->
                     <!--android:layout_marginBottom="8dp"-->
                     <!--android:layout_marginEnd="8dp"-->
                     <!--android:layout_marginTop="8dp"-->
-                    <!--android:text="Add"-->
+                    <!--android:text="@string/clear"-->
                     <!--android:textAllCaps="false"-->
                     <!--app:layout_constraintBottom_toBottomOf="parent"-->
                     <!--app:layout_constraintEnd_toEndOf="parent"-->
@@ -684,186 +567,310 @@
 
             <!--</android.support.constraint.ConstraintLayout>-->
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/signedDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/appointmentDateSection"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/appointmentSetDateSection">-->
 
-                <TextView
-                    android:id="@+id/signedDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/signedDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/signedDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <!--<TextView-->
+                    <!--android:id="@+id/appointmentDateTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/appointmentDateTitle"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-                <TextView
-                    android:id="@+id/signedDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/signedDatePicker"
-                    app:layout_constraintTop_toBottomOf="@+id/signedDateTitle" />
+                <!--<TextView-->
+                    <!--android:id="@+id/appointmentDateDisplay"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:hint="@string/temp_date"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/appointmentDateTitle" />-->
 
-                <ImageView
-                    android:id="@+id/signedDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/appointmentDatePicker"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--app:layout_constraintDimensionRatio="1:1"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"-->
+                    <!--app:srcCompat="@drawable/appointment_icon" />-->
 
-                <Button
-                    android:id="@+id/signedDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <!--<Button-->
+                    <!--android:id="@+id/appointmentDateButton"-->
+                    <!--style="@style/ButtonStyle"-->
+                    <!--android:layout_width="75dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/clear"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 
-            </android.support.constraint.ConstraintLayout>
+            <!--</android.support.constraint.ConstraintLayout>-->
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/underContractSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signedDateSection">
+            <!--&lt;!&ndash;<android.support.constraint.ConstraintLayout&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/addAppointmentDateSection"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_marginStart="8dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">&ndash;&gt;-->
 
-                <TextView
-                    android:id="@+id/underContractDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/underContractTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/underContractDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/addAppointmentDateTitle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginStart="20dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="@string/addAppointmentDateTitle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textSize="@dimen/font_normal"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
 
-                <TextView
-                    android:id="@+id/underContractDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/underContractDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/underContractDateTitle" />
+                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/addAppointmentDateDisplay"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginBottom="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginStart="20dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:hint="@string/temp_date"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textSize="@dimen/font_normal"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintTop_toBottomOf="@id/addAppointmentDateTitle" />&ndash;&gt;-->
 
-                <ImageView
-                    android:id="@+id/underContractDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
+                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/addAppointmentDatePicker"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginStart="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintDimensionRatio="1:1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:srcCompat="@drawable/appointment_icon" />&ndash;&gt;-->
 
-                <Button
-                    android:id="@+id/underContractDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/addAppointmentDateButton"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="@style/ButtonStyle"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="75dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="40dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginBottom="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginTop="8dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="Add"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textAllCaps="false"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
 
-            </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/settlementDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/underContractSection">
+            <!--&lt;!&ndash;</android.support.constraint.ConstraintLayout>&ndash;&gt;-->
 
-                <TextView
-                    android:id="@+id/settlementDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/settlementDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/settlementDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/signedDateSection"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">-->
 
-                <TextView
-                    android:id="@+id/settlementDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/settlementDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/settlementDateTitle" />
+                <!--<TextView-->
+                    <!--android:id="@+id/signedDateTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/signedDateTitle"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/signedDatePicker"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
-                <ImageView
-                    android:id="@+id/settlementDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
+                <!--<TextView-->
+                    <!--android:id="@+id/signedDateDisplay"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:hint="@string/temp_date"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/signedDatePicker"-->
+                    <!--app:layout_constraintTop_toBottomOf="@+id/signedDateTitle" />-->
 
-                <Button
-                    android:id="@+id/settlementDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                <!--<ImageView-->
+                    <!--android:id="@+id/signedDatePicker"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--app:layout_constraintDimensionRatio="1:1"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"-->
+                    <!--app:srcCompat="@drawable/appointment_icon" />-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/signedDateButton"-->
+                    <!--style="@style/ButtonStyle"-->
+                    <!--android:layout_width="75dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/clear"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+
+            <!--</android.support.constraint.ConstraintLayout>-->
+
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/underContractSection"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/signedDateSection">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/underContractDateTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/underContractTitle"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/underContractDatePicker"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/underContractDateDisplay"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:hint="@string/temp_date"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/underContractDatePicker"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/underContractDateTitle" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/underContractDatePicker"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--app:layout_constraintDimensionRatio="1:1"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"-->
+                    <!--app:srcCompat="@drawable/appointment_icon" />-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/underContractDateButton"-->
+                    <!--style="@style/ButtonStyle"-->
+                    <!--android:layout_width="75dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/clear"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+            <!--</android.support.constraint.ConstraintLayout>-->
+
+            <!--<android.support.constraint.ConstraintLayout-->
+                <!--android:id="@+id/settlementDateSection"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="16dp"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/underContractSection">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/settlementDateTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:text="@string/settlementDateTitle"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/settlementDatePicker"-->
+                    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/settlementDateDisplay"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:layout_marginStart="20dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--android:hint="@string/temp_date"-->
+                    <!--android:textSize="@dimen/font_normal"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintStart_toEndOf="@id/settlementDatePicker"-->
+                    <!--app:layout_constraintTop_toBottomOf="@id/settlementDateTitle" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/settlementDatePicker"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_marginStart="8dp"-->
+                    <!--android:layout_marginTop="8dp"-->
+                    <!--app:layout_constraintDimensionRatio="1:1"-->
+                    <!--app:layout_constraintStart_toStartOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="parent"-->
+                    <!--app:srcCompat="@drawable/appointment_icon" />-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/settlementDateButton"-->
+                    <!--style="@style/ButtonStyle"-->
+                    <!--android:layout_width="75dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginBottom="8dp"-->
+                    <!--android:layout_marginEnd="8dp"-->
+                    <!--android:text="@string/clear"-->
+                    <!--android:textAllCaps="false"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent" />-->
+            <!--</android.support.constraint.ConstraintLayout>-->
 
 
         </android.support.constraint.ConstraintLayout>

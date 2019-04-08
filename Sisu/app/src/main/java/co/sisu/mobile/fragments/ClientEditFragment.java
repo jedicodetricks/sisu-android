@@ -166,7 +166,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
         archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
         appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
-//        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.setAppointmentDateTitle)));
+        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentSetDateTitle)));
         signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
         underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
         settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
@@ -499,6 +499,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         }
 
         String formattedApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_dt());
+        String formattedSetApptDt = getFormattedDateFromApiReturn(currentClient.getAppt_set_dt());
         String formattedSignedDt = getFormattedDateFromApiReturn(currentClient.getSigned_dt());
         String formattedContractDt = getFormattedDateFromApiReturn(currentClient.getUc_dt());
         String formattedClosedDt = getFormattedDateFromApiReturn(currentClient.getClosed_dt());
@@ -515,6 +516,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
 
         appointmentDisplay.setText(formattedApptDt);
+        setAppointmentDisplay.setText(formattedSetApptDt);
         signedDisplay.setText(formattedSignedDt);
         contractDisplay.setText(formattedContractDt);
         settlementDisplay.setText(formattedClosedDt);
@@ -576,6 +578,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setMobile_phone(phoneText.getText().toString().equals("") ? null : phoneText.getText().toString());
         currentClient.setEmail(emailText.getText().toString().equals("") ? null : emailText.getText().toString());
         currentClient.setAppt_dt(null);
+        currentClient.setAppt_set_dt(null);
         currentClient.setSigned_dt(null);
         currentClient.setUc_dt(null);
         currentClient.setClosed_dt(null);
@@ -583,13 +586,21 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
         currentClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
         currentClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
-
+        currentClient.setTeam_id(parentActivity.getSelectedTeamId());
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
         }
         else {
             currentClient.setAppt_dt(null);
         }
+
+        if(!setAppointmentDisplay.getText().toString().equals("")) {
+            currentClient.setAppt_set_dt(getFormattedDate(setAppointmentDisplay.getText().toString()));
+        }
+        else {
+            currentClient.setAppt_dt(null);
+        }
+
         if(!signedDisplay.getText().toString().equals("")) {
             currentClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
             statusList = "signed";

@@ -11,6 +11,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String address_1;
     private String address_2;
     private String appt_dt;
+    private String appt_set_dt;
     private String city;
     private String client_event_count;
     private String client_id;
@@ -39,6 +40,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private int is_priority;
     private String activate_client;
     private String market_id;
+    private int team_id;
 
     public String getActivate_client() {
         return activate_client;
@@ -291,5 +293,22 @@ public class ClientObject implements Comparable<ClientObject>{
 
     public void setMarket_id(String market_id) {
         this.market_id = market_id;
+    }
+
+    public String getAppt_set_dt() {
+        return appt_set_dt;
+    }
+
+    public void setAppt_set_dt(String appt_set_dt) {
+        this.appt_set_dt = appt_set_dt;
+    }
+
+
+    public int getTeam_id() {
+        return team_id;
+    }
+
+    public void setTeam_id(int team_id) {
+        this.team_id = team_id;
     }
 }

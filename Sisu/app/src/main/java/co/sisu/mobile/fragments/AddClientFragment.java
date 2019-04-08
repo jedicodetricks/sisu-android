@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import co.sisu.mobile.controllers.ClientCommonManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -69,21 +70,23 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     public final int PICK_CONTACT = 2015;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
-    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
-                     appointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, setAppointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
+                     appointmentDateTitle, setAppointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
                      percentSign1, percentSign2, statusLabel, priorityText, leadSource;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, setAppointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    private int setAppointmentSelectedYear, setAppointmentSelectedMonth, setAppointmentSelectedDay;
     private int counter;
     private Switch prioritySwitch;
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
+//    private ClientCommonManager clientCommonManager;
     private ApiManager apiManager;
     private String currentStatus;
     private ColorSchemeManager colorSchemeManager;
@@ -105,6 +108,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+//        clientCommonManager = new ClientCommonManager();
         counter = 1;
         initializeButtons();
         initializeForm();
@@ -137,6 +141,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
         archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
         appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
+        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentSetDateTitle)));
         signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
         underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
         settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
@@ -160,11 +165,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
 
         signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
         pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
@@ -178,6 +185,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
 
         appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -237,6 +245,11 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         appointmentClear.setTextColor(colorSchemeManager.getButtonText());
         appointmentClear.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) appointmentClear.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
+        setAppointmentClear.setTextColor(colorSchemeManager.getButtonText());
+        setAppointmentClear.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) setAppointmentClear.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
@@ -368,6 +381,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         appointmentDateTitle = getView().findViewById(R.id.appointmentDateTitle);
         appointmentDateTitle.setOnClickListener(this);
 
+        getView().findViewById(R.id.appointmentSetDatePicker).setOnClickListener(this);
+        setAppointmentDisplay = getView().findViewById(R.id.appointmentSetDateDisplay);
+        setAppointmentDisplay.setOnClickListener(this);
+        setAppointmentDateTitle = getView().findViewById(R.id.appointmentSetDateTitle);
+        setAppointmentDateTitle.setOnClickListener(this);
+
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -388,6 +407,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         appointmentSelectedYear = year;
         appointmentSelectedMonth = month;
         appointmentSelectedDay = day;
+
+        setAppointmentSelectedYear = year;
+        setAppointmentSelectedMonth = month;
+        setAppointmentSelectedDay = day;
     }
 
     private void initializeForm() {
@@ -572,6 +595,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             case R.id.appointmentDateTitle:
 //                Toast.makeText(AddClientActivity.this, "SETTLEMENT DATE", Toast.LENGTH_SHORT).show();
                 showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
+                break;
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
                 removeStatusColor(signedStatus);
@@ -612,6 +636,11 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             // create and show the alert dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                break;
+            case R.id.appointmentSetDatePicker:
+            case R.id.appointmentSetDateDisplay:
+            case R.id.appointmentSetDateTitle:
+                showDatePickerDialog(setAppointmentSelectedYear, setAppointmentSelectedMonth, setAppointmentSelectedDay, "setAppointment");
                 break;
             default:
                 break;
@@ -769,6 +798,9 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
         if(!appointmentDisplay.getText().equals("")) {
             newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
+        }
+        if(!setAppointmentDisplay.getText().equals("")) {
+            newClient.setAppt_set_dt(getFormattedDate(setAppointmentDisplay.getText().toString()));
         }
         if(!signedDisplay.getText().equals("")) {
             newClient.setSigned_dt(getFormattedDate(signedDisplay.getText().toString()));
@@ -1020,6 +1052,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         settlementClear.setOnClickListener(this);
         appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
+        setAppointmentClear = getView().findViewById(R.id.appointmentSetDateButton);
+        setAppointmentClear.setOnClickListener(this);
         calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
@@ -1058,6 +1092,10 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             case "appointment":
                 appointmentDisplay.setText("");
                 appointmentDisplay.setHint(setText);
+                break;
+            case "setAppointment":
+                setAppointmentDisplay.setText("");
+                setAppointmentDisplay.setHint(setText);
                 break;
         }
         updateStatus();
@@ -1106,6 +1144,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 appointmentSelectedMonth = month - 1;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
+                break;
+            case "setAppointment":
+                setAppointmentSelectedYear = year;
+                setAppointmentSelectedMonth = month - 1;
+                setAppointmentSelectedDay = day;
+                setAppointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
         }
