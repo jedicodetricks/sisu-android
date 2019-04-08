@@ -578,7 +578,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    navigationManager.initializeTeamAgents(agents);
+                    navigationManager.initializeTeamAgents(agents, myAgentId);
                 }
             });
 

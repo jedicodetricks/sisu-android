@@ -39,7 +39,13 @@ public class ActionBarManager {
     int selectedTeam = 0;
     private ClientObject selectedClient;
     private TeamObject currentTeam;
-
+    private boolean isAdminMode = false;
+    private String myAgentId = "";
+    private AgentModelStringSuperUser[] allTeamAgents;
+    private AgentModelStringSuperUser[] justMyAgent = new AgentModelStringSuperUser[1];
+    private ListView teamAgentListView;
+    TeamAgentsListAdapter wholeTeamAdapter;
+    TeamAgentsListAdapter justMyAgentAdapter;
 
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
@@ -55,6 +61,11 @@ public class ActionBarManager {
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
         drawerLayout = parentActivity.findViewById(R.id.drawer_layout);
+        teamAgentListView = parentActivity.findViewById(R.id.team_agent_list);
+        teamAgentListView.setDivider(null);
+        teamAgentListView.setDividerHeight(40);
+
+        teamAgentListView.setOnItemClickListener(parentActivity);
     }
 
     public void initializeActionBar(String fragmentTag) {
@@ -101,16 +112,29 @@ public class ActionBarManager {
         }
     }
 
-    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
+    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents, String myAgentId) {
+        this.myAgentId = myAgentId;
+        allTeamAgents = teamAgents;
+        for (AgentModelStringSuperUser agent : teamAgents) {
+            if(agent.getAgent_id().equals(myAgentId)) {
+                justMyAgent[0] = agent;
+                break;
+            }
+        }
         if(teamAgents.length > 0) {
-            ListView mListView = parentActivity.findViewById(R.id.team_agent_list);
-            mListView.setDivider(null);
-            mListView.setDividerHeight(40);
-
-            mListView.setOnItemClickListener(parentActivity);
-
-            TeamAgentsListAdapter adapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
-            mListView.setAdapter(adapter);
+            wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
+            justMyAgentAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), justMyAgent, colorSchemeManager);
+            if(isAdminMode) {
+                // Swap the team agent list to only allow the agent to switch back to themselves
+                if(justMyAgentAdapter != null) {
+                    teamAgentListView.setAdapter(justMyAgentAdapter);
+                }
+            }
+            else {
+                if(wholeTeamAdapter != null) {
+                    teamAgentListView.setAdapter(wholeTeamAdapter);
+                }
+            }
         }
     }
 
@@ -177,6 +201,14 @@ public class ActionBarManager {
                 pageTitle = parentActivity.findViewById(R.id.action_bar_title);
                 pageTitle.setTextColor(colorSchemeManager.getActionbarText());
                 pageTitle.setText(parentActivity.localizeLabel(titleString));
+                teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
+
+                if(isAdminMode) {
+                    teamAgentsTitle.setText("Return");
+                }
+                else {
+                    teamAgentsTitle.setText("Team");
+                }
                 manageDrawerEnabled(isDrawerEnabled);
             }
         });
@@ -312,7 +344,7 @@ public class ActionBarManager {
             teamIcon.setVisibility(View.INVISIBLE);
         }
 
-        if(team.getRole().equals("ADMIN")) {
+        if(team.getRole().equals("ADMIN") || isAdminMode) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
             teamAgentsTitle.setVisibility(View.VISIBLE);
         }
@@ -382,12 +414,13 @@ public class ActionBarManager {
     }
 
     public void setAdminMode(boolean isAdminMode) {
+        this.isAdminMode = isAdminMode;
         if(teamAgentsTitle != null) {
             if(isAdminMode) {
                 teamAgentsTitle.setText("Return");
             }
             else {
-                teamAgentsTitle.setText("Company");
+                teamAgentsTitle.setText("Team");
             }
         }
     }

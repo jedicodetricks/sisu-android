@@ -78,17 +78,18 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, leadSource, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
     private ImageView lock, archiveButton;
-    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, addAppointmentDisplay;
+    private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, setAppointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton,
-                     appointmentDateTitle, addAppointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
+                     appointmentDateTitle, setAppointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
                      percentSign1, percentSign2, statusLabel, priorityText;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentAdd, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentSet, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
     private Switch prioritySwitch;
     private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
     private int settlementSelectedYear, settlementSelectedMonth, settlementSelectedDay;
     private int appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay;
+    private int appointmentSetSelectedYear, appointmentSetSelectedMonth, appointmentSetSelectedDay;
     private String typeSelected, clientStatus, m_Text;
     private String statusList = "pipeline";
     private int counter;
@@ -165,7 +166,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
         archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
         appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
-//        addAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.addAppointmentDateTitle)));
+//        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.setAppointmentDateTitle)));
         signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
         underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
         settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
@@ -190,13 +191,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-//        addAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
 
         signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-//        addAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
         pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
@@ -210,7 +211,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
 
         appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-//        addAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -300,10 +301,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         drawable = (GradientDrawable) appointmentClear.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-//        appointmentAdd.setTextColor(colorSchemeManager.getButtonText());
-//        appointmentAdd.setBackgroundResource(R.drawable.rounded_button);
-//        drawable = (GradientDrawable) appointmentAdd.getBackground();
-//        drawable.setColor(colorSchemeManager.getButtonBackground());
+        appointmentSet.setTextColor(colorSchemeManager.getButtonText());
+        appointmentSet.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) appointmentSet.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
 
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
         calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
@@ -708,11 +709,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         appointmentDateTitle = getView().findViewById(R.id.appointmentDateTitle);
         appointmentDateTitle.setOnClickListener(this);
 
-//        getView().findViewById(R.id.addAppointmentDatePicker).setOnClickListener(this);
-//        addAppointmentDisplay = getView().findViewById(R.id.addAppointmentDateDisplay);
-//        addAppointmentDisplay.setOnClickListener(this);
-//        addAppointmentDateTitle = getView().findViewById(R.id.addAppointmentDateTitle);
-//        addAppointmentDateTitle.setOnClickListener(this);
+        getView().findViewById(R.id.appointmentSetDatePicker).setOnClickListener(this);
+        setAppointmentDisplay = getView().findViewById(R.id.appointmentSetDateDisplay);
+        setAppointmentDisplay.setOnClickListener(this);
+        setAppointmentDateTitle = getView().findViewById(R.id.appointmentSetDateTitle);
+        setAppointmentDateTitle.setOnClickListener(this);
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -734,6 +735,10 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         appointmentSelectedYear = year;
         appointmentSelectedMonth = month;
         appointmentSelectedDay = day;
+
+        appointmentSetSelectedYear = year;
+        appointmentSetSelectedMonth = month;
+        appointmentSetSelectedDay = day;
     }
 
     private void initializeForm() {
@@ -976,13 +981,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.appointmentDateTitle:
                 showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "appointment");
                 break;
-//            case R.id.addAppointmentDatePicker:
-//            case R.id.addAppointmentDateDisplay:
-//            case R.id.addAppointmentDateTitle:
-//            case R.id.addAppointmentDateButton:
-//                //TODO: Change this to addAppointment stuff
-//                showDatePickerDialog(appointmentSelectedYear, appointmentSelectedMonth, appointmentSelectedDay, "add");
-//                break;
+            case R.id.appointmentSetDatePicker:
+            case R.id.appointmentSetDateDisplay:
+            case R.id.appointmentSetDateTitle:
+                showDatePickerDialog(appointmentSetSelectedYear, appointmentSetSelectedMonth, appointmentSetSelectedDay, "setAppointment");
+                break;
             case R.id.signedDateButton:
                 clearDisplayDate("signed");
                 removeStatusColor(signedStatus);
@@ -998,6 +1001,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.appointmentDateButton:
                 clearDisplayDate("appointment");
                 removeStatusColor(pipelineStatus);
+                break;
+            case R.id.appointmentSetDateButton:
+                clearDisplayDate("setAppointment");
                 break;
             case R.id.exportContactButton:
                 Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
@@ -1101,8 +1107,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         settlementClear.setOnClickListener(this);
         appointmentClear = getView().findViewById(R.id.appointmentDateButton);
         appointmentClear.setOnClickListener(this);
-//        appointmentAdd = getView().findViewById(R.id.addAppointmentDateButton);
-//        appointmentAdd.setOnClickListener(this);
+        appointmentSet = getView().findViewById(R.id.appointmentSetDateButton);
+        appointmentSet.setOnClickListener(this);
         exportContact = getView().findViewById(R.id.exportContactButton);
         exportContact.setOnClickListener(this);
         saveButton = parentActivity.findViewById(R.id.saveButton);
@@ -1161,6 +1167,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             case "appointment":
                 appointmentDisplay.setText("");
                 appointmentDisplay.setHint(setText);
+            case "setAppointment":
+                setAppointmentDisplay.setText("");
+                setAppointmentDisplay.setHint(setText);
         }
         updateStatus();
     }
@@ -1283,6 +1292,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 appointmentSelectedMonth = month - 1;
                 appointmentSelectedDay = day;
                 appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
+                break;
+            case "setAppointment":
+                appointmentSetSelectedYear = year;
+                appointmentSetSelectedMonth = month - 1;
+                appointmentSetSelectedDay = day;
+                setAppointmentDisplay.setText(sdf.format(updatedTime.getTime()));
                 updateStatus();
                 break;
             case "add":

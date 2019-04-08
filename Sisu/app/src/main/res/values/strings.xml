@@ -30,7 +30,7 @@
     <string name="closed">Closed</string>
     <string name="closed_volume">Closed Volume</string>
     <string name="scoreboard">Scoreboard</string>
-    <string name="company">Company</string>
+    <string name="team">Team</string>
     <string name="appts">Appts.</string>
     <string name="month">month</string>
     <string name="year">year</string>
@@ -50,6 +50,7 @@
     <string name="goals">Goals</string>
     <string name="signedDateTitle">Signed Date:</string>
     <string name="appointmentDateTitle">Initial Appointment Date:</string>
+    <string name="appointmentSetDateTitle">1st Time Appt Set Date:</string>
     <string name="addAppointmentDateTitle">Add Appointment:</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>

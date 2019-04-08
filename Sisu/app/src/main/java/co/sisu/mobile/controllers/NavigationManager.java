@@ -302,8 +302,8 @@ public class NavigationManager {
         actionBarManager.initializeTeamBar(teamsObject);
     }
 
-    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents) {
-        actionBarManager.initializeTeamAgents(teamAgents);
+    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents, String myAgentId) {
+        actionBarManager.initializeTeamAgents(teamAgents, myAgentId);
     }
 
     public void updateTeam(TeamObject team) {
