@@ -52,6 +52,7 @@
     <string name="appointmentDateTitle">Initial Appointment Date:</string>
     <string name="appointmentSetDateTitle">1st Time Appt Set Date:</string>
     <string name="addAppointmentDateTitle">Add Appointment:</string>
+    <string name="otherAppointmentDateTitle">Other Appointments</string>
     <string name="underContractTitle">Under Contract Date:</string>
     <string name="settlementDateTitle">Settlement Date:</string>
     <string name="pipeline">Pipeline</string>

@@ -128,8 +128,7 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/transaction_amount_hint"
-                android:maxLength="8"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -156,8 +155,7 @@
                 android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:hint="@string/gci_hint"
-                android:inputType="number"
-                android:maxLength="8" />
+                android:inputType="numberDecimal"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -181,7 +179,7 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:maxLength="4"
+                android:maxLength="8"
                 android:textAlignment="textEnd" />
 
         </android.support.design.widget.TextInputLayout>
@@ -220,7 +218,6 @@
                 android:ems="10"
                 android:hint="@string/commission_hint"
                 android:inputType="number"
-                android:maxLength="8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -249,7 +246,7 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:maxLength="4"
+                android:maxLength="8"
                 android:textAlignment="textEnd" />
 
         </android.support.design.widget.TextInputLayout>

@@ -21,7 +21,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.telephony.PhoneNumberUtils;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
@@ -767,10 +771,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         phoneText.setOnFocusChangeListener(this);
         transAmount = getView().findViewById(R.id.editTransAmount);
         transAmount.setOnFocusChangeListener(this);
+        transAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10,2)});
         paidIncome = getView().findViewById(R.id.editPaidIncome);
         paidIncome.setOnFocusChangeListener(this);
+        paidIncome.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10,2)});
         gci = getView().findViewById(R.id.editGci);
         gci.setOnFocusChangeListener(this);
+        gci.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(10,2)});
         gciPercent = getView().findViewById(R.id.editGciPercent);
         gciPercent.setOnFocusChangeListener(this);
         incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
@@ -1414,5 +1421,24 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     public void hideKeyboard(View view) {
         InputMethodManager inputMethodManager =(InputMethodManager) parentActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
+            mPattern=Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher=mPattern.matcher(dest);
+            if(!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 }

@@ -401,11 +401,11 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             try {
                 if(parentActivity.isRecruiting()) {
                     ClientObject iterClient = currentList.get(i);
-                    totalValue += Integer.parseInt(iterClient.getGross_commission_amt() != null ? iterClient.getGross_commission_amt() : "0");
+                    totalValue += Double.parseDouble(iterClient.getGross_commission_amt() != null ? iterClient.getGross_commission_amt() : "0");
                 }
                 else {
                     ClientObject iterClient = currentList.get(i);
-                    totalValue += Integer.parseInt(iterClient.getCommission_amt() != null ? iterClient.getCommission_amt() : "0");
+                    totalValue += Double.parseDouble(iterClient.getCommission_amt() != null ? iterClient.getCommission_amt() : "0");
                 }
             } catch (NumberFormatException nfe) {
                 totalValue += 0;

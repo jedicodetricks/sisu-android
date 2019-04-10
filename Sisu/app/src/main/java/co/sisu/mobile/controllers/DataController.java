@@ -692,6 +692,7 @@ public class DataController {
 
     private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
         List<String> currentSorting = new ArrayList<>();
+        //TODO: Null check this.
         for (String key : activitiesSelected.keySet()) {
             currentSorting.add(key);
         }
@@ -778,30 +779,11 @@ public class DataController {
         }
     }
 
-    private void removeDecimalsFromAmounts(ClientObject co) {
-        if(co.getCommission_amt() != null) {
-            String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
-            co.setCommission_amt(commission);
-        }
-
-        if(co.getTrans_amt() != null) {
-            String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
-            co.setTrans_amt(trans);
-        }
-
-        if(co.getGross_commission_amt() != null) {
-            String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
-            co.setGross_commission_amt(gci);
-
-        }
-    }
-
     public void setClientListObject(Object returnObject, boolean isRecruiting) {
         AsyncClientJsonObject clientParentObject = (AsyncClientJsonObject) returnObject;
         ClientObject[] clientObject = clientParentObject.getClients();
         resetClientLists();
         for(ClientObject co : clientObject) {
-            removeDecimalsFromAmounts(co);
             if(co.getStatus().equalsIgnoreCase("D")) {
                 //Archived List
                 archivedList.add(co);

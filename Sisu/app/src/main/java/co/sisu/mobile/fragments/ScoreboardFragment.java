@@ -283,7 +283,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             //Pending
             List<ClientObject> underContractClients = dataController.getContractList();
             for(ClientObject co : underContractClients) {
-                pendingVolume += Integer.valueOf(co.getTrans_amt());
+                pendingVolume += Double.valueOf(co.getTrans_amt());
             }
             NumberFormat format = NumberFormat.getNumberInstance();
 
@@ -296,7 +296,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             for(ClientObject co : closedClients) {
 
                 if(insideSelectedTimeRange(co.getClosed_dt())) {
-                    closedVolume += Integer.valueOf(co.getTrans_amt());
+                    closedVolume += Double.valueOf(co.getTrans_amt());
                 }
             }
 
@@ -304,6 +304,24 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             closedVolumeDisplay.setText("$" + format.format(closedVolume));
         }
 
+    }
+
+    private void removeDecimalsFromAmounts(ClientObject co) {
+        if(co.getCommission_amt() != null) {
+            String commission = co.getCommission_amt().substring(0, co.getCommission_amt().indexOf("."));
+            co.setCommission_amt(commission);
+        }
+
+        if(co.getTrans_amt() != null) {
+            String trans = co.getTrans_amt().substring(0, co.getTrans_amt().indexOf("."));
+            co.setTrans_amt(trans);
+        }
+
+        if(co.getGross_commission_amt() != null) {
+            String gci = co.getGross_commission_amt().substring(0, co.getGross_commission_amt().indexOf("."));
+            co.setGross_commission_amt(gci);
+
+        }
     }
 
     private boolean insideSelectedTimeRange(String closedDate) {
