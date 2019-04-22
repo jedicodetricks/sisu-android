@@ -72,8 +72,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private TextInputEditText firstNameText, lastNameText, emailText, phoneText, transAmount, paidIncome, gci, noteText, gciPercent, incomePercent;
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, setAppointmentDisplay, pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus,
                      appointmentDateTitle, setAppointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
-                     percentSign1, percentSign2, statusLabel, priorityText, leadSource;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, setAppointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton;
+                     percentSign1, percentSign2, statusLabel, priorityText, leadSource, otherAppointmentsTitle;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, setAppointmentClear, calculateGciPercent, calculateIncomePercent, importContactButton, buyerButton, sellerButton, addAppointmentButton;
     private TextInputLayout firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private String typeSelected;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
@@ -252,6 +252,11 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         drawable = (GradientDrawable) setAppointmentClear.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
+        addAppointmentButton.setTextColor(colorSchemeManager.getButtonText());
+        addAppointmentButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) addAppointmentButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
         calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateGciPercent.getBackground();
@@ -263,6 +268,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
         priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
@@ -465,10 +471,12 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         commissionEquals = getView().findViewById(R.id.commissionEquals);
         gciEquals = getView().findViewById(R.id.gciEquals);
         priorityText = getView().findViewById(R.id.priorityText);
+        otherAppointmentsTitle = getView().findViewById(R.id.otherAppointmentsTitle);
 
         RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
         ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
         ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
+        ConstraintLayout addAppointmentDateSection = getView().findViewById(R.id.addAppointmentDateSection);
 
         if(parentActivity.isRecruiting()) {
             paidIncomeLayout.setVisibility(View.GONE);
@@ -481,6 +489,13 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             percentSign2.setVisibility(View.GONE);
             commissionEquals.setVisibility(View.GONE);
             noteLayout.setVisibility(View.GONE);
+            otherAppointmentsTitle.setVisibility(View.VISIBLE);
+            addAppointmentDateSection.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            otherAppointmentsTitle.setVisibility(View.GONE);
+            addAppointmentDateSection.setVisibility(View.GONE);
         }
     }
 
@@ -1054,11 +1069,14 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         appointmentClear.setOnClickListener(this);
         setAppointmentClear = getView().findViewById(R.id.appointmentSetDateButton);
         setAppointmentClear.setOnClickListener(this);
+        addAppointmentButton = getView().findViewById(R.id.addAppointmentDateButton);
+        addAppointmentButton.setOnClickListener(this);
         calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
         calculateIncomePercent.setOnClickListener(this);
         prioritySwitch = getView().findViewById(R.id.prioritySwitch);
+
     }
 
     private void showDatePickerDialog(final int selectedYear, final int selectedMonth, final int selectedDay, final String calendarCaller) {

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
+import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
@@ -467,6 +468,7 @@ public class ApiManager {
                 .setExpiration(expDate.getTime())
                 .claim("Transaction-Id", transactionID)
                 .claim("agent_id", agentId)
+                .claim("client-version", BuildConfig.VERSION_CODE)
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
 

@@ -283,7 +283,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             //Pending
             List<ClientObject> underContractClients = dataController.getContractList();
             for(ClientObject co : underContractClients) {
-                pendingVolume += Double.valueOf(co.getTrans_amt());
+                try {
+                    pendingVolume += Double.valueOf(co.getTrans_amt());
+                } catch(Exception e) {
+                    pendingVolume += Integer.valueOf(co.getTrans_amt());
+                }
             }
             NumberFormat format = NumberFormat.getNumberInstance();
 
@@ -296,7 +300,11 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             for(ClientObject co : closedClients) {
 
                 if(insideSelectedTimeRange(co.getClosed_dt())) {
-                    closedVolume += Double.valueOf(co.getTrans_amt());
+                    try {
+                        closedVolume += Double.valueOf(co.getTrans_amt());
+                    } catch (Exception e) {
+                        closedVolume += Integer.valueOf(co.getTrans_amt());
+                    }
                 }
             }
 

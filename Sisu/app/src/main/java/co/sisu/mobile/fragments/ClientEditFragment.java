@@ -85,8 +85,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private TextView signedDisplay, contractDisplay, settlementDisplay, appointmentDisplay, setAppointmentDisplay;
     private TextView pipelineStatus, signedStatus, underContractStatus, closedStatus, archivedStatus, buyer, seller, saveButton,
                      appointmentDateTitle, setAppointmentDateTitle, signedDateTitle, underContractDateTitle, settlementDateTitle, dollarSign1, dollarSign2, commissionEquals, gciEquals,
-                     percentSign1, percentSign2, statusLabel, priorityText;
-    private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentSet, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton;
+                     percentSign1, percentSign2, statusLabel, priorityText, otherAppointmentsTitle;
+    private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentSet, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton, addAppointmentButton;
     private Switch prioritySwitch;
     private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
@@ -310,6 +310,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         drawable = (GradientDrawable) appointmentSet.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
+        addAppointmentButton.setTextColor(colorSchemeManager.getButtonText());
+        addAppointmentButton.setBackgroundResource(R.drawable.rounded_button);
+        drawable = (GradientDrawable) addAppointmentButton.getBackground();
+        drawable.setColor(colorSchemeManager.getButtonBackground());
+
         calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
         calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) calculateGciPercent.getBackground();
@@ -326,6 +331,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
         priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
@@ -818,10 +824,12 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         gciEquals = getView().findViewById(R.id.gciEquals);
 
         priorityText = getView().findViewById(R.id.priorityText);
+        otherAppointmentsTitle = getView().findViewById(R.id.otherAppointmentsTitle);
 
         RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
         ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
         ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
+        ConstraintLayout addAppointmentDateSection = getView().findViewById(R.id.addAppointmentDateSection);
 
         if(parentActivity.isRecruiting()) {
             paidIncomeLayout.setVisibility(View.GONE);
@@ -831,6 +839,13 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             signedDateSection.setVisibility(View.GONE);
             percentSign2.setVisibility(View.GONE);
             commissionEquals.setVisibility(View.GONE);
+            otherAppointmentsTitle.setVisibility(View.VISIBLE);
+            addAppointmentDateSection.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            otherAppointmentsTitle.setVisibility(View.GONE);
+            addAppointmentDateSection.setVisibility(View.GONE);
         }
     }
 
@@ -1151,6 +1166,8 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         calculateGciPercent.setOnClickListener(this);
         calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
         calculateIncomePercent.setOnClickListener(this);
+        addAppointmentButton = getView().findViewById(R.id.addAppointmentDateButton);
+        addAppointmentButton.setOnClickListener(this);
 
     }
 
