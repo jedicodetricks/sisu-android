@@ -41,6 +41,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -56,7 +58,9 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
+import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.NotesObject;
 import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
@@ -491,7 +495,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
             noteLayout.setVisibility(View.GONE);
             otherAppointmentsTitle.setVisibility(View.VISIBLE);
             addAppointmentDateSection.setVisibility(View.VISIBLE);
-
         }
         else {
             otherAppointmentsTitle.setVisibility(View.GONE);

@@ -64,9 +64,11 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
+import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 import okhttp3.Response;
@@ -138,6 +140,11 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
             loader.setVisibility(View.GONE);
         }
+
+        if(parentActivity.isRecruiting()) {
+            apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
+        }
+
         setupLabels();
         setColorScheme();
 
@@ -1399,6 +1406,16 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 @Override
                 public void run() {
                     initializeClient();
+                }
+            });
+        }
+        else if(returnType == ApiReturnTypes.GET_NOTES) {
+            AsyncNotesJsonObject asyncNotesJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncNotesJsonObject.class);
+            final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+//                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
                 }
             });
         }
