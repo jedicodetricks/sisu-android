@@ -1,6 +1,5 @@
 package co.sisu.mobile.fragments;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -34,6 +33,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -47,6 +47,7 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -55,6 +56,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.sisu.mobile.adapters.AppointmentListAdapter;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -90,6 +92,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                      percentSign1, percentSign2, statusLabel, priorityText, otherAppointmentsTitle;
     private Button signedClear, contractClear, settlementClear, appointmentClear, appointmentSet, exportContact, deleteButton, noteButton, calculateGciPercent, calculateIncomePercent, activateButton, addAppointmentButton;
     private Switch prioritySwitch;
+    private ListView mListView;
     private TextInputLayout archivedLayout, firstNameLayout, lastNameLayout, emailLayout, phoneLayout, transAmountLayout, paidIncomeLayout, gciLayout, noteLayout, gciPercentLayout, commissionInputLayout, leadSourceInputLayout;
     private int signedSelectedYear, signedSelectedMonth, signedSelectedDay;
     private int contractSelectedYear, contractSelectedMonth, contractSelectedDay;
@@ -99,13 +102,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     private String typeSelected, clientStatus, m_Text;
     private String statusList = "pipeline";
     private int counter;
-    private Gson gson;
     private LinkedHashMap leadSources;
-
-
-    public ClientEditFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,7 +116,6 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        gson = new Gson();
         loader = view.findViewById(R.id.clientLoader);
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
@@ -132,6 +128,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         initializeButtons();
         initializeForm();
         initializeCalendar();
+        initListView();
 
         if(currentClient.getStatus().equals("D")) {
             apiManager.getClientParams(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id());
@@ -410,10 +407,15 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
-                Log.e("ADD", m_Text);
                 if(!m_Text.equals("")) {
                     apiManager.addNote(ClientEditFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), label + ": " + m_Text, "NOTES");
-                    apiManager.setClientParameter(ClientEditFragment.this, dataController.getAgent().getAgent_id(), createActivateClientObject(parentActivity.getSelectedClient().getClient_id(), m_Text));
+                    if(label.equalsIgnoreCase("Archived")) {
+                        updateCurrentClient(true);
+                    }
+                    else {
+                        updateCurrentClient(false);
+                    }
+                    saveClient();
                 }
                 else {
                     parentActivity.showToast("Please enter some text in the note field.");
@@ -656,6 +658,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             currentClient.setStatus("D");
             currentClient.setActivate_client(m_Text);
             statusList = "archived";
+            if(parentActivity.isRecruiting()) {
+                currentClient.setClosed_dt(null);
+            }
         } else {
             if(currentClient.getStatus().equals("D")) {
                 currentClient.setStatus("N");
@@ -1347,12 +1352,33 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
                 int addYear = year;
                 int addMonth = month - 1;
                 int addDay = day;
-//                appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
-//                updateStatus();
+                appointmentDisplay.setText(sdf.format(updatedTime.getTime()));
+                updateStatus();
                 break;
 
         }
 
+
+    }
+
+    private void initListView() {
+        mListView = getView().findViewById(R.id.appointmentList);
+    }
+
+    private void fillListViewWithData(ArrayList<NotesObject> noteList) {
+        if(getContext() != null) {
+            AppointmentListAdapter adapter = new AppointmentListAdapter(getContext(), noteList, parentActivity.getColorSchemeManager());
+            mListView.setAdapter(adapter);
+            int height = 0;
+            for(NotesObject note : noteList) {
+                height += 130;
+            }
+            ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mListView.getLayoutParams();
+            lp.height = height;
+            mListView.setLayoutParams(lp);
+
+//            mListView.setOnItemClickListener(this);
+        }
 
     }
 
@@ -1363,7 +1389,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_CLIENT_SETTINGS) {
-            AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
+            AsyncParameterJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             ParameterObject settings = settingsJson.getParameter();
             if(settings != null) {
                 currentClient.setActivate_client(settings.getValue());
@@ -1377,8 +1403,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             });
         }
         else if(returnType == ApiReturnTypes.CREATE_NOTE) {
-            updateCurrentClient(!currentClient.getStatus().equals("D"));
-            saveClient();
+            // TODO: Why do I do this?
+//            updateCurrentClient(!currentClient.getStatus().equals("D"));
+//            saveClient();
         }
         else if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
             parentActivity.runOnUiThread(new Runnable() {
@@ -1415,7 +1442,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
+                    fillListViewWithData(new ArrayList<>(Arrays.asList(allNotes)));
                 }
             });
         }

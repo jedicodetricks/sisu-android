@@ -124,96 +124,96 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     }
 
     private void setupLabels() {
-        buyerButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyer)));
-        sellerButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.seller)));
-
-        firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
-        lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
-        transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
-        gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
-        if(parentActivity.isRecruiting()) {
-            gciLayout.setHint("Recruit Income");
-        }
-        commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
-        leadSourceInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.lead_source_hint)));
-        phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
-        emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
-        statusLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.status)));
-        pipelineStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.pipeline)));
-        signedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.signed)));
-        underContractStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.contract)));
-        closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
-        archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
-        appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
-        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentSetDateTitle)));
-        signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
-        underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
-        settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
-        noteLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.notes)));
+//        buyerButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.buyer)));
+//        sellerButton.setText(parentActivity.localizeLabel(getResources().getString(R.string.seller)));
+//
+//        firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
+//        lastNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.last_name_hint_non_req)));
+//        transAmountLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.transaction_amount_hint)));
+//        gciLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.gci_hint)));
+//        if(parentActivity.isRecruiting()) {
+//            gciLayout.setHint("Recruit Income");
+//        }
+//        commissionInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.commission_hint)));
+//        leadSourceInputLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.lead_source_hint)));
+//        phoneLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.phone_hint)));
+//        emailLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.email_hint)));
+//        statusLabel.setText(parentActivity.localizeLabel(getResources().getString(R.string.status)));
+//        pipelineStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.pipeline)));
+//        signedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.signed)));
+//        underContractStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.contract)));
+//        closedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.closed)));
+//        archivedStatus.setText(parentActivity.localizeLabel(getResources().getString(R.string.archived)));
+//        appointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentDateTitle)));
+//        setAppointmentDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.appointmentSetDateTitle)));
+//        signedDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.signedDateTitle)));
+//        underContractDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.underContractTitle)));
+//        settlementDateTitle.setText(parentActivity.localizeLabel(getResources().getString(R.string.settlementDateTitle)));
+//        noteLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.notes)));
     }
 
     private void setupColorScheme() {
-        firstNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lastNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        emailText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        phoneText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        transAmount.setTextColor(colorSchemeManager.getDarkerTextColor());
-        paidIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gci.setTextColor(colorSchemeManager.getDarkerTextColor());
-        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
-        incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
-        leadSource.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-
-        signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
-        pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        signedStatus.setTextColor(colorSchemeManager.getButtonText());
-        signedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        underContractStatus.setTextColor(colorSchemeManager.getButtonText());
-        underContractStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        closedStatus.setTextColor(colorSchemeManager.getButtonText());
-        closedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        archivedStatus.setTextColor(colorSchemeManager.getButtonText());
-        archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
-
-        appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        dollarSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
-        dollarSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
-        percentSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
-        percentSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        commissionEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gciEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
-        statusLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(emailLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(transAmountLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(paidIncomeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(gciLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
+//        firstNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        lastNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        emailText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        phoneText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        transAmount.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        paidIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        gci.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        leadSource.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+//        contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+//        settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+//        appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+//        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
+//        pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+//        signedStatus.setTextColor(colorSchemeManager.getButtonText());
+//        signedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+//        underContractStatus.setTextColor(colorSchemeManager.getButtonText());
+//        underContractStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+//        closedStatus.setTextColor(colorSchemeManager.getButtonText());
+//        closedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+//        archivedStatus.setTextColor(colorSchemeManager.getButtonText());
+//        archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
+//
+//        appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        dollarSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        dollarSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        percentSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        percentSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        commissionEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        gciEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        statusLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(emailLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(transAmountLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(paidIncomeLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(gciLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(gciPercentLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(commissionInputLayout, colorSchemeManager.getIconActive());
+//        setInputTextLayoutColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
 
         importContactButton.setHighlightColor(colorSchemeManager.getButtonSelected());
         importContactButton.setBackgroundResource(R.drawable.rounded_button);
@@ -221,76 +221,76 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         GradientDrawable drawable = (GradientDrawable) importContactButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        buyerButton.setTextColor(colorSchemeManager.getButtonText());
-        buyerButton.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) buyerButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
+//        buyerButton.setTextColor(colorSchemeManager.getButtonText());
+//        buyerButton.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) buyerButton.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        sellerButton.setTextColor(colorSchemeManager.getButtonText());
+//        sellerButton.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) sellerButton.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        sellerButton.setTextColor(colorSchemeManager.getButtonText());
-        sellerButton.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) sellerButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
+//        signedClear.setTextColor(colorSchemeManager.getButtonText());
+//        signedClear.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) signedClear.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        contractClear.setTextColor(colorSchemeManager.getButtonText());
+//        contractClear.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) contractClear.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        settlementClear.setTextColor(colorSchemeManager.getButtonText());
+//        settlementClear.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) settlementClear.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        appointmentClear.setTextColor(colorSchemeManager.getButtonText());
+//        appointmentClear.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) appointmentClear.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        setAppointmentClear.setTextColor(colorSchemeManager.getButtonText());
+//        setAppointmentClear.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) setAppointmentClear.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        addAppointmentButton.setTextColor(colorSchemeManager.getButtonText());
+//        addAppointmentButton.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) addAppointmentButton.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
+//        calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) calculateGciPercent.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
+//
+//        calculateIncomePercent.setTextColor(colorSchemeManager.getButtonText());
+//        calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
+//        drawable = (GradientDrawable) calculateIncomePercent.getBackground();
+//        drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        signedClear.setTextColor(colorSchemeManager.getButtonText());
-        signedClear.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) signedClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        contractClear.setTextColor(colorSchemeManager.getButtonText());
-        contractClear.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) contractClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        settlementClear.setTextColor(colorSchemeManager.getButtonText());
-        settlementClear.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) settlementClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        appointmentClear.setTextColor(colorSchemeManager.getButtonText());
-        appointmentClear.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) appointmentClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        setAppointmentClear.setTextColor(colorSchemeManager.getButtonText());
-        setAppointmentClear.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) setAppointmentClear.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        addAppointmentButton.setTextColor(colorSchemeManager.getButtonText());
-        addAppointmentButton.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) addAppointmentButton.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        calculateGciPercent.setTextColor(colorSchemeManager.getButtonText());
-        calculateGciPercent.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) calculateGciPercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        calculateIncomePercent.setTextColor(colorSchemeManager.getButtonText());
-        calculateIncomePercent.setBackgroundResource(R.drawable.rounded_button);
-        drawable = (GradientDrawable) calculateIncomePercent.getBackground();
-        drawable.setColor(colorSchemeManager.getButtonBackground());
-
-        priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-
-        int[][] states = new int[][] {
-                new int[] {-android.R.attr.state_checked},
-                new int[] {android.R.attr.state_checked},
-        };
-
-        int[] thumbColors = new int[] {
-                Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
-        };
-
-        int[] trackColors = new int[] {
-                Color.GRAY,
-                colorSchemeManager.getSegmentSelected()
-        };
-
-        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
-        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+//        priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+//
+//        int[][] states = new int[][] {
+//                new int[] {-android.R.attr.state_checked},
+//                new int[] {android.R.attr.state_checked},
+//        };
+//
+//        int[] thumbColors = new int[] {
+//                Color.GRAY,
+//                colorSchemeManager.getSegmentSelected()
+//        };
+//
+//        int[] trackColors = new int[] {
+//                Color.GRAY,
+//                colorSchemeManager.getSegmentSelected()
+//        };
+//
+//        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+//        DrawableCompat.setTintList(DrawableCompat.wrap(prioritySwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
 
     private void setInputTextLayoutColor(TextInputLayout layout, int color) {
@@ -316,15 +316,15 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     }
 
     private void initActionBar() {
-        TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
-        TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
-        if(cancelButton != null) {
-            cancelButton.setOnClickListener(this);
-        }
-
-        if(saveButton != null) {
-            saveButton.setOnClickListener(this);
-        }
+//        TextView cancelButton = parentActivity.findViewById(R.id.cancelButton);
+//        TextView saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
+//        if(cancelButton != null) {
+//            cancelButton.setOnClickListener(this);
+//        }
+//
+//        if(saveButton != null) {
+//            saveButton.setOnClickListener(this);
+//        }
     }
 
     private void calculateTransPercentage(EditText editPercent, EditText editDollar) {
@@ -425,81 +425,81 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initializeForm() {
         typeSelected = "";
-        firstNameText = getView().findViewById(R.id.editFirstName);
-        firstNameText.setOnFocusChangeListener(this);
-        lastNameText = getView().findViewById(R.id.addClientEditLastName);
-        lastNameText.setOnFocusChangeListener(this);
-        emailText = getView().findViewById(R.id.editEmail);
-        emailText.setOnFocusChangeListener(this);
-        phoneText = getView().findViewById(R.id.editPhone);
-        phoneText.setOnFocusChangeListener(this);
-        transAmount = getView().findViewById(R.id.editTransAmount);
-        transAmount.setOnFocusChangeListener(this);
-        paidIncome = getView().findViewById(R.id.editPaidIncome);
-        paidIncome.setOnFocusChangeListener(this);
-        gci = getView().findViewById(R.id.editGci);
-        gci.setOnFocusChangeListener(this);
-        gciPercent = getView().findViewById(R.id.editGciPercent);
-        gciPercent.setOnFocusChangeListener(this);
-        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
-        incomePercent.setOnFocusChangeListener(this);
-        leadSource = getView().findViewById(R.id.leadSource);
-        leadSource.setOnClickListener(this);
+//        firstNameText = getView().findViewById(R.id.editFirstName);
+//        firstNameText.setOnFocusChangeListener(this);
+//        lastNameText = getView().findViewById(R.id.addClientEditLastName);
+//        lastNameText.setOnFocusChangeListener(this);
+//        emailText = getView().findViewById(R.id.editEmail);
+//        emailText.setOnFocusChangeListener(this);
+//        phoneText = getView().findViewById(R.id.editPhone);
+//        phoneText.setOnFocusChangeListener(this);
+//        transAmount = getView().findViewById(R.id.editTransAmount);
+//        transAmount.setOnFocusChangeListener(this);
+//        paidIncome = getView().findViewById(R.id.editPaidIncome);
+//        paidIncome.setOnFocusChangeListener(this);
+//        gci = getView().findViewById(R.id.editGci);
+//        gci.setOnFocusChangeListener(this);
+//        gciPercent = getView().findViewById(R.id.editGciPercent);
+//        gciPercent.setOnFocusChangeListener(this);
+//        incomePercent = getView().findViewById(R.id.editPaidIncomePercent);
+//        incomePercent.setOnFocusChangeListener(this);
+//        leadSource = getView().findViewById(R.id.leadSource);
+//        leadSource.setOnClickListener(this);
 
-        pipelineStatus = getView().findViewById(R.id.pipelineButton);
-        signedStatus = getView().findViewById(R.id.signedButton);
-        underContractStatus = getView().findViewById(R.id.contractButton);
-        closedStatus = getView().findViewById(R.id.closedButton);
-        archivedStatus = getView().findViewById(R.id.archivedButton);
-        noteText = getView().findViewById(R.id.editNotes);
+//        pipelineStatus = getView().findViewById(R.id.pipelineButton);
+//        signedStatus = getView().findViewById(R.id.signedButton);
+//        underContractStatus = getView().findViewById(R.id.contractButton);
+//        closedStatus = getView().findViewById(R.id.closedButton);
+//        archivedStatus = getView().findViewById(R.id.archivedButton);
+//        noteText = getView().findViewById(R.id.editNotes);
 
-        firstNameLayout = getView().findViewById(R.id.firstNameInputLayoutAdd);
-        lastNameLayout = getView().findViewById(R.id.lastNameInputLayout);
-        emailLayout = getView().findViewById(R.id.emailInputLayout);
-        phoneLayout = getView().findViewById(R.id.phoneInputLayout);
-        transAmountLayout = getView().findViewById(R.id.transAmountInputLayout);
-        paidIncomeLayout = getView().findViewById(R.id.commissionInputLayout);
-        gciLayout = getView().findViewById(R.id.gciInputLayout);
-        noteLayout = getView().findViewById(R.id.notesInputLayout);
-        gciPercentLayout = getView().findViewById(R.id.gciInputLayout);
-        commissionInputLayout = getView().findViewById(R.id.commissionInputLayout);
-        leadSourceInputLayout = getView().findViewById(R.id.leadSourceInputLayout);
-        leadSourceInputLayout.setOnClickListener(this);
+//        firstNameLayout = getView().findViewById(R.id.firstNameInputLayoutAdd);
+//        lastNameLayout = getView().findViewById(R.id.lastNameInputLayout);
+//        emailLayout = getView().findViewById(R.id.emailInputLayout);
+//        phoneLayout = getView().findViewById(R.id.phoneInputLayout);
+//        transAmountLayout = getView().findViewById(R.id.transAmountInputLayout);
+//        paidIncomeLayout = getView().findViewById(R.id.commissionInputLayout);
+//        gciLayout = getView().findViewById(R.id.gciInputLayout);
+//        noteLayout = getView().findViewById(R.id.notesInputLayout);
+//        gciPercentLayout = getView().findViewById(R.id.gciInputLayout);
+//        commissionInputLayout = getView().findViewById(R.id.commissionInputLayout);
+//        leadSourceInputLayout = getView().findViewById(R.id.leadSourceInputLayout);
+//        leadSourceInputLayout.setOnClickListener(this);
 
-        dollarSign1 = getView().findViewById(R.id.dollarSign);
-        dollarSign2 = getView().findViewById(R.id.dollarSign2);
-        percentSign1 = getView().findViewById(R.id.percentSign);
-        percentSign2 = getView().findViewById(R.id.percentSign2);
-        statusLabel = getView().findViewById(R.id.statusLabel);
+//        dollarSign1 = getView().findViewById(R.id.dollarSign);
+//        dollarSign2 = getView().findViewById(R.id.dollarSign2);
+//        percentSign1 = getView().findViewById(R.id.percentSign);
+//        percentSign2 = getView().findViewById(R.id.percentSign2);
+//        statusLabel = getView().findViewById(R.id.statusLabel);
 
-        commissionEquals = getView().findViewById(R.id.commissionEquals);
-        gciEquals = getView().findViewById(R.id.gciEquals);
-        priorityText = getView().findViewById(R.id.priorityText);
-        otherAppointmentsTitle = getView().findViewById(R.id.otherAppointmentsTitle);
+//        commissionEquals = getView().findViewById(R.id.commissionEquals);
+//        gciEquals = getView().findViewById(R.id.gciEquals);
+//        priorityText = getView().findViewById(R.id.priorityText);
+//        otherAppointmentsTitle = getView().findViewById(R.id.otherAppointmentsTitle);
 
-        RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
-        ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
-        ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
-        ConstraintLayout addAppointmentDateSection = getView().findViewById(R.id.addAppointmentDateSection);
+//        RelativeLayout statusGroup = getView().findViewById(R.id.statusRadioGroup);
+//        ConstraintLayout underContractSection = getView().findViewById(R.id.underContractSection);
+//        ConstraintLayout signedDateSection = getView().findViewById(R.id.signedDateSection);
+//        ConstraintLayout addAppointmentDateSection = getView().findViewById(R.id.addAppointmentDateSection);
 
-        if(parentActivity.isRecruiting()) {
-            paidIncomeLayout.setVisibility(View.GONE);
-            commissionInputLayout.setVisibility(View.GONE);
-            calculateIncomePercent.setVisibility(View.GONE);
-            statusLabel.setVisibility(View.GONE);
-            statusGroup.setVisibility(View.GONE);
-            underContractSection.setVisibility(View.GONE);
-            signedDateSection.setVisibility(View.GONE);
-            percentSign2.setVisibility(View.GONE);
-            commissionEquals.setVisibility(View.GONE);
-            noteLayout.setVisibility(View.GONE);
-            otherAppointmentsTitle.setVisibility(View.VISIBLE);
-            addAppointmentDateSection.setVisibility(View.VISIBLE);
-        }
-        else {
-            otherAppointmentsTitle.setVisibility(View.GONE);
-            addAppointmentDateSection.setVisibility(View.GONE);
-        }
+//        if(parentActivity.isRecruiting()) {
+//            paidIncomeLayout.setVisibility(View.GONE);
+//            commissionInputLayout.setVisibility(View.GONE);
+//            calculateIncomePercent.setVisibility(View.GONE);
+//            statusLabel.setVisibility(View.GONE);
+//            statusGroup.setVisibility(View.GONE);
+//            underContractSection.setVisibility(View.GONE);
+//            signedDateSection.setVisibility(View.GONE);
+//            percentSign2.setVisibility(View.GONE);
+//            commissionEquals.setVisibility(View.GONE);
+//            noteLayout.setVisibility(View.GONE);
+//            otherAppointmentsTitle.setVisibility(View.VISIBLE);
+//            addAppointmentDateSection.setVisibility(View.VISIBLE);
+//        }
+//        else {
+//            otherAppointmentsTitle.setVisibility(View.GONE);
+//            addAppointmentDateSection.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -1053,31 +1053,31 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initializeButtons(){
 
-        buyerButton= getView().findViewById(R.id.buyerButton);
-        buyerButton.setOnClickListener(this);
-
-        sellerButton= getView().findViewById(R.id.sellerButton);
-        sellerButton.setOnClickListener(this);
+//        buyerButton= getView().findViewById(R.id.buyerButton);
+//        buyerButton.setOnClickListener(this);
+//
+//        sellerButton= getView().findViewById(R.id.sellerButton);
+//        sellerButton.setOnClickListener(this);
 
         importContactButton = getView().findViewById(R.id.importContactButton);
         importContactButton.setOnClickListener(this);
 
-        signedClear = getView().findViewById(R.id.signedDateButton);
-        signedClear.setOnClickListener(this);
-        contractClear = getView().findViewById(R.id.underContractDateButton);
-        contractClear.setOnClickListener(this);
-        settlementClear = getView().findViewById(R.id.settlementDateButton);
-        settlementClear.setOnClickListener(this);
-        appointmentClear = getView().findViewById(R.id.appointmentDateButton);
-        appointmentClear.setOnClickListener(this);
-        setAppointmentClear = getView().findViewById(R.id.appointmentSetDateButton);
-        setAppointmentClear.setOnClickListener(this);
-        addAppointmentButton = getView().findViewById(R.id.addAppointmentDateButton);
-        addAppointmentButton.setOnClickListener(this);
-        calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
-        calculateGciPercent.setOnClickListener(this);
-        calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
-        calculateIncomePercent.setOnClickListener(this);
+//        signedClear = getView().findViewById(R.id.signedDateButton);
+//        signedClear.setOnClickListener(this);
+//        contractClear = getView().findViewById(R.id.underContractDateButton);
+//        contractClear.setOnClickListener(this);
+//        settlementClear = getView().findViewById(R.id.settlementDateButton);
+//        settlementClear.setOnClickListener(this);
+//        appointmentClear = getView().findViewById(R.id.appointmentDateButton);
+//        appointmentClear.setOnClickListener(this);
+//        setAppointmentClear = getView().findViewById(R.id.appointmentSetDateButton);
+//        setAppointmentClear.setOnClickListener(this);
+//        addAppointmentButton = getView().findViewById(R.id.addAppointmentDateButton);
+//        addAppointmentButton.setOnClickListener(this);
+//        calculateGciPercent = getView().findViewById(R.id.calculateGciPercent);
+//        calculateGciPercent.setOnClickListener(this);
+//        calculateIncomePercent = getView().findViewById(R.id.calculateIncomePercent);
+//        calculateIncomePercent.setOnClickListener(this);
         prioritySwitch = getView().findViewById(R.id.prioritySwitch);
 
     }

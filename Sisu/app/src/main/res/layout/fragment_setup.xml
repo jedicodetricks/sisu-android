@@ -83,7 +83,6 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/desired_income_hint"
-                android:maxLength="8"
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

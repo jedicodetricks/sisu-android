@@ -66,17 +66,12 @@ public class NavigationManager {
     }
 
     private void manageActionBar(Class fragmentClass) {
-        if(fragmentClass.getSimpleName().equals("AddClientFragment") || fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
-            if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-                actionBarManager.swapToAddClientBar(null, DISABLE_DRAWER);
+        if(fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
+            if(parentActivity.getIsNoteFragment()) {
+                actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
             }
             else {
-                if(parentActivity.getIsNoteFragment()) {
-                    actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
-                }
-                else {
-                    actionBarManager.swapToAddClientBar("Send Push Notification", DISABLE_DRAWER);
-                }
+                actionBarManager.swapToAddClientBar("Send Push Notification", DISABLE_DRAWER);
             }
         }
         else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
@@ -97,8 +92,13 @@ public class NavigationManager {
                 fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
             sortTitleBar(fragmentClass);
         }
-        else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
-            actionBarManager.swapToEditClientBar(DISABLE_DRAWER);
+        else if(fragmentClass.getSimpleName().equals("ClientManageFragment")) {
+            if(parentActivity.getSelectedClient() == null) {
+                actionBarManager.swapToAddClientBar(null, DISABLE_DRAWER);
+            }
+            else {
+                actionBarManager.swapToEditClientBar(DISABLE_DRAWER);
+            }
         }
         else {
             sortSaveActionBar(fragmentClass);
@@ -173,6 +173,7 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        fragmentTag = fragmentClass.getSimpleName();
         manageActionBar(fragmentClass);
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
@@ -234,6 +235,9 @@ public class NavigationManager {
     }
 
     public void onBackPressed() {
+        if(fragmentTag != null && !fragmentTag.equalsIgnoreCase("ClientNoteFragment")) {
+            actionBarManager.resetClient();
+        }
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
             if(colorSchemeManager.getAppBackground() == Color.WHITE) {
                 AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)

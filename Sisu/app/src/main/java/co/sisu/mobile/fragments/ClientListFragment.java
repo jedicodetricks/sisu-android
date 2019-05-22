@@ -286,7 +286,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                 parentActivity.onBackPressed();
                 break;
             case R.id.addClientButton:
-                navigationManager.stackReplaceFragment(AddClientFragment.class);
+                navigationManager.stackReplaceFragment(ClientManageFragment.class);
                 break;
             case R.id.searchClient:
                 break;
@@ -544,7 +544,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     @Override
     public void onItemClicked(ClientObject selectedClient) {
         parentActivity.setSelectedClient(selectedClient);
-        navigationManager.stackReplaceFragment(ClientEditFragment.class);
+        navigationManager.stackReplaceFragment(ClientManageFragment.class);
     }
 
     @Override
@@ -581,7 +581,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ClientObject selectedClient = (ClientObject) parent.getItemAtPosition(position);
         parentActivity.setSelectedClient(selectedClient);
-        navigationManager.stackReplaceFragment(ClientEditFragment.class);
+        navigationManager.stackReplaceFragment(ClientManageFragment.class);
     }
 
     private static class MyDragItem extends DragItem {

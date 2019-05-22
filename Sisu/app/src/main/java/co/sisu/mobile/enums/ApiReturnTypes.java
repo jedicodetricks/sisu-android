@@ -40,5 +40,6 @@ public enum ApiReturnTypes {
     ACTIVATE_CLIENT,
     DELETE_NOTE,
     GET_LEAD_SOURCES,
-    GET_TEAM_AGENTS
+    GET_TEAM_AGENTS,
+    CREATE_APPT_NOTE
 }

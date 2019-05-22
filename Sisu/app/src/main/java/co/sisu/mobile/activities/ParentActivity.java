@@ -1131,5 +1131,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public boolean isAdminMode() {
         return isAdminMode;
     }
+
+    public AgentModel getAgent() {
+        return dataController.getAgent();
+    }
 }
 

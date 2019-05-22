@@ -395,8 +395,8 @@ public class DataController {
                             if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
                                 if(ago.getGoal_id().equalsIgnoreCase("SAPPT")) {
                                     firstAppointment.setGoalNum(firstAppointment.getGoalNum() + Double.parseDouble(ago.getValue()));
-                                    signed.setGoalNum(signed.getGoalNum() + Double.parseDouble(ago.getValue()));
-                                    showing.setGoalNum(showing.getGoalNum() + Double.parseDouble(ago.getValue()));
+//                                    signed.setGoalNum(signed.getGoalNum() + Double.parseDouble(ago.getValue()));
+//                                    showing.setGoalNum(showing.getGoalNum() + Double.parseDouble(ago.getValue()));
 
                                 }
                                 else if (ago.getGoal_id().equals("BAPPT")) {
@@ -692,10 +692,12 @@ public class DataController {
 
     private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
         List<String> currentSorting = new ArrayList<>();
-        //TODO: Null check this.
-        for (String key : activitiesSelected.keySet()) {
-            currentSorting.add(key);
+        if(activitiesSelected != null) {
+            for (String key : activitiesSelected.keySet()) {
+                currentSorting.add(key);
+            }
         }
+
         return currentSorting;
     }
 
@@ -1380,7 +1382,7 @@ public class DataController {
     }
 
     public String getColorSchemeId() {
-        if(settings.size() > 0) {
+        if(settings != null && settings.size() > 0) {
             for (ParameterObject p : settings) {
                 if(p.getName().equalsIgnoreCase("lights")) {
                     return p.getValue();
@@ -1435,18 +1437,21 @@ public class DataController {
 
     public AsyncActivitySettingsObject getFirstOtherActivity() {
         AsyncActivitySettingsObject firstOtherActivity = null;
-        for(AsyncActivitySettingsObject setting : activitySettings) {
-            if(setting.getValue()) {
-                if(firstOtherActivity == null) {
-                    firstOtherActivity = setting;
-                }
-                else {
-                    if(setting.getDisplay_order() > firstOtherActivity.getDisplay_order()) {
+        if(activitySettings != null) {
+            for(AsyncActivitySettingsObject setting : activitySettings) {
+                if(setting.getValue()) {
+                    if(firstOtherActivity == null) {
                         firstOtherActivity = setting;
+                    }
+                    else {
+                        if(setting.getDisplay_order() > firstOtherActivity.getDisplay_order()) {
+                            firstOtherActivity = setting;
+                        }
                     }
                 }
             }
         }
+
         return firstOtherActivity;
     }
 

@@ -316,7 +316,11 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
             for(ClientObject co : closedClients) {
                 if(co.getClosed_dt() != null) {
                     if(insideSelectedTimeRange(co.getClosed_dt())) {
-                        closedVolume += Integer.valueOf(co.getTrans_amt());
+                        try {
+                            closedVolume += Integer.valueOf(co.getTrans_amt());
+                        } catch (Exception e) {
+                            closedVolume += Double.valueOf(co.getTrans_amt());
+                        }
                     }
                 }
             }
@@ -324,7 +328,9 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
             NumberFormat format = NumberFormat.getNumberInstance();
 
             companyDollarDisplay = getView().findViewById(R.id.closedAmount);
-            companyDollarDisplay.setText("$" + format.format(closedVolume));
+            // TODO: How does company dollar even go up?!
+//            companyDollarDisplay.setText("$" + format.format(closedVolume));
+            companyDollarDisplay.setText("$0");
         }
 
     }
@@ -847,16 +853,17 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
                     launchAddClient();
                     break;
                 case R.id.contactsProgressMark:
-                    navigateToClientList("pipeline");
+                    navigationManager.stackReplaceFragment(RecordFragment.class);
+//                    navigateToClientList("pipeline");
                     break;
                 case R.id.appointmentsProgressMark:
-                    navigateToClientList("pipeline");
+                    navigateToClientList("signed");
                     break;
                 case R.id.bbSignedProgressMark:
-                    navigateToClientList("signed");
+                    navigateToClientList("contract");
                     break;
                 case R.id.listingsTakenProgressMark:
-                    navigateToClientList("signed");
+                    navigateToClientList("contract");
                     break;
                 case R.id.underContractProgressMark:
                     navigateToClientList("archived");
@@ -877,7 +884,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
     private void launchAddClient() {
         //TODO: Change this back
-        navigationManager.stackReplaceFragment(AddClientFragment.class);
+        navigationManager.stackReplaceFragment(ClientManageFragment.class);
 //        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        startActivity(intent);

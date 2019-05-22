@@ -350,7 +350,9 @@ public class ActionBarManager {
         }
         else {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-            teamAgentsTitle.setVisibility(View.GONE);
+            if(teamAgentsTitle != null) {
+                teamAgentsTitle.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -433,7 +435,9 @@ public class ActionBarManager {
             teamIcon.setVisibility(View.VISIBLE);
             teamLetter.setVisibility(View.GONE);
             teamBlock.setBackgroundColor(Color.TRANSPARENT);
-            SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+            if(colorSchemeManager.getIcon() != null) {
+                SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+            }
         } else {
             teamLetter.setText(currentTeam.getTeamLetter());
             teamLetter.setBackgroundColor(currentTeam.getColor());
@@ -444,4 +448,7 @@ public class ActionBarManager {
         }
     }
 
+    public void resetClient() {
+        this.selectedClient = null;
+    }
 }

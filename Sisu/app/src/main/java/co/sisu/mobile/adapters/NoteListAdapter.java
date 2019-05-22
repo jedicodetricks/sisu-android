@@ -125,6 +125,8 @@ public class NoteListAdapter extends BaseAdapter {
                 return "Note";
             case "EMAIL":
                 return "Email";
+            case "APPTS":
+                return "Appointment";
             default:
                 return "Log";
         }

@@ -60,7 +60,6 @@
             android:backgroundTint="@color/colorCorporateOrange"
             android:ems="10"
             android:hint="Email Address"
-            android:maxLength="35"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

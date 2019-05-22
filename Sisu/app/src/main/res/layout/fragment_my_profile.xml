@@ -71,7 +71,6 @@
                     android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/username_email_hint"
-                    android:maxLength="35"
                     android:inputType="textEmailAddress"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profileImage" />
@@ -97,7 +96,6 @@
                     android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/first_name_hint_non_req"
-                    android:maxLength="20"
                     android:inputType="textPersonName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profileUsernameLayout" />
@@ -123,7 +121,6 @@
                     android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/last_name_hint_non_req"
-                    android:maxLength="20"
                     android:inputType="textPersonName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profileFirstNameLayout" />
@@ -149,7 +146,6 @@
                     android:layout_marginTop="8dp"
                     android:ems="10"
                     android:hint="@string/phone_hint_non_req"
-                    android:maxLength="14"
                     android:inputType="phone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profileLastNameLayout" />

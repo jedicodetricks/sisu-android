@@ -288,6 +288,15 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void addAppointmentNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType, String createdTs) {
+        //POST
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.CREATE_APPT_NOTE;
+        String body = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\", \"created_ts\":\"" + createdTs + "\"}";
+        String currentUrl = url + "api/v1/client/logs/" + clientId;
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         //POST
         getJWT(agent.getAgent_id());

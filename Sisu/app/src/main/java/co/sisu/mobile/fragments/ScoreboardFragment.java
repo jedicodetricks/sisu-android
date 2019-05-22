@@ -135,7 +135,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             String body = parentActivity.getPushNotificationBody();
             String is_html = parentActivity.getPushNotificationIsHTML();
             String pushId = parentActivity.getPushNotificationPushId();
-            if(is_html.equals("true")) {
+            if(is_html != null && is_html.equals("true")) {
                 //TODO: This will have to make an api call with pushId
             }
             else {
@@ -888,7 +888,7 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
 
     private void launchAddClient() {
         //TODO: Change this back
-        navigationManager.stackReplaceFragment(AddClientFragment.class);
+        navigationManager.stackReplaceFragment(ClientManageFragment.class);
 //        Intent intent = new Intent(parentActivity, HtmlNotificationActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        startActivity(intent);
