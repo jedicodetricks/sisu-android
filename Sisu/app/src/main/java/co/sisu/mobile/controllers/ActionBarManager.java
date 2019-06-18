@@ -346,7 +346,9 @@ public class ActionBarManager {
 
         if(team.getRole().equals("ADMIN") || isAdminMode) {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
-            teamAgentsTitle.setVisibility(View.VISIBLE);
+            if(teamAgentsTitle != null) {
+                teamAgentsTitle.setVisibility(View.VISIBLE);
+            }
         }
         else {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);

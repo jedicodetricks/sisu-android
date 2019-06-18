@@ -1239,9 +1239,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
                 if(addAppointmentSelectedMonth == month && addAppointmentSelectedDay == day && addAppointmentSelectedYear == year) {
                     month += 1;
-
                     String formattedDate = getFormattedForAppointmentDate(month + "/" + day +"/" + year);
-
                     apiManager.addAppointmentNote(ClientManageFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), "Added from Mobile APP", "APPTS", formattedDate);
                 }
                 else {
@@ -1260,7 +1258,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                     }
                     addAppointmentSelectedMonth += 1;
                     String formattedDate =  getFormattedForAppointmentDate(formattedMonth + "/" + formattedDay +"/" + addAppointmentSelectedYear);
-
                     apiManager.addAppointmentNote(ClientManageFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id(), "Added from Mobile APP", "APPTS", formattedDate);
                 }
 
@@ -1271,12 +1268,16 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
                 String phone = "";
                 int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
-                if(currentClient.getMobile_phone() != null) {
-                    phone = currentClient.getMobile_phone();
-                } else {
-                    phone = currentClient.getHome_phone();
-                    phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+
+                if(currentClient != null) {
+                    if(currentClient.getMobile_phone() != null) {
+                        phone = currentClient.getMobile_phone();
+                    } else {
+                        phone = currentClient.getHome_phone();
+                        phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+                    }
                 }
+
                 contactIntent
                         .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
                         .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
