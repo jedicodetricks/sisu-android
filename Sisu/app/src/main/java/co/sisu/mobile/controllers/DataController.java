@@ -73,7 +73,7 @@ public class DataController {
         labels = new HashMap<>();
     }
 
-    private void initializeMorePageObject(boolean isRecruiting) {
+    private void initializeMorePageObject(boolean isRecruiting, boolean isAdmin) {
         morePage = new ArrayList<>();
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
         if(isRecruiting) {
@@ -84,7 +84,9 @@ public class DataController {
         }
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
         morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
-        morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
+        if(isAdmin) {
+            morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
+        }
         morePage.add(new MorePageContainer("Settings", "Application settings", R.drawable.settings_icon_active));
         morePage.add(new MorePageContainer("Feedback", "Provide Feedback", R.drawable.feedback_icon_active));
         if(slackInfo != null) {
@@ -100,8 +102,8 @@ public class DataController {
         morePage.add(new MorePageContainer("Logout", "", R.drawable.logout_icon_active));
     }
 
-    public List<MorePageContainer> getMorePageContainer(boolean isRecruiting) {
-        initializeMorePageObject(isRecruiting);
+    public List<MorePageContainer> getMorePageContainer(boolean isRecruiting, boolean isAdmin) {
+        initializeMorePageObject(isRecruiting, isAdmin);
         return morePage;
     }
 

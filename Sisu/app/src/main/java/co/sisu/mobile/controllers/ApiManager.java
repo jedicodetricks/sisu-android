@@ -123,7 +123,7 @@ public class ApiManager {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
-        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId + "/" + marketId;
+        String currentUrl = url + "api/v1/team/record-activities/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -321,7 +321,7 @@ public class ApiManager {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS;
         String body = updateObject;
-        String currentUrl = url + "api/v1/agent/record-activities/"+ agentId + "/" + teamId + "/" + marketId;
+        String currentUrl = url + "api/v1/team/record-activities/" + teamId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
