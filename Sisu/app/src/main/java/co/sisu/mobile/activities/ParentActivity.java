@@ -166,8 +166,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         //MOCKING AN AGENT
-//        agent.setAgent_id("5088");
-//        dataController.setAgent(agent);
+        agent.setAgent_id("6325");
+        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
 
@@ -712,11 +712,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            setActivityColors();
-            colorSchemeFinished = true;
-            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-            navigateToScoreboard();
+            if(colorScheme.length < 5) {
+                apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 0, dataController.getColorSchemeId());
+            }
+            else {
+                colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+                setActivityColors();
+                colorSchemeFinished = true;
+                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+                navigateToScoreboard();
+            }
+
         }
         else if(returnType == ApiReturnTypes.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);

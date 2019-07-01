@@ -44,7 +44,7 @@ public class ColorSchemeManager {
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme, String colorSchemeId) {
 
-//        setDefaults(colorSchemeId);
+        setDefaults(colorSchemeId);
         icon = null;
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
             switch (colorSchemeObject.getName()) {
