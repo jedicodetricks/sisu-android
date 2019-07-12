@@ -56,6 +56,7 @@ import co.sisu.mobile.fragments.RecordFragment;
 import co.sisu.mobile.fragments.RecruitingScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.ScoreboardFragment;
+import co.sisu.mobile.fragments.TileTemplateFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
@@ -140,6 +141,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isAdminMode = false;
     private boolean adminTransferring = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,8 +168,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         //MOCKING AN AGENT
-        agent.setAgent_id("6325");
-        dataController.setAgent(agent);
+//        agent.setAgent_id("6325");
+//        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
 
@@ -455,7 +457,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
                     }
                     else {
-                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+//                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                     }
                 }
             });

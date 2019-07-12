@@ -1,0 +1,688 @@
+{
+  "tile_rows": [
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 100.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 0.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "smallHeader",
+          "border": "all",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "YTD Closed Volume",
+          "value": "$1.03m",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 12.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "smallHeader",
+          "border": "all",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "YTD Closed Units",
+          "value": "6.75",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 12.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 100.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 0.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "smallHeader",
+          "border": "all",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "MTD U/C Volume",
+          "value": "$100K",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 12.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "smallHeader",
+          "border": "all",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "MTD Closed Volume",
+          "value": "$450k",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 12.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 300.0,
+      "disabled": false,
+      "square": true,
+      "innerGap": 4.0,
+      "max_tiles": 1,
+      "tiles": [
+        {
+          "rounded": false,
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#1B1E20",
+          "color": "#FF5500",
+          "under_title":"Conversations",
+          "duration":2.0
+        }
+      ]
+    },
+    {
+      "rowheight": 200.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 1,
+      "tiles": [
+        {
+          "type": "ratioDiamond",
+          "border": "none",
+          "tile_color": "#1B1E20",
+          "diamond_color": "8B8B8B",
+          "rounded": false,
+          "header": "25.3%",
+          "left_header": "Buyers",
+          "right_header": "Listings",
+          "header_baseline": "center",
+          "header_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_header_footer": "large",
+          "header_adjust_font": true
+        }
+      ]
+    },
+    {
+      "rowheight": 200.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "rounded": false,
+          "border": "right",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#1B1E20",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        },
+        {
+          "rounded": false,
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#1B1E20",
+          "color": "#FF5500",
+          "under_title":"Listing Appointments",
+          "duration":2.0
+        }
+      ]
+    },
+    {
+      "rowheight": 200.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "rounded": false,
+          "border": "right",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#1B1E20",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        },
+        {
+          "rounded": false,
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#1B1E20",
+          "color": "#FF5500",
+          "under_title":"Listing Appointments",
+          "duration":2.0
+        }
+      ]
+    },
+    {
+      "rowheight": 60.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "ratio",
+          "border": "right",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "25.3%",
+          "header_baseline": "center",
+          "header_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_header_footer": "large",
+          "header_adjust_font": true
+        },
+        {
+          "type": "ratio",
+          "border": "none",
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "20.0%",
+          "header_baseline": "center",
+          "header_alignment": "center",
+          "header_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_header_footer": "large",
+          "header_adjust_font": true
+        }
+
+      ]
+    },
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 80.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 0.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "fullText",
+          "border": "top",
+          "side": true,
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "Buyers:",
+          "value": "",
+          "header_baseline": "center",
+          "header_alignment": "left",
+          "header_text_color": "#8B8B8B",
+          "font_header": "large",
+          "font_size_header": 32.0,
+          "header_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 200.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "rounded": true,
+          "border": "all",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#333333",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        },
+        {
+          "rounded": true,
+          "border": "all",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#333333",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        },
+        {
+          "rounded": true,
+          "border": "all",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#333333",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        },
+        {
+          "rounded": true,
+          "border": "all",
+          "type": "progress",
+          "current": 60.0,
+          "max": 100.0,
+          "pacer": 80.0,
+          "tile_color": "#333333",
+          "color": "#FF5500",
+          "under_title":"1st Time Appointments",
+          "duration":2.0
+        }
+      ]
+    },
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 80.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 0.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "fullText",
+          "border": "none",
+          "side": true,
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "Year To Date",
+          "value": "",
+          "header_baseline": "center",
+          "header_alignment": "left",
+          "header_text_color": "#8B8B8B",
+          "font_header": "large",
+          "font_size_header": 32.0,
+          "header_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 140.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 10.0,
+      "max_tiles": 3,
+      "tiles": [
+        {
+          "type": "smallHeader",
+          "border": "none",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "Units Pending",
+          "value": "19.75",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "left",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FF5000",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "smallHeader",
+          "border": "none",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "Volume Pending",
+          "value": "$11.45m",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "left",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#0FD476",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "smallHeader",
+          "border": "none",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "GCI Pending",
+          "value": "$655m",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "left",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "smallHeader",
+          "border": "none",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "GCI Pending",
+          "value": "$655m",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "left",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#8B8B8B",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 40.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 60.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 10.0,
+      "max_tiles": 1,
+      "tiles": [
+        {
+          "type": "smallHeader",
+          "border": "top",
+          "side": true,
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "Avg Listing Price",
+          "value": "$429K",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "right",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FF5000",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 60.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 10.0,
+      "max_tiles": 1,
+      "tiles": [
+        {
+          "type": "smallHeader",
+          "border": "top",
+          "side": true,
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "Avg Buyer Price",
+          "value": "$436K",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "left",
+          "footer_alignment": "right",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 18.0,
+          "font_footer": "large",
+          "font_size_footer": 24.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 80.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 0.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "fullText",
+          "border": "none",
+          "side": true,
+          "tile_color": "#1B1E20",
+          "rounded": false,
+          "header": "Activity",
+          "value": "",
+          "header_baseline": "center",
+          "header_alignment": "left",
+          "header_text_color": "#8B8B8B",
+          "font_header": "large",
+          "font_size_header": 32.0,
+          "header_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 180,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "activity",
+          "image": "contacts",
+          "border": "all",
+          "tile_color": "#FF5000",
+          "rounded": true,
+          "header": "Dials",
+          "value": "14",
+          "units": "hours",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_footer": "large",
+          "font_size_footer": 48.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "activity",
+          "image": "contacts",
+          "border": "all",
+          "tile_color": "#FF5000",
+          "rounded": true,
+          "header": "Meditate",
+          "value": "12",
+          "units": "hours",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_footer": "large",
+          "font_size_footer": 48.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    },
+    {
+      "rowheight": 10.0,
+      "disabled": false,
+      "spacer": true
+    },
+    {
+      "rowheight": 140.0,
+      "disabled": false,
+      "square": false,
+      "innerGap": 4.0,
+      "max_tiles": 2,
+      "tiles": [
+        {
+          "type": "activity",
+          "border": "all",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "Dials",
+          "value": "14",
+          "units": "",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_footer": "large",
+          "font_size_footer": 64.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "activity",
+          "border": "all",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "Meditate",
+          "value": "12",
+          "units": "hours",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_footer": "large",
+          "font_size_footer": 64.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        },
+        {
+          "type": "activity",
+          "border": "all",
+          "tile_color": "#333333",
+          "rounded": true,
+          "header": "Meditate",
+          "value": "12",
+          "units": "hours",
+          "header_baseline": "center",
+          "footer_baseline": "center",
+          "header_alignment": "center",
+          "footer_alignment": "center",
+          "header_text_color": "#FFFFFF",
+          "footer_text_color": "#FFFFFF",
+          "font_header": "medium",
+          "font_size_header": 24.0,
+          "font_footer": "large",
+          "font_size_footer": 64.0,
+          "header_adjust_font": false,
+          "footer_adjust_font": false
+        }
+      ]
+    }
+  ]
+}
