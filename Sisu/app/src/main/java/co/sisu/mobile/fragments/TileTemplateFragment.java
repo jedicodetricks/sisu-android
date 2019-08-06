@@ -81,7 +81,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         HorizontalScrollView horizontalScrollView2 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
         horizontalScrollView2.setId(51);
-//        horizontalScrollView2.setBackgroundColor(Color.BLUE);
+        horizontalScrollView2.setBackgroundColor(Color.BLUE);
 
         HorizontalScrollView horizontalScrollView3 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
         horizontalScrollView3.setId(52);
@@ -96,9 +96,9 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         RelativeLayout.LayoutParams horizontalParams3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         horizontalParams3.setMargins(6, 6, 6, 6);
 
-        horizontalScrollView.setLayoutParams(horizontalParams);
+//        horizontalScrollView.setLayoutParams(horizontalParams);
 //        horizontalScrollView2.setLayoutParams(horizontalParams2);
-        horizontalScrollView3.setLayoutParams(horizontalParams3);
+//        horizontalScrollView3.setLayoutParams(horizontalParams3);
 
         // This view gets loaded with all the components for a row then goes into the horizontal view. This is the view that decides the height
         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 800);
@@ -122,7 +122,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         View v = createProgressView(container);
         v.setId(1);
 
-        View v2 = createProgressView(container);
+        View v2 = createSmallHeaderView(container);
         v2.setId(2);
 
         View v3 = createProgressView(container);
@@ -148,9 +148,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         relativeLayout.addView(v2, textview1param);
         relativeLayout.addView(v3, textview3param);
 
+//        View progress1 = createProgressView(container);
+//        progress1.setId(11);
 
-        View progress1 = createProgressView(container);
-        progress1.setId(11);
+        View smallHeader1 = createSmallHeaderView(container);
+        smallHeader1.setId(11);
 
         View progress2 = createProgressView(container);
         progress2.setId(12);
@@ -171,7 +173,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 //        progressParam3.setMargins(6, 6, 6, 6);
 //        progressParam3.addRule(RelativeLayout.RIGHT_OF, 12);
 
-        relativeLayout2.addView(progress1, progressParam);
+        relativeLayout2.addView(smallHeader1, progressParam);
 //        relativeLayout2.addView(progress2, progressParam2);
 //        relativeLayout2.addView(progress3, progressParam3);
 
@@ -319,7 +321,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     }
 
-    private View createSmallHeaderView(TableRow row) {
+    private View createSmallHeaderView(ViewGroup row) {
         String headerText = "YTD Closed Volume";
         String footerText = "$500K";
 
@@ -330,6 +332,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         header.setText(headerText);
         footer.setText(footerText);
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
+        GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+        roundedCorners.setColor(ContextCompat.getColor(getContext(), R.color.colorAlmostBlack));
+        rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners) );
         return rowView;
     }
 

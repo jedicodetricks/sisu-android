@@ -51,7 +51,7 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        }
+        },
       ]
     },
     {
@@ -100,7 +100,7 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        }
+        },
       ]
     },
     {
@@ -120,7 +120,7 @@
           "color": "#FF5500",
           "under_title":"Conversations",
           "duration":2.0
-        }
+        },
       ]
     },
     {
@@ -134,7 +134,7 @@
           "type": "ratioDiamond",
           "border": "none",
           "tile_color": "#1B1E20",
-          "diamond_color": "8B8B8B",
+          "diamond_color": "#8B8B8B",
           "rounded": false,
           "header": "25.3%",
           "left_header": "Buyers",
@@ -276,8 +276,8 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false
-        }
+          "header_adjust_font": false,
+        },
       ]
     },
     {
@@ -362,8 +362,8 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false
-        }
+          "header_adjust_font": false,
+        },
       ]
     },
     {
@@ -457,7 +457,7 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        }
+        },
       ]
     },
     {
@@ -550,8 +550,8 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false
-        }
+          "header_adjust_font": false,
+        },
       ]
     },
     {
@@ -604,7 +604,7 @@
           "font_size_footer": 48.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        }
+        },
       ]
     },
     {
@@ -681,8 +681,8 @@
           "font_size_footer": 64.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        }
+        },
       ]
-    }
+    },
   ]
 }
