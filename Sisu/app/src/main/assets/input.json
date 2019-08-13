@@ -3,7 +3,7 @@
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 100.0,
@@ -51,7 +51,7 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        },
+        }
       ]
     },
     {
@@ -100,7 +100,7 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        },
+        }
       ]
     },
     {
@@ -120,7 +120,7 @@
           "color": "#FF5500",
           "under_title":"Conversations",
           "duration":2.0
-        },
+        }
       ]
     },
     {
@@ -254,7 +254,7 @@
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 80.0,
@@ -276,8 +276,8 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false,
-        },
+          "header_adjust_font": false
+        }
       ]
     },
     {
@@ -340,7 +340,7 @@
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 80.0,
@@ -362,14 +362,14 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false,
-        },
+          "header_adjust_font": false
+        }
       ]
     },
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 140.0,
@@ -457,13 +457,13 @@
           "font_size_footer": 24.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        },
+        }
       ]
     },
     {
       "rowheight": 40.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 60.0,
@@ -528,7 +528,7 @@
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 80.0,
@@ -550,8 +550,8 @@
           "header_text_color": "#8B8B8B",
           "font_header": "large",
           "font_size_header": 32.0,
-          "header_adjust_font": false,
-        },
+          "header_adjust_font": false
+        }
       ]
     },
     {
@@ -604,13 +604,13 @@
           "font_size_footer": 48.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        },
+        }
       ]
     },
     {
       "rowheight": 10.0,
       "disabled": false,
-      "spacer": true
+      "type": "spacer"
     },
     {
       "rowheight": 140.0,
@@ -681,8 +681,8 @@
           "font_size_footer": 64.0,
           "header_adjust_font": false,
           "footer_adjust_font": false
-        },
+        }
       ]
-    },
+    }
   ]
 }
