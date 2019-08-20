@@ -4,10 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -15,12 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -117,7 +123,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.e("TILE ROWS", String.valueOf(tile_rows.length()));
+            Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
             for(int i = 1; i < tile_rows.length(); i++) {
                 try {
                     HorizontalScrollView horizontalScrollView = createRowFromJSON(tile_rows.getJSONObject(i), container);
@@ -125,7 +131,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                         // Add one here to account for the spinner's ID.
                         horizontalScrollView.setId(numOfRows + 1);
                         RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        horizontalParam.setMargins(6, 6, 6, 6);
                         horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
 
                         parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
@@ -139,182 +144,184 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         }
         else {
-
-
-
-            // We'll need a horizontal view for every single row
-            HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-            horizontalScrollView.setId(50);
-//        horizontalScrollView.setBackgroundColor(Color.RED);
-
-            HorizontalScrollView horizontalScrollView2 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-            horizontalScrollView2.setId(51);
-//        horizontalScrollView2.setBackgroundColor(Color.BLUE);
-
-            HorizontalScrollView horizontalScrollView3 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-            horizontalScrollView3.setId(52);
-//        horizontalScrollView3.setBackgroundColor(Color.GREEN);
-
-            // I don't think we need these now
-//        RelativeLayout.LayoutParams horizontalParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        horizontalParams.setMargins(6, 6, 6, 6);
-//
-//        RelativeLayout.LayoutParams horizontalParams2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        horizontalParams2.setMargins(6, 6, 6, 6);
-//
-//        RelativeLayout.LayoutParams horizontalParams3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        horizontalParams3.setMargins(6, 6, 6, 6);
-
-//        horizontalScrollView.setLayoutParams(horizontalParams);
-//        horizontalScrollView2.setLayoutParams(horizontalParams2);
-//        horizontalScrollView3.setLayoutParams(horizontalParams3);
-
-            // This view gets loaded with all the components for a row then goes into the horizontal view. This is the view that decides the height
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 375);
-            RelativeLayout.LayoutParams relativeParams2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 375);
-            RelativeLayout.LayoutParams relativeParams3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 450);
-
-            View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-
-            view.setLayoutParams(relativeParams);
-//        RelativeLayout relativeLayout = view.findViewById(R.id.tileRelativeLayout);
-            LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
-
-            View v = createSmallHeaderView(container, "YTD Closed Volume", "$1.03m", false);
-            v.setId(1);
-
-            View v2 = createSmallHeaderView(container, "YTD Closed Units", "6.75", false);
-            v2.setId(2);
-
-            View v3 = createProgressView(container, "title", 50, "#FFFFFF", false);
-            v3.setId(3);
-
-            LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
-            textviewparam.setMargins(6, 6, 6, 6);
-//        textviewparam.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//        textviewparam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//        textviewparam.addRule(RelativeLayout.CENTER_VERTICAL);
-
-            LinearLayout.LayoutParams textview1param = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
-            textview1param.setMargins(6, 6, 6, 6);
-//        textview1param.addRule(RelativeLayout.RIGHT_OF, 1);
-//        textview1param.addRule(RelativeLayout.CENTER_VERTICAL);
-
-            RelativeLayout.LayoutParams textview3param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
-            textview3param.setMargins(6, 6, 6, 6);
-            textview3param.addRule(RelativeLayout.RIGHT_OF, 2);
-            textview3param.addRule(RelativeLayout.CENTER_VERTICAL);
-
-            linearLayout.addView(v, textviewparam);
-            linearLayout.addView(v2, textview1param);
-//        linearLayout.addView(v3, textview3param);
-
-//        View progress1 = createProgressView(container);
-//        progress1.setId(11);
-
-
-            // ROW TWO
-            // ROW TWO
-            // ROW TWO
-
-            View view2 = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-            view2.setLayoutParams(relativeParams2);
-            LinearLayout linearLayout2 = view2.findViewById(R.id.tileLinearLayout);
-
-
-            View smallHeader1 = createSmallHeaderView(container, "MTD U/C Volume", "$100K", false);
-            smallHeader1.setId(11);
-
-            View smallHeader2 = createSmallHeaderView(container, "MTD Closed Volume", "$450K", false);
-            smallHeader2.setId(12);
-
-            View progress3 = createProgressView(container, "title", 50, "#FFFFFF", false);
-            progress3.setId(13);
-
-            LinearLayout.LayoutParams progressParam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
-            progressParam.setMargins(6, 6, 6, 6);
-//        progressParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
-//        progressParam.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-//        RelativeLayout.LayoutParams progressParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
-//        progressParam2.setMargins(6, 6, 6, 6);
-//        progressParam2.addRule(RelativeLayout.RIGHT_OF, 11);
-
-//        RelativeLayout.LayoutParams progressParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100);
-//        progressParam3.setMargins(6, 6, 6, 6);
-//        progressParam3.addRule(RelativeLayout.RIGHT_OF, 12);
-
-            linearLayout2.addView(smallHeader1, progressParam);
-            linearLayout2.addView(smallHeader2, progressParam);
-//        relativeLayout2.addView(progress3, progressParam3);
-
-
-            // ROW THREE
-            // ROW THREE
-            // ROW THREE
-            View view3 = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-            view3.setLayoutParams(relativeParams3);
-//        RelativeLayout relativeLayout3 = view3.findViewById(R.id.tileRelativeLayout);
-            LinearLayout linearLayout3 = view3.findViewById(R.id.tileLinearLayout);
-
-            View progressView = createProgressView(container, "title", 50, "#FFFFFF", false);
-            progressView.setId(31);
-
-            View progressView2 = createProgressView(container, "title", 50, "#FFFFFF", false);
-            progressView2.setId(32);
-
-            View progressView3 = createProgressView(container, "title", 50, "#FFFFFF", false);
-            progressView3.setId(33);
-
-            LinearLayout.LayoutParams progressViewParam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 450, 1);
-            progressViewParam.setMargins(6, 6, 6, 6);
-//        progressViewParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//        progressViewParam.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-            RelativeLayout.LayoutParams progressViewParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
-            progressViewParam2.setMargins(6, 6, 6, 6);
-            progressViewParam2.addRule(RelativeLayout.RIGHT_OF, 31);
-            progressViewParam2.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-            RelativeLayout.LayoutParams progressViewParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100);
-            progressViewParam3.setMargins(6, 6, 6, 6);
-            progressViewParam3.addRule(RelativeLayout.RIGHT_OF, 32);
-
-            linearLayout3.addView(progressView, progressViewParam);
-//        relativeLayout3.addView(progressView2, progressViewParam2);
-//        relativeLayout3.addView(progressView3, progressViewParam3);
-
-            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            horizontalParam.setMargins(6, 6, 6, 6);
-            horizontalParam.addRule(RelativeLayout.BELOW, 99);
-
-            RelativeLayout.LayoutParams horizontalParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            horizontalParam2.setMargins(6, 6, 6, 6);
-            horizontalParam2.addRule(RelativeLayout.BELOW, 50);
-            horizontalParam2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-            RelativeLayout.LayoutParams horizontalParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            horizontalParam3.setMargins(6, 6, 6, 6);
-            horizontalParam3.addRule(RelativeLayout.BELOW, 51);
-
-//        HorizontalScrollView.LayoutParams horizTest = new HorizontalScrollView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, HorizontalScrollView.LayoutParams.MATCH_PARENT);
-//        horizTest.setMargins(6, 6, 6, 6);
-
-            horizontalScrollView.addView(linearLayout);
-            horizontalScrollView2.addView(linearLayout2);
-            horizontalScrollView3.addView(linearLayout3);
-
-            parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
-            parentRelativeLayout.addView(horizontalScrollView2, horizontalParam2);
-            parentRelativeLayout.addView(horizontalScrollView3, horizontalParam3);
+            createHardcodedView(container, parentRelativeLayout);
         }
 
         return parentLayout;
     }
 
     @SuppressLint("ResourceType")
+    private void createHardcodedView(ViewGroup container, RelativeLayout parentRelativeLayout) {
+        // We'll need a horizontal view for every single row
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
+        horizontalScrollView.setId(50);
+//        horizontalScrollView.setBackgroundColor(Color.RED);
+
+        HorizontalScrollView horizontalScrollView2 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
+        horizontalScrollView2.setId(51);
+//        horizontalScrollView2.setBackgroundColor(Color.BLUE);
+
+        HorizontalScrollView horizontalScrollView3 = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
+        horizontalScrollView3.setId(52);
+//        horizontalScrollView3.setBackgroundColor(Color.GREEN);
+
+        // I don't think we need these now
+//        RelativeLayout.LayoutParams horizontalParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        horizontalParams.setMargins(2, 2, 2, 2);
+//
+//        RelativeLayout.LayoutParams horizontalParams2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        horizontalParams2.setMargins(2, 2, 2, 2);
+//
+//        RelativeLayout.LayoutParams horizontalParams3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        horizontalParams3.setMargins(2, 2, 2, 2);
+
+//        horizontalScrollView.setLayoutParams(horizontalParams);
+//        horizontalScrollView2.setLayoutParams(horizontalParams2);
+//        horizontalScrollView3.setLayoutParams(horizontalParams3);
+
+        // This view gets loaded with all the components for a row then goes into the horizontal view. This is the view that decides the height
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 375);
+        RelativeLayout.LayoutParams relativeParams2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 375);
+        RelativeLayout.LayoutParams relativeParams3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 450);
+
+        View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
+
+        view.setLayoutParams(relativeParams);
+//        RelativeLayout relativeLayout = view.findViewById(R.id.tileRelativeLayout);
+        LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
+
+        View v = createSmallHeaderView(container, "YTD Closed Volume", "$1.03m", false);
+        v.setId(1);
+
+        View v2 = createSmallHeaderView(container, "YTD Closed Units", "6.75", false);
+        v2.setId(2);
+
+        View v3 = createProgressView(container, "title", 50, "#FFFFFF", false);
+        v3.setId(3);
+
+        LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
+        textviewparam.setMargins(2, 2, 2, 2);
+//        textviewparam.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        textviewparam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        textviewparam.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        LinearLayout.LayoutParams textview1param = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
+        textview1param.setMargins(2, 2, 2, 2);
+//        textview1param.addRule(RelativeLayout.RIGHT_OF, 1);
+//        textview1param.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        RelativeLayout.LayoutParams textview3param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 200);
+        textview3param.setMargins(2, 2, 2, 2);
+        textview3param.addRule(RelativeLayout.RIGHT_OF, 2);
+        textview3param.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        linearLayout.addView(v, textviewparam);
+        linearLayout.addView(v2, textview1param);
+//        linearLayout.addView(v3, textview3param);
+
+//        View progress1 = createProgressView(container);
+//        progress1.setId(11);
+
+
+        // ROW TWO
+        // ROW TWO
+        // ROW TWO
+
+        View view2 = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
+        view2.setLayoutParams(relativeParams2);
+        LinearLayout linearLayout2 = view2.findViewById(R.id.tileLinearLayout);
+
+
+        View smallHeader1 = createSmallHeaderView(container, "MTD U/C Volume", "$100K", false);
+        smallHeader1.setId(11);
+
+        View smallHeader2 = createSmallHeaderView(container, "MTD Closed Volume", "$450K", false);
+        smallHeader2.setId(12);
+
+        View progress3 = createProgressView(container, "title", 50, "#FFFFFF", false);
+        progress3.setId(13);
+
+        LinearLayout.LayoutParams progressParam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 350, 1);
+        progressParam.setMargins(2, 2, 2, 2);
+//        progressParam.addRule(RelativeLayout.CENTER_HORIZONTAL);
+//        progressParam.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+//        RelativeLayout.LayoutParams progressParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
+//        progressParam2.setMargins(2, 2, 2, 2);
+//        progressParam2.addRule(RelativeLayout.RIGHT_OF, 11);
+
+//        RelativeLayout.LayoutParams progressParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100);
+//        progressParam3.setMargins(2, 2, 2, 2);
+//        progressParam3.addRule(RelativeLayout.RIGHT_OF, 12);
+
+        linearLayout2.addView(smallHeader1, progressParam);
+        linearLayout2.addView(smallHeader2, progressParam);
+//        relativeLayout2.addView(progress3, progressParam3);
+
+
+        // ROW THREE
+        // ROW THREE
+        // ROW THREE
+        View view3 = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
+        view3.setLayoutParams(relativeParams3);
+//        RelativeLayout relativeLayout3 = view3.findViewById(R.id.tileRelativeLayout);
+        LinearLayout linearLayout3 = view3.findViewById(R.id.tileLinearLayout);
+
+        View progressView = createProgressView(container, "title", 50, "#FFFFFF", false);
+        progressView.setId(31);
+
+        View progressView2 = createProgressView(container, "title", 50, "#FFFFFF", false);
+        progressView2.setId(32);
+
+        View progressView3 = createProgressView(container, "title", 50, "#FFFFFF", false);
+        progressView3.setId(33);
+
+        LinearLayout.LayoutParams progressViewParam = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 450, 1);
+        progressViewParam.setMargins(2, 2, 2, 2);
+//        progressViewParam.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//        progressViewParam.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        RelativeLayout.LayoutParams progressViewParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 150);
+        progressViewParam2.setMargins(2, 2, 2, 2);
+        progressViewParam2.addRule(RelativeLayout.RIGHT_OF, 31);
+        progressViewParam2.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        RelativeLayout.LayoutParams progressViewParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100);
+        progressViewParam3.setMargins(2, 2, 2, 2);
+        progressViewParam3.addRule(RelativeLayout.RIGHT_OF, 32);
+
+        linearLayout3.addView(progressView, progressViewParam);
+//        relativeLayout3.addView(progressView2, progressViewParam2);
+//        relativeLayout3.addView(progressView3, progressViewParam3);
+
+        RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        horizontalParam.setMargins(2, 2, 2, 2);
+        horizontalParam.addRule(RelativeLayout.BELOW, 99);
+
+        RelativeLayout.LayoutParams horizontalParam2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        horizontalParam2.setMargins(2, 2, 2, 2);
+        horizontalParam2.addRule(RelativeLayout.BELOW, 50);
+        horizontalParam2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+        RelativeLayout.LayoutParams horizontalParam3 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        horizontalParam3.setMargins(2, 2, 2, 2);
+        horizontalParam3.addRule(RelativeLayout.BELOW, 51);
+
+//        HorizontalScrollView.LayoutParams horizTest = new HorizontalScrollView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, HorizontalScrollView.LayoutParams.MATCH_PARENT);
+//        horizTest.setMargins(2, 2, 2, 2);
+
+        horizontalScrollView.addView(linearLayout);
+        horizontalScrollView2.addView(linearLayout2);
+        horizontalScrollView3.addView(linearLayout3);
+
+        parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
+        parentRelativeLayout.addView(horizontalScrollView2, horizontalParam2);
+        parentRelativeLayout.addView(horizontalScrollView3, horizontalParam3);
+    }
+
+    @SuppressLint("ResourceType")
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container) {
-        Log.e("TILE ROWS", String.valueOf(rowObject));
+        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
             Double height = rowObject.getDouble("rowheight");
@@ -326,29 +333,34 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             int correctedHeight = height.intValue() + 200;
             List<View> rowViews = new ArrayList<>();
 
-
             for(int i = 0; i < rowTiles.length(); i++) {
                 JSONObject tileObject = rowTiles.getJSONObject(i);
                 String type = tileObject.getString("type");
 
                 switch (type) {
                     case "smallHeader":
-                        String header = tileObject.getString("header");
-                        String footer = tileObject.getString("value");
-                        Boolean rounded = tileObject.getBoolean("rounded");
-                        Log.e("Type", "SMALL HEADER");
-//                        View v = createSmallHeaderView(container, header, footer, rounded);
                         View v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "progress":
-                        String title = tileObject.getString("under_title");
-                        Double currentProgress = tileObject.getDouble("current");
-                        int formattedCurrentProgress = currentProgress.intValue();
-                        String progressColor = tileObject.getString("color");
-                        rounded = tileObject.getBoolean("rounded");
                         v = createProgressView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
+                    case "fullText":
+                        v = createFullTextView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
+                    case "activity":
+                        v = createActivityView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
+                    case "ratioDiamond":
+                        correctedHeight = height.intValue() + 400;
+                        v = createRatioDiamondView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
@@ -359,41 +371,41 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
 
             HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, correctedHeight + 12);
 
             View view = null;
 
-//            if(rowViews.size() > maxTiles) {
-//                view = inflater.inflate(R.layout.activity_tile_template_test, container, false);
-//                RelativeLayout relativeLayout = view.findViewById(R.id.tileRelativeLayout);
-//                RelativeLayout.LayoutParams childRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, correctedHeight);
-//                childRelativeParams.setMargins(6, 6, 6, 6);
-//
-//                // Starting this at 50 so that it doesn't get confused with other IDs.
-//                int viewCounter = 50;
-//                for(View v: rowViews) {
-//                    v.setId(viewCounter);
-//                    if(viewCounter > 50) {
-//                        childRelativeParams.addRule(RelativeLayout.RIGHT_OF, viewCounter - 1);
-//                    }
-//                    relativeLayout.addView(v, childRelativeParams);
-//                    viewCounter++;
-//                }
-//                horizontalScrollView.addView(relativeLayout);
-//            }
-//            else {
+            if(rowViews.size() > maxTiles) {
+                view = inflater.inflate(R.layout.activity_tile_template_test, container, false);
+                RelativeLayout relativeLayout = view.findViewById(R.id.tileRelativeLayout);
+
+
+                // Starting this at 50 so that it doesn't get confused with other IDs.
+                int viewCounter = 50;
+                for(View v: rowViews) {
+                    v.setId(viewCounter);
+                    RelativeLayout.LayoutParams childRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, correctedHeight);
+//                    childRelativeParams.setMargins(2, 2, 2, 2);
+                    if(viewCounter > 50) {
+                        childRelativeParams.addRule(RelativeLayout.RIGHT_OF, viewCounter - 1);
+                    }
+                    relativeLayout.addView(v, childRelativeParams);
+                    viewCounter++;
+                }
+                horizontalScrollView.addView(relativeLayout);
+            }
+            else {
                 view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
                 LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
                 LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, correctedHeight, 1);
-                textviewparam.setMargins(6, 6, 6, 6);
+                textviewparam.setMargins(2, 2, 2, 2);
 
                 for(View v: rowViews) {
                     linearLayout.addView(v, textviewparam);
                 }
                 horizontalScrollView.addView(linearLayout);
-//            }
+            }
 
-            view.setLayoutParams(relativeParams);
+//            view.setLayoutParams(relativeParams);
 
             return horizontalScrollView;
 
@@ -401,12 +413,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             // That means this is probably a spacer
             try {
                 Double height = rowObject.getDouble("rowheight");
-                int correctedHeight = height.intValue() + 200;
 
                 HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, correctedHeight + 12);
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height.intValue());
                 View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
                 view.setLayoutParams(relativeParams);
+                horizontalScrollView.addView(view);
                 return horizontalScrollView;
             } catch (JSONException e1) {
                 // If we get here, we've really screwed it up.
@@ -420,7 +432,18 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     }
 
     private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+        View rowView = null;
+        if(tileObject.has("side")) {
+            if(tileObject.getBoolean("side") == true) {
+                rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
+            }
+            else {
+                rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+            }
+        }
+        else {
+            rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+        }
 
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
@@ -429,6 +452,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         String footerColor = tileObject.getString("footer_text_color");
         String headerSize = tileObject.getString("font_header");
         String footerSize = tileObject.getString("font_footer");
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+        String tileColor = tileObject.getString("tile_color");
 
         TextView header = rowView.findViewById(R.id.smallHeaderTileHeader);
         TextView footer = rowView.findViewById(R.id.smallHeaderTileFooter);
@@ -447,10 +475,41 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
         }
         else {
-            GradientDrawable border = new GradientDrawable();
-//            border.setColor(0xFFFFFFFF); //white background
-            border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
-            rowView.setBackground(border);
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
         }
 
         return rowView;
@@ -477,8 +536,31 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         return returnSize;
     }
 
-    private void createRowOne() {
+    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
+        // Initialize new color drawables
+        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
+        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
 
+        // Initialize a new array of drawable objects
+        Drawable[] drawables = new Drawable[]{
+                borderColorDrawable,
+                backgroundColorDrawable
+        };
+
+        // Initialize a new layer drawable instance from drawables array
+        LayerDrawable layerDrawable = new LayerDrawable(drawables);
+
+        // Set padding for background color layer
+        layerDrawable.setLayerInset(
+                1, // Index of the drawable to adjust [background color layer]
+                left, // Number of pixels to add to the left bound [left border]
+                top, // Number of pixels to add to the top bound [top border]
+                right, // Number of pixels to add to the right bound [right border]
+                bottom // Number of pixels to add to the bottom bound [bottom border]
+        );
+
+        // Finally, return the one or more sided bordered background drawable
+        return layerDrawable;
     }
 
     public String loadJSONFromAsset(Context context) {
@@ -511,51 +593,177 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     }
 
-    // This is the class to create rows via TableLayout
-    private void createRow(int height, int maxTiles) {
-        int rowWeight = 100 / maxTiles;
-        TableRow row = new TableRow(tableLayout.getContext());
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, height);
+    private View createActivityView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = inflater.inflate(R.layout.tile_activity_layout, row, false);
+        TextView header = rowView.findViewById(R.id.activityTileHeader);
+        TextView count = rowView.findViewById(R.id.activityTileCount);
+        TextView unit = rowView.findViewById(R.id.activityTileUnit);
 
-//        View v = new View(row.getContext());
-//        v.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
-//        v.setBackgroundColor(Color.rgb(51, 51, 51));
-//        lp.setMargins(12, 12, 12, 12);
-//        lp.setMarginEnd(24);
-//        lp.setMarginStart(24);
-        row.setLayoutParams(lp);
-//        for (int i = 0; i < maxTiles; i++) {
-//            View rowView = createSmallHeaderView(row);
-//            rowView.setMinimumHeight(height);
-//            row.addView(rowView);
-//        }
+        String headerText = tileObject.getString("header");
+        String countText = tileObject.getString("value");
+        String unitText = tileObject.getString("units");
+        Boolean rounded = tileObject.getBoolean("rounded");
+        String headerColor = tileObject.getString("header_text_color");
+        String headerSize = tileObject.getString("font_header");
+        String headerAlignment = tileObject.getString("header_alignment");
 
-        for (int i = 0; i < maxTiles; i++) {
-//            View rowView = createProgressView(row);
-//            rowView.setRight(24);
-//            rowView.setPadding(48, 0, 48, 0);
-//            row.addView(rowView);
-//            if(i < maxTiles -1) {
-//            row.addView(v);
-//            }
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+        String tileColor = tileObject.getString("tile_color");
+
+        header.setText(headerText);
+        header.setTextColor(Color.parseColor(headerColor));
+        header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        count.setText(countText);
+        count.setTextColor(Color.parseColor(headerColor));
+        count.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        unit.setText(unitText);
+        unit.setTextColor(Color.parseColor(headerColor));
+        unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+        if(rounded) {
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(Color.parseColor(tileColor));
+            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+        }
+        else {
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
         }
 
+        return rowView;
+    }
 
-//            CheckBox checkBox = new CheckBox(parentActivity);
-//            TextView tv = new TextView(parentActivity);
-//            ImageButton addBtn = new ImageButton(parentActivity);
-//            addBtn.setImageResource(R.drawable.add_icon);
-//            ImageButton minusBtn = new ImageButton(parentActivity);
-//            minusBtn.setImageResource(R.drawable.minus_icon);
-//            TextView qty = new TextView(parentActivity);
-//            checkBox.setText("hello");
-//            qty.setText("10");
-//            row.addView(checkBox);
-//            row.addView(minusBtn);
-//            row.addView(qty);
-//            row.addView(addBtn);
-        tableLayout.addView(row);
+    private View createRatioDiamondView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = inflater.inflate(R.layout.tile_ratio_diamond_layout, row, false);
+        ImageView diamond = rowView.findViewById(R.id.tileRatioDiamond);
+        View centerLine = rowView.findViewById(R.id.tileCenterLine);
+//        View verticalLine = rowView.findViewById(R.id.tileVerticalLine);
+        TextView ratioText = rowView.findViewById(R.id.tileRatioText);
+        TextView leftText = rowView.findViewById(R.id.tileRatioLeftText);
+        TextView rightText = rowView.findViewById(R.id.tileRatioRightText);
 
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+        String tileColor = tileObject.getString("tile_color");
+        String diamondColor = tileObject.getString("diamond_color");
+        String leftHeader = tileObject.getString("left_header");
+        String rightHeader = tileObject.getString("right_header");
+        String header = tileObject.getString("header");
+        String headerColor = tileObject.getString("header_text_color");
+        String headerSize = tileObject.getString("font_header");
+
+        leftText.setText(leftHeader);
+        leftText.setTextColor(Color.parseColor(headerColor));
+        leftText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        rightText.setText(rightHeader);
+        rightText.setTextColor(Color.parseColor(headerColor));
+        rightText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        ratioText.setText(header);
+        ratioText.setTextColor(Color.parseColor(headerColor));
+        ratioText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        Drawable background = diamond.getBackground();
+        Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.shape_diamond);
+        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(diamondColor));
+
+        diamond.setImageDrawable(wrappedDrawable);
+        centerLine.setBackgroundColor(Color.parseColor(diamondColor));
+//        verticalLine.setBackgroundColor(Color.parseColor(diamondColor));
+
+        centerLine.setZ(1);
+//        verticalLine.setZ(2);
+        diamond.setZ(3);
+        ratioText.setZ(4);
+//        if (background instanceof ShapeDrawable) {
+//            ((ShapeDrawable)background).getPaint().setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+//        } else if (background instanceof GradientDrawable) {
+//            ((GradientDrawable)background).setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+//        } else if (background instanceof ColorDrawable) {
+//            ((ColorDrawable)background).setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+//        }
+
+
+
+        int topBorder = 0;
+        int leftBorder = 0;
+        int rightBorder = 0;
+        int bottomBorder = 0;
+
+        switch (border) {
+            case "all":
+                topBorder = 5;
+                leftBorder = 5;
+                rightBorder = 5;
+                bottomBorder = 5;
+                break;
+            case "top":
+                topBorder = 5;
+                break;
+            case "left":
+                leftBorder = 5;
+                break;
+            case "right":
+                rightBorder = 5;
+                break;
+            case "bottom":
+                bottomBorder = 5;
+                break;
+        }
+
+        LayerDrawable borderDrawable = getBorders(
+                Color.parseColor(tileColor), // Background color
+                Color.GRAY, // Border color
+                leftBorder, // Left border in pixels
+                topBorder, // Top border in pixels
+                rightBorder, // Right border in pixels
+                bottomBorder // Bottom border in pixels
+        );
+        rowView.setBackground(borderDrawable);
+
+
+        return rowView;
     }
 
     private View createSmallHeaderView(ViewGroup row, String headerText, String footerText, boolean rounded) {
@@ -594,6 +802,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         int formattedCurrentProgress = currentProgress.intValue();
         String progressColor = tileObject.getString("color");
         Boolean rounded = tileObject.getBoolean("rounded");
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+        String tileColor = tileObject.getString("tile_color");
 
         CircularProgressBar progress = rowView.findViewById(R.id.progressTileProgressBar);
         TextView titleView = rowView.findViewById(R.id.progressTileHeader);
@@ -609,20 +822,128 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         progress.setProgressWithAnimation(formattedCurrentProgress, ANIMATION_DURATION);
         rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
         rowView.setClipToOutline(true);
+
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(ContextCompat.getColor(getContext(), R.color.colorAlmostBlack));
             rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
         }
         else {
-            GradientDrawable border = new GradientDrawable();
-//            border.setColor(0xFFFFFFFF); //white background
-            border.setStroke(1, 0xFFFFFFFF); //black border with full opacity
-            rowView.setBackground(border);
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+
+            rowView.setBackground(borderDrawable);
         }
-//        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-//        layoutParams.setMargins(12, 12, 12, 12);
-//        rowView.setLayoutParams(layoutParams);
+        return rowView;
+    }
+
+    private View createFullTextView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = inflater.inflate(R.layout.tile_fulltext_side_layout, row, false);
+        TextView leftText = rowView.findViewById(R.id.fullTextTileHeader);
+
+
+        String headerText = tileObject.getString("header");
+        Boolean rounded = tileObject.getBoolean("rounded");
+        String headerColor = tileObject.getString("header_text_color");
+        String headerSize = tileObject.getString("font_header");
+        String headerAlignment = tileObject.getString("header_alignment");
+
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+        String tileColor = tileObject.getString("tile_color");
+
+        leftText.setText(headerText);
+        leftText.setTextColor(Color.parseColor(headerColor));
+        leftText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        switch (headerAlignment) {
+            case "left":
+                leftText.setGravity(View.TEXT_ALIGNMENT_VIEW_START);
+                break;
+            case "center":
+                leftText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+                break;
+            case "right":
+                leftText.setGravity(View.TEXT_ALIGNMENT_VIEW_END);
+                break;
+        }
+
+        if(rounded) {
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(ContextCompat.getColor(getContext(), R.color.colorAlmostBlack));
+            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+        }
+        else {
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
+        }
         return rowView;
     }
 
