@@ -83,7 +83,12 @@ public class NavigationManager {
                 actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
             }
             else {
-                actionBarManager.swapToClientListBar("Client Notes", DISABLE_DRAWER);
+                if(parentActivity.getIsNoteFragment()) {
+                    actionBarManager.swapToClientListBar("Client Notes", DISABLE_DRAWER);
+                }
+                else {
+                    actionBarManager.swapToClientListBar("Message Center", DISABLE_DRAWER);
+                }
             }
         }
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||

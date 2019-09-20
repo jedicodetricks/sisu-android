@@ -283,11 +283,18 @@ public class ScoreboardFragment extends Fragment implements View.OnClickListener
             //Pending
             List<ClientObject> underContractClients = dataController.getContractList();
             for(ClientObject co : underContractClients) {
-                try {
-                    pendingVolume += Double.valueOf(co.getTrans_amt());
-                } catch(Exception e) {
-                    pendingVolume += Integer.valueOf(co.getTrans_amt());
+                if(co.getTrans_amt() != null || !co.getTrans_amt().equals("")) {
+                    try {
+                        pendingVolume += Double.valueOf(co.getTrans_amt());
+                    } catch(Exception e) {
+                        try {
+                            pendingVolume += Integer.valueOf(co.getTrans_amt());
+                        } catch(Exception ex) {
+                            break;
+                        }
+                    }
                 }
+
             }
             NumberFormat format = NumberFormat.getNumberInstance();
 

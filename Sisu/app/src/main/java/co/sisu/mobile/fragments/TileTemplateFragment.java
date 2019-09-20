@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -104,6 +104,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         // Create the parent layout that all the rows will go in
         View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
+        parentLayout.setBackgroundColor(Color.BLUE);
         RelativeLayout parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
         initializeTimelineSelector(parentLayout);
         //
@@ -325,9 +326,9 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
             Double height = rowObject.getDouble("rowheight");
-            Double innerGap = rowObject.getDouble("innerGap");
+//            Double innerGap = rowObject.getDouble("innerGap");
             Boolean disabled = rowObject.getBoolean("disabled");
-            Boolean square = rowObject.getBoolean("square");
+//            Boolean square = rowObject.getBoolean("square");
             Integer maxTiles = rowObject.getInt("max_tiles");
 
             int correctedHeight = height.intValue() + 200;
@@ -338,8 +339,13 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 String type = tileObject.getString("type");
 
                 switch (type) {
+                    case "normal":
+                        View v = createNormalView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
                     case "smallHeader":
-                        View v = createSmallHeaderView(container, tileObject);
+                        v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
@@ -364,8 +370,13 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                         v.setId(i);
                         rowViews.add(v);
                         break;
+                    case "legend":
+                        v = createLegendView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
                     default:
-                        Log.e("TYPE", "OTHER");
+                        Log.e("TYPE", type);
                         break;
                 }
             }
@@ -431,35 +442,37 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     }
 
-    private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
+    private View createLegendView(ViewGroup row, JSONObject tileObject) {
+        View rowView = inflater.inflate(R.layout.tile_legend_layout, row, false);
+
+        return rowView;
+    }
+
+    private View createNormalView(ViewGroup row, JSONObject tileObject) throws JSONException {
         View rowView = null;
         if(tileObject.has("side")) {
             if(tileObject.getBoolean("side") == true) {
                 rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
             }
             else {
-                rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+                rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
             }
         }
         else {
-            rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+            rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
         }
-
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
-        Boolean rounded = tileObject.getBoolean("rounded");
         String headerColor = tileObject.getString("header_text_color");
         String footerColor = tileObject.getString("footer_text_color");
         String headerSize = tileObject.getString("font_header");
         String footerSize = tileObject.getString("font_footer");
-        String border = "";
-        if(tileObject.has("border")) {
-            border = tileObject.getString("border");
-        }
-        String tileColor = tileObject.getString("tile_color");
+        JSONObject progressBar = tileObject.getJSONObject("progress_bar");
 
-        TextView header = rowView.findViewById(R.id.smallHeaderTileHeader);
-        TextView footer = rowView.findViewById(R.id.smallHeaderTileFooter);
+        TextView header = rowView.findViewById(R.id.normalTileHeader);
+        TextView footer = rowView.findViewById(R.id.normalTileFooter);
+        ProgressBar progress = rowView.findViewById(R.id.normalTileProgressBar);
+
         header.setText(headerText);
         header.setTextColor(Color.parseColor(headerColor));
         header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
@@ -468,10 +481,26 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         footer.setTextColor(Color.parseColor(footerColor));
         footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
+
+        if(progress != null) {
+            Double completedPercent = progressBar.getDouble("completed");
+            String progressColor = progressBar.getString("progress_color");
+            progress.setProgress(completedPercent.intValue());
+            progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+        }
+
+
+        String tileColor = tileObject.getString("tile_color");
+        Boolean rounded = tileObject.getBoolean("rounded");
+
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(ContextCompat.getColor(getContext(), R.color.colorAlmostBlack));
+            roundedCorners.setColor(Color.parseColor(tileColor));
             rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
         }
         else {
@@ -503,6 +532,98 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
             LayerDrawable borderDrawable = getBorders(
                     Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
+        }
+
+        return rowView;
+    }
+    private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = null;
+        if(tileObject.has("side")) {
+            if(tileObject.getBoolean("side") == true) {
+                rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
+            }
+            else {
+                rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+            }
+        }
+        else {
+            rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
+        }
+
+        String headerText = tileObject.getString("header");
+        String footerText = tileObject.getString("value");
+        Boolean rounded = tileObject.getBoolean("rounded");
+        String headerColor = tileObject.getString("header_text_color");
+        String footerColor = tileObject.getString("footer_text_color");
+        String headerSize = tileObject.getString("font_header");
+        String footerSize = tileObject.getString("font_footer");
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+
+        Object tileColor = tileObject.get("tile_color");
+
+        TextView header = rowView.findViewById(R.id.smallHeaderTileHeader);
+        TextView footer = rowView.findViewById(R.id.smallHeaderTileFooter);
+        header.setText(headerText);
+        header.setTextColor(Color.parseColor(headerColor));
+        header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+
+        footer.setText(footerText);
+        footer.setTextColor(Color.parseColor(footerColor));
+        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
+        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
+//        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
+        String assignedTileColor = "#FFF";
+        if(tileColor instanceof String) {
+            assignedTileColor = (String) tileColor;
+        }
+        else if(tileColor instanceof JSONObject) {
+            assignedTileColor = "#FFF000";
+        }
+
+        if(rounded) {
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(Color.parseColor(assignedTileColor));
+            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+        }
+        else {
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(assignedTileColor), // Background color
                     Color.GRAY, // Border color
                     leftBorder, // Left border in pixels
                     topBorder, // Top border in pixels
@@ -820,6 +941,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setProgressWithAnimation(formattedCurrentProgress, ANIMATION_DURATION);
+        progress.setProgress(currentProgress.floatValue());
         rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
         rowView.setClipToOutline(true);
 

@@ -155,33 +155,35 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private void fillFieldsWithData() {
         settings = dataController.getSettings();
-
-        for (ParameterObject s : settings) {
-            Log.e(s.getName(), s.getValue());
-            switch (s.getName()) {
-                case "local_timezone":
-                    if(s.getValue().equals("")) {
-                        timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
-                    }
-                    else {
-                        timeZoneDisplay.setText(s.getValue());
-                    }
-                    break;
-                case "daily_reminder_time":
+        if(settings != null) {
+            for (ParameterObject s : settings) {
+                Log.e(s.getName(), s.getValue());
+                switch (s.getName()) {
+                    case "local_timezone":
+                        if(s.getValue().equals("")) {
+                            timeZoneDisplay.setText(TimeZone.getDefault().getID().toString());
+                        }
+                        else {
+                            timeZoneDisplay.setText(s.getValue());
+                        }
+                        break;
+                    case "daily_reminder_time":
                         displayTime.setText(formatTimeFrom24H(s.getValue()));
-                    break;
-                //Keep these, we'll need them for V2
-                case "lights":
-                    lightsSwitch.setChecked(isChecked(s));
-                    break;
+                        break;
+                    //Keep these, we'll need them for V2
+                    case "lights":
+                        lightsSwitch.setChecked(isChecked(s));
+                        break;
 //                case "biometrics":
 //                    idSwitch.setChecked(isChecked(s));
 //                    break;
-                case "daily_reminder":
-                    reminderSwitch.setChecked(isChecked(s));
-                    break;
+                    case "daily_reminder":
+                        reminderSwitch.setChecked(isChecked(s));
+                        break;
+                }
             }
         }
+
     }
 
     private boolean isChecked(ParameterObject s) {

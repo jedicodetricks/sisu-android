@@ -1100,11 +1100,14 @@ public class DataController {
 //            String[] splitString = formattedString.split(",");
 //
 //            if(splitString.length > 1) {
-        for(AsyncActivitySettingsObject setting : s) {
-            if(setting.getValue() == true) {
-                activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
+        if(s != null) {
+            for(AsyncActivitySettingsObject setting : s) {
+                if(setting.getValue() == true) {
+                    activitiesSelected.put(setting.getActivity_type(), new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName()));
+                }
             }
         }
+
         return activitiesSelected;
 //            }
 //

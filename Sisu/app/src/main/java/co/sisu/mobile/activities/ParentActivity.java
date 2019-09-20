@@ -141,6 +141,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isAdminMode = false;
     private boolean adminTransferring = false;
 
+    private boolean tileDebug = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,19 +170,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         //MOCKING AN AGENT
-//        agent.setAgent_id("6325");
+//        agent.setAgent_id("4235");
 //        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
 
+        //TODO: Don't do this when you release
+        if(tileDebug) {
+            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+        }
+        else {
+            apiManager.getFirebaseDevices(this, agent.getAgent_id());
 
-        apiManager.getFirebaseDevices(this, agent.getAgent_id());
+            initParentFields();
+            initializeButtons();
+            apiManager.getTeams(this, agent.getAgent_id());
 
-        initParentFields();
-        initializeButtons();
-        apiManager.getTeams(this, agent.getAgent_id());
+            initCache();
+        }
 
-        initCache();
     }
 
     private void initCache() {
@@ -457,8 +465,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
                     }
                     else {
-//                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        }
                     }
                 }
             });

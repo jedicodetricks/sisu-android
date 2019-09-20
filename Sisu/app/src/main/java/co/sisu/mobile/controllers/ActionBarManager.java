@@ -209,6 +209,20 @@ public class ActionBarManager {
                 else {
                     teamAgentsTitle.setText("Team");
                 }
+
+                if(currentTeam.getRole().equals("ADMIN")) {
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+                    if(teamAgentsTitle != null) {
+                        teamAgentsTitle.setVisibility(View.VISIBLE);
+                    }
+                }
+                else {
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+                    if(teamAgentsTitle != null) {
+                        teamAgentsTitle.setVisibility(View.GONE);
+                    }
+                }
+
                 manageDrawerEnabled(isDrawerEnabled);
             }
         });
@@ -441,12 +455,18 @@ public class ActionBarManager {
                 SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
             }
         } else {
-            teamLetter.setText(currentTeam.getTeamLetter());
-            teamLetter.setBackgroundColor(currentTeam.getColor());
-            teamBlock.setBackgroundColor(currentTeam.getColor());
-            teamBlock.setVisibility(View.VISIBLE);
-            teamLetter.setVisibility(View.VISIBLE);
-            teamIcon.setVisibility(View.INVISIBLE);
+            teamLetter = parentActivity.findViewById(R.id.team_letter);
+            teamIcon = parentActivity.findViewById(R.id.team_icon);
+            teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+            if(currentTeam != null) {
+                teamLetter.setText(currentTeam.getTeamLetter());
+                teamLetter.setBackgroundColor(currentTeam.getColor());
+                teamBlock.setBackgroundColor(currentTeam.getColor());
+                teamBlock.setVisibility(View.VISIBLE);
+                teamLetter.setVisibility(View.VISIBLE);
+                teamIcon.setVisibility(View.INVISIBLE);
+            }
+
         }
     }
 
