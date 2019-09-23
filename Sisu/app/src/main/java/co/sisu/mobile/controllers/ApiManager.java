@@ -225,6 +225,12 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void getTileSetup(AsyncServerEventListener cb, String agentId) {
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
+        String currentUrl = url + "api/v1/get-dashboard-tiles";
+    }
+
     //START OF POST CALLS
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {

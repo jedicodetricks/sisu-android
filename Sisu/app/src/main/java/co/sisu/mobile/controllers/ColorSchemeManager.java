@@ -2,6 +2,9 @@ package co.sisu.mobile.controllers;
 
 import android.graphics.Color;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 
@@ -40,6 +43,106 @@ public class ColorSchemeManager {
     private String icon;
     private int menuIcon;
 
+    public ColorSchemeManager() {}
+
+    public ColorSchemeManager(JSONObject theme) throws JSONException {
+            if(theme.has("app_background")) {
+                appBackground = Color.parseColor(theme.getString("app_background"));
+            }
+            if(theme.has("bottombar_background")) {
+//                appBackground = Color.parseColor(theme.getString("bottombar_background"));
+            }
+            if(theme.has("bottombar_text")) {
+//                appBackground = Color.parseColor(theme.getString("bottombar_text"));
+            }
+            if(theme.has("button_background")) {
+                buttonBackground = Color.parseColor(theme.getString("button_background"));
+            }
+            if(theme.has("button_border")) {
+                buttonBorder = Color.parseColor(theme.getString("button_border"));
+            }
+            if(theme.has("button_selected")) {
+                buttonSelected = Color.parseColor(theme.getString("button_selected"));
+            }
+            if(theme.has("button_text")) {
+                buttonText = Color.parseColor(theme.getString("button_text"));
+            }
+            if(theme.has("darker_text")) {
+                darkerTextColor = Color.parseColor(theme.getString("darker_text"));
+            }
+            if(theme.has("icon_idle")) {
+                iconIdle = Color.parseColor(theme.getString("icon_idle"));
+            }
+            if(theme.has("icon_selected")) {
+//                appBackground = Color.parseColor(theme.getString("icon_selected"));
+            }
+            if(theme.has("lighter_text")) {
+                lighterTextColor = Color.parseColor(theme.getString("lighter_text"));
+            }
+            if(theme.has("line")) {
+                line = Color.parseColor(theme.getString("line"));
+            }
+            if(theme.has("logo")) {
+                // TODO: Do something different
+//                appBackground = Color.parseColor(theme.getString("app_background"));
+            }
+            if(theme.has("menu_background")) {
+                menuBackground = Color.parseColor(theme.getString("menu_background"));
+            }
+            if(theme.has("menu_icon")) {
+                menuIcon = Color.parseColor(theme.getString("menu_icon"));
+            }
+            if(theme.has("menu_selected")) {
+                menuSelected = Color.parseColor(theme.getString("menu_selected"));
+            }
+            if(theme.has("menu_selected_text")) {
+                menuSelectedText = Color.parseColor(theme.getString("menu_selected_text"));
+            }
+            if(theme.has("menu_text")) {
+                menuText = Color.parseColor(theme.getString("menu_text"));
+            }
+            if(theme.has("normal_text")) {
+                normalTextColor = Color.parseColor(theme.getString("normal_text"));
+            }
+            if(theme.has("progress_background")) {
+                progressBackground = Color.parseColor(theme.getString("progress_background"));
+            }
+            if(theme.has("progress_complete")) {
+//                appBackground = Color.parseColor(theme.getString("progress_complete"));
+            }
+            if(theme.has("progress_offtrack")) {
+//                appBackground = Color.parseColor(theme.getString("progress_offtrack"));
+            }
+            if(theme.has("progress_ontrack")) {
+//                appBackground = Color.parseColor(theme.getString("progress_ontrack"));
+            }
+            if(theme.has("rounded_button")) {
+                roundedButtonColor = Color.parseColor(theme.getString("rounded_button"));
+            }
+            if(theme.has("segment_background")) {
+                segmentBackground = Color.parseColor(theme.getString("segment_background"));
+            }
+            if(theme.has("segment_line")) {
+                segmentLine = Color.parseColor(theme.getString("segment_line"));
+            }
+            if(theme.has("segment_text")) {
+//                appBackground = Color.parseColor(theme.getString("segment_text"));
+            }
+            if(theme.has("spinner_background")) {
+                spinnerBackground = Color.parseColor(theme.getString("spinner_background"));
+            }
+            if(theme.has("spinner_text")) {
+                spinnerText = Color.parseColor(theme.getString("spinner_text"));
+            }
+            if(theme.has("topbar_background")) {
+//                appBackground = Color.parseColor(theme.getString("topbar_background"));
+            }
+            if(theme.has("topbar_text")) {
+//                appBackground = Color.parseColor(theme.getString("topbar_text"));
+            }
+
+            System.out.println("hello");
+    }
 
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme, String colorSchemeId) {
@@ -136,7 +239,6 @@ public class ColorSchemeManager {
                     menuIcon = Color.parseColor(colorSchemeObject.getTheme_data());
                     break;
             }
-
         }
 
         if(buttonBackground == buttonSelected) {

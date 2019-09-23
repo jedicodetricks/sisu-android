@@ -177,6 +177,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         //TODO: Don't do this when you release
         if(tileDebug) {
+//            apiManager.getTileSetup(this, agent.getAgent_id());
             navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
         }
         else {

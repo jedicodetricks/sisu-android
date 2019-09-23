@@ -34,7 +34,7 @@
             android:layout_marginBottom="8dp"
             android:text="Not On Pace"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/legendTileNoPaceCircle"
+            app:layout_constraintStart_toEndOf="@id/legendTileNoPaceCircle"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -46,7 +46,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/legendTileNoPaceTitle"
+            app:layout_constraintStart_toEndOf="@id/legendTileNoPaceTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/shape_circle" />
 
@@ -59,7 +59,7 @@
             android:layout_marginBottom="8dp"
             android:text="On Pace"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/legendTilePaceCircle"
+            app:layout_constraintStart_toEndOf="@id/legendTilePaceCircle"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -70,7 +70,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/legendTilePaceTitle"
+            app:layout_constraintStart_toEndOf="@id/legendTilePaceTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/shape_circle" />
 
@@ -83,7 +83,7 @@
             android:layout_marginBottom="8dp"
             android:text="Goal Achieved"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/legendTileGoalCircle"
+            app:layout_constraintStart_toEndOf="@id/legendTileGoalCircle"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
