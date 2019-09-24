@@ -102,6 +102,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         loader.setVisibility(View.INVISIBLE);
         this.inflater = inflater;
 
+
+
         String inputJSON = loadJSONFromAsset(getContext());
         JSONObject tileTemplate = null;
         JSONArray tile_rows = null;

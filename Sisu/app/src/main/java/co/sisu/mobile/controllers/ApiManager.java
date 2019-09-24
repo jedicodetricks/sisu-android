@@ -225,13 +225,20 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getTileSetup(AsyncServerEventListener cb, String agentId) {
+    //START OF POST CALLS
+
+    public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
         String currentUrl = url + "api/v1/get-dashboard-tiles";
-    }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedStartTime = formatter.format(startDate);
+        String formattedEndTime = formatter.format(endDate);
 
-    //START OF POST CALLS
+        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\", \"dashboard_type\": \"" + dashboardType + "\",\"team_id\":\"" + teamId + "\",\"agent_id\":\"" + agentId + "\",\"dashboard_name\":\"Default Dashboard\",\"include_data\":true}";
+
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+    }
 
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         //POST

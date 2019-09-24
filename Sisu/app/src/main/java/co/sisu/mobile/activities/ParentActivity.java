@@ -177,7 +177,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         //TODO: Don't do this when you release
         if(tileDebug) {
-//            apiManager.getTileSetup(this, agent.getAgent_id());
             navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
         }
         else {
@@ -584,6 +583,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(teamSwap) {
             swappingTeamData(returnObject, returnType);
+        }
+        else if(returnType == ApiReturnTypes.GET_TILES) {
+            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
