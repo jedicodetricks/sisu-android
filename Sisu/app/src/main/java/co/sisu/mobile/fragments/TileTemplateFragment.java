@@ -29,6 +29,8 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,21 +99,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
-//        colorSchemeManager = parentActivity.getColorSchemeManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.INVISIBLE);
         this.inflater = inflater;
-
-
-
-        String inputJSON = loadJSONFromAsset(getContext());
-        JSONObject tileTemplate = null;
+        JSONObject tileTemplate = parentActivity.getTileTemplate();
         JSONArray tile_rows = null;
-        try {
-            tileTemplate = new JSONObject(inputJSON);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         View parentLayout = null;
         RelativeLayout parentRelativeLayout = null;

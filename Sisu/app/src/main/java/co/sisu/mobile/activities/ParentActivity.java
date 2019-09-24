@@ -32,7 +32,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,6 +115,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
     private boolean labelsFinished = false;
+    private boolean tileTemplateFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
@@ -143,6 +152,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean tileDebug = true;
 
+    private int selectedStartYear = 0;
+    private int selectedStartMonth = 0;
+    private int selectedStartDay = 0;
+    private int selectedEndYear = 0;
+    private int selectedEndMonth = 0;
+    private int selectedEndDay = 0;
+    private String formattedStartTime;
+    private String formattedEndTime;
+    private Calendar calendar = Calendar.getInstance();
+    private Date selectedStartTime;
+    private Date selectedEndTime;
+
+    private JSONObject tileTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +199,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         //TODO: Don't do this when you release
         if(tileDebug) {
-            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+            initTimelineDate();
+            apiManager.getTeams(this, agent.getAgent_id());
         }
         else {
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
@@ -189,6 +212,140 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             initCache();
         }
 
+    }
+
+    private void initTimelineDate() {
+        calendar = Calendar.getInstance();
+
+        switch (timelineSelection) {
+            case 0:
+                //Yesterday
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case 1:
+                //Today
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                break;
+            case 2:
+                //Last Week
+                calendar.add(Calendar.WEEK_OF_YEAR, -1);
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+
+                calendar.add(Calendar.DAY_OF_WEEK, 6);
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+                break;
+            case 3:
+                //This Week
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+
+                calendar.add(Calendar.DAY_OF_WEEK, 6);
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+                break;
+            case 4:
+                //Last Month
+                calendar.add(Calendar.MONTH, -1);
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = 1;
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                break;
+            case 5:
+                //This Month
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedStartDay = 1;
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                break;
+            case 6:
+                //Last year
+                calendar.add(Calendar.YEAR, -1);
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = 1;
+                selectedStartDay = 1;
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = 12;
+                selectedEndDay = 31;
+                break;
+            case 7:
+                //This year
+                selectedStartYear = calendar.get(Calendar.YEAR);
+                selectedStartMonth = 1;
+                selectedStartDay = 1;
+
+                selectedEndYear = calendar.get(Calendar.YEAR);
+                selectedEndMonth = 12;
+                selectedEndDay = 31;
+                break;
+        }
+
+        String formattedStartMonth = String.valueOf(selectedStartMonth);
+        String formattedEndMonth = String.valueOf(selectedEndMonth);
+        String formattedStartDay = String.valueOf(selectedStartDay);
+        String formattedEndDay = String.valueOf(selectedEndDay);
+
+        if(selectedStartDay < 10) {
+            formattedStartDay = "0" + selectedStartDay;
+        }
+
+        if(selectedEndDay < 10) {
+            formattedEndDay = "0" + selectedEndDay;
+        }
+
+        if(selectedStartMonth < 10) {
+            formattedStartMonth = "0" + selectedStartMonth;
+        }
+
+        if(selectedEndMonth < 10) {
+            formattedEndMonth = "0" + selectedEndMonth;
+        }
+
+
+
+        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
+        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
+    }
+
+    private Date getDateFromFormattedTime(String formattedTime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date d = formatter.parse(formattedTime);
+            return d;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void initCache() {
@@ -218,33 +375,36 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setActivityColors() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-                if(isAdminMode) {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
+        if(!tileDebug) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+                    if(isAdminMode) {
+                        toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
+                    }
+                    else {
+                        toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+                    }
+                    navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+                    navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+                    navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+                    //change parentLoader here, if needed
+                    parentLoader = findViewById(R.id.parentLoader);
+                    if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                        Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                        parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                        parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                    } else {
+                        Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                        parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                        parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                    }
+                    navigationManager.updateColorScheme(colorSchemeManager);
                 }
-                else {
-                    toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-                }
-                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
-                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
-                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-                //change parentLoader here, if needed
-                parentLoader = findViewById(R.id.parentLoader);
-                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
-                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                } else {
-                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
-                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                }
-                navigationManager.updateColorScheme(colorSchemeManager);
-            }
-        });
+            });
+        }
+
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -457,12 +617,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring) {
+        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if(isRecruiting()) {
-                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        }
                     }
                     else {
                         if(tileDebug) {
@@ -482,6 +647,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             labelsFinished = false;
             noNavigation = true;
             activitySettingsParamFinished = false;
+            tileTemplateFinished = false;
         }
         else {
             if(adminTransferring) {
@@ -585,7 +751,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             swappingTeamData(returnObject, returnType);
         }
         else if(returnType == ApiReturnTypes.GET_TILES) {
-            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                tileTemplate =  new JSONObject(tileString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            tileTemplateFinished = true;
+            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
@@ -670,9 +845,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
                         apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                         SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
-                        if(settingsFinished) {
+                        if(settingsFinished && !tileDebug) {
                             apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
                             apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
+                        }
+                        else if(tileDebug) {
+                            colorSchemeFinished = true;
+                            labelsFinished = true;
                         }
                     }
                     else {
@@ -686,6 +865,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                     apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
                     apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
                 }
             });
         }
@@ -1016,7 +1196,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentAnimator = set;
     }
 
-
     // GETTERS AND SETTERS
 
     public NotesObject getSelectedNote() {
@@ -1158,6 +1337,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public AgentModel getAgent() {
         return dataController.getAgent();
+    }
+
+    public JSONObject getTileTemplate() {
+        return tileTemplate;
+    }
+
+    public void setTileTemplate(JSONObject tileTemplate) {
+        this.tileTemplate = tileTemplate;
     }
 }
 
