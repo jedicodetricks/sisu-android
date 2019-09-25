@@ -94,7 +94,7 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
                 fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment") ||
-                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
+                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
             sortTitleBar(fragmentClass);
         }
         else if(fragmentClass.getSimpleName().equals("ClientManageFragment")) {
@@ -148,7 +148,7 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
             fragmentTag = "More";
         }
-        else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
+        else if(fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
             fragmentTag = "Scoreboard";
         }
         else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {

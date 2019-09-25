@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -28,8 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +53,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.utils.CircularProgressBar;
+import okhttp3.Response;
 
 import static android.view.FrameMetrics.ANIMATION_DURATION;
 
@@ -69,8 +69,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private ProgressBar loader;
-    private TableLayout tableLayout;
-    private RelativeLayout relativeLayout;
     private LayoutInflater inflater;
 
     private int selectedStartYear = 0;
@@ -89,11 +87,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private boolean pastTimeline;
 
     private int numOfRows = 1;
+    private boolean isAgentDashboard;
 
+    private ConstraintLayout leftLayout, rightLayout;
     @SuppressLint("ResourceType")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
@@ -102,11 +101,18 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.INVISIBLE);
         this.inflater = inflater;
+        this.isAgentDashboard = parentActivity.isAgentDashboard();
         JSONObject tileTemplate = parentActivity.getTileTemplate();
+
+        return createFullView(container, tileTemplate);
+    }
+
+    private View createFullView(ViewGroup container, JSONObject tileTemplate) {
         JSONArray tile_rows = null;
 
-        View parentLayout = null;
+
         RelativeLayout parentRelativeLayout = null;
+        View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
 
         if (tileTemplate != null) {
             try {
@@ -115,10 +121,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 e.printStackTrace();
             }
             // Create the parent layout that all the rows will go in
-            parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
             parentLayout.setBackgroundColor(colorSchemeManager.getAppBackground());
             parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
-            initializeTimelineSelector(parentLayout);
+            initTimelineSelector(parentLayout);
+            initDashboardTypeSelector(parentLayout);
             //
 
             try {
@@ -1176,8 +1182,86 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         return rowView;
     }
 
+    private void initDashboardTypeSelector(View view) {
+        leftLayout = view.findViewById(R.id.dashboardTypeTileLeftLayout);
+        leftLayout.setOnClickListener(this);
+
+        rightLayout = view.findViewById(R.id.dashboardTypeTileRightLayout);
+        rightLayout.setOnClickListener(this);
+
+        LayerDrawable underlineDrawable = getBorders(
+                colorSchemeManager.getAppBackground(), // Background color
+                Color.GRAY, // Border color
+                0, // Left border in pixels
+                0, // Top border in pixels
+                0, // Right border in pixels
+                5 // Bottom border in pixels
+        );
+
+        LayerDrawable noUnderlineDrawable = getBorders(
+                colorSchemeManager.getAppBackground(), // Background color
+                Color.GRAY, // Border color
+                0, // Left border in pixels
+                0, // Top border in pixels
+                0, // Right border in pixels
+                0 // Bottom border in pixels
+        );
+
+        if(isAgentDashboard) {
+            leftLayout.setBackground(underlineDrawable);
+            rightLayout.setBackground(noUnderlineDrawable);
+        }
+        else {
+            leftLayout.setBackground(noUnderlineDrawable);
+            rightLayout.setBackground(underlineDrawable);
+        }
+    }
+
+    private void toggleDashboardTypeSelector(boolean isAgentClicked) {
+        boolean toggled = false;
+        LayerDrawable underlineDrawable = getBorders(
+                colorSchemeManager.getAppBackground(), // Background color
+                Color.GRAY, // Border color
+                0, // Left border in pixels
+                0, // Top border in pixels
+                0, // Right border in pixels
+                5 // Bottom border in pixels
+        );
+
+        LayerDrawable noUnderlineDrawable = getBorders(
+                colorSchemeManager.getAppBackground(), // Background color
+                Color.GRAY, // Border color
+                0, // Left border in pixels
+                0, // Top border in pixels
+                0, // Right border in pixels
+                0 // Bottom border in pixels
+        );
+
+        if(isAgentDashboard && !isAgentClicked) {
+            leftLayout.setBackground(noUnderlineDrawable);
+            rightLayout.setBackground(underlineDrawable);
+            toggled = true;
+        }
+        else if(!isAgentDashboard && isAgentClicked){
+            rightLayout.setBackground(noUnderlineDrawable);
+            leftLayout.setBackground(underlineDrawable);
+            toggled = true;
+        }
+
+        if(toggled) {
+            isAgentDashboard = !isAgentDashboard;
+            parentActivity.setAgentDashboard(isAgentDashboard);
+            // TODO: We need to go and get the other dashboard
+            String dashboardType = "agent";
+            if(!isAgentClicked) {
+                dashboardType = "team";
+            }
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+        }
+    }
+
     @SuppressLint("ResourceType")
-    private void initializeTimelineSelector(View view) {
+    private void initTimelineSelector(View view) {
         spinner = view.findViewById(R.id.tileTimelineSelector);
         spinner.setId(1);
 //        spinner.setBackgroundColor(Color.RED);
@@ -1404,8 +1488,17 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void onClick(View view) {
-
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.dashboardTypeTileLeftLayout:
+                toggleDashboardTypeSelector(true);
+                break;
+            case R.id.dashboardTypeTileRightLayout:
+                toggleDashboardTypeSelector(false);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -1415,7 +1508,23 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_TILES) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                parentActivity.setTileTemplate(new JSONObject(tileString));
+                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+//                parentActivity.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        parentLayout = createFullView(container, parentActivity.getTileTemplate());
+//                    }
+//                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

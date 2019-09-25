@@ -165,6 +165,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Date selectedEndTime;
 
     private JSONObject tileTemplate;
+    private boolean isAgentDashboard = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +198,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         //
         myAgentId = agent.getAgent_id();
 
+        initParentFields();
+        initializeButtons();
+        initCache();
+
         //TODO: Don't do this when you release
         if(tileDebug) {
             initTimelineDate();
@@ -204,12 +209,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else {
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
-
-            initParentFields();
-            initializeButtons();
             apiManager.getTeams(this, agent.getAgent_id());
 
-            initCache();
         }
 
     }
@@ -453,10 +454,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.scoreboardView:
                     if(isRecruiting()) {
-                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        }
                     }
                     else {
-                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        }
                     }
                     break;
                 case R.id.reportView:
@@ -558,8 +569,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.getAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), getSelectedTeamMarketId());
         apiManager.getClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
-        apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
-        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
+        if(tileDebug) {
+            String dashboardType = "agent";
+            if(!isAgentDashboard) {
+                dashboardType = "team";
+            }
+            apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+        }
+        else {
+            apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
+            apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
+        }
+
     }
 
     private void executeTeamSwap() {
@@ -578,21 +599,33 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             switch (f.getTag()) {
                 case "Scoreboard":
                     try {
-                        if(isRecruiting()) {
-                            ((RecruitingScoreboardFragment) f).teamSwap();
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
-                            ((ScoreboardFragment) f).teamSwap();
+                            if(isRecruiting()) {
+                                ((RecruitingScoreboardFragment) f).teamSwap();
+                                navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                            }
+                            else {
+                                ((ScoreboardFragment) f).teamSwap();
+                            }
                         }
+
                     }
                     catch(Exception e) {
-                        if(isRecruiting()) {
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
-                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                            if(isRecruiting()) {
+                                navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                            }
+                            else {
+                                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                            }
                         }
+
                     }
 
                     break;
@@ -994,6 +1027,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.setClientListObject(clientObject, isRecruiting());
             clientFinished = true;
         }
+        else if(asyncReturnType == ApiReturnTypes.GET_TILES) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                tileTemplate =  new JSONObject(tileString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            tileTemplateFinished = true;
+        }
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1345,6 +1389,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setTileTemplate(JSONObject tileTemplate) {
         this.tileTemplate = tileTemplate;
+    }
+
+    public boolean isAgentDashboard() {
+        return isAgentDashboard;
+    }
+
+    public void setAgentDashboard(boolean agentDashboard) {
+        isAgentDashboard = agentDashboard;
     }
 }
 
