@@ -97,7 +97,7 @@
             app:layout_constraintEnd_toStartOf="@id/recordView"
             app:layout_constraintStart_toEndOf="@id/scoreboardView"
             app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/report_icon" />
+            app:srcCompat="@drawable/client_icon" />
 
         <ImageView
             android:id="@+id/scoreboardView"

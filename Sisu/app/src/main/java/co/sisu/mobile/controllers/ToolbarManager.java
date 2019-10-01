@@ -37,10 +37,15 @@ public class ToolbarManager {
                 drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
                 scoreBoardButton.setImageDrawable(drawable);
 
-                ImageView reportButton = parentActivity.findViewById(R.id.reportView);
-                drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon).mutate();
+//                ImageView reportButton = parentActivity.findViewById(R.id.reportView);
+//                drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon).mutate();
+//                drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+//                reportButton.setImageDrawable(drawable);
+
+                ImageView clientButton = parentActivity.findViewById(R.id.reportView);
+                drawable = parentActivity.getResources().getDrawable(R.drawable.client_icon).mutate();
                 drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
-                reportButton.setImageDrawable(drawable);
+                clientButton.setImageDrawable(drawable);
 
                 ImageView recordButton = parentActivity.findViewById(R.id.recordView);
                 drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon).mutate();
@@ -64,9 +69,9 @@ public class ToolbarManager {
                         scoreBoardButton.setImageDrawable(drawable);
                         break;
                     case "Report":
-                        drawable = parentActivity.getResources().getDrawable(R.drawable.report_icon_active).mutate();
+                        drawable = parentActivity.getResources().getDrawable(R.drawable.client_icon_active).mutate();
                         drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
-                        reportButton.setImageDrawable(drawable);
+                        clientButton.setImageDrawable(drawable);
                         break;
                     case "Record":
                         drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();

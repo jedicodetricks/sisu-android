@@ -80,10 +80,10 @@
         android:layout_marginTop="4dp"
         android:text="@string/contacts_hint"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@id/guideline9"
         app:layout_constraintEnd_toEndOf="@id/contactsProgress"
         app:layout_constraintStart_toStartOf="@id/contactsProgress"
-        app:layout_constraintTop_toBottomOf="@+id/contactsProgressMark" />
+        app:layout_constraintTop_toBottomOf="@id/contactsProgressMark" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/bbSignedProgress"
@@ -97,9 +97,9 @@
         android:progress="0"
         android:progressDrawable="@drawable/circular"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/bbSignedProgressMark"
-        app:layout_constraintTop_toTopOf="@+id/guideline9" />
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgressMark"
+        app:layout_constraintTop_toTopOf="@id/guideline9" />
 
     <co.sisu.mobile.utils.CircularProgressBar
         android:id="@+id/bbSignedProgressMark"
@@ -116,9 +116,9 @@
         android:progressDrawable="@drawable/circular"
         app:cpb_background_progressbar_color="#00000000"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/guideline13"
-        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline13"
+        app:layout_constraintTop_toTopOf="@id/guideline9"
         android:clickable="true"/>
 
     <TextView

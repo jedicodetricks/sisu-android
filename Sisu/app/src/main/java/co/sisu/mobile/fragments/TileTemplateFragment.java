@@ -868,8 +868,16 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             border = tileObject.getString("border");
         }
         String tileColor = tileObject.getString("tile_color");
+        Double percentageComplete = tileObject.getDouble("pacer_percent");
 
         CircularProgressBar progress = rowView.findViewById(R.id.progressTileProgressBar);
+        CircularProgressBar progressMark = rowView.findViewById(R.id.progressTileProgressMark);
+
+        progressMark.setStartAngle(60);
+        progressMark.setColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
+        progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
+        progressMark.setProgressWithAnimation(1, 0);
+
         TextView titleView = rowView.findViewById(R.id.progressTileHeader);
         titleView.setText(title);
         TextView currentProgressText = rowView.findViewById(R.id.progressTileCurrentNumber);
@@ -880,8 +888,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 //        progress.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-        progress.setProgressWithAnimation(formattedCurrentProgress, ANIMATION_DURATION);
-        progress.setProgress(currentProgress.floatValue());
+        progress.setProgressWithAnimation(percentageComplete.floatValue(), ANIMATION_DURATION);
+        progress.setProgress(percentageComplete.floatValue());
         rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
         rowView.setClipToOutline(true);
 
@@ -1125,10 +1133,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         List<String> spinnerArray = initSpinnerArray();
 
         DropdownAdapter adapter = new DropdownAdapter(getContext(), R.layout.spinner_item, spinnerArray, colorSchemeManager);
-
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
+        spinner.setSelection(parentActivity.getTimelineSelection());
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 calendar = Calendar.getInstance();

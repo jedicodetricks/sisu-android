@@ -58,6 +58,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -202,7 +203,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         initCache();
 
-        //TODO: Don't do this when you release
+        //TODO: Maybe don't do this when you release
         if(tileDebug) {
             initTimelineDate();
             apiManager.getTeams(this, agent.getAgent_id());
@@ -210,7 +211,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else {
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
             apiManager.getTeams(this, agent.getAgent_id());
-
         }
 
     }
@@ -472,7 +472,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.reportView:
                     noNavigation = false;
-                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
+//                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
+                    navigationManager.clearStackReplaceFragment(ClientListFragment.class);
                     break;
                 case R.id.recordView:
                     noNavigation = false;
@@ -584,65 +585,108 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void executeTeamSwap() {
-        if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
-            parentLoader.setVisibility(View.INVISIBLE);
-            clientFinished = false;
-            goalsFinished = false;
-            settingsFinished = false;
-            teamParamFinished = false;
-            colorSchemeFinished = false;
-            labelsFinished = false;
-            noNavigation = true;
-            activitySettingsParamFinished = false;
-            teamSwap = false;
-            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-            switch (f.getTag()) {
-                case "Scoreboard":
-                    try {
-                        if(tileDebug) {
+        if(tileDebug) {
+            if(clientFinished && goalsFinished && teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
+                parentLoader.setVisibility(View.INVISIBLE);
+                clientFinished = false;
+                goalsFinished = false;
+                settingsFinished = false;
+                teamParamFinished = false;
+                colorSchemeFinished = false;
+                labelsFinished = false;
+                noNavigation = true;
+                activitySettingsParamFinished = false;
+                tileTemplateFinished = false;
+                teamSwap = false;
+                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+                switch (f.getTag()) {
+                    case "Scoreboard":
+                        try {
                             navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
-                        else {
-                            if(isRecruiting()) {
-                                ((RecruitingScoreboardFragment) f).teamSwap();
-                                navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                            }
-                            else {
-                                ((ScoreboardFragment) f).teamSwap();
-                            }
-                        }
-
-                    }
-                    catch(Exception e) {
-                        if(tileDebug) {
+                        catch(Exception e) {
                             navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
-                        else {
-                            if(isRecruiting()) {
-                                navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                            }
-                            else {
-                                navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                            }
-                        }
 
-                    }
-
-                    break;
-                case "Record":
-                    ((RecordFragment) f).teamSwap();
-                    break;
-                case "Report":
-                    ((ReportFragment) f).teamSwap();
-                    break;
-                case "Leaderboard":
-                    ((LeaderboardFragment) f).teamSwap();
-                    break;
-                case "More":
-                    ((MoreFragment) f).teamSwap();
-                    break;
+                        break;
+                    case "Record":
+                        ((RecordFragment) f).teamSwap();
+                        break;
+                    case "Report":
+                        ((ReportFragment) f).teamSwap();
+                        break;
+                    case "Leaderboard":
+                        ((LeaderboardFragment) f).teamSwap();
+                        break;
+                    case "More":
+                        ((MoreFragment) f).teamSwap();
+                        break;
+                }
             }
         }
+        else {
+            if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
+
+                parentLoader.setVisibility(View.INVISIBLE);
+                clientFinished = false;
+                goalsFinished = false;
+                settingsFinished = false;
+                teamParamFinished = false;
+                colorSchemeFinished = false;
+                labelsFinished = false;
+                noNavigation = true;
+                activitySettingsParamFinished = false;
+                teamSwap = false;
+                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+                switch (f.getTag()) {
+                    case "Scoreboard":
+                        try {
+                            if(tileDebug) {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            }
+                            else {
+                                if(isRecruiting()) {
+                                    ((RecruitingScoreboardFragment) f).teamSwap();
+                                    navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                                }
+                                else {
+                                    ((ScoreboardFragment) f).teamSwap();
+                                }
+                            }
+
+                        }
+                        catch(Exception e) {
+                            if(tileDebug) {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            }
+                            else {
+                                if(isRecruiting()) {
+                                    navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                                }
+                                else {
+                                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                                }
+                            }
+
+                        }
+
+                        break;
+                    case "Record":
+                        ((RecordFragment) f).teamSwap();
+                        break;
+                    case "Report":
+                        ((ReportFragment) f).teamSwap();
+                        break;
+                    case "Leaderboard":
+                        ((LeaderboardFragment) f).teamSwap();
+                        break;
+                    case "More":
+                        ((MoreFragment) f).teamSwap();
+                        break;
+                }
+            }
+        }
+
     }
 
     public TeamObject getCurrentTeam() {
