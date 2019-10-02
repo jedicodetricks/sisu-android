@@ -8,8 +8,8 @@
         <rotate android:fromDegrees="45">
             <shape>
                 <size
-                    android:width="200dp"
-                    android:height="200dp" />
+                    android:width="125dp"
+                    android:height="125dp" />
                 <gradient
                     android:startColor="#0fdcc9"
                     android:endColor="#0fdcc9" />

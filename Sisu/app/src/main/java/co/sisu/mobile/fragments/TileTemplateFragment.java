@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import co.sisu.mobile.adapters.DropdownAdapter;
 import co.sisu.mobile.enums.ApiReturnTypes;
@@ -98,7 +99,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
-        loader.setVisibility(View.INVISIBLE);
         this.inflater = inflater;
         this.isAgentDashboard = parentActivity.isAgentDashboard();
         JSONObject tileTemplate = parentActivity.getTileTemplate();
@@ -107,6 +107,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     }
 
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
+        loader.setVisibility(View.VISIBLE);
         JSONArray tile_rows = null;
 
         RelativeLayout parentRelativeLayout = null;
@@ -150,7 +151,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
 
         }
-
+        loader.setVisibility(View.INVISIBLE);
         return parentLayout;
     }
 
@@ -166,7 +167,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 //            Boolean square = rowObject.getBoolean("square");
             Integer maxTiles = rowObject.getInt("max_tiles");
 
-            int correctedHeight = height.intValue() + 200;
+            int correctedHeight = height.intValue() + 300;
             List<View> rowViews = new ArrayList<>();
 
             for(int i = 0; i < rowTiles.length(); i++) {
@@ -470,7 +471,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         header.setText(headerText);
         header.setTextColor(Color.parseColor(headerColor));
-        header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+        if(headerText.length() > 15) {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+        }
+        else {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+        }
 
         footer.setText(footerText);
         footer.setTextColor(Color.parseColor(footerColor));
@@ -800,7 +806,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         ratioText.setTextColor(Color.parseColor(headerColor));
         ratioText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
 
-        Drawable background = diamond.getBackground();
         Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.shape_diamond);
         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
         DrawableCompat.setTint(wrappedDrawable, Color.parseColor(diamondColor));
@@ -860,7 +865,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         String title = tileObject.getString("under_title");
         Double currentProgress = tileObject.getDouble("current");
         Double maxProgress = tileObject.getDouble("max");
-        int formattedCurrentProgress = currentProgress.intValue();
         String progressColor = tileObject.getString("color");
         Boolean rounded = tileObject.getBoolean("rounded");
         String border = "";
@@ -868,28 +872,33 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             border = tileObject.getString("border");
         }
         String tileColor = tileObject.getString("tile_color");
-        Double percentageComplete = tileObject.getDouble("pacer_percent");
+        Double pacer = tileObject.getDouble("pacer") - 90;
 
         CircularProgressBar progress = rowView.findViewById(R.id.progressTileProgressBar);
         CircularProgressBar progressMark = rowView.findViewById(R.id.progressTileProgressMark);
-
-        progressMark.setStartAngle(60);
+        progressMark.setStartAngle(pacer.intValue());
         progressMark.setColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
         progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progressMark.setProgressWithAnimation(1, 0);
 
         TextView titleView = rowView.findViewById(R.id.progressTileHeader);
         titleView.setText(title);
+        if(title.length() > 15) {
+            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+        }
+        else {
+            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("medium"));
+        }
         TextView currentProgressText = rowView.findViewById(R.id.progressTileCurrentNumber);
         currentProgressText.setText(currentProgress.intValue() + "");
         TextView goalProgressText = rowView.findViewById(R.id.progressTileGoalNumber);
         goalProgressText.setText(maxProgress.intValue() + "");
         progress.setColor(Color.parseColor(progressColor));
-//        progress.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateGrey));
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
-        progress.setProgressWithAnimation(percentageComplete.floatValue(), ANIMATION_DURATION);
-        progress.setProgress(percentageComplete.floatValue());
+        double percentCompleted = getPercentComplete(currentProgress, maxProgress);
+        progress.setProgressWithAnimation((float) percentCompleted, ANIMATION_DURATION);
+        progress.setProgress((float) percentCompleted);
         rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
         rowView.setClipToOutline(true);
 
@@ -1121,6 +1130,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             if(!isAgentClicked) {
                 dashboardType = "team";
             }
+            loader.setVisibility(View.VISIBLE);
             apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
         }
     }
@@ -1140,7 +1150,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 calendar = Calendar.getInstance();
-//                loader.setVisibility(View.VISIBLE);
 
                 switch (position) {
                     case 0:
@@ -1287,6 +1296,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 }
 
                 if(!initialLoad) {
+                    loader.setVisibility(View.VISIBLE);
                     apiManager.getTileSetup(TileTemplateFragment.this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                     initialLoad = false;
                 }
@@ -1343,6 +1353,21 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         return null;
     }
 
+    public int getPercentComplete(double currentNum, double goalNum){
+        if(goalNum == 0) {
+            if(currentNum > 0) {
+                return 100;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        int percentComplete = (int) ((currentNum/goalNum) * 100);
+
+        return percentComplete;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -1369,6 +1394,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
                 navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+//                loader.setVisibility(View.INVISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
