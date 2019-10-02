@@ -69,7 +69,6 @@ public class ActionBarManager {
     }
 
     public void initializeActionBar(String fragmentTag) {
-
         bar.setCustomView(R.layout.action_bar_layout);
         pageTitle = parentActivity.findViewById(R.id.action_bar_title);
         teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);

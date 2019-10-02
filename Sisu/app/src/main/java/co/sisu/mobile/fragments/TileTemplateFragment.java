@@ -443,9 +443,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private View createNormalView(ViewGroup row, JSONObject tileObject) throws JSONException {
         View rowView = null;
+        boolean isSideView = false;
         if(tileObject.has("side")) {
             if(tileObject.getBoolean("side") == true) {
                 rowView = inflater.inflate(R.layout.tile_normal_side_layout, row, false);
+                isSideView = true;
             }
             else {
                 rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
@@ -471,12 +473,15 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         header.setText(headerText);
         header.setTextColor(Color.parseColor(headerColor));
-        if(headerText.length() > 15) {
-            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+        if(!isSideView) {
+            if(headerText.length() > 15) {
+                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+            }
+            else {
+                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+            }
         }
-        else {
-            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
-        }
+
 
         footer.setText(footerText);
         footer.setTextColor(Color.parseColor(footerColor));
@@ -861,7 +866,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private View createProgressView(ViewGroup row, JSONObject tileObject) throws JSONException {
         View rowView = inflater.inflate(R.layout.tile_progress_layout, row, false);
-
+        ConstraintLayout constraintLayout = rowView.findViewById(R.id.progressTileLayout);
         String title = tileObject.getString("under_title");
         Double currentProgress = tileObject.getDouble("current");
         Double maxProgress = tileObject.getDouble("max");
@@ -948,7 +953,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(tileObject.has("tap")) {
             final String clickDestination = tileObject.getString("tap");
-            rowView.setOnClickListener(new View.OnClickListener() {
+            constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     switch (clickDestination) {
