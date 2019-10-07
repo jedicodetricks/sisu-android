@@ -9,7 +9,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -41,10 +44,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import co.sisu.mobile.adapters.DropdownAdapter;
+import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
+import co.sisu.mobile.adapters.LeaderboardTileAdapter;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -134,7 +140,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
             for(int i = 1; i < tile_rows.length(); i++) {
                 try {
-                    HorizontalScrollView horizontalScrollView = createRowFromJSON(tile_rows.getJSONObject(i), container);
+                    HorizontalScrollView horizontalScrollView = createRowFromJSON(tile_rows.getJSONObject(i), container, false);
                     if(horizontalScrollView != null) {
                         // Add one here to account for the spinner's ID.
                         horizontalScrollView.setId(numOfRows + 1);
@@ -150,14 +156,66 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 }
             }
 
+//            if(!isAgentDashboard) {
+//                try {
+//                    JSONObject leaderboardObject = tileTemplate.getJSONObject("leaderboards");
+//                    HorizontalScrollView horizontalScrollView = null;
+//                    try {
+//                        Iterator<String> keys = leaderboardObject.keys();
+//                        while(keys.hasNext()) {
+//                            String key = keys.next();
+//                            if(leaderboardObject.get(key) instanceof  JSONObject) {
+//                                JSONObject value = (JSONObject) leaderboardObject.get(key);
+//                                horizontalScrollView = createLeaderboardRowsFromJSON(value, container);
+//                                if(horizontalScrollView != null) {
+//                                    // Add one here to account for the spinner's ID.
+//                                    horizontalScrollView.setId(numOfRows + 1);
+//                                    RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                                    horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+//
+//                                    parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
+//                                    numOfRows++;
+//                                }
+//                            }
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
         }
         loader.setVisibility(View.INVISIBLE);
         return parentLayout;
     }
 
+    private HorizontalScrollView createLeaderboardRowsFromJSON(JSONObject rowObject, ViewGroup container) {
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
+        try {
+            View v = createLeaderboardView(container, rowObject);
+            View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
+            LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
+            LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500, 1);
+            textviewparam.setMargins(2, 2, 2, 2);
+            linearLayout.addView(v, textviewparam);
+            horizontalScrollView.addView(linearLayout);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return horizontalScrollView;
+    }
+
 
     @SuppressLint("ResourceType")
-    private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container) {
+    private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
         Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
@@ -181,6 +239,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                         rowViews.add(v);
                         break;
                     case "smallHeader":
+                        v = createSmallHeaderView(container, tileObject);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
+                    case "largeHeader":
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -375,6 +438,24 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         return rowView;
     }
 
+    private View createLeaderboardView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = inflater.inflate(R.layout.tile_leaderboard_layout, row, false);
+        ListView list = rowView.findViewById(R.id.leaderboardTileListView);
+
+        JSONArray data = tileObject.getJSONArray("data");
+
+        LeaderboardTileAdapter listAdapter = new LeaderboardTileAdapter(getContext(), data);
+        list.setAdapter(listAdapter);
+//        ImageView noPace = rowView.findViewById(R.id.legendTileNoPaceCircle);
+//        ImageView onPace = rowView.findViewById(R.id.legendTilePaceCircle);
+//        ImageView onGoal = rowView.findViewById(R.id.legendTileGoalCircle);
+//
+//        noPace.setColorFilter(Color.parseColor(tileObject.getString("progress_offtrack")), PorterDuff.Mode.SRC_ATOP);
+//        onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
+//        onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
+        return rowView;
+    }
+
     private View createRatioView(ViewGroup row, JSONObject tileObject) throws JSONException {
         View rowView = inflater.inflate(R.layout.tile_ratio_layout, row, false);
         String titleString = tileObject.getString("header");
@@ -482,7 +563,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
         }
 
-
         footer.setText(footerText);
         footer.setTextColor(Color.parseColor(footerColor));
         footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
@@ -562,10 +642,16 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         else {
             rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
         }
-
+        Boolean rounded = false;
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        if(tileObject.has("rounded")) {
+            try {
+                rounded = tileObject.getBoolean("rounded");
+            } catch (Exception e) {
+                // If we throw this it means he passed us null for rounded... probably
+            }
+        }
         String headerColor = tileObject.getString("header_text_color");
         String footerColor = tileObject.getString("footer_text_color");
         String headerSize = tileObject.getString("font_header");

@@ -93,7 +93,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
