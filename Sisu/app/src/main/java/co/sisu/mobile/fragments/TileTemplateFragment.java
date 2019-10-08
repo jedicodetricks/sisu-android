@@ -116,7 +116,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         loader.setVisibility(View.VISIBLE);
         JSONArray tile_rows = null;
 
-        RelativeLayout parentRelativeLayout = null;
+        RelativeLayout parentRelativeLayout;
         View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
 
         if (tileTemplate != null) {
@@ -156,63 +156,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 }
             }
 
-//            if(!isAgentDashboard) {
-//                try {
-//                    JSONObject leaderboardObject = tileTemplate.getJSONObject("leaderboards");
-//                    HorizontalScrollView horizontalScrollView = null;
-//                    try {
-//                        Iterator<String> keys = leaderboardObject.keys();
-//                        while(keys.hasNext()) {
-//                            String key = keys.next();
-//                            if(leaderboardObject.get(key) instanceof  JSONObject) {
-//                                JSONObject value = (JSONObject) leaderboardObject.get(key);
-//                                horizontalScrollView = createLeaderboardRowsFromJSON(value, container);
-//                                if(horizontalScrollView != null) {
-//                                    // Add one here to account for the spinner's ID.
-//                                    horizontalScrollView.setId(numOfRows + 1);
-//                                    RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//                                    horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
-//
-//                                    parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
-//                                    numOfRows++;
-//                                }
-//                            }
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
         }
         loader.setVisibility(View.INVISIBLE);
         return parentLayout;
     }
-
-    private HorizontalScrollView createLeaderboardRowsFromJSON(JSONObject rowObject, ViewGroup container) {
-        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-        try {
-            View v = createLeaderboardView(container, rowObject);
-            View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-            LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
-            LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500, 1);
-            textviewparam.setMargins(2, 2, 2, 2);
-            linearLayout.addView(v, textviewparam);
-            horizontalScrollView.addView(linearLayout);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        return horizontalScrollView;
-    }
-
 
     @SuppressLint("ResourceType")
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
@@ -234,16 +181,31 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
                 switch (type) {
                     case "normal":
+                        boolean side = false;
+                        if(tileObject.has("side")) {
+                            side = tileObject.getBoolean("side");
+                        }
+                        if(side) {
+                            correctedHeight = height.intValue() + 150;
+                        }
                         View v = createNormalView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "smallHeader":
+                        side = false;
+                        if(tileObject.has("side")) {
+                            side = tileObject.getBoolean("side");
+                        }
+                        if(side) {
+                            correctedHeight = height.intValue() + 150;
+                        }
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "largeHeader":
+                        correctedHeight = height.intValue() + 150;
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -435,24 +397,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         noPace.setColorFilter(Color.parseColor(tileObject.getString("progress_offtrack")), PorterDuff.Mode.SRC_ATOP);
         onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
         onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
-        return rowView;
-    }
-
-    private View createLeaderboardView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = inflater.inflate(R.layout.tile_leaderboard_layout, row, false);
-        ListView list = rowView.findViewById(R.id.leaderboardTileListView);
-
-        JSONArray data = tileObject.getJSONArray("data");
-
-        LeaderboardTileAdapter listAdapter = new LeaderboardTileAdapter(getContext(), data);
-        list.setAdapter(listAdapter);
-//        ImageView noPace = rowView.findViewById(R.id.legendTileNoPaceCircle);
-//        ImageView onPace = rowView.findViewById(R.id.legendTilePaceCircle);
-//        ImageView onGoal = rowView.findViewById(R.id.legendTileGoalCircle);
-//
-//        noPace.setColorFilter(Color.parseColor(tileObject.getString("progress_offtrack")), PorterDuff.Mode.SRC_ATOP);
-//        onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
-//        onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
         return rowView;
     }
 
@@ -727,29 +671,26 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(tileObject.has("tap")) {
             final String clickDestination = tileObject.getString("tap");
-            rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (clickDestination) {
-                        case "clients":
-                            navigationManager.stackReplaceFragment(ClientListFragment.class);
-                            break;
-                        case "scoreboard":
-                            navigationManager.stackReplaceFragment(ScoreboardFragment.class);
-                            break;
-                        case "record":
-                            navigationManager.stackReplaceFragment(RecordFragment.class);
-                            break;
-                        case "report":
-                            navigationManager.stackReplaceFragment(ReportFragment.class);
-                            break;
-                        case "leaderboard":
-                            navigationManager.stackReplaceFragment(LeaderboardFragment.class);
-                            break;
-                        case "more":
-                            navigationManager.stackReplaceFragment(MoreFragment.class);
-                            break;
-                    }
+            rowView.setOnClickListener(view -> {
+                switch (clickDestination) {
+                    case "clients":
+                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        break;
+                    case "scoreboard":
+                        navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                        break;
+                    case "record":
+                        navigationManager.stackReplaceFragment(RecordFragment.class);
+                        break;
+                    case "report":
+                        navigationManager.stackReplaceFragment(ReportFragment.class);
+                        break;
+                    case "leaderboard":
+                        navigationManager.stackReplaceFragment(LeaderboardFragment.class);
+                        break;
+                    case "more":
+                        navigationManager.stackReplaceFragment(MoreFragment.class);
+                        break;
                 }
             });
         }
@@ -834,29 +775,26 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(tileObject.has("tap")) {
             final String clickDestination = tileObject.getString("tap");
-            rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (clickDestination) {
-                        case "clients":
-                            navigationManager.stackReplaceFragment(ClientListFragment.class);
-                            break;
-                        case "scoreboard":
-                            navigationManager.stackReplaceFragment(ScoreboardFragment.class);
-                            break;
-                        case "record":
-                            navigationManager.stackReplaceFragment(RecordFragment.class);
-                            break;
-                        case "report":
-                            navigationManager.stackReplaceFragment(ReportFragment.class);
-                            break;
-                        case "leaderboard":
-                            navigationManager.stackReplaceFragment(LeaderboardFragment.class);
-                            break;
-                        case "more":
-                            navigationManager.stackReplaceFragment(MoreFragment.class);
-                            break;
-                    }
+            rowView.setOnClickListener(view -> {
+                switch (clickDestination) {
+                    case "clients":
+                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        break;
+                    case "scoreboard":
+                        navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                        break;
+                    case "record":
+                        navigationManager.stackReplaceFragment(RecordFragment.class);
+                        break;
+                    case "report":
+                        navigationManager.stackReplaceFragment(ReportFragment.class);
+                        break;
+                    case "leaderboard":
+                        navigationManager.stackReplaceFragment(LeaderboardFragment.class);
+                        break;
+                    case "more":
+                        navigationManager.stackReplaceFragment(MoreFragment.class);
+                        break;
                 }
             });
         }
@@ -1216,7 +1154,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         if(toggled) {
             isAgentDashboard = !isAgentDashboard;
             parentActivity.setAgentDashboard(isAgentDashboard);
-            // TODO: We need to go and get the other dashboard
             String dashboardType = "agent";
             if(!isAgentClicked) {
                 dashboardType = "team";
