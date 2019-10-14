@@ -255,6 +255,13 @@
         <item name="android:background">@color/colorCorporateGrey</item>
     </style>
 
+    <style name="DateSelectorStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textColor">@color/colorCorporateOrange</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:background">@color/colorCorporateGrey</item>
+    </style>
+
     <style name="ToolBar">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>

@@ -13,20 +13,31 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <include
-            android:id="@+id/tileDashboardTypeSelector"
-            layout="@layout/tile_dashboard_type_layout"
+            android:id="@+id/tileDashboardDateSelector"
+            layout="@layout/date_selector_group"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <Spinner
-            android:id="@+id/tileTimelineSelector"
-            style="@style/SpinnerDropdownItemStyle"
+        <include
+            android:id="@+id/tileDashboardTypeSelector"
+            layout="@layout/tile_dashboard_type_layout"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_below="@+id/tileDashboardTypeSelector"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/tileDashboardDateSelector"/>
+
+        <!--<Spinner-->
+            <!--android:id="@+id/tileTimelineSelector"-->
+            <!--style="@style/SpinnerDropdownItemStyle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="35dp"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--android:layout_below="@+id/tileDashboardTypeSelector"/>-->
 
     </RelativeLayout>
 

@@ -1442,5 +1442,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setAgentDashboard(boolean agentDashboard) {
         isAgentDashboard = agentDashboard;
     }
+
+    public String getFormattedStartTime() {
+        return formattedStartTime;
+    }
+
+    public void setFormattedStartTime(String formattedStartTime) {
+        this.formattedStartTime = formattedStartTime;
+    }
+
+    public String getFormattedEndTime() {
+        return formattedEndTime;
+    }
+
+    public void setFormattedEndTime(String formattedEndTime) {
+        this.formattedEndTime = formattedEndTime;
+    }
 }
 

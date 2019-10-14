@@ -76,12 +76,12 @@ public class DataController {
     private void initializeMorePageObject(boolean isRecruiting, boolean isAdmin) {
         morePage = new ArrayList<>();
 //        morePage.add(new MorePageContainer("Teams", "Configure team settings, invites, challenges", R.drawable.team_icon_active));
-        if(isRecruiting) {
-            morePage.add(new MorePageContainer("Recruits", "Modify your pipeline", R.drawable.clients_icon_active));
-        }
-        else {
-            morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
-        }
+//        if(isRecruiting) {
+//            morePage.add(new MorePageContainer("Recruits", "Modify your pipeline", R.drawable.clients_icon_active));
+//        }
+//        else {
+//            morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
+//        }
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
         morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
         if(isAdmin) {
