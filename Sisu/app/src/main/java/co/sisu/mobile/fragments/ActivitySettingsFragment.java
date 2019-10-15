@@ -1,6 +1,7 @@
 package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Pair;
@@ -92,6 +93,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.activitySettingsParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         title.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 

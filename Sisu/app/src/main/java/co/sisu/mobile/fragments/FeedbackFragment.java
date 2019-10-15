@@ -80,6 +80,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.clientListParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerTextColor());
         feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerTextColor());
 

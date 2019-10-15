@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
@@ -63,6 +64,12 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         dataController = parentActivity.getDataController();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         initializeListView();
+        setColorScheme();
+    }
+
+    private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.moreListParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
     }
 
     private void initializeListView() {

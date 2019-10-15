@@ -133,6 +133,9 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.profileParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         username.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         firstName.setTextColor(colorSchemeManager.getDarkerTextColor());

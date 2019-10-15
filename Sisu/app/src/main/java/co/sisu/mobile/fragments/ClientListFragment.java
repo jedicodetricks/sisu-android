@@ -109,6 +109,9 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     private void loadColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.feedbackFragmentParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         tabLayout.setTabTextColors(colorSchemeManager.getMenuText(), colorSchemeManager.getMenuSelectedText());
         tabLayout.setSelectedTabIndicatorColor(colorSchemeManager.getSegmentSelected());
         total.setTextColor(colorSchemeManager.getDarkerTextColor());

@@ -43,7 +43,7 @@ public class ToolbarManager {
 //                reportButton.setImageDrawable(drawable);
 
                 ImageView clientButton = parentActivity.findViewById(R.id.reportView);
-                drawable = parentActivity.getResources().getDrawable(R.drawable.client_icon).mutate();
+                drawable = parentActivity.getResources().getDrawable(R.drawable.trans_disabled).mutate();
                 drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
                 clientButton.setImageDrawable(drawable);
 
@@ -69,8 +69,7 @@ public class ToolbarManager {
                         scoreBoardButton.setImageDrawable(drawable);
                         break;
                     case "Report":
-                        drawable = parentActivity.getResources().getDrawable(R.drawable.client_icon_active).mutate();
-                        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+                        drawable = parentActivity.getResources().getDrawable(R.drawable.trans_tab).mutate();
                         clientButton.setImageDrawable(drawable);
                         break;
                     case "Record":

@@ -105,6 +105,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.settingsFragment);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
         reminderTimeTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
         displayTime.setTextColor(colorSchemeManager.getDarkerTextColor());

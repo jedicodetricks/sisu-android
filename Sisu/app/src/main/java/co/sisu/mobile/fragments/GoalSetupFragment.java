@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -129,6 +130,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.goalSetupParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         desiredIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
         trackingReasons.setTextColor(colorSchemeManager.getDarkerTextColor());
         contacts.setTextColor(colorSchemeManager.getDarkerTextColor());

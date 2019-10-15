@@ -19,6 +19,8 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.PopupMenu;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -185,13 +187,19 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private void initPopupMenu() {
         popup = new PopupMenu(getContext(), dateSelectorDateText);
+
         popup.setOnMenuItemClickListener(this);
         List<String> timelineArray = initSpinnerArray();
         int counter = 0;
         for(String timePeriod : timelineArray) {
-            popup.getMenu().add(1, counter, counter, timePeriod);
+            SpannableString s = new SpannableString(timePeriod);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+
+            popup.getMenu().add(1, counter, counter, s);
+
             counter++;
         }
+
     }
 
     private void initializeCalendarHandler() {
@@ -625,6 +633,9 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         else {
             rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
         }
+
+        ConstraintLayout parentLayout = rowView.findViewById(R.id.smallHeaderTileParent);
+
         Boolean rounded = false;
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
@@ -710,7 +721,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(tileObject.has("tap")) {
             final String clickDestination = tileObject.getString("tap");
-            rowView.setOnClickListener(view -> {
+            parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
                         navigationManager.stackReplaceFragment(ClientListFragment.class);
@@ -739,6 +750,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private View createActivityView(ViewGroup row, JSONObject tileObject) throws JSONException {
         View rowView = inflater.inflate(R.layout.tile_activity_layout, row, false);
+        ConstraintLayout parentLayout = rowView.findViewById(R.id.activityTileParent);
         TextView header = rowView.findViewById(R.id.activityTileHeader);
         TextView count = rowView.findViewById(R.id.activityTileCount);
         TextView unit = rowView.findViewById(R.id.activityTileUnit);
@@ -814,7 +826,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(tileObject.has("tap")) {
             final String clickDestination = tileObject.getString("tap");
-            rowView.setOnClickListener(view -> {
+            parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
                         navigationManager.stackReplaceFragment(ClientListFragment.class);
@@ -1019,31 +1031,42 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (clickDestination) {
-                        case "clients":
-                            navigationManager.stackReplaceFragment(ClientListFragment.class);
-                            break;
-                        case "scoreboard":
-                            navigationManager.stackReplaceFragment(ScoreboardFragment.class);
-                            break;
-                        case "record":
-                            navigationManager.stackReplaceFragment(RecordFragment.class);
-                            break;
-                        case "report":
-                            navigationManager.stackReplaceFragment(ReportFragment.class);
-                            break;
-                        case "leaderboard":
-                            navigationManager.stackReplaceFragment(LeaderboardFragment.class);
-                            break;
-                        case "more":
-                            navigationManager.stackReplaceFragment(MoreFragment.class);
-                            break;
-                    }
+                    progressOnClick(clickDestination);
+                }
+            });
+
+            progressMark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    progressOnClick(clickDestination);
                 }
             });
         }
 
         return rowView;
+    }
+
+    private void progressOnClick(String clickDestination) {
+        switch (clickDestination) {
+            case "clients":
+                navigationManager.stackReplaceFragment(ClientListFragment.class);
+                break;
+            case "scoreboard":
+                navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                break;
+            case "record":
+                navigationManager.stackReplaceFragment(RecordFragment.class);
+                break;
+            case "report":
+                navigationManager.stackReplaceFragment(ReportFragment.class);
+                break;
+            case "leaderboard":
+                navigationManager.stackReplaceFragment(LeaderboardFragment.class);
+                break;
+            case "more":
+                navigationManager.stackReplaceFragment(MoreFragment.class);
+                break;
+        }
     }
 
     private View createFullTextView(ViewGroup row, JSONObject tileObject) throws JSONException {
@@ -1126,15 +1149,24 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private void initDateSelector(View view) {
         dateSelectorDateText = view.findViewById(R.id.dateSelectorDate);
+        dateSelectorDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+
         dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
         dateSelectorBeginDateText.setText(parentActivity.getFormattedStartTime());
+        dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterTextColor());
         selectedStartTime = getDateFromFormattedTime(parentActivity.getFormattedStartTime());
 
         dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
         dateSelectorEndDateText.setText(parentActivity.getFormattedEndTime());
+        dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
         selectedEndTime = getDateFromFormattedTime(parentActivity.getFormattedEndTime());
 
         TextView submitDateSelector = view.findViewById(R.id.dateSelectorSubmit);
+        submitDateSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        submitDateSelector.setTextColor(colorSchemeManager.getLighterTextColor());
 
         dateSelectorDateText.setOnClickListener(this);
         dateSelectorBeginDateText.setOnClickListener(this);
@@ -1504,6 +1536,9 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         dateSelectorBeginDateText.setText(formattedStartTime);
         dateSelectorEndDateText.setText(formattedEndTime);
+        loader.setVisibility(View.VISIBLE);
+        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+
         return false;
     }
 

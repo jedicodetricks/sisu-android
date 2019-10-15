@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
@@ -116,6 +117,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.leaderboard_parent);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
         monthToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
         yearToggle.setTextColor(colorSchemeManager.getDarkerTextColor());

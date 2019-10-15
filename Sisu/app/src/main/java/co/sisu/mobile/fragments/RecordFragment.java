@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -114,6 +115,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void setColorScheme() {
+        ConstraintLayout layout = getView().findViewById(R.id.record_list_parent_layout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
         dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
         Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
