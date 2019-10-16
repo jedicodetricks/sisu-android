@@ -131,6 +131,19 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         return createFullView(container, tileTemplate);
     }
 
+    public void teamSwap() {
+//        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
+        loader.setVisibility(View.VISIBLE);
+        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+//        parentActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                setupUiVisuals();
+//            }
+//        });
+
+    }
+
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
         loader.setVisibility(View.VISIBLE);
@@ -1523,8 +1536,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         if(selectedEndMonth < 10) {
             formattedEndMonth = "0" + selectedEndMonth;
         }
-
-
 
         formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
         formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;

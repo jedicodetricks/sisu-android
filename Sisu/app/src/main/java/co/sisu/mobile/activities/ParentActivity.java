@@ -529,6 +529,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         parentLoader.setVisibility(View.VISIBLE);
         try {
+            // This is what goes off when you click a new TEAM
             TeamObject team = (TeamObject) parent.getItemAtPosition(position);
             updatedTeam = team;
             updateTeamPosition = position;
@@ -541,25 +542,31 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
             navigationManager.closeDrawer();
         } catch ( ClassCastException cce) {
-            //This is what goes off when you click a new team agent.
+            //This is what goes off when you click a new team AGENT.
             AgentModelStringSuperUser selectedAgent = (AgentModelStringSuperUser) parent.getItemAtPosition(position);
             if(selectedAgent.getAgent_id().equals(myAgentId)) {
                 // This is what will trigger when you return to yourself
                 isAdminMode = false;
-                actionBarManager.setAdminMode(isAdminMode);
+                actionBarManager.setAdminMode(false);
             }
             else {
                 if(isAdminMode) {
                     isAdminMode = false;
-                    actionBarManager.setAdminMode(isAdminMode);
+                    actionBarManager.setAdminMode(false);
                 }
                 else {
                     isAdminMode = true;
-                    actionBarManager.setAdminMode(isAdminMode);
+                    actionBarManager.setAdminMode(true);
                 }
             }
             navigationManager.closeTeamAgentsDrawer();
-            apiManager.getAgent(this, selectedAgent.getAgent_id());
+            if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
+                apiManager.getAgent(this, selectedAgent.getAgent_id());
+//                apiManager.getTileSetup(ParentActivity.this, selectedAgent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
+            }
+            else {
+                apiManager.getAgent(this, selectedAgent.getAgent_id());
+            }
         }
     }
 
@@ -601,13 +608,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
                 switch (f.getTag()) {
                     case "Scoreboard":
-                        try {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-                        }
-                        catch(Exception e) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-                        }
-
+//                        try {
+//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+//                        }
+//                        catch(Exception e) {
+//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+//                        }
+                        ((TileTemplateFragment) f).teamSwap();
                         break;
                     case "Record":
                         ((RecordFragment) f).teamSwap();
@@ -728,15 +735,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else {
             if(adminTransferring) {
-                if(clientFinished && goalsFinished && activitySettingsParamFinished && settingsFinished && teamParamFinished && noNavigation) {
+                if(clientFinished && goalsFinished && activitySettingsParamFinished && settingsFinished && teamParamFinished && noNavigation && tileTemplateFinished) {
+                    clientFinished = false;
+                    goalsFinished = false;
+                    settingsFinished = false;
+                    teamParamFinished = false;
+                    colorSchemeFinished = false;
+                    labelsFinished = false;
+                    noNavigation = true;
+                    activitySettingsParamFinished = false;
+                    tileTemplateFinished = false;
+
                     switch (navigationManager.getCurrentFragment()) {
                         case "Scoreboard":
                             noNavigation = false;
                             adminTransferring = false;
                             System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                            this.runOnUiThread(() -> {
+                                if(tileDebug) {
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                                }
+                                else {
                                     if(isRecruiting()) {
                                         navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
                                     }
