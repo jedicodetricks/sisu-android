@@ -109,7 +109,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     private void loadColorScheme() {
-        ConstraintLayout layout = getView().findViewById(R.id.feedbackFragmentParentLayout);
+        ConstraintLayout layout = getView().findViewById(R.id.clientListParentLayout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
         tabLayout.setTabTextColors(colorSchemeManager.getMenuText(), colorSchemeManager.getMenuSelectedText());
@@ -510,10 +510,12 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
 
     private void addOneToContacts() {
         Metric contactMetric = dataController.getContactsMetric();
-        contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
-        dataController.setRecordUpdated(contactMetric);
-        parentActivity.updateRecordedActivities();
-        parentActivity.showToast("+1 to your contacts");
+        if(contactMetric != null) {
+            contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
+            dataController.setRecordUpdated(contactMetric);
+            parentActivity.updateRecordedActivities();
+            parentActivity.showToast("+1 to your contacts");
+        }
     }
 
     @Override

@@ -209,18 +209,21 @@ public class ActionBarManager {
                     teamAgentsTitle.setText("Team");
                 }
 
-                if(currentTeam.getRole().equals("ADMIN") || isAdminMode) {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
-                    if(teamAgentsTitle != null) {
-                        teamAgentsTitle.setVisibility(View.VISIBLE);
+                if(currentTeam != null) {
+                    if(currentTeam.getRole().equals("ADMIN") || isAdminMode) {
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+                        if(teamAgentsTitle != null) {
+                            teamAgentsTitle.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else {
+                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+                        if(teamAgentsTitle != null) {
+                            teamAgentsTitle.setVisibility(View.GONE);
+                        }
                     }
                 }
-                else {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-                    if(teamAgentsTitle != null) {
-                        teamAgentsTitle.setVisibility(View.GONE);
-                    }
-                }
+
 
                 manageDrawerEnabled(isDrawerEnabled);
             }

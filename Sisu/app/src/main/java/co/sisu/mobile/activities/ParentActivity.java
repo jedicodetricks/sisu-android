@@ -35,11 +35,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -193,8 +189,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
+        //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("4235");
+//        agent.setAgent_id("11415");
 //        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
@@ -203,7 +200,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         initCache();
 
-        //TODO: Maybe don't do this when you release
+        //TODO: Eventually you won't need the non tile debug stuff
         if(tileDebug) {
             initTimelineDate();
             apiManager.getTeams(this, agent.getAgent_id());
@@ -701,7 +698,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void navigateToScoreboard() {
-        if(clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished) {
+        if(!tileDebug) {
+            tileTemplateFinished = true;
+        }
+        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -732,6 +732,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             noNavigation = true;
             activitySettingsParamFinished = false;
             tileTemplateFinished = false;
+            teamsFinished = false;
         }
         else {
             if(adminTransferring) {
@@ -931,36 +932,35 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_TEAMS) {
             AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
             dataController.setTeamsObject(ParentActivity.this, teamsObject);
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    navigationManager.initializeTeamBar(dataController.getTeamsObject());
-                    if(dataController.getTeamsObject().size() > 0) {
-                        navigationManager.updateTeam(dataController.getTeamsObject().get(0));
-                        dataController.setMessageCenterVisible(true);
-                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
-                        apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-                        SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
-                        if(settingsFinished && !tileDebug) {
-                            apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
-                            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
-                        }
-                        else if(tileDebug) {
-                            colorSchemeFinished = true;
-                            labelsFinished = true;
-                        }
+            this.runOnUiThread(() -> {
+                navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                if(dataController.getTeamsObject().size() > 0) {
+                    navigationManager.updateTeam(dataController.getTeamsObject().get(0));
+                    dataController.setMessageCenterVisible(true);
+                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
+                    if(settingsFinished && !tileDebug) {
+                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                        apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
                     }
-                    else {
-                        apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-                        dataController.setMessageCenterVisible(false);
-                        teamParamFinished = true;
-                        dataController.setSlackInfo(null);
+                    else if(tileDebug) {
+                        colorSchemeFinished = true;
+                        labelsFinished = true;
                     }
-                    teamsFinished = true;
-                    apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                    apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
-                    apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                }
+                else {
+                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    dataController.setMessageCenterVisible(false);
+                    teamParamFinished = true;
+                    dataController.setSlackInfo(null);
+                }
+                teamsFinished = true;
+                apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+                apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
+                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                if(tileDebug) {
                     apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
                 }
             });
@@ -1135,7 +1135,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.e("FAILURE", asyncReturnType);
-
     }
 
     @Override

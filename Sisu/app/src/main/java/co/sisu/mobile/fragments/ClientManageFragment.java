@@ -1279,7 +1279,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 }
 
                 contactIntent
-                        .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() + " " + currentClient.getLast_name())
+                        .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() != null ? currentClient.getFirst_name() : "" + " " + currentClient.getLast_name() != null ? currentClient.getLast_name() : "")
                         .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
                         .putExtra(ContactsContract.Intents.Insert.PHONE, phone)
                         .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, phoneType);
