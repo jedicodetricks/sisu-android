@@ -333,14 +333,20 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private String formatTimeTo24H(String displayTime) {
         String[] timeSplit = displayTime.split(" ");
         String militaryTime = "";
-        if(timeSplit[1].equals("AM")) {
-            militaryTime = timeSplit[0];
+        if(timeSplit != null) {
+            if(timeSplit[1].equals("AM")) {
+                militaryTime = timeSplit[0];
+            }
+            else if(timeSplit[1].equals("PM")) {
+                String[] milTimeSplit = timeSplit[0].split(":");
+                int hour = Integer.parseInt(milTimeSplit[0]) + 12;
+                militaryTime = String.valueOf(hour) + ":" + milTimeSplit[1];
+            }
         }
-        else if(timeSplit[1].equals("PM")) {
-            String[] milTimeSplit = timeSplit[0].split(":");
-            int hour = Integer.parseInt(milTimeSplit[0]) + 12;
-            militaryTime = String.valueOf(hour) + ":" + milTimeSplit[1];
+        else {
+            militaryTime = "09:00";
         }
+
 
         return militaryTime;
     }

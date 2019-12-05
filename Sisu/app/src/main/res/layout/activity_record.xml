@@ -9,47 +9,66 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/record_list_date"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/tileRecordDateSelector"
+            layout="@layout/date_selector_group"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <include layout="@layout/status_radio_group"
+            android:id="@+id/statusRadioGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/tileRecordDateSelector"/>
 
-            <TextView
-                android:id="@+id/record_date"
-                style="@style/RecordLabelText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/record_list_date"
-                android:text="@string/record_date"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/calender_date_picker"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!--<android.support.constraint.ConstraintLayout-->
+            <!--android:id="@+id/record_list_date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="10dp">-->
 
-            <ImageView
-                android:id="@+id/calender_date_picker"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/appointment_icon" />
+            <!--<TextView-->
+                <!--android:id="@+id/record_date"-->
+                <!--style="@style/RecordLabelText"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--android:layout_marginStart="20dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_toEndOf="@id/record_list_date"-->
+                <!--android:text="@string/record_date"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintStart_toEndOf="@id/calender_date_picker"-->
+                <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/calender_date_picker"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_marginStart="16dp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintDimensionRatio="1:1"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:srcCompat="@drawable/appointment_icon" />-->
 
 
-        </android.support.constraint.ConstraintLayout>
+        <!--</android.support.constraint.ConstraintLayout>-->
 
         <RelativeLayout
             android:id="@+id/divider"
             style="@style/DividerStyle"
             android:layout_width="match_parent"
-            android:layout_below="@id/record_list_date"/>
+            android:layout_below="@id/statusRadioGroup"/>
 
         <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/divider">
             <ListView

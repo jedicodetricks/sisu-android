@@ -100,7 +100,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
-        initializeCalendarHandler();
+//        initializeCalendarHandler();
         TextView save = parentActivity.findViewById(R.id.saveButton);
         if(save != null) {
             save.setOnClickListener(this);
@@ -118,11 +118,11 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         ConstraintLayout layout = getView().findViewById(R.id.record_list_parent_layout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
-        calendarLauncher.setImageDrawable(drawable);
+//        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
+//        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+//        calendarLauncher.setImageDrawable(drawable);
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -135,44 +135,44 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
     }
 
-    private void initializeCalendarHandler() {
-        calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-        dateDisplay = getView().findViewById(R.id.record_date);
+//    private void initializeCalendarHandler() {
+//        calendarLauncher = getView().findViewById(R.id.calender_date_picker);
+//        dateDisplay = getView().findViewById(R.id.record_date);
+//
+//        selectedYear = Calendar.getInstance().get(Calendar.YEAR);
+//        selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
+//        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+//
+//        updateDisplayDate(selectedYear, selectedMonth, selectedDay);
+//
+//        calendarLauncher.setOnClickListener(this);
+//        dateDisplay.setOnClickListener(this);
+//
+//    }
 
-        selectedYear = Calendar.getInstance().get(Calendar.YEAR);
-        selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-
-        updateDisplayDate(selectedYear, selectedMonth, selectedDay);
-
-        calendarLauncher.setOnClickListener(this);
-        dateDisplay.setOnClickListener(this);
-
-    }
-
-    private void updateDisplayDate(int year, int month, int day) {
-        selectedYear = year;
-        selectedMonth = month;
-        selectedDay = day;
-
-        Date d;
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        month += 1;
-        String formatDate = year + "/" + month + "/" + day;
-
-        try {
-            d = formatter.parse(formatDate);
-            Calendar updatedTime = Calendar.getInstance();
-            updatedTime.setTime(d);
-
-            TextView dateDisplay = getView().findViewById(R.id.record_date);
-            dateDisplay.setText(sdf.format(updatedTime.getTime()));
-        } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
-            e.printStackTrace();
-        }
-    }
+//    private void updateDisplayDate(int year, int month, int day) {
+//        selectedYear = year;
+//        selectedMonth = month;
+//        selectedDay = day;
+//
+//        Date d;
+//        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+//        month += 1;
+//        String formatDate = year + "/" + month + "/" + day;
+//
+//        try {
+//            d = formatter.parse(formatDate);
+//            Calendar updatedTime = Calendar.getInstance();
+//            updatedTime.setTime(d);
+//
+//            TextView dateDisplay = getView().findViewById(R.id.record_date);
+//            dateDisplay.setText(sdf.format(updatedTime.getTime()));
+//        } catch (ParseException e) {
+//            parentActivity.showToast("Error parsing selected date");
+//            e.printStackTrace();
+//        }
+//    }
 
     private void initializeListView(List<Metric> metricList) {
         if(getView() != null) {
@@ -210,7 +210,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 if(year != selectedYear || month != selectedMonth || day != selectedDay) {
-                    updateDisplayDate(year, month, day);
+//                    updateDisplayDate(year, month, day);
                     updateRecordInfo();
                 }
                 else {
@@ -243,22 +243,22 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.calender_date_picker:
-            case R.id.record_date:
-                showDatePickerDialog();
-                break;
-            case R.id.saveButton:
-                if(parentActivity.isAdminMode()) {
-                    popAdminConfirmDialog();
-                }
-                else {
-                    saveRecords();
-                }
-                break;
-            default:
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.calender_date_picker:
+//            case R.id.record_date:
+//                showDatePickerDialog();
+//                break;
+//            case R.id.saveButton:
+//                if(parentActivity.isAdminMode()) {
+//                    popAdminConfirmDialog();
+//                }
+//                else {
+//                    saveRecords();
+//                }
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     private void saveRecords() {
