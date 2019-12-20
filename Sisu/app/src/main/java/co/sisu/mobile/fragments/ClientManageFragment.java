@@ -1309,20 +1309,21 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 builder.setTitle("Choose a lead source");
 
                 // add a list
-                final String[] sources = new String[leadSources.size()];
-                int counter = 0;
-                for ( Object key : leadSources.keySet() ) {
-                    sources[counter] = (String) leadSources.get(key);
-                    counter++;
-                }
-
-                builder.setItems(sources, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        leadSource.setText(sources[which]);
-
+                if(leadSources != null) {
+                    final String[] sources = new String[leadSources.size()];
+                    int counter = 0;
+                    for ( Object key : leadSources.keySet() ) {
+                        sources[counter] = (String) leadSources.get(key);
+                        counter++;
                     }
-                });
+
+                    builder.setItems(sources, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            leadSource.setText(sources[which]);
+                        }
+                    });
+                }
 
                 // create and show the alert dialog
                 android.support.v7.app.AlertDialog dialog = builder.create();

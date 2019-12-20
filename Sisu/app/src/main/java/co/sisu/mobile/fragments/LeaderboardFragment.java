@@ -448,7 +448,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
+        switch (v.getId()) {
             case R.id.leaderboard_calender_date_picker:
             case R.id.leaderboard_date:
                 new SpinnerDatePickerDialogBuilder()
