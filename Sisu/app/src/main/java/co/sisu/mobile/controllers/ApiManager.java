@@ -1,7 +1,6 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,8 +13,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 import co.sisu.mobile.BuildConfig;
-import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncDelete;
 import co.sisu.mobile.api.AsyncGet;
@@ -23,6 +20,7 @@ import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncPost;
 import co.sisu.mobile.api.AsyncPut;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;

@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncForgotPassword;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.enums.ApiReturnTypes;
 
 /**
  * Created by bradygroharing on 2/21/18.

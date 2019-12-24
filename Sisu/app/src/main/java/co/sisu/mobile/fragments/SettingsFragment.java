@@ -30,7 +30,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -40,6 +39,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ParameterObject;

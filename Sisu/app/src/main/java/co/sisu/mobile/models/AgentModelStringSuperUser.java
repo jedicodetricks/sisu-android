@@ -1,8 +1,5 @@
 package co.sisu.mobile.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by Brady Groharing on 4/8/2018.
  * This class only exists because Rick is sending down either a boolean or a byte to indicate is_super_user

@@ -280,7 +280,7 @@ public class DataController {
 
             if (goals != null) {
                 for (AgentGoalsObject ago : goals) {
-                        //TODO: Recruiting shit here
+                    //TODO: Recruiting shit here
                     if(ago != null) {
                         if (counters[i].getActivity_type().equals(ago.getGoal_id())) {
 

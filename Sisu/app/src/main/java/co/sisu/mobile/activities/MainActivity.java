@@ -32,12 +32,12 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;

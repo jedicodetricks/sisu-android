@@ -14,9 +14,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 

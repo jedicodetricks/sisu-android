@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
@@ -41,6 +40,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;

@@ -40,8 +40,6 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -56,15 +54,15 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import co.sisu.mobile.adapters.AppointmentListAdapter;
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.adapters.AppointmentListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;

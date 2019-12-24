@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
@@ -30,7 +29,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.models.AsyncActivitiesJsonObject;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;

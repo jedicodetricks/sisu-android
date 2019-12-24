@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.NoteListAdapter;
@@ -25,6 +24,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;

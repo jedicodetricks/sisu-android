@@ -1,42 +1,17 @@
 package co.sisu.mobile.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.devs.vectorchildfinder.VectorChildFinder;
-import com.devs.vectorchildfinder.VectorDrawableCompat;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import co.sisu.mobile.R;
-import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.controllers.RecordEventHandler;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
-import co.sisu.mobile.models.LeaderboardItemsObject;
-import co.sisu.mobile.models.LeaderboardObject;
-import co.sisu.mobile.models.Metric;
 
 /**
  * Created by Brady Groharing on 2/25/2018.
