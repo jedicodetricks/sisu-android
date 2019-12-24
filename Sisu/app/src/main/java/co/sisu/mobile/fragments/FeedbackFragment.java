@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
 import com.squareup.picasso.Picasso;
 
 import co.sisu.mobile.R;
@@ -26,6 +25,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**

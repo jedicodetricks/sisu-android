@@ -2,15 +2,8 @@ package co.sisu.mobile.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.util.Patterns;
-import android.webkit.WebView;
-import android.widget.TextView;
-
 import android.util.Base64;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import android.webkit.WebView;
 
 import co.sisu.mobile.R;
 

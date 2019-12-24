@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "co.sisu.mobile"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 75
+        targetSdkVersion 28
+        versionCode 76
         vectorDrawables.useSupportLibrary = true
-        versionName "2.20.2"
+        versionName "2.20.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true //important
 

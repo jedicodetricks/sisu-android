@@ -2,25 +2,16 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
-import co.sisu.mobile.models.TeamObject;
-import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by Brady Groharing on 3/12/2018.

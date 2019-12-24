@@ -21,7 +21,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.UpdateAgentGoalsObject;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 /**
  * A simple {@link Fragment} subclass.
