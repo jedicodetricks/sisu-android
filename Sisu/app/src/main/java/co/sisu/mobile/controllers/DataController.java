@@ -3,6 +3,10 @@ package co.sisu.mobile.controllers;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -990,40 +994,47 @@ public class DataController {
         return updatedRecords;
     }
 
-    public void setSettings(ParameterObject[] settings) {
-        int arraySize = settings.length;
+    public void setSettings(JSONArray settings) {
+        int arraySize = settings.length();
         List<String> existingSettings = new ArrayList<>();
         List<ParameterObject> newSettings = new ArrayList<>();
         List<ParameterObject> relevantSettings = new ArrayList<>();
 
-        for (ParameterObject s : settings) {
-            switch (s.getName()) {
-                case "local_timezone":
-                    existingSettings.add("local_timezone");
-                    newSettings.add(s);
-                    break;
-                case "daily_reminder_time":
-                    existingSettings.add("daily_reminder_time");
-                    newSettings.add(s);
-                    break;
-                case "lights":
-                    existingSettings.add("lights");
-                    newSettings.add(s);
-                    break;
-//                    case "biometrics":
-                case "daily_reminder":
-                    existingSettings.add("daily_reminder");
-                    newSettings.add(s);
-                    break;
-                case "record_activities":
-                    existingSettings.add("record_activities");
-                    newSettings.add(s);
-                    break;
-                default:
-                    newSettings.add(s);
+        for(int i = 0; i < settings.length(); i++) {
+            JSONObject s = null;
+            try {
+                s = settings.getJSONObject(i);
+                switch (s.getString("name")) {
+                    case "local_timezone":
+                        existingSettings.add("local_timezone");
+                        newSettings.add(new ParameterObject(s));
+                        break;
+                    case "daily_reminder_time":
+                        existingSettings.add("daily_reminder_time");
+                        newSettings.add(new ParameterObject(s));
+                        break;
+                    case "lights":
+                        existingSettings.add("lights");
+                        newSettings.add(new ParameterObject(s));
+                        break;
+                    case "daily_reminder":
+                        existingSettings.add("daily_reminder");
+                        newSettings.add(new ParameterObject(s));
+                        break;
+                    case "record_activities":
+                        existingSettings.add("record_activities");
+                        newSettings.add(new ParameterObject(s));
+                        break;
+                    default:
+                        newSettings.add(new ParameterObject(s));
 
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
         }
+
 
         if(!existingSettings.contains("local_timezone")) {
             newSettings.add(getDefaultLocalTimezone());
@@ -1052,45 +1063,56 @@ public class DataController {
 
         ParameterObject[] array = new ParameterObject[arraySize];
 
-        settings = newSettings.toArray(array);
+        try {
+            settings = new JSONArray(newSettings.toArray(array));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        for (ParameterObject s : settings) {
-            switch (s.getName()) {
-                case "local_timezone":
-                    if(s.getValue().equals("{}")) {
-                        s.setValue("America/Denver");
-                    }
-                    relevantSettings.add(s);
-                    break;
-                case "daily_reminder_time":
-                    if(s.getValue().equals("{}")) {
-                        s.setValue("17:00");
-                    }
-                    relevantSettings.add(s);
-                    break;
-                case "lights":
-                    if(s.getValue().equals("{}")) {
-                        s.setValue("0");
-                    }
-                    relevantSettings.add(s);
-                    break;
+        for(int i = 0; i < settings.length(); i++) {
+            JSONObject s = null;
+            try {
+                s =  settings.getJSONObject(i);
+                ParameterObject currentParam = new ParameterObject(s);
+                switch (s.getString("name")) {
+                    case "local_timezone":
+                        if(currentParam.getValue().equals("{}")) {
+                            currentParam.setValue("America/Denver");
+                        }
+                        relevantSettings.add(currentParam);
+                        break;
+                    case "daily_reminder_time":
+                        if(currentParam.getValue().equals("{}")) {
+                            currentParam.setValue("17:00");
+                        }
+                        relevantSettings.add(currentParam);
+                        break;
+                    case "lights":
+                        if(currentParam.getValue().equals("{}")) {
+                            currentParam.setValue("0");
+                        }
+                        relevantSettings.add(currentParam);
+                        break;
 //                    case "biometrics":
-                case "daily_reminder":
-                    if(s.getValue().equals("{}")) {
-                        s.setValue("1");
-                    }
-                    relevantSettings.add(s);
-                    break;
-                case "record_activities":
-//                    if(s.getValue().equals("{}")) {
-//                        s = setDefaultActivitesSelected();
+                    case "daily_reminder":
+                        if(currentParam.getValue().equals("{}")) {
+                            currentParam.setValue("1");
+                        }
+                        relevantSettings.add(currentParam);
+                        break;
+                    case "record_activities":
+//                    if(currentParam.getValue().equals("{}")) {
+//                        currentParam = setDefaultActivitesSelected();
 //                    }
-//                    setupSelectedActivities(s);
-                    break;
+//                    setupSelectedActivities(currentParam);
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+
         }
         this.settings = relevantSettings;
-
     }
 
     private LinkedHashMap<String, SelectedActivities> setupSelectedActivities(AsyncActivitySettingsObject[] s) {

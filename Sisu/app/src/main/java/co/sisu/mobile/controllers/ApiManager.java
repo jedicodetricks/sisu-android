@@ -54,9 +54,10 @@ public class ApiManager {
         cache = new Cache(context.getCacheDir(), cacheSize);
         gson = new Gson();
     }
-    //TODO: THIS MIGHT BE A SPECIAL CASE BECAUSE OF ASYNC. Keep looking into it.
+
     public void getLeaderboardImage(AsyncServerEventListener cb, String agentId, LeaderboardAgentModel leaderboardAgentModel) {
         //GET
+        //This is a special case because of the async call that it applies to the leaderboardAgentModel
         getJWT(agentId);
         new AsyncLeaderboardImage(cb, url, leaderboardAgentModel).execute(jwtStr, timestamp, transactionID);
     }

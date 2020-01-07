@@ -1,5 +1,10 @@
 package co.sisu.mobile.models;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by bradygroharing on 4/17/18.
  */
@@ -12,6 +17,18 @@ public class ParameterObject {
     String parameter_type_id;
     String status;
     String value;
+
+    public ParameterObject(JSONObject jsonObject) {
+        try {
+            this.name = jsonObject.getString("name");
+            this.status = jsonObject.getString("status");;
+            this.value = jsonObject.getString("value");;
+            this.parameter_type_id = jsonObject.getString("parameter_type_id");;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public ParameterObject(String name, String status, String value, String parameter_type_id) {
         this.name = name;

@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -327,8 +328,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             formattedEndMonth = "0" + selectedEndMonth;
         }
 
-
-
         formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
         formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
         selectedStartTime = getDateFromFormattedTime(formattedStartTime);
@@ -374,32 +373,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setActivityColors() {
         if(!tileDebug) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-                    if(isAdminMode) {
-                        toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
-                    }
-                    else {
-                        toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-                    }
-                    navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
-                    navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
-                    navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-                    //change parentLoader here, if needed
-                    parentLoader = findViewById(R.id.parentLoader);
-                    if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                        Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                        parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
-                        parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                    } else {
-                        Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                        parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
-                        parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                    }
-                    navigationManager.updateColorScheme(colorSchemeManager);
+            this.runOnUiThread(() -> {
+                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+                if(isAdminMode) {
+                    toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
                 }
+                else {
+                    toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
+                }
+                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+                //change parentLoader here, if needed
+                parentLoader = findViewById(R.id.parentLoader);
+                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                } else {
+                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
+                }
+                navigationManager.updateColorScheme(colorSchemeManager);
             });
         }
 
@@ -770,45 +766,27 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             noNavigation = false;
                             adminTransferring = false;
                             System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                navigationManager.clearStackReplaceFragment(ReportFragment.class);
-                                }
-                            });
+                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ReportFragment.class));
                             break;
                         case "Record":
                             noNavigation = false;
                             adminTransferring = false;
                             System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    navigationManager.clearStackReplaceFragment(RecordFragment.class);
-                                }
-                            });
+                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(RecordFragment.class));
                             break;
                         case "Leaderboard":
                             noNavigation = false;
                             adminTransferring = false;
                             System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
-                                }
-                            });
+                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(LeaderboardFragment.class));
                             break;
                         case "More":
                             noNavigation = false;
                             adminTransferring = false;
                             System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                                    parentLoader.setVisibility(View.INVISIBLE);
-                                }
+                            this.runOnUiThread(() -> {
+                                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+                                parentLoader.setVisibility(View.INVISIBLE);
                             });
                             break;
                     }
@@ -889,45 +867,53 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_SETTINGS) {
-            AsyncSettingsJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncSettingsJsonObject.class);
-            ParameterObject[] settings = settingsJson.getParameters();
-            dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
-            List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
-            settingsFinished = true;
-            int hour = 0;
-            int minute = 0;
-            int reminderActive = 0;
-            for (ParameterObject s : newSettings) {
-                Log.e(s.getName(), s.getValue());
-                switch (s.getName()) {
-                    case "daily_reminder_time":
-                        String[] values = s.getValue().split(":");
-                        try{
-                            hour = Integer.parseInt(values[0]);
-                            minute = Integer.parseInt(values[1]);
-                        } catch(NumberFormatException nfe) {
-                            hour = 17;
-                            minute = 0;
-                        }
-                        break;
-                    case "daily_reminder":
-                        try{
-                            reminderActive = Integer.parseInt(s.getValue());
+            try {
+                String settingsString = ((Response) returnObject).body().string();
+                JSONObject settingsJson = new JSONObject(settingsString);
+                JSONArray settings = settingsJson.getJSONArray("parameters");
+                dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
+                List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
+                settingsFinished = true;
+                int hour = 0;
+                int minute = 0;
+                int reminderActive = 0;
+                for (ParameterObject s : newSettings) {
+                    Log.e(s.getName(), s.getValue());
+                    switch (s.getName()) {
+                        case "daily_reminder_time":
+                            String[] values = s.getValue().split(":");
+                            try{
+                                hour = Integer.parseInt(values[0]);
+                                minute = Integer.parseInt(values[1]);
+                            } catch(NumberFormatException nfe) {
+                                hour = 17;
+                                minute = 0;
+                            }
+                            break;
+                        case "daily_reminder":
+                            try{
+                                reminderActive = Integer.parseInt(s.getValue());
 
-                        } catch(NumberFormatException nfe) {
-                            reminderActive = 1;
-                        }
+                            } catch(NumberFormatException nfe) {
+                                reminderActive = 1;
+                            }
+                    }
                 }
+
+                if(reminderActive == 1) {
+                    createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+                }
+                if(teamsFinished) {
+                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                }
+                navigateToScoreboard();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            if(reminderActive == 1) {
-                createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
-            }
-            if(teamsFinished) {
-                apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
-                apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-            }
-            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_TEAMS) {
             AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);

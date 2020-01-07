@@ -25,6 +25,9 @@ import android.widget.TimePicker;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -449,7 +452,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 @Override
                 public void run() {
                     ParameterObject[] array = new ParameterObject[settings.size()];
-                    dataController.setSettings(settings.toArray(array));
+                    try {
+                        dataController.setSettings(new JSONArray(settings.toArray(array)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     if(colorScheme != null) {
                         colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
                         parentActivity.setActivityColors();

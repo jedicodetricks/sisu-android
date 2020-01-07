@@ -278,7 +278,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
                         if(!agents.containsKey(currentAgent.getAgent_id())) {
                             agents.put(leaderBoardSections.get(i).getLeaderboardItemsObject()[j].getAgent_id(), new LeaderboardAgentModel(currentAgent.getAgent_id(), currentAgent.getLabel(),
-                                    /*Stop trying to delete this, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
+                                    /*Stop trying to delete this line, Brady*/                                               currentAgent.getPlace(), currentAgent.getProfile(), currentAgent.getValue()));
                         }
                     }
                 }
@@ -381,38 +381,13 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Leaderboard Image")) {
+            //TODO: This one is being used. Transition it
             LeaderboardAgentModel leaderboardAgentModel = (LeaderboardAgentModel) returnObject;
             if (leaderboardAgentModel.getBitmap() != null) {
                 parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
             agentDisplayCounting();
         }
-        else if(asyncReturnType.equals("Goals")) {
-            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
-            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject, parentActivity.isRecruiting());
-        }
-//        else if(asyncReturnType.equals("Leaderboard")){
-//            AsyncLeaderboardJsonObject leaderboardObject = gson.fromJson(responseString, AsyncLeaderboardJsonObject.class);
-//            AsyncLeaderboardJsonObject leaderboardJsonObject = (AsyncLeaderboardJsonObject) returnObject;
-//            leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
-//
-//            prepareListData();
-//        }
-//        else if(asyncReturnType.equals("Get Color Scheme")) {
-//            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
-//            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-//            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-//            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-//            parentActivity.setActivityColors();
-//        }
-//        else if(asyncReturnType.equals("Get Labels")) {
-//            AsyncLabelsJsonObject labelObject = gson.fromJson(response.body().charStream(), AsyncLabelsJsonObject.class);
-//            AsyncLabelsJsonObject labelObject = (AsyncLabelsJsonObject) returnObject;
-//            HashMap<String, String> labels = labelObject.getMarket();
-//            dataController.setLabels(labels);
-//        }
-
     }
 
     @Override

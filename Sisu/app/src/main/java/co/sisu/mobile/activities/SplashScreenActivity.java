@@ -52,6 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Authenticator")) {
+            //TODO: This is being used. Transition it.
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {
                 showToast("Incorrect username or password");
@@ -69,7 +70,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                     body =  bundle.getString("body");
                 }
 
-
                 intent = new Intent(this, ParentActivity.class);
                 Bundle extras = new Bundle();
                 extras.putParcelable("Agent", agent);
@@ -79,7 +79,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                 launchActivity();
             }
         }
-
     }
 
     @Override

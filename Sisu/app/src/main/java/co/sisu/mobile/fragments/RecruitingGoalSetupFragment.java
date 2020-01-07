@@ -280,7 +280,6 @@ public class RecruitingGoalSetupFragment extends Fragment implements CompoundBut
                     dateSwap = false;
 
                     }
-
             }
         });
 
