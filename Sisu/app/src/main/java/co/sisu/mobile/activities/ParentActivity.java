@@ -203,10 +203,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         //TODO: Eventually you won't need the non tile debug stuff
         if(tileDebug) {
             initTimelineDate();
+            apiManager.getFirebaseDevices(this, agent.getAgent_id());
             apiManager.getTeams(this, agent.getAgent_id());
         }
         else {
-            apiManager.getFirebaseDevices(this, agent.getAgent_id());
             apiManager.getTeams(this, agent.getAgent_id());
         }
 
