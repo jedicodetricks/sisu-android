@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -50,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -102,6 +104,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private boolean beginDateSelected = false;
     private boolean endDateSelected = false;
     private String dashboardType = "agent";
+    private String previousSmallHeaderTileColor = "000000";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,6 +120,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         return createFullView(container, tileTemplate);
     }
+
 
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
@@ -432,6 +436,24 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if(parentActivity.shouldDisplayPushNotification()) {
+            parentActivity.setShouldDisplayPushNotification(false);
+            String title = parentActivity.getPushNotificationTitle();
+            String body = parentActivity.getPushNotificationBody();
+            String is_html = parentActivity.getPushNotificationIsHTML();
+            String pushId = parentActivity.getPushNotificationPushId();
+            if(is_html != null && is_html.equals("true")) {
+                //TODO: This will have to make an api call with pushId
+            }
+            else {
+                Intent intent = new Intent(parentActivity, NotificationActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("body", body);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+
+        }
 
     }
 
@@ -671,12 +693,13 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
 //        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
-        String assignedTileColor = "#FFFFFF";
-        if(tileColor instanceof String) {
+        String assignedTileColor = previousSmallHeaderTileColor;
+        if(tileColor instanceof String && !((String) tileColor).equalsIgnoreCase("")) {
             assignedTileColor = (String) tileColor;
+            previousSmallHeaderTileColor = assignedTileColor;
         }
         else if(tileColor instanceof JSONObject) {
-            assignedTileColor = "#FFF000";
+            assignedTileColor = previousSmallHeaderTileColor;
         }
 
         if(rounded) {
