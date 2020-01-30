@@ -276,7 +276,7 @@ public class ClientObject implements Comparable<ClientObject>{
 
     @Override
     public int compareTo(@NonNull ClientObject c) {
-        if(this.getLast_name() != null) {
+        if(this.getLast_name() != null && c.last_name != null) {
             return (this.getLast_name().compareTo(c.last_name));
         }
         return 0;

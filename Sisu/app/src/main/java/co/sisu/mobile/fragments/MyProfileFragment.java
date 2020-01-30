@@ -362,8 +362,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                             .setMinCropResultSize(100,100)
                             .setMaxCropResultSize(600,600)
                             .start(parentActivity, this);
-
                 }
+
                 break;
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);

@@ -669,12 +669,12 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
         builder.setTitle(message);
         final String label = text;
-// Set up the input
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        // Set up the input
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-// Set up the buttons
+        // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -937,8 +937,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 }
             }
         }
-
-
 
         if(deleteClient) {
             currentClient.setStatus("D");
