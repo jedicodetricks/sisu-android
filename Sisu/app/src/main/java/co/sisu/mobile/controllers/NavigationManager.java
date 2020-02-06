@@ -16,6 +16,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamObject;
 
 /**
@@ -310,8 +311,8 @@ public class NavigationManager {
         actionBarManager.initializeTeamBar(teamsObject);
     }
 
-    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents, String myAgentId) {
-        actionBarManager.initializeTeamAgents(teamAgents, myAgentId);
+    public void initScopeBar(List<ScopeBarModel> scopeBar, String myAgentId) {
+        actionBarManager.initializeTeamAgents(scopeBar, myAgentId);
     }
 
     public void updateTeam(TeamObject team) {

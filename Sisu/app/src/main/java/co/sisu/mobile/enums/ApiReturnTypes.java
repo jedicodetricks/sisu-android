@@ -42,5 +42,6 @@ public enum ApiReturnTypes {
     GET_LEAD_SOURCES,
     GET_TEAM_AGENTS,
     GET_TILES,
-    CREATE_APPT_NOTE
+    CREATE_APPT_NOTE,
+    GET_SCOPE
 }

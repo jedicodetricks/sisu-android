@@ -23,6 +23,7 @@ import co.sisu.mobile.adapters.TeamAgentsListAdapter;
 import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
@@ -114,30 +115,35 @@ public class ActionBarManager {
         }
     }
 
-    public void initializeTeamAgents(AgentModelStringSuperUser[] teamAgents, String myAgentId) {
+    public void initializeTeamAgents(List<ScopeBarModel> scopeBar, String myAgentId) {
         this.myAgentId = myAgentId;
-        allTeamAgents = teamAgents;
-        for (AgentModelStringSuperUser agent : teamAgents) {
-            if(agent.getAgent_id().equals(myAgentId)) {
-                justMyAgent[0] = agent;
-                break;
-            }
+//        allTeamAgents = teamAgents;
+//        for (AgentModelStringSuperUser agent : teamAgents) {
+//            if(agent.getAgent_id().equals(myAgentId)) {
+//                justMyAgent[0] = agent;
+//                break;
+//            }
+//        }
+//        if(teamAgents.length > 0) {
+//            wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
+//            justMyAgentAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), justMyAgent, colorSchemeManager);
+//            if(isAdminMode) {
+//                // Swap the team agent list to only allow the agent to switch back to themselves
+//                if(justMyAgentAdapter != null) {
+//                    teamAgentListView.setAdapter(justMyAgentAdapter);
+//                }
+//            }
+//            else {
+//                if(wholeTeamAdapter != null) {
+//                    teamAgentListView.setAdapter(wholeTeamAdapter);
+//                }
+//            }
+//        }
+        wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), scopeBar, colorSchemeManager);
+        if(wholeTeamAdapter != null) {
+            teamAgentListView.setAdapter(wholeTeamAdapter);
         }
-        if(teamAgents.length > 0) {
-            wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), teamAgents, colorSchemeManager);
-            justMyAgentAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), justMyAgent, colorSchemeManager);
-            if(isAdminMode) {
-                // Swap the team agent list to only allow the agent to switch back to themselves
-                if(justMyAgentAdapter != null) {
-                    teamAgentListView.setAdapter(justMyAgentAdapter);
-                }
-            }
-            else {
-                if(wholeTeamAdapter != null) {
-                    teamAgentListView.setAdapter(wholeTeamAdapter);
-                }
-            }
-        }
+
     }
 
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {

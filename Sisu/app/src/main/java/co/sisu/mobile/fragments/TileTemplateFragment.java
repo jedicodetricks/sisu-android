@@ -128,7 +128,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 //                setupUiVisuals();
 //            }
 //        });
-
     }
 
     @SuppressLint("ResourceType")

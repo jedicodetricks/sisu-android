@@ -172,14 +172,14 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:fitsSystemWindows="true">
-        <TextView
-            android:id="@+id/team_agent_title"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="@string/teamAgentsTitle"
-            android:textSize="@dimen/font_large"
-            android:layout_marginTop="80dp"
-            android:textAlignment="center"/>
+        <!--<TextView-->
+            <!--android:id="@+id/team_agent_title"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:text="@string/teamAgentsTitle"-->
+            <!--android:textSize="@dimen/font_large"-->
+            <!--android:layout_marginTop="80dp"-->
+            <!--android:textAlignment="center"/>-->
         <ListView
             android:id="@+id/team_agent_list"
             android:layout_width="match_parent"

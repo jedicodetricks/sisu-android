@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import co.sisu.mobile.BuildConfig;
+import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncDelete;
 import co.sisu.mobile.api.AsyncGet;
@@ -69,6 +70,14 @@ public class ApiManager {
     }
 
     //START OF GET CALLS
+
+    public void getScope(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
+        //GET
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_SCOPE;
+        String currentUrl = url + "api/v1/agent/scopes/"+ agentId +"/" + selectedTeamId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+    }
 
     public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
@@ -516,4 +525,5 @@ public class ApiManager {
 
         return firebaseDeviceObject;
     }
+
 }

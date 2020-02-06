@@ -75,7 +75,6 @@ import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
-import co.sisu.mobile.models.AsyncSettingsJsonObject;
 import co.sisu.mobile.models.AsyncTeamAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
@@ -85,6 +84,7 @@ import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
+import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -114,6 +114,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean teamsFinished = false;
     private boolean labelsFinished = false;
     private boolean tileTemplateFinished = false;
+    private boolean scopeFinished = false;
+    private boolean teamAgentsFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
@@ -163,7 +165,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Date selectedEndTime;
 
     private JSONObject tileTemplate;
+    private JSONObject scopes;
     private boolean isAgentDashboard = true;
+    private List<ScopeBarModel> scopeBarAgents = new ArrayList<ScopeBarModel>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -535,14 +539,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
             navigationManager.closeDrawer();
         } catch ( ClassCastException cce) {
-            //This is what goes off when you click a new team AGENT.
-            AgentModelStringSuperUser selectedAgent = (AgentModelStringSuperUser) parent.getItemAtPosition(position);
-            if(selectedAgent.getAgent_id().equals(myAgentId)) {
-                // This is what will trigger when you return to yourself
-                isAdminMode = false;
-                actionBarManager.setAdminMode(false);
-            }
-            else {
+            //This is what goes off when you click a new scope.
+            ScopeBarModel selectedAgent = (ScopeBarModel) parent.getItemAtPosition(position);
+//            if(selectedAgent.getAgent_id().equals(myAgentId)) {
+//                // This is what will trigger when you return to yourself
+//                isAdminMode = false;
+//                actionBarManager.setAdminMode(false);
+//            }
+//            else {
                 if(isAdminMode) {
                     isAdminMode = false;
                     actionBarManager.setAdminMode(false);
@@ -551,14 +555,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     isAdminMode = true;
                     actionBarManager.setAdminMode(true);
                 }
-            }
+//            }
             navigationManager.closeTeamAgentsDrawer();
             if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
-                apiManager.getAgent(this, selectedAgent.getAgent_id());
+//                apiManager.getAgent(this, selectedAgent.getAgent_id());
 //                apiManager.getTileSetup(ParentActivity.this, selectedAgent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
             }
             else {
-                apiManager.getAgent(this, selectedAgent.getAgent_id());
+//                apiManager.getAgent(this, selectedAgent.getAgent_id());
             }
         }
     }
@@ -697,7 +701,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(!tileDebug) {
             tileTemplateFinished = true;
         }
-        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished) {
+        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished) {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -841,15 +845,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.clearUpdatedRecords();
         }
         else if(returnType == ApiReturnTypes.GET_TEAM_AGENTS) {
-            AsyncTeamAgentJsonStringSuperUserObject teamAgentsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamAgentJsonStringSuperUserObject.class);
-            final AgentModelStringSuperUser[] agents = teamAgentsObject.getAgents();
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    navigationManager.initializeTeamAgents(agents, myAgentId);
-                }
-            });
-
+//            AsyncTeamAgentJsonStringSuperUserObject teamAgentsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamAgentJsonStringSuperUserObject.class);
+//            AgentModelStringSuperUser[] agents = teamAgentsObject.getAgents();
+//            for(int i = 0; i < teamAgentsObject.getAgents().length; i++) {
+//                AgentModelStringSuperUser currentAgent = teamAgentsObject.getAgents()[i];
+//                String agentWholeName = currentAgent.getFirst_name() != null ? currentAgent.getFirst_name() : "" + " " + currentAgent.getLast_name() != null ? currentAgent.getLast_name() : "";
+//                scopeBarAgents.add(new ScopeBarModel(agentWholeName, "a" + currentAgent.getAgent_id()));
+//            }
+//            teamAgentsFinished = true;
+//            this.runOnUiThread(() -> {
+//                if(scopeFinished) {
+//                    navigationManager.initScopeBar(agents, myAgentId);
+//                }
+//            });
         }
         else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
@@ -942,14 +950,53 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     dataController.setSlackInfo(null);
                 }
                 teamsFinished = true;
+                apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
-                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+//                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 if(tileDebug) {
                     apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
                 }
             });
+        }
+        else if(returnType == ApiReturnTypes.GET_SCOPE) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                scopes =  new JSONObject(tileString);
+                JSONObject allScopes = scopes.getJSONObject("scopes");
+                JSONArray scopeAgents = allScopes.getJSONArray("agents");
+                JSONArray scopeGroups = allScopes.getJSONArray("groups");
+                JSONObject scopeTeam = allScopes.getJSONObject("team");
+
+                scopeBarAgents.add(new ScopeBarModel("-- Groups --", "Groups"));
+
+                for(int i = 0; i < scopeGroups.length(); i++) {
+                    JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
+                    scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("team_id")));
+                }
+
+                scopeBarAgents.add(new ScopeBarModel("-- Agents --", "Groups"));
+
+                for(int i = 0; i < scopeAgents.length(); i++) {
+                    JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
+                    scopeBarAgents.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                }
+
+
+
+                int i = 0;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            scopeFinished = true;
+            this.runOnUiThread(() -> {
+                navigationManager.initScopeBar(scopeBarAgents, myAgentId);
+            });
+            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
@@ -1433,6 +1480,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public JSONObject getTileTemplate() {
         return tileTemplate;
+    }
+
+    public JSONObject getScopes() {
+        return scopes;
     }
 
     public void setTileTemplate(JSONObject tileTemplate) {
