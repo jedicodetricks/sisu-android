@@ -694,7 +694,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         footer.setTextColor(Color.parseColor(footerColor));
         footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
+
         String assignedTileColor = previousSmallHeaderTileColor;
         if(tileColor instanceof String && !((String) tileColor).equalsIgnoreCase("")) {
             assignedTileColor = (String) tileColor;

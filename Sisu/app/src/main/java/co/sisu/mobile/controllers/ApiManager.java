@@ -226,6 +226,7 @@ public class ApiManager {
     //START OF POST CALLS
 
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
+        //POST
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
         String currentUrl = url + "api/v1/get-dashboard-tiles";
