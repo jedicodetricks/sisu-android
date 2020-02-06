@@ -583,12 +583,14 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(progress != null) {
             Double completedPercent = 0.0;
-            if(progressBar.has("completed")) {
-                completedPercent = progressBar.getDouble("completed");
+            if(progressBar != null) {
+                if(progressBar.has("completed")) {
+                    completedPercent = progressBar.getDouble("completed");
+                }
+                String progressColor = progressBar.getString("progress_color");
+                progress.setProgress(completedPercent.intValue());
+                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
             }
-            String progressColor = progressBar.getString("progress_color");
-            progress.setProgress(completedPercent.intValue());
-            progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
         }
 
         String tileColor = tileObject.getString("tile_color");
