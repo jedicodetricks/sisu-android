@@ -540,13 +540,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             navigationManager.closeDrawer();
         } catch ( ClassCastException cce) {
             //This is what goes off when you click a new scope.
-            ScopeBarModel selectedAgent = (ScopeBarModel) parent.getItemAtPosition(position);
-//            if(selectedAgent.getAgent_id().equals(myAgentId)) {
+            ScopeBarModel selectedScope = (ScopeBarModel) parent.getItemAtPosition(position);
+            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
+                // DO NOTHING
+                navigationManager.closeTeamAgentsDrawer();
+                parentLoader.setVisibility(View.INVISIBLE);
+            }
+            else {
+                //            if(selectedAgent.getAgent_id().equals(myAgentId)) {
 //                // This is what will trigger when you return to yourself
 //                isAdminMode = false;
 //                actionBarManager.setAdminMode(false);
 //            }
-//            else {
                 if(isAdminMode) {
                     isAdminMode = false;
                     actionBarManager.setAdminMode(false);
@@ -556,14 +561,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     actionBarManager.setAdminMode(true);
                 }
 //            }
-            navigationManager.closeTeamAgentsDrawer();
-            if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
+                navigationManager.closeTeamAgentsDrawer();
+                if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
-//                apiManager.getTileSetup(ParentActivity.this, selectedAgent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
-            }
-            else {
+                    apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", selectedScope.getIdValue());
+                }
+                else {
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
+                }
             }
+
+
         }
     }
 
@@ -695,6 +703,40 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public TeamObject getCurrentTeam() {
         return navigationManager.getCurrentTeam();
+    }
+
+    private void navigateToScoreboard(boolean b) {
+        if(!tileDebug) {
+            tileTemplateFinished = true;
+        }
+            this.runOnUiThread(() -> {
+                if(isRecruiting()) {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                    }
+                }
+                else {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                    }
+                }
+            });
+            clientFinished = false;
+            goalsFinished = false;
+            settingsFinished = false;
+            teamParamFinished = false;
+            colorSchemeFinished = false;
+            labelsFinished = false;
+            noNavigation = true;
+            activitySettingsParamFinished = false;
+            tileTemplateFinished = false;
+            teamsFinished = false;
     }
 
     private void navigateToScoreboard() {
@@ -839,7 +881,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 e.printStackTrace();
             }
             tileTemplateFinished = true;
-            navigateToScoreboard();
+            navigateToScoreboard(true);
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();

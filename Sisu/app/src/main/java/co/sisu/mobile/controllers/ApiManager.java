@@ -248,6 +248,19 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType, String idValue) {
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
+        String currentUrl = url + "api/v1/get-dashboard-tiles";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedStartTime = formatter.format(startDate);
+        String formattedEndTime = formatter.format(endDate);
+
+        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\", \"dashboard_type\": \"" + dashboardType + "\",\"team_id\":\"" + teamId + "\",\"agent_id\":\"" + agentId + "\",\"context_filter\":\"" + idValue + "\",\"dashboard_name\":\"Default Dashboard\",\"include_data\":true}";
+
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         //POST
         getJWT(agentId);
@@ -525,5 +538,6 @@ public class ApiManager {
 
         return firebaseDeviceObject;
     }
+
 
 }
