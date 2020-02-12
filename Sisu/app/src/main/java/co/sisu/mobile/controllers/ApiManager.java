@@ -71,6 +71,22 @@ public class ApiManager {
 
     //START OF GET CALLS
 
+    public void getAgentFilters(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
+        //GET
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_FILTERS;
+        String currentUrl = url + "api/v1/agent/filters/" + agentId +"/" + selectedTeamId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getMarketStatus(AsyncServerEventListener cb, String agentId, String marketId) {
+        //GET
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_MARKET_STATUS;
+        String currentUrl = url + "api/v1/client/market_status" + marketId;
+        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void getScope(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
         //GET
         getJWT(agentId);
@@ -234,6 +250,19 @@ public class ApiManager {
     }
 
     //START OF POST CALLS
+
+    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENTS;
+        String currentUrl = url + "api/v2/team/get-team-clients";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedStartTime = formatter.format(startDate);
+        String formattedEndTime = formatter.format(endDate);
+
+        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\", \"dashboard_type\": \"" + dashboardType + "\",\"team_id\":\"" + teamId + "\",\"agent_id\":\"" + agentId + "\",\"dashboard_name\":\"Default Dashboard\",\"include_data\":true}";
+
+        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+    }
 
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
         getJWT(agentId);

@@ -1166,14 +1166,14 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
         selectedEndTime = getDateFromFormattedTime(parentActivity.getFormattedEndTime());
 
-        TextView submitDateSelector = view.findViewById(R.id.dateSelectorSubmit);
-        submitDateSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        submitDateSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        TextView scopeSelector = view.findViewById(R.id.scopeSelector);
+        scopeSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelector.setTextColor(colorSchemeManager.getLighterTextColor());
 
         dateSelectorDateText.setOnClickListener(this);
         dateSelectorBeginDateText.setOnClickListener(this);
         dateSelectorEndDateText.setOnClickListener(this);
-        submitDateSelector.setOnClickListener(this);
+        scopeSelector.setOnClickListener(this);
     }
 
     private void initDashboardTypeSelector(View view) {
@@ -1349,9 +1349,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                         .show();
                 System.out.println("STOP");
                 break;
-            case R.id.dateSelectorSubmit:
-                loader.setVisibility(View.VISIBLE);
-                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+            case R.id.scopeSelector:
+                parentActivity.getNavigationManager().toggleTeamDrawer();
+//                loader.setVisibility(View.VISIBLE);
+//                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;
             default:
                 break;

@@ -547,7 +547,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 parentLoader.setVisibility(View.INVISIBLE);
             }
             else {
-                //            if(selectedAgent.getAgent_id().equals(myAgentId)) {
+//            if(selectedAgent.getAgent_id().equals(myAgentId)) {
 //                // This is what will trigger when you return to yourself
 //                isAdminMode = false;
 //                actionBarManager.setAdminMode(false);
@@ -1011,11 +1011,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 JSONArray scopeGroups = allScopes.getJSONArray("groups");
                 JSONObject scopeTeam = allScopes.getJSONObject("team");
 
+                for(int i = 0; i < scopeAgents.length(); i++) {
+                    JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
+                    if(currentAgent.getString("agent_id").equalsIgnoreCase(myAgentId)) {
+                        scopeBarAgents.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                        break;
+                    }
+                }
+
+                scopeBarAgents.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
                 scopeBarAgents.add(new ScopeBarModel("-- Groups --", "Groups"));
 
                 for(int i = 0; i < scopeGroups.length(); i++) {
                     JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
-                    scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("team_id")));
+                    scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
                 }
 
                 scopeBarAgents.add(new ScopeBarModel("-- Agents --", "Groups"));
