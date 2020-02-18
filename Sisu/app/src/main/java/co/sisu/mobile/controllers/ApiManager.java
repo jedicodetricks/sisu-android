@@ -4,8 +4,14 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,11 +85,11 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getMarketStatus(AsyncServerEventListener cb, String agentId, String marketId) {
+    public void getMarketStatus(AsyncServerEventListener cb, String agentId, int marketId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_MARKET_STATUS;
-        String currentUrl = url + "api/v1/client/market_status" + marketId;
+        String currentUrl = url + "api/v1/client/market_status/" + marketId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
@@ -251,17 +257,43 @@ public class ApiManager {
 
     //START OF POST CALLS
 
-    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
+    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter) {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENTS;
         String currentUrl = url + "api/v2/team/get-team-clients";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedStartTime = formatter.format(startDate);
-        String formattedEndTime = formatter.format(endDate);
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("team_id", teamId);
+        jsonRequest.addProperty("agent_id", Integer.valueOf(agentId));
+        jsonRequest.addProperty("include_agent_info", false);
+        jsonRequest.addProperty("return_tiles", true);
+        jsonRequest.addProperty("lighter", false);
+        jsonRequest.addProperty("saved_filter", "");
+        JsonArray fieldsArray = new JsonArray();
+        fieldsArray.add("client_id");
+        fieldsArray.add("first_name");
+        fieldsArray.add("last_name");
+        fieldsArray.add("email");
+        fieldsArray.add("mobile_phone");
+        fieldsArray.add("type_id");
+        fieldsArray.add("is_locked");
+        fieldsArray.add("commission_amt");
+        jsonRequest.add("fieldsX", fieldsArray);
+        JsonObject filter = new JsonObject();
+        filter.addProperty("context_filter", contextFilter);
+        filter.addProperty("client_filter", "");
+        filter.addProperty("include_totals", true);
+        filter.addProperty("record_limit", 0);
+        filter.addProperty("order_by", "last_name");
+        filter.addProperty("order_direction", "asc");
+        filter.addProperty("page", 1);
+        filter.addProperty("per_page", 40);
+        filter.addProperty("name_filter", "");
+        JsonObject stringFilters = new JsonObject();
+        stringFilters.addProperty("status", "N");
+        filter.add("string_filters", stringFilters);
+        jsonRequest.add("filter", filter);
 
-        String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\", \"dashboard_type\": \"" + dashboardType + "\",\"team_id\":\"" + teamId + "\",\"agent_id\":\"" + agentId + "\",\"dashboard_name\":\"Default Dashboard\",\"include_data\":true}";
-
-        new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
     }
 
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {

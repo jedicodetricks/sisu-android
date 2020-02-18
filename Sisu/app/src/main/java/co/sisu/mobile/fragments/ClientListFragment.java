@@ -23,6 +23,10 @@ import android.widget.TextView;
 import com.woxthebox.draglistview.DragItem;
 import com.woxthebox.draglistview.DragListView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -100,6 +104,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         AgentModel agent = dataController.getAgent();
         initializeTabView();
         apiManager.getClients(this, agent.getAgent_id(), parentActivity.getSelectedTeamMarketId());
+//        apiManager.getTeamClients(this, agent.getAgent_id(), parentActivity.getSelectedTeamId());
         view.clearFocus();
         selectTab(selectedTab);
         loader.setVisibility(View.VISIBLE);
@@ -386,6 +391,16 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             });
         }
         else if(returnType == ApiReturnTypes.CREATE_NOTE) {}
+        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENTS) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                JSONObject clientObject = new JSONObject(tileString);
+                System.out.println("test");
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override

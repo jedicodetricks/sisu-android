@@ -121,7 +121,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
         loader.setVisibility(View.VISIBLE);
-        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
 //        parentActivity.runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -142,6 +142,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         if (tileTemplate != null) {
             try {
                 colorSchemeManager = new ColorSchemeManager(tileTemplate.getJSONObject("theme"));
+                parentActivity.setColorSchemeManager(colorSchemeManager);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1250,7 +1251,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 dashboardType = "team";
             }
             loader.setVisibility(View.VISIBLE);
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
         }
     }
 
@@ -1538,7 +1539,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorBeginDateText.setText(formattedStartTime);
         dateSelectorEndDateText.setText(formattedEndTime);
         loader.setVisibility(View.VISIBLE);
-        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
 
         return false;
     }

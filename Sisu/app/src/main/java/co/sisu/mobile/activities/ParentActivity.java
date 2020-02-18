@@ -56,6 +56,7 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.fragments.ClientListFragment;
+import co.sisu.mobile.fragments.ClientTileFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
 import co.sisu.mobile.fragments.RecordFragment;
@@ -116,6 +117,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
     private boolean teamAgentsFinished = false;
+    private boolean clientTilesFinished = false;
+    private boolean marketStatusFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
@@ -165,9 +168,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Date selectedEndTime;
 
     private JSONObject tileTemplate;
+    private JSONObject clientTiles;
+    private JSONObject marketStatuses;
     private JSONObject scopes;
     private boolean isAgentDashboard = true;
     private List<ScopeBarModel> scopeBarAgents = new ArrayList<ScopeBarModel>();
+    private ScopeBarModel currentScopeFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,8 +475,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.reportView:
                     noNavigation = false;
+                    parentLoader.setVisibility(View.VISIBLE);
+                    apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue());
+                    apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
-                    navigationManager.clearStackReplaceFragment(ClientListFragment.class);
+//                    navigationManager.clearStackReplaceFragment(ClientListFragment.class);
                     break;
                 case R.id.recordView:
                     noNavigation = false;
@@ -564,6 +573,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 navigationManager.closeTeamAgentsDrawer();
                 if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
+                    currentScopeFilter = selectedScope;
                     apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", selectedScope.getIdValue());
                 }
                 else {
@@ -883,6 +893,32 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
             navigateToScoreboard(true);
         }
+        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENTS) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                clientTiles = new JSONObject(tileString);
+                clientTilesFinished = true;
+                if(marketStatusFinished) {
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        else if(returnType == ApiReturnTypes.GET_MARKET_STATUS) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                marketStatuses = new JSONObject(tileString);
+                marketStatusFinished = true;
+                if(clientTilesFinished) {
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
         }
@@ -998,7 +1034,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
 //                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 if(tileDebug) {
-                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent");
+                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
                 }
             });
         }
@@ -1014,7 +1050,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 for(int i = 0; i < scopeAgents.length(); i++) {
                     JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
                     if(currentAgent.getString("agent_id").equalsIgnoreCase(myAgentId)) {
-                        scopeBarAgents.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                        ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
+                        scopeBarAgents.add(agentScope);
+                        currentScopeFilter = agentScope;
                         break;
                     }
                 }
@@ -1453,6 +1491,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return colorSchemeManager;
     }
 
+    public void setColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+    }
+
     public boolean imageExists(Context context, String id) {
         return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
     }
@@ -1533,6 +1575,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return tileTemplate;
     }
 
+    public JSONObject getClientTiles() {
+        return clientTiles;
+    }
+
+    public JSONObject getMarketStatuses() {
+        return marketStatuses;
+    }
+
     public JSONObject getScopes() {
         return scopes;
     }
@@ -1563,6 +1613,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setFormattedEndTime(String formattedEndTime) {
         this.formattedEndTime = formattedEndTime;
+    }
+
+    public List<ScopeBarModel> getScopeBarAgents() {
+        return scopeBarAgents;
+    }
+
+    public void setScopeFilter(ScopeBarModel selectedScope) {
+        currentScopeFilter = selectedScope;
+    }
+
+    public ScopeBarModel getCurrentScopeFilter() {
+        return currentScopeFilter;
+    }
+
+    public void resetClientTiles() {
+        marketStatusFinished = true;
+        String selectedContextId = agent.getAgent_id();
+        if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
+            selectedContextId = currentScopeFilter.getIdValue().substring(1);
+        }
+
+        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue());
     }
 }
 
