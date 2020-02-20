@@ -1,10 +1,7 @@
 package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -13,41 +10,28 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.tsongkha.spinnerdatepicker.DatePicker;
-import com.tsongkha.spinnerdatepicker.DatePickerDialog;
-import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -58,11 +42,8 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.ScopeBarModel;
-import co.sisu.mobile.utils.CircularProgressBar;
-import okhttp3.Response;
-
-import static android.view.FrameMetrics.ANIMATION_DURATION;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -79,8 +60,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private LayoutInflater inflater;
 
     private int numOfRows = 1;
-    private TextView scopeSelectorText;
-    private PopupMenu popup;
+    private TextView scopeSelectorText, marketStatusFilterText;
+    private PopupMenu scopePopup, marketStatusPopup;
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
@@ -328,22 +309,59 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopeSelectorText = view.findViewById(R.id.contextFilterRight);
         scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
         scopeSelectorText.setOnClickListener(this);
-        initScopePopupMenu();
 
+        marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
+//        marketStatusFilterText.setText(parentActivity.);
+        marketStatusFilterText.setOnClickListener(this);
+        initScopePopupMenu();
+        initMarketStatusPopupMenu();
     }
 
     private void initScopePopupMenu() {
-        popup = new PopupMenu(getContext(), scopeSelectorText);
+        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
 
-        popup.setOnMenuItemClickListener(this);
+        scopePopup.setOnMenuItemClickListener(item -> {
+            ScopeBarModel selectedScope = parentActivity.getScopeBarAgents().get(item.getItemId());
+            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
+                // DO NOTHING
+                scopePopup.dismiss();
+            }
+            else {
+                scopePopup.dismiss();
+                parentActivity.setScopeFilter(selectedScope);
+                parentActivity.resetClientTiles();
+            }
+            return false;
+        });
 //        List<String> timelineArray = initSpinnerArray();
         int counter = 0;
         for(ScopeBarModel scope : parentActivity.getScopeBarAgents()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
 
-            popup.getMenu().add(1, counter, counter, s);
+            scopePopup.getMenu().add(1, counter, counter, s);
 
+            counter++;
+        }
+    }
+
+    private void initMarketStatusPopupMenu() {
+        marketStatusPopup = new PopupMenu(getContext(), marketStatusFilterText);
+
+        marketStatusPopup.setOnMenuItemClickListener(item -> {
+            MarketStatusModel selectedMarketStatus = parentActivity.getMarketStatuses().get(item.getItemId());
+
+            scopePopup.dismiss();
+            parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
+            parentActivity.resetClientTiles();
+            return false;
+        });
+//        List<String> timelineArray = initSpinnerArray();
+        int counter = 0;
+        for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
+            SpannableString s = new SpannableString(marketStatusModel.getLabel());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            marketStatusPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
 
@@ -597,7 +615,10 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //                toggleDashboardTypeSelector(false);
                 break;
             case R.id.contextFilterRight:
-                popup.show();
+                scopePopup.show();
+                break;
+            case R.id.contextFilterLeft:
+                marketStatusPopup.show();
                 break;
             case R.id.scopeSelector:
                 parentActivity.getNavigationManager().toggleTeamDrawer();
@@ -631,18 +652,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        ScopeBarModel selectedScope = parentActivity.getScopeBarAgents().get(item.getItemId());
-        if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
-            // DO NOTHING
-            popup.dismiss();
-//            parentLoader.setVisibility(View.INVISIBLE);
-        }
-        else {
-            popup.dismiss();
-            parentActivity.setScopeFilter(selectedScope);
-            parentActivity.resetClientTiles();
-//            navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-        }
         return false;
     }
 }

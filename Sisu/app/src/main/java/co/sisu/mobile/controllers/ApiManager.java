@@ -257,7 +257,7 @@ public class ApiManager {
 
     //START OF POST CALLS
 
-    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter) {
+    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter) {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENTS;
         String currentUrl = url + "api/v2/team/get-team-clients";
@@ -267,7 +267,7 @@ public class ApiManager {
         jsonRequest.addProperty("include_agent_info", false);
         jsonRequest.addProperty("return_tiles", true);
         jsonRequest.addProperty("lighter", false);
-        jsonRequest.addProperty("saved_filter", "");
+        jsonRequest.addProperty("saved_filter", marketStatusFilter);
         JsonArray fieldsArray = new JsonArray();
         fieldsArray.add("client_id");
         fieldsArray.add("first_name");

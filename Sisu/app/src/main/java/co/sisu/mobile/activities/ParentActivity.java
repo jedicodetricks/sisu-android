@@ -55,7 +55,6 @@ import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
-import co.sisu.mobile.fragments.ClientListFragment;
 import co.sisu.mobile.fragments.ClientTileFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -66,7 +65,6 @@ import co.sisu.mobile.fragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.TileTemplateFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -76,12 +74,12 @@ import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
-import co.sisu.mobile.models.AsyncTeamAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
+import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
@@ -172,8 +170,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private JSONObject marketStatuses;
     private JSONObject scopes;
     private boolean isAgentDashboard = true;
-    private List<ScopeBarModel> scopeBarAgents = new ArrayList<ScopeBarModel>();
+    private List<ScopeBarModel> scopeBarAgents = new ArrayList<>();
+    private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
     private ScopeBarModel currentScopeFilter = null;
+    private MarketStatusModel currentMarketStatusFilter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -458,7 +458,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.scoreboardView:
                     if(isRecruiting()) {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
@@ -466,7 +467,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     else {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
@@ -476,7 +478,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.reportView:
                     noNavigation = false;
                     parentLoader.setVisibility(View.VISIBLE);
-                    apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue());
+                    if(currentMarketStatusFilter != null) {
+                        apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "");
+                    }
+                    else {
+                        apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue(),"");
+                    }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
 //                    navigationManager.clearStackReplaceFragment(ClientListFragment.class);
@@ -909,7 +916,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_MARKET_STATUS) {
             try {
                 String tileString = ((Response) returnObject).body().string();
-                marketStatuses = new JSONObject(tileString);
+
+                JSONObject marketStatusObject = new JSONObject(tileString);
+                try {
+                    JSONArray marketStatuses = marketStatusObject.getJSONArray("client_status");
+                    for(int k = 0; k < marketStatuses.length(); k++) {
+                        JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
+                        MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
+                        marketStatusBar.add(currentModel);
+                        if(currentModel.getKey().equalsIgnoreCase("")) {
+                            currentMarketStatusFilter = currentModel;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 marketStatusFinished = true;
                 if(clientTilesFinished) {
                     navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
@@ -1579,8 +1600,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return clientTiles;
     }
 
-    public JSONObject getMarketStatuses() {
-        return marketStatuses;
+    public List<MarketStatusModel> getMarketStatuses() {
+        return marketStatusBar;
     }
 
     public JSONObject getScopes() {
@@ -1627,6 +1648,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return currentScopeFilter;
     }
 
+    public MarketStatusModel getCurrentMarketStatusFilter() {
+        return currentMarketStatusFilter;
+    }
+
+    public void setCurrentMarketStatusFilter(MarketStatusModel currentMarketStatusFilter) {
+        this.currentMarketStatusFilter = currentMarketStatusFilter;
+    }
+
     public void resetClientTiles() {
         marketStatusFinished = true;
         String selectedContextId = agent.getAgent_id();
@@ -1634,7 +1663,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             selectedContextId = currentScopeFilter.getIdValue().substring(1);
         }
 
-        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue());
+        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey());
     }
+
 }
 
