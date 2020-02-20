@@ -311,7 +311,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopeSelectorText.setOnClickListener(this);
 
         marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
-//        marketStatusFilterText.setText(parentActivity.);
+        marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
         marketStatusFilterText.setOnClickListener(this);
         initScopePopupMenu();
         initMarketStatusPopupMenu();

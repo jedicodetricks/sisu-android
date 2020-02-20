@@ -267,7 +267,7 @@ public class ApiManager {
         jsonRequest.addProperty("include_agent_info", false);
         jsonRequest.addProperty("return_tiles", true);
         jsonRequest.addProperty("lighter", false);
-        jsonRequest.addProperty("saved_filter", marketStatusFilter);
+        jsonRequest.addProperty("saved_filter", "");
         JsonArray fieldsArray = new JsonArray();
         fieldsArray.add("client_id");
         fieldsArray.add("first_name");
@@ -280,7 +280,7 @@ public class ApiManager {
         jsonRequest.add("fieldsX", fieldsArray);
         JsonObject filter = new JsonObject();
         filter.addProperty("context_filter", contextFilter);
-        filter.addProperty("client_filter", "");
+        filter.addProperty("client_filter", marketStatusFilter);
         filter.addProperty("include_totals", true);
         filter.addProperty("record_limit", 0);
         filter.addProperty("order_by", "last_name");
