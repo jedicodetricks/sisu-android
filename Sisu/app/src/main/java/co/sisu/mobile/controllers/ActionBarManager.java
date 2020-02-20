@@ -50,6 +50,8 @@ public class ActionBarManager {
     private ListView teamAgentListView;
     TeamAgentsListAdapter wholeTeamAdapter;
     TeamAgentsListAdapter justMyAgentAdapter;
+    private boolean actionBarColorSet = false;
+    private String displayTitle = "";
 
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
@@ -65,11 +67,11 @@ public class ActionBarManager {
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
         drawerLayout = parentActivity.findViewById(R.id.drawer_layout);
-        teamAgentListView = parentActivity.findViewById(R.id.team_agent_list);
-        teamAgentListView.setDivider(null);
-        teamAgentListView.setDividerHeight(40);
-
-        teamAgentListView.setOnItemClickListener(parentActivity);
+//        teamAgentListView = parentActivity.findViewById(R.id.team_agent_list);
+//        teamAgentListView.setDivider(null);
+//        teamAgentListView.setDividerHeight(40);
+//
+//        teamAgentListView.setOnItemClickListener(parentActivity);
     }
 
     public void initializeActionBar(String fragmentTag) {
@@ -81,7 +83,7 @@ public class ActionBarManager {
         teamBlock = parentActivity.findViewById(R.id.action_bar_home);
 
         View view = parentActivity.getSupportActionBar().getCustomView();
-        pageTitle.setText(parentActivity.localizeLabel(fragmentTag));
+        pageTitle.setText(displayTitle);
         View homeButton= view.findViewById(R.id.action_bar_home);
         homeButton.setOnClickListener(parentActivity);
         teamAgentsTitle.setOnClickListener(parentActivity);
@@ -139,10 +141,10 @@ public class ActionBarManager {
 //                }
 //            }
 //        }
-        wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), scopeBar, colorSchemeManager);
-        if(wholeTeamAdapter != null) {
-            teamAgentListView.setAdapter(wholeTeamAdapter);
-        }
+//        wholeTeamAdapter = new TeamAgentsListAdapter(parentActivity.getBaseContext(), scopeBar, colorSchemeManager);
+//        if(wholeTeamAdapter != null) {
+//            teamAgentListView.setAdapter(wholeTeamAdapter);
+//        }
 
     }
 
@@ -151,7 +153,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 TextView saveButton = parentActivity.findViewById(R.id.saveButton);
@@ -200,42 +202,38 @@ public class ActionBarManager {
     }
 
     public void swapToTitleBar(final String titleString, final boolean isDrawerEnabled) {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+//            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
 
-                pageTitle = parentActivity.findViewById(R.id.action_bar_title);
-                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-                pageTitle.setText(parentActivity.localizeLabel(titleString));
-                teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
+            pageTitle = parentActivity.findViewById(R.id.action_bar_title);
+            pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+            pageTitle.setText(displayTitle);
+            teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
 
-                if(isAdminMode) {
-                    teamAgentsTitle.setText("Return");
+            if(isAdminMode) {
+                teamAgentsTitle.setText("");
+            }
+            else {
+                teamAgentsTitle.setText("");
+            }
+
+            if(currentTeam != null) {
+                if(currentTeam.getRole().equals("ADMIN") || isAdminMode) {
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+                    if(teamAgentsTitle != null) {
+                        teamAgentsTitle.setVisibility(View.VISIBLE);
+                    }
                 }
                 else {
-                    teamAgentsTitle.setText("Team");
-                }
-
-                if(currentTeam != null) {
-                    if(currentTeam.getRole().equals("ADMIN") || isAdminMode) {
-                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
-                        if(teamAgentsTitle != null) {
-                            teamAgentsTitle.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    else {
-                        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-                        if(teamAgentsTitle != null) {
-                            teamAgentsTitle.setVisibility(View.GONE);
-                        }
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+                    if(teamAgentsTitle != null) {
+                        teamAgentsTitle.setVisibility(View.GONE);
                     }
                 }
-
-
-                manageDrawerEnabled(isDrawerEnabled);
             }
+
+            manageDrawerEnabled(isDrawerEnabled);
         });
 
     }
@@ -245,7 +243,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
                     pageTitle.setText(parentActivity.localizeLabel(title));
@@ -262,7 +260,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 if(title != null) {
                     pageTitle.setText(parentActivity.localizeLabel(title));
@@ -334,7 +332,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 String displayName = "";
@@ -477,11 +475,24 @@ public class ActionBarManager {
                 teamLetter.setVisibility(View.VISIBLE);
                 teamIcon.setVisibility(View.INVISIBLE);
             }
-
         }
+        if(!actionBarColorSet) {
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            actionBarColorSet = true;
+        }
+
     }
 
     public void resetClient() {
         this.selectedClient = null;
+    }
+
+    public void setTitle(String title) {
+        parentActivity.runOnUiThread(() -> {
+            displayTitle = title;
+            pageTitle.setText(title);
+            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
+        });
+
     }
 }

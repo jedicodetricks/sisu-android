@@ -157,7 +157,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //            Boolean square = rowObject.getBoolean("square");
             Integer maxTiles = rowObject.getInt("max_tiles");
 
-            int correctedHeight = height.intValue() + 300;
+            int correctedHeight = height.intValue();
             List<View> rowViews = new ArrayList<>();
 
             for(int i = 0; i < rowTiles.length(); i++) {
@@ -166,25 +166,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
                 switch (type) {
                     case "clientList":
-                        boolean side = false;
-                        if(tileObject.has("side")) {
-                            side = tileObject.getBoolean("side");
-                        }
-                        if(side) {
-                            correctedHeight = height.intValue() + 150;
-                        }
+                        correctedHeight = height.intValue() + 150;
                         View v = createClientView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "smallHeader":
-                        side = false;
-                        if(tileObject.has("side")) {
-                            side = tileObject.getBoolean("side");
-                        }
-                        if(side) {
-                            correctedHeight = height.intValue() + 150;
-                        }
+                        correctedHeight = height.intValue() + 225;
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -309,10 +297,15 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopeSelectorText = view.findViewById(R.id.contextFilterRight);
         scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
         scopeSelectorText.setOnClickListener(this);
+        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
 
         marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
         marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
         marketStatusFilterText.setOnClickListener(this);
+        marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        marketStatusFilterText.setTextColor(colorSchemeManager.getLighterTextColor());
+
         initScopePopupMenu();
         initMarketStatusPopupMenu();
     }
@@ -406,6 +399,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         if(tileObject.has("border")) {
             border = tileObject.getString("border");
         }
+
 
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
@@ -509,6 +503,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             assignedTileColor = "#FFF000";
         }
 
+        // TODO: I am setting this to true because IOS is making assumptions
+        rounded = true;
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(assignedTileColor));

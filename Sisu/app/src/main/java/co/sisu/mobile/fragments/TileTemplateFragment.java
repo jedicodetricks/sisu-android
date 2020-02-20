@@ -2,6 +2,7 @@ package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -50,6 +51,7 @@ import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
+import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
@@ -57,6 +59,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.CircularProgressBar;
 import okhttp3.Response;
 
@@ -94,7 +97,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     private ConstraintLayout leftLayout, rightLayout;
     private boolean initialLoad = true;
-    private TextView dateSelectorBeginDateText, dateSelectorEndDateText, dateSelectorDateText;
+    private TextView dateSelectorBeginDateText, dateSelectorEndDateText, dateSelectorDateText, scopeSelectorText;
     private PopupMenu popup;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -102,6 +105,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private boolean beginDateSelected = false;
     private boolean endDateSelected = false;
     private String dashboardType = "agent";
+    private PopupMenu scopePopup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +134,34 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 //        });
     }
 
+    private void initScopePopupMenu() {
+        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
+
+        scopePopup.setOnMenuItemClickListener(item -> {
+            ScopeBarModel selectedScope = parentActivity.getScopeBarAgents().get(item.getItemId());
+            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
+                // DO NOTHING
+                scopePopup.dismiss();
+            }
+            else {
+                scopePopup.dismiss();
+                parentActivity.setScopeFilter(selectedScope);
+                parentActivity.resetDashboardTiles();
+            }
+            return false;
+        });
+//        List<String> timelineArray = initSpinnerArray();
+        int counter = 0;
+        for(ScopeBarModel scope : parentActivity.getScopeBarAgents()) {
+            SpannableString s = new SpannableString(scope.getName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+
+            scopePopup.getMenu().add(1, counter, counter, s);
+
+            counter++;
+        }
+    }
+
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
         loader.setVisibility(View.VISIBLE);
@@ -137,12 +169,13 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         RelativeLayout parentRelativeLayout;
         View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
-        LinearLayout parentLinearLayout = parentLayout.findViewById(R.id.tileDashboardTypeSelector);
-        parentLinearLayout.setId(1);
+        RelativeLayout upperRelativeLayout = parentLayout.findViewById(R.id.tileDashboardDateSelector);
+        upperRelativeLayout.setId(1);
         if (tileTemplate != null) {
             try {
                 colorSchemeManager = new ColorSchemeManager(tileTemplate.getJSONObject("theme"));
                 parentActivity.setColorSchemeManager(colorSchemeManager);
+                parentActivity.updateColorScheme(colorSchemeManager);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -432,6 +465,25 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        if(parentActivity.shouldDisplayPushNotification()) {
+            parentActivity.setShouldDisplayPushNotification(false);
+            String title = parentActivity.getPushNotificationTitle();
+            String body = parentActivity.getPushNotificationBody();
+            String is_html = parentActivity.getPushNotificationIsHTML();
+            String pushId = parentActivity.getPushNotificationPushId();
+            if(is_html != null && is_html.equals("true")) {
+                //TODO: This will have to make an api call with pushId
+            }
+            else {
+                Intent intent = new Intent(parentActivity, NotificationActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("body", body);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
+        initScopePopupMenu();
+
 
     }
 
@@ -1167,49 +1219,50 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
         selectedEndTime = getDateFromFormattedTime(parentActivity.getFormattedEndTime());
 
-        TextView scopeSelector = view.findViewById(R.id.scopeSelector);
-        scopeSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        scopeSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        scopeSelectorText = view.findViewById(R.id.scopeSelector);
+        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
 
         dateSelectorDateText.setOnClickListener(this);
         dateSelectorBeginDateText.setOnClickListener(this);
         dateSelectorEndDateText.setOnClickListener(this);
-        scopeSelector.setOnClickListener(this);
+        scopeSelectorText.setOnClickListener(this);
     }
 
     private void initDashboardTypeSelector(View view) {
-        leftLayout = view.findViewById(R.id.dashboardTypeTileLeftLayout);
-        leftLayout.setOnClickListener(this);
-
-        rightLayout = view.findViewById(R.id.dashboardTypeTileRightLayout);
-        rightLayout.setOnClickListener(this);
-
-        LayerDrawable underlineDrawable = getBorders(
-                colorSchemeManager.getAppBackground(), // Background color
-                Color.GRAY, // Border color
-                0, // Left border in pixels
-                0, // Top border in pixels
-                0, // Right border in pixels
-                5 // Bottom border in pixels
-        );
-
-        LayerDrawable noUnderlineDrawable = getBorders(
-                colorSchemeManager.getAppBackground(), // Background color
-                Color.GRAY, // Border color
-                0, // Left border in pixels
-                0, // Top border in pixels
-                0, // Right border in pixels
-                0 // Bottom border in pixels
-        );
-
-        if(isAgentDashboard) {
-            leftLayout.setBackground(underlineDrawable);
-            rightLayout.setBackground(noUnderlineDrawable);
-        }
-        else {
-            leftLayout.setBackground(noUnderlineDrawable);
-            rightLayout.setBackground(underlineDrawable);
-        }
+        // TODO: I think I can delete this
+//        leftLayout = view.findViewById(R.id.dashboardTypeTileLeftLayout);
+//        leftLayout.setOnClickListener(this);
+//
+//        rightLayout = view.findViewById(R.id.dashboardTypeTileRightLayout);
+//        rightLayout.setOnClickListener(this);
+//
+//        LayerDrawable underlineDrawable = getBorders(
+//                colorSchemeManager.getAppBackground(), // Background color
+//                Color.GRAY, // Border color
+//                0, // Left border in pixels
+//                0, // Top border in pixels
+//                0, // Right border in pixels
+//                5 // Bottom border in pixels
+//        );
+//
+//        LayerDrawable noUnderlineDrawable = getBorders(
+//                colorSchemeManager.getAppBackground(), // Background color
+//                Color.GRAY, // Border color
+//                0, // Left border in pixels
+//                0, // Top border in pixels
+//                0, // Right border in pixels
+//                0 // Bottom border in pixels
+//        );
+//
+//        if(isAgentDashboard) {
+//            leftLayout.setBackground(underlineDrawable);
+//            rightLayout.setBackground(noUnderlineDrawable);
+//        }
+//        else {
+//            leftLayout.setBackground(noUnderlineDrawable);
+//            rightLayout.setBackground(underlineDrawable);
+//        }
     }
 
     private void toggleDashboardTypeSelector(boolean isAgentClicked) {
@@ -1351,7 +1404,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 System.out.println("STOP");
                 break;
             case R.id.scopeSelector:
-                parentActivity.getNavigationManager().toggleTeamDrawer();
+                scopePopup.show();
+//                parentActivity.getNavigationManager().toggleTeamDrawer();
 //                loader.setVisibility(View.VISIBLE);
 //                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;

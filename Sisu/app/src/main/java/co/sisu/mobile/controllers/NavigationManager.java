@@ -94,7 +94,8 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
                 fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment") ||
-                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
+                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment") ||
+                fragmentClass.getSimpleName().equals("ClientTileFragment")) {
             sortTitleBar(fragmentClass);
         }
         else if(fragmentClass.getSimpleName().equals("ClientManageFragment")) {
@@ -154,7 +155,7 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
             fragmentTag = "Scoreboard";
         }
-        else if(fragmentClass.getSimpleName().equals("ReportFragment")) {
+        else if(fragmentClass.getSimpleName().equals("ClientTileFragment")) {
             fragmentTag = "Report";
         }
         else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
@@ -244,7 +245,7 @@ public class NavigationManager {
             actionBarManager.resetClient();
         }
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+            if(colorSchemeManager.getAppBackground() != Color.WHITE) {
                 AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)
                         .setIcon(R.drawable.sisu_mark)
                         .setTitle("Closing Sisu")

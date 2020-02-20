@@ -20,16 +20,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <include
-            android:id="@+id/tileDashboardTypeSelector"
-            layout="@layout/tile_dashboard_type_layout"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/tileDashboardDateSelector"/>
-
         <!--<Spinner-->
             <!--android:id="@+id/tileTimelineSelector"-->
             <!--style="@style/SpinnerDropdownItemStyle"-->

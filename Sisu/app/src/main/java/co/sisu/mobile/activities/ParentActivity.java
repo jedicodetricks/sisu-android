@@ -478,11 +478,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.reportView:
                     noNavigation = false;
                     parentLoader.setVisibility(View.VISIBLE);
+                    String selectedContextId = agent.getAgent_id();
+                    if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
+                        selectedContextId = currentScopeFilter.getIdValue().substring(1);
+                    }
                     if(currentMarketStatusFilter != null) {
-                        apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "");
                     }
                     else {
-                        apiManager.getTeamClients(this, agent.getAgent_id(), getSelectedTeamId(), currentScopeFilter.getIdValue(),"");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"");
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
@@ -503,9 +507,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.cancelButton:
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                     break;
-                case R.id.team_agents_title:
-                    navigationManager.toggleTeamDrawer();
-                    break;
+//                case R.id.team_agents_title:
+//                    navigationManager.toggleTeamDrawer();
+//                    break;
                 default:
                     break;
             }
@@ -581,6 +585,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
                     currentScopeFilter = selectedScope;
+                    updateActionBarTitle(currentScopeFilter.getName());
                     apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", selectedScope.getIdValue());
                 }
                 else {
@@ -1074,6 +1079,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
                         scopeBarAgents.add(agentScope);
                         currentScopeFilter = agentScope;
+                        updateActionBarTitle(currentScopeFilter.getName());
                         break;
                     }
                 }
@@ -1093,9 +1099,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     scopeBarAgents.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
                 }
 
-
-
-                int i = 0;
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -1103,9 +1106,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             scopeFinished = true;
-            this.runOnUiThread(() -> {
-                navigationManager.initScopeBar(scopeBarAgents, myAgentId);
-            });
+//            this.runOnUiThread(() -> {
+//                navigationManager.initScopeBar(scopeBarAgents, myAgentId);
+//            });
             navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
@@ -1155,6 +1158,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             else {
                 colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
                 setActivityColors();
+                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
                 colorSchemeFinished = true;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
                 navigateToScoreboard();
@@ -1269,7 +1273,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(currentTimeInMillis > calendar.getTimeInMillis()) {
             calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
         }
-
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
@@ -1662,9 +1665,28 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
             selectedContextId = currentScopeFilter.getIdValue().substring(1);
         }
-
-        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey());
+        updateActionBarTitle(currentScopeFilter.getName());
+        if(currentMarketStatusFilter != null) {
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey());
+        }
+        else {
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "");
+        }
     }
 
+    public void resetDashboardTiles() {
+        updateActionBarTitle(currentScopeFilter.getName());
+        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+    }
+
+
+    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
+    }
+
+    public void updateActionBarTitle(String title) {
+        navigationManager.getActionBarManager().setTitle(title);
+    }
 }
 

@@ -166,27 +166,27 @@
             />
     </android.support.design.widget.NavigationView>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/team_agent_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:fitsSystemWindows="true">
-        <!--<TextView-->
-            <!--android:id="@+id/team_agent_title"-->
+    <!--<android.support.design.widget.NavigationView-->
+        <!--android:id="@+id/team_agent_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="end"-->
+        <!--android:fitsSystemWindows="true">-->
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/team_agent_title"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="45dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="@string/teamAgentsTitle"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textSize="@dimen/font_large"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_marginTop="80dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textAlignment="center"/>&ndash;&gt;-->
+        <!--<ListView-->
+            <!--android:id="@+id/team_agent_list"-->
             <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="45dp"-->
-            <!--android:text="@string/teamAgentsTitle"-->
-            <!--android:textSize="@dimen/font_large"-->
-            <!--android:layout_marginTop="80dp"-->
-            <!--android:textAlignment="center"/>-->
-        <ListView
-            android:id="@+id/team_agent_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="110dp"
-            />
-    </android.support.design.widget.NavigationView>
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginTop="110dp"-->
+            <!--/>-->
+    <!--</android.support.design.widget.NavigationView>-->
 
 </android.support.v4.widget.DrawerLayout>

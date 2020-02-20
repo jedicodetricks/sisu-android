@@ -44,7 +44,6 @@ public class ToolbarManager {
 
                 ImageView clientButton = parentActivity.findViewById(R.id.reportView);
                 drawable = parentActivity.getResources().getDrawable(R.drawable.trans_disabled).mutate();
-                drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
                 clientButton.setImageDrawable(drawable);
 
                 ImageView recordButton = parentActivity.findViewById(R.id.recordView);
