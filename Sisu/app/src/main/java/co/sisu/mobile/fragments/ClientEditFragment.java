@@ -524,7 +524,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
         if(leadSources != null) {
             for ( Object key : leadSources.keySet() ) {
                 int formattedKey = Integer.valueOf((String) key);
-                if(formattedKey == currentClient.getLead_type_id()) {
+                if(key == currentClient.getLead_type_id()) {
                     leadSource.setText(leadSources.get(key).toString());
                     break;
                 }
@@ -644,7 +644,7 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             for ( Object key : leadSources.keySet() ) {
                 if(leadSources.get(key).equals(leadSource.getText().toString())) {
                     //TODO: Should probably wrap this in a try catch
-                    currentClient.setLead_type_id(Integer.valueOf((String) key));
+                    currentClient.setLead_type_id((String) key);
                     break;
                 }
             }

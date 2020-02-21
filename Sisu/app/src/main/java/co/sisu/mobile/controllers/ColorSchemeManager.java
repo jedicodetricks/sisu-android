@@ -141,7 +141,6 @@ public class ColorSchemeManager {
 //                appBackground = Color.parseColor(theme.getString("topbar_text"));
             }
 
-            System.out.println("hello");
     }
 
 

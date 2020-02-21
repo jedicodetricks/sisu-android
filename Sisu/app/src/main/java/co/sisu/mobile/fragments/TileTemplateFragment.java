@@ -243,7 +243,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @SuppressLint("ResourceType")
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
-        Log.e("ROW OBJECT", String.valueOf(rowObject));
+//        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
             Double height = rowObject.getDouble("rowheight");

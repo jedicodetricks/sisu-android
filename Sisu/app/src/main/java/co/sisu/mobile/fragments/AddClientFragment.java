@@ -826,7 +826,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         for ( Object key : leadSources.keySet() ) {
             System.out.println(leadSource.getText().toString());
             if(leadSources.get(key).equals(leadSource.getText().toString())) {
-                newClient.setLead_type_id(Integer.valueOf((String) key));
+                newClient.setLead_type_id((String) key);
                 break;
             }
         }

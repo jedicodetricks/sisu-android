@@ -2,6 +2,7 @@
 
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,129 +20,175 @@
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/parentLayout"
-        android:clickable="true"
-        android:focusableInTouchMode="true"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/your_placeholder"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/actionBarMock"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/toolbar"
+            android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:text="HELLO"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/leaderBoardView"
-            style="@style/ToolBar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="leaderboard"
-            app:layout_constraintEnd_toStartOf="@id/moreView"
-            app:layout_constraintStart_toEndOf="@id/recordView"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/leaderboard_icon" />
+        </android.support.constraint.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/moreView"
-            style="@style/ToolBar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:contentDescription="leaderboard"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline16"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/more_icon" />
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/parentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintTop_toBottomOf="@id/actionBarMock">
 
-        <ImageView
-            android:id="@+id/recordView"
-            style="@style/ToolBar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="record"
-            app:layout_constraintEnd_toStartOf="@+id/guideline7"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/record_icon" />
+            <FrameLayout
+                android:id="@+id/your_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/paginateInfo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/reportView"
-            style="@style/ToolBar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="reports"
-            app:layout_constraintEnd_toStartOf="@id/recordView"
-            app:layout_constraintStart_toEndOf="@id/scoreboardView"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/client_icon" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/scoreboardView"
-            style="@style/ToolBar"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="scoreboard"
-            app:layout_constraintStart_toStartOf="@+id/guideline15"
-            app:layout_constraintTop_toTopOf="@id/toolbar"
-            app:srcCompat="@drawable/home_icon" />
+            <ImageView
+                android:id="@+id/leaderBoardView"
+                style="@style/ToolBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="leaderboard"
+                app:layout_constraintEnd_toStartOf="@id/moreView"
+                app:layout_constraintStart_toEndOf="@id/recordView"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                app:srcCompat="@drawable/leaderboard_icon" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.49878347" />
+            <ImageView
+                android:id="@+id/moreView"
+                style="@style/ToolBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="leaderboard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline16"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                app:srcCompat="@drawable/more_icon" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.048661802" />
+            <ImageView
+                android:id="@+id/recordView"
+                style="@style/ToolBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="record"
+                app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                app:srcCompat="@drawable/record_icon" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.96" />
+            <ImageView
+                android:id="@+id/reportView"
+                style="@style/ToolBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="reports"
+                app:layout_constraintEnd_toStartOf="@id/recordView"
+                app:layout_constraintStart_toEndOf="@id/scoreboardView"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                app:srcCompat="@drawable/client_icon" />
 
-        <ProgressBar
-            android:id="@+id/parentLoader"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:indeterminateDrawable="@drawable/progress"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/scoreboardView"
+                style="@style/ToolBar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="scoreboard"
+                app:layout_constraintStart_toStartOf="@+id/guideline15"
+                app:layout_constraintTop_toTopOf="@id/toolbar"
+                app:srcCompat="@drawable/home_icon" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.49878347" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.048661802" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.96" />
+
+            <ProgressBar
+                android:id="@+id/parentLoader"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:indeterminateDrawable="@drawable/progress"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/paginateInfo"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/toolbar">
+
+                <TextView
+                    android:id="@+id/paginateText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
+
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

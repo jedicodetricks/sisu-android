@@ -149,55 +149,49 @@ public class ActionBarManager {
     }
 
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
 //                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-                backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
-                TextView saveButton = parentActivity.findViewById(R.id.saveButton);
-                saveButton.setTextColor(colorSchemeManager.getActionbarText());
+            backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+            backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
+            TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+            saveButton.setTextColor(colorSchemeManager.getActionbarText());
 
-                if(titleString == null) {
-                    String displayName = "";
-                    if(selectedClient.getFirst_name() != null) {
-                        displayName += selectedClient.getFirst_name() + " ";
-                    }
-                    if(selectedClient.getLast_name() != null) {
-                        displayName += selectedClient.getLast_name();
-                    }
-                    backtionTitle.setText(displayName);
-                } else {
-                    backtionTitle.setText(parentActivity.localizeLabel(titleString));
+            if(titleString == null) {
+                String displayName = "";
+                if(selectedClient.getFirst_name() != null) {
+                    displayName += selectedClient.getFirst_name() + " ";
                 }
-
-                manageDrawerEnabled(isDrawerEnabled);
+                if(selectedClient.getLast_name() != null) {
+                    displayName += selectedClient.getLast_name();
+                }
+                backtionTitle.setText(displayName);
+            } else {
+                backtionTitle.setText(parentActivity.localizeLabel(titleString));
             }
+
+            manageDrawerEnabled(isDrawerEnabled);
         });
     }
 
     public void swapToSaveEditAction(final String titleString, final boolean isDrawerEnabled) {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_save_edit_layout);
-                backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                if(titleString == null) {
-                    String displayName = "";
-                    if(selectedClient.getFirst_name() != null) {
-                        displayName += selectedClient.getFirst_name() + " ";
-                    }
-                    if(selectedClient.getLast_name() != null) {
-                        displayName += selectedClient.getLast_name();
-                    }
-                    backtionTitle.setText(displayName);
-                } else {
-                    backtionTitle.setText(titleString);
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_save_edit_layout);
+            backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+            if(titleString == null) {
+                String displayName = "";
+                if(selectedClient.getFirst_name() != null) {
+                    displayName += selectedClient.getFirst_name() + " ";
                 }
-
-                manageDrawerEnabled(isDrawerEnabled);
+                if(selectedClient.getLast_name() != null) {
+                    displayName += selectedClient.getLast_name();
+                }
+                backtionTitle.setText(displayName);
+            } else {
+                backtionTitle.setText(titleString);
             }
+
+            manageDrawerEnabled(isDrawerEnabled);
         });
     }
 
@@ -239,39 +233,33 @@ public class ActionBarManager {
     }
 
     public void swapToClientListBar(final String title, final boolean isDrawerEnabled) {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
 //                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                if(title != null) {
-                    pageTitle.setText(parentActivity.localizeLabel(title));
-                }
-                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-
-                manageDrawerEnabled(isDrawerEnabled);
+            pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+            if(title != null) {
+                pageTitle.setText(parentActivity.localizeLabel(title));
             }
+            pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
+            manageDrawerEnabled(isDrawerEnabled);
         });
     }
 
     public void swapToAddClientBar(final String title, final boolean isDrawerEnabled) {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
 //                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-                pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
-                if(title != null) {
-                    pageTitle.setText(parentActivity.localizeLabel(title));
-                    TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
-                    sendButton.setText("Send Slack");
-                }
-
-                pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-
-                manageDrawerEnabled(isDrawerEnabled);
+            pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
+            if(title != null) {
+                pageTitle.setText(parentActivity.localizeLabel(title));
+                TextView sendButton = parentActivity.findViewById(R.id.addClientSaveButton);
+                sendButton.setText("Send Slack");
             }
+
+            pageTitle.setTextColor(colorSchemeManager.getActionbarText());
+
+            manageDrawerEnabled(isDrawerEnabled);
         });
     }
 
@@ -454,32 +442,35 @@ public class ActionBarManager {
 
     public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
-        if(colorSchemeManager.getIcon() != null) {
-            Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
-            //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
-            teamIcon.setVisibility(View.VISIBLE);
-            teamLetter.setVisibility(View.GONE);
-            teamBlock.setBackgroundColor(Color.TRANSPARENT);
+        parentActivity.runOnUiThread(() -> {
             if(colorSchemeManager.getIcon() != null) {
-                SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+                Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getIcon())).into(teamIcon);
+                //teamIcon.setImageURI(Uri.parse(colorSchemeManager.getIcon()));
+                teamIcon.setVisibility(View.VISIBLE);
+                teamLetter.setVisibility(View.GONE);
+                teamBlock.setBackgroundColor(Color.TRANSPARENT);
+                if(colorSchemeManager.getIcon() != null) {
+                    SaveSharedPreference.setIcon(parentActivity, colorSchemeManager.getIcon());
+                }
+            } else {
+                teamLetter = parentActivity.findViewById(R.id.team_letter);
+                teamIcon = parentActivity.findViewById(R.id.team_icon);
+                teamBlock = parentActivity.findViewById(R.id.action_bar_home);
+                if(currentTeam != null) {
+                    teamLetter.setText(currentTeam.getTeamLetter());
+                    teamLetter.setBackgroundColor(currentTeam.getColor());
+                    teamBlock.setBackgroundColor(currentTeam.getColor());
+                    teamBlock.setVisibility(View.VISIBLE);
+                    teamLetter.setVisibility(View.VISIBLE);
+                    teamIcon.setVisibility(View.INVISIBLE);
+                }
             }
-        } else {
-            teamLetter = parentActivity.findViewById(R.id.team_letter);
-            teamIcon = parentActivity.findViewById(R.id.team_icon);
-            teamBlock = parentActivity.findViewById(R.id.action_bar_home);
-            if(currentTeam != null) {
-                teamLetter.setText(currentTeam.getTeamLetter());
-                teamLetter.setBackgroundColor(currentTeam.getColor());
-                teamBlock.setBackgroundColor(currentTeam.getColor());
-                teamBlock.setVisibility(View.VISIBLE);
-                teamLetter.setVisibility(View.VISIBLE);
-                teamIcon.setVisibility(View.INVISIBLE);
+            if(!actionBarColorSet) {
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                actionBarColorSet = true;
             }
-        }
-        if(!actionBarColorSet) {
-            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-            actionBarColorSet = true;
-        }
+        });
+
 
     }
 

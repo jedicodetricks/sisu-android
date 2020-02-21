@@ -1,11 +1,14 @@
 package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -16,12 +19,12 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -38,19 +41,21 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
+import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
 
 /**
  * Created by bradygroharing on 2/21/18.
  */
 
-public class ClientTileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener {
-
+public class ClientTileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, SearchView.OnQueryTextListener, ClientMessagingEvent {
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
@@ -68,7 +73,10 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private boolean beginDateSelected = false;
     private boolean endDateSelected = false;
     private String dashboardType = "agent";
-
+    private android.support.v7.widget.SearchView clientSearch;
+    private ConstraintLayout paginateInfo;
+    private JSONObject paginateObject;
+    private String count;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -79,6 +87,19 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getClientTiles();
+
+        try {
+            if(tileTemplate.has("pagination")) {
+                paginateObject = tileTemplate.getJSONObject("pagination");
+            }
+
+            if(tileTemplate.has("count")) {
+                count = tileTemplate.getString("count");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         return createFullView(container, tileTemplate);
     }
@@ -102,10 +123,23 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         RelativeLayout parentRelativeLayout;
         View parentLayout = inflater.inflate(R.layout.activity_client_tile_parentlayout, container, false);
-        SearchView searchLayout = parentLayout.findViewById(R.id.searchClient);
-        searchLayout.setId(1);
+        clientSearch = parentLayout.findViewById(R.id.clientTileSearch);
+        clientSearch.setId(1);
         if (tileTemplate != null) {
             colorSchemeManager = parentActivity.getColorSchemeManager();
+            paginateInfo = parentActivity.findViewById(R.id.paginateInfo);
+            paginateInfo.setVisibility(View.VISIBLE);
+            paginateInfo.setBackgroundColor(colorSchemeManager.getAppBackground());
+            LayerDrawable borderDrawable = getBorders(
+                    colorSchemeManager.getAppBackground(), // Background color
+                    Color.GRAY, // Border color
+                    0, // Left border in pixels
+                    5, // Top border in pixels
+                    0, // Right border in pixels
+                    0 // Bottom border in pixels
+            );
+            paginateInfo.setBackground(borderDrawable);
+
             // Create the parent layout that all the rows will go in
             parentLayout.setBackgroundColor(colorSchemeManager.getAppBackground());
             parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
@@ -148,7 +182,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @SuppressLint("ResourceType")
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
-        Log.e("ROW OBJECT", String.valueOf(rowObject));
+//        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
             Double height = rowObject.getDouble("rowheight");
@@ -306,6 +340,20 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
         marketStatusFilterText.setTextColor(colorSchemeManager.getLighterTextColor());
 
+        clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
+        android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        search.setTextColor(colorSchemeManager.getLighterTextColor());
+        search.setHighlightColor(colorSchemeManager.getAppBackground());
+        search.setHintTextColor(colorSchemeManager.getLighterTextColor());
+
+        clientSearch.setOnQueryTextListener(this);
+
+        TextView paginationText = paginateInfo.findViewById(R.id.paginateText);
+        try {
+            paginationText.setText("Showing: 1 to " + paginateObject.getString("page_count") + " of " + paginateObject.getString("total") + " entities");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         initScopePopupMenu();
         initMarketStatusPopupMenu();
     }
@@ -322,7 +370,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             else {
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetClientTiles();
+                parentActivity.resetClientTiles("");
             }
             return false;
         });
@@ -346,7 +394,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
             scopePopup.dismiss();
             parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
-            parentActivity.resetClientTiles();
+            parentActivity.resetClientTiles("");
             return false;
         });
 //        List<String> timelineArray = initSpinnerArray();
@@ -443,6 +491,90 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             );
             rowView.setBackground(borderDrawable);
         }
+
+        rowView.setOnClickListener(view -> {
+            try {
+                ClientObject selectedClient = new ClientObject(tileObject.getJSONObject("tile_data"));
+                parentActivity.setSelectedClient(selectedClient);
+                paginateInfo.setVisibility(View.GONE);
+                navigationManager.stackReplaceFragment(ClientManageFragment.class);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        ClientObject clientObject = new ClientObject(tileObject.getJSONObject("tile_data"));
+        ImageView textImage = rowView.findViewById(R.id.leftButton);
+        ImageView phoneImage = rowView.findViewById(R.id.centerButton);
+        ImageView emailImage = rowView.findViewById(R.id.rightButton);
+//
+        if(clientObject.getHome_phone() == null || clientObject.getHome_phone().equals("")) {
+            phoneImage.setVisibility(View.INVISIBLE);
+        }
+        else {
+            phoneImage.setVisibility(View.VISIBLE);
+        }
+
+        if(clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("")) {
+            textImage.setVisibility(View.INVISIBLE);
+        } else {
+            phoneImage.setVisibility(View.VISIBLE);
+            textImage.setVisibility(View.VISIBLE);
+            textImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onTextClicked(clientObject.getMobile_phone(), clientObject);
+                }
+            });
+            phoneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject);
+                }
+            });
+
+        }
+
+        if(clientObject.getEmail() == null || clientObject.getEmail().equals("")) {
+            emailImage.setVisibility(View.INVISIBLE);
+        } else {
+            emailImage.setVisibility(View.VISIBLE);
+            emailImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onEmailClicked(clientObject.getEmail(), clientObject);
+                }
+            });
+
+        }
+
+//        drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
+//        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+//        moreButton.setImageDrawable(drawable);
+
+        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
+        if(clientObject.getIs_locked() == 1) {
+            if(clientObject.getType_id().equalsIgnoreCase("b")) {
+                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            } else {
+                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            }
+        }
+        else {
+            if(clientObject.getType_id().equalsIgnoreCase("b")) {
+                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            } else {
+                thumbnail.setImageResource(R.drawable.seller_icon_active);
+            }
+        }
+
 
         return rowView;
     }
@@ -553,21 +685,27 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(ClientListFragment.class);
                         break;
                     case "scoreboard":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(ScoreboardFragment.class);
                         break;
                     case "record":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(RecordFragment.class);
                         break;
                     case "report":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(ReportFragment.class);
                         break;
                     case "leaderboard":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(LeaderboardFragment.class);
                         break;
                     case "more":
+                        paginateInfo.setVisibility(View.GONE);
                         navigationManager.stackReplaceFragment(MoreFragment.class);
                         break;
                 }
@@ -649,5 +787,60 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        parentActivity.resetClientTiles(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public void onPhoneClicked(String number, ClientObject client) {
+        addOneToContacts();
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "PHONE");
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + number));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTextClicked(String number, ClientObject client) {
+        addOneToContacts();
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "TEXTM");
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("smsto:" + number));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onEmailClicked(String email, ClientObject client) {
+        addOneToContacts();
+        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), email, "EMAIL");
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemClicked(ClientObject selectedClient) {
+        parentActivity.setSelectedClient(selectedClient);
+        navigationManager.stackReplaceFragment(ClientManageFragment.class);
+    }
+
+    private void addOneToContacts() {
+        Metric contactMetric = dataController.getContactsMetric();
+        if(contactMetric != null) {
+            contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
+            dataController.setRecordUpdated(contactMetric);
+            parentActivity.updateRecordedActivities();
+            parentActivity.showToast("+1 to your contacts");
+        }
     }
 }

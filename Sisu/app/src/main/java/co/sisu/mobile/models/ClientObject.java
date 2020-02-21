@@ -2,6 +2,9 @@ package co.sisu.mobile.models;
 
 import android.support.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Brady Groharing on 3/15/2018.
  */
@@ -13,7 +16,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String appt_dt;
     private String appt_set_dt;
     private String city;
-    private String client_event_count;
+    private String client_event_count; // Not using?
     private String client_id;
     private String closed_dt;
     private String commission_amt;
@@ -24,7 +27,7 @@ public class ClientObject implements Comparable<ClientObject>{
     private String home_phone;
     private int is_locked;
     private String last_name;
-    private int lead_type_id;
+    private String lead_type_id;
     private String mobile_phone;
     private String note;
     private String paid_dt;
@@ -41,6 +44,56 @@ public class ClientObject implements Comparable<ClientObject>{
     private String activate_client;
     private String market_id;
     private int team_id;
+
+    public ClientObject() {
+    }
+
+    public ClientObject(JSONObject clientJson) {
+        try {
+            this.address_1 = String.valueOf(clientJson.get("address_1")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("address_1"));
+            this.address_2 = String.valueOf(clientJson.get("address_2")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("address_2"));
+            this.appt_dt = String.valueOf(clientJson.get("appt_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("appt_dt"));
+            this.appt_set_dt = String.valueOf(clientJson.get("appt_set_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("appt_set_dt"));
+            this.city = String.valueOf(clientJson.get("city")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("city"));
+            this.client_id = String.valueOf(clientJson.get("client_id")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("client_id"));
+            this.closed_dt = String.valueOf(clientJson.get("closed_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("closed_dt"));
+            this.commission_amt = String.valueOf(clientJson.get("commission_amt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("commission_amt"));
+            this.created_ts = String.valueOf(clientJson.get("created_ts")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("created_ts"));
+            this.email = String.valueOf(clientJson.get("email")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("email"));
+            this.first_name = String.valueOf(clientJson.get("first_name")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("first_name"));
+            this.gross_commission_amt = String.valueOf(clientJson.get("gross_commission_amt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("gross_commission_amt"));
+            this.home_phone = String.valueOf(clientJson.get("home_phone")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("home_phone"));
+            try {
+                this.is_locked = Integer.valueOf((Integer) clientJson.get("is_locked"));
+            } catch(Exception e) {
+                this.is_locked = 0;
+                e.printStackTrace();
+            }
+            this.last_name = String.valueOf(clientJson.get("last_name")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("last_name"));
+            this.lead_type_id = String.valueOf(clientJson.get("lead_type_id")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("lead_type_id"));
+            this.mobile_phone = String.valueOf(clientJson.get("mobile_phone")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("mobile_phone"));
+            this.note = String.valueOf(clientJson.get("note")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("note"));
+            this.paid_dt = String.valueOf(clientJson.get("paid_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("paid_dt"));
+            this.postal_code = String.valueOf(clientJson.get("postal_code")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("postal_code"));
+            this.signed_dt = String.valueOf(clientJson.get("signed_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("signed_dt"));
+            this.state = String.valueOf(clientJson.get("state")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("state"));
+            this.status = String.valueOf(clientJson.get("status")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("status"));
+            this.trans_amt = String.valueOf(clientJson.get("trans_amt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("trans_amt"));
+            this.type_id = String.valueOf(clientJson.get("type_id")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("type_id"));
+//            this.type_id_dscr = String.valueOf(clientJson.get("type_id_dscr")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("type_id_dscr"));
+            this.uc_dt = String.valueOf(clientJson.get("uc_dt")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("uc_dt"));
+            this.updated_ts = String.valueOf(clientJson.get("updated_ts")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("updated_ts"));
+            this.is_priority = Integer.valueOf((Integer) clientJson.get("is_priority"));
+//            this.activate_client = String.valueOf(clientJson.get("activate_client")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("activate_client"));
+            this.market_id = String.valueOf(clientJson.get("market_id")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("market_id"));
+            if(clientJson.has("team_id")) {
+                this.team_id = Integer.valueOf((Integer) clientJson.get("team_id"));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String getActivate_client() {
         return activate_client;
@@ -170,11 +223,11 @@ public class ClientObject implements Comparable<ClientObject>{
         this.last_name = last_name;
     }
 
-    public int getLead_type_id() {
+    public String getLead_type_id() {
         return lead_type_id;
     }
 
-    public void setLead_type_id(int lead_type_id) {
+    public void setLead_type_id(String lead_type_id) {
         this.lead_type_id = lead_type_id;
     }
 

@@ -812,7 +812,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         if(leadSources != null) {
             for ( Object key : leadSources.keySet() ) {
                 int formattedKey = Integer.valueOf((String) key);
-                if(formattedKey == currentClient.getLead_type_id()) {
+                if(key == currentClient.getLead_type_id()) {
                     leadSource.setText(leadSources.get(key).toString());
                     break;
                 }
@@ -932,7 +932,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             for ( Object key : leadSources.keySet() ) {
                 if(leadSources.get(key).equals(leadSource.getText().toString())) {
                     //TODO: Should probably wrap this in a try catch
-                    currentClient.setLead_type_id(Integer.valueOf((String) key));
+                    currentClient.setLead_type_id((String) key);
                     break;
                 }
             }
@@ -1416,7 +1416,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         for ( Object key : leadSources.keySet() ) {
             System.out.println(leadSource.getText().toString());
             if(leadSources.get(key).equals(leadSource.getText().toString())) {
-                newClient.setLead_type_id(Integer.valueOf((String) key));
+                newClient.setLead_type_id((String) key);
                 break;
             }
         }

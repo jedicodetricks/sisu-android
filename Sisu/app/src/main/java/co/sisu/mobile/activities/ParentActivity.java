@@ -164,10 +164,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Calendar calendar = Calendar.getInstance();
     private Date selectedStartTime;
     private Date selectedEndTime;
+    private ConstraintLayout paginateInfo;
 
     private JSONObject tileTemplate;
     private JSONObject clientTiles;
-    private JSONObject marketStatuses;
     private JSONObject scopes;
     private boolean isAgentDashboard = true;
     private List<ScopeBarModel> scopeBarAgents = new ArrayList<>();
@@ -180,6 +180,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
 
+        paginateInfo = findViewById(R.id.paginateInfo);
         parentLoader = findViewById(R.id.parentLoader);
         gson = new Gson();
         dataController = new DataController();
@@ -445,6 +446,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         parentLoader.setVisibility(View.GONE);
+        paginateInfo.setVisibility(View.GONE);
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
@@ -467,6 +469,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     else {
                         if(tileDebug) {
+                            parentLoader.setVisibility(View.VISIBLE);
                             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
 //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
@@ -483,10 +486,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         selectedContextId = currentScopeFilter.getIdValue().substring(1);
                     }
                     if(currentMarketStatusFilter != null) {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "");
                     }
                     else {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "");
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
@@ -515,7 +518,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-
     }
 
     public void updateRecordedActivities() {
@@ -592,8 +594,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
                 }
             }
-
-
         }
     }
 
@@ -1659,7 +1659,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
 
-    public void resetClientTiles() {
+    public void resetClientTiles(String clientSearch) {
+        parentLoader.setVisibility(View.VISIBLE);
         marketStatusFinished = true;
         String selectedContextId = agent.getAgent_id();
         if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
@@ -1667,14 +1668,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         updateActionBarTitle(currentScopeFilter.getName());
         if(currentMarketStatusFilter != null) {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey());
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch);
         }
         else {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "");
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch);
         }
     }
 
     public void resetDashboardTiles() {
+        parentLoader.setVisibility(View.VISIBLE);
         updateActionBarTitle(currentScopeFilter.getName());
         apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
     }
