@@ -1119,7 +1119,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     if(currentAgent.getString("agent_id").equalsIgnoreCase(myAgentId)) {
                         ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
                         scopeBarAgents.add(agentScope);
-                        currentScopeFilter = agentScope;
+                        if(currentScopeFilter == null) {
+                            currentScopeFilter = agentScope;
+                        }
                         updateActionBarTitle(currentScopeFilter.getName());
                         break;
                     }

@@ -152,11 +152,11 @@ public class ActionBarManager {
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
             backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
-            backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
+            backtionTitle.setTextColor(colorSchemeManager.getLighterTextColor());
             TextView saveButton = parentActivity.findViewById(R.id.saveButton);
-            saveButton.setTextColor(colorSchemeManager.getActionbarText());
+            saveButton.setTextColor(colorSchemeManager.getLighterTextColor());
 
             if(titleString == null) {
                 String displayName = "";
@@ -183,7 +183,7 @@ public class ActionBarManager {
             backtionTitle.setTextColor(colorSchemeManager.getLighterTextColor());
             TextView saveButton = parentActivity.findViewById(R.id.saveButton);
             saveButton.setText("Filters");
-            saveButton.setTextColor(colorSchemeManager.getActionbarText());
+            saveButton.setTextColor(colorSchemeManager.getLighterTextColor());
 
             backtionTitle.setText(parentActivity.localizeLabel(titleString));
 
@@ -253,7 +253,7 @@ public class ActionBarManager {
     public void swapToClientListBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
-            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
             pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
             if(title != null) {
                 pageTitle.setText(parentActivity.localizeLabel(title));
@@ -267,7 +267,7 @@ public class ActionBarManager {
     public void swapToAddClientBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
             pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
             if(title != null) {
                 pageTitle.setText(parentActivity.localizeLabel(title));
@@ -338,7 +338,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 String displayName = "";
@@ -483,7 +483,7 @@ public class ActionBarManager {
                     teamIcon.setVisibility(View.INVISIBLE);
                 }
             }
-            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
             actionBarColorSet = true;
         });
 
@@ -495,11 +495,11 @@ public class ActionBarManager {
     }
 
     public void setTitle(String title) {
-//        parentActivity.runOnUiThread(() -> {
-//            displayTitle = title;
-//            pageTitle.setText(title);
-//            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
-//        });
+        parentActivity.runOnUiThread(() -> {
+            displayTitle = title;
+            pageTitle.setText(title);
+            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
+        });
 
     }
 }

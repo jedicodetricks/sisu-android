@@ -119,7 +119,7 @@ public class NavigationManager {
 
         if(fragmentClass.getSimpleName().equals("RecordFragment")) {
             fragmentTag = "Record";
-            actionBarManager.swapToSaveAction("Record", ENABLE_DRAWER);
+            actionBarManager.swapToSaveAction("Record", DISABLE_DRAWER);
             toolbarManager.resetToolbarImages(fragmentTag);
         }
         else if(fragmentClass.getSimpleName().equals("MyProfileFragment")) {
@@ -152,7 +152,7 @@ public class NavigationManager {
     private void sortTitleBar(Class fragmentClass, String titleString) {
         //TODO: Action Bar issue
 
-        boolean isDrawerEnabled = ENABLE_DRAWER;
+        boolean isDrawerEnabled = DISABLE_DRAWER;
         if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
             fragmentTag = "Feedback";
             isDrawerEnabled = DISABLE_DRAWER;
@@ -162,6 +162,7 @@ public class NavigationManager {
         }
         else if(fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
             fragmentTag = "Scoreboard";
+            isDrawerEnabled = ENABLE_DRAWER;
         }
         else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
             fragmentTag = "Scoreboard";

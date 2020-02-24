@@ -187,6 +187,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             loader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
             loader.getIndeterminateDrawable().setBounds(bounds);
         }
+
+        leftSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        leftSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        rightSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        rightSelector.setTextColor(colorSchemeManager.getLighterTextColor());
     }
 
     private List<String> initSpinnerArray() {

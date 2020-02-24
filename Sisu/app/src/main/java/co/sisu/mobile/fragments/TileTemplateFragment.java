@@ -1626,5 +1626,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         beginDateSelected = false;
         endDateSelected = false;
+
+        loader.setVisibility(View.VISIBLE);
+        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
     }
 }
