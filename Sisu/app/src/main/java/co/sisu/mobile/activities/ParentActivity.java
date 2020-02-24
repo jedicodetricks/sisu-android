@@ -187,7 +187,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
-        actionBarManager = navigationManager.getActionBarManager();
+//        actionBarManager = navigationManager.getActionBarManager();
 
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
@@ -486,10 +486,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         selectedContextId = currentScopeFilter.getIdValue().substring(1);
                     }
                     if(currentMarketStatusFilter != null) {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
                     }
                     else {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "");
+                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1);
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
@@ -633,6 +633,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 tileTemplateFinished = false;
                 teamSwap = false;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+
                 switch (f.getTag()) {
                     case "Scoreboard":
 //                        try {
@@ -647,7 +648,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         ((RecordFragment) f).teamSwap();
                         break;
                     case "Report":
-                        ((ReportFragment) f).teamSwap();
+                        ((ClientTileFragment) f).teamSwap();
                         break;
                     case "Leaderboard":
                         ((LeaderboardFragment) f).teamSwap();
@@ -676,7 +677,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     case "Scoreboard":
                         try {
                             if(tileDebug) {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                             }
                             else {
                                 if(isRecruiting()) {
@@ -691,7 +692,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         catch(Exception e) {
                             if(tileDebug) {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                             }
                             else {
                                 if(isRecruiting()) {
@@ -732,22 +733,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
         }
             this.runOnUiThread(() -> {
-                if(isRecruiting()) {
-                    if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                if(scopeFinished && tileTemplateFinished) {
+                    if(isRecruiting()) {
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        }
                     }
                     else {
-                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                        if(tileDebug) {
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                        }
+                        else {
+                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                        }
                     }
                 }
-                else {
-                    if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-                    }
-                    else {
-                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                    }
-                }
+
             });
             clientFinished = false;
             goalsFinished = false;
@@ -757,7 +761,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             labelsFinished = false;
             noNavigation = true;
             activitySettingsParamFinished = false;
-            tileTemplateFinished = false;
             teamsFinished = false;
     }
 
@@ -771,7 +774,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     if(isRecruiting()) {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
@@ -779,7 +782,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     else {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
@@ -818,7 +821,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             System.out.println(navigationManager.getCurrentFragment());
                             this.runOnUiThread(() -> {
                                 if(tileDebug) {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                                 }
                                 else {
                                     if(isRecruiting()) {
@@ -908,10 +911,45 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_TEAM_CLIENTS) {
             try {
                 String tileString = ((Response) returnObject).body().string();
-                clientTiles = new JSONObject(tileString);
+                JSONObject newClientTiles = new JSONObject(tileString);
+                JSONObject pagination = newClientTiles.getJSONObject("pagination");
+
+                if(pagination.getInt("page") > 1) {
+                    //append tiles
+                    JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
+                    JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
+
+                    for(int i = 0; i < clientTilesToAppend.length(); i++) {
+                        JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
+                        JSONArray currentTiles = tileObject.getJSONArray("tiles");
+                        JSONObject tile = currentTiles.getJSONObject(0);
+                        if(tile.has("type")) {
+                            String type = tile.getString("type");
+                            switch (type) {
+                                case "clientList":
+                                    currentClientTiles.put(tileObject);
+                                    break;
+                                case "smallHeader":
+                                    break;
+                                default:
+                                    Log.e("TYPE", type);
+                                    break;
+                            }
+                        }
+                    }
+                    clientTiles.put("tile_rows", currentClientTiles);
+                    clientTiles.put("pagination", pagination);
+                    clientTiles.put("count", currentClientTiles.length());
+                    Log.e("TYPE", "ee");
+                }
+                else {
+                    //overwrite tiles
+                    clientTiles = newClientTiles;
+                }
+
                 clientTilesFinished = true;
                 if(marketStatusFinished) {
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -938,7 +976,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 marketStatusFinished = true;
                 if(clientTilesFinished) {
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -1031,8 +1069,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
             dataController.setTeamsObject(ParentActivity.this, teamsObject);
             this.runOnUiThread(() -> {
+                //TODO: Action Bar issue
                 navigationManager.initializeTeamBar(dataController.getTeamsObject());
                 if(dataController.getTeamsObject().size() > 0) {
+                    //TODO: Action Bar issue
                     navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                     dataController.setMessageCenterVisible(true);
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
@@ -1067,6 +1107,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_SCOPE) {
             try {
                 String tileString = ((Response) returnObject).body().string();
+                scopeBarAgents = new ArrayList<>();
                 scopes =  new JSONObject(tileString);
                 JSONObject allScopes = scopes.getJSONObject("scopes");
                 JSONArray scopeAgents = allScopes.getJSONArray("agents");
@@ -1109,7 +1150,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            this.runOnUiThread(() -> {
 //                navigationManager.initScopeBar(scopeBarAgents, myAgentId);
 //            });
-            navigateToScoreboard();
+            if(teamSwap) {
+                navigateToScoreboard(true);
+            }
+            else {
+                navigateToScoreboard();
+            }
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
@@ -1659,7 +1705,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
 
-    public void resetClientTiles(String clientSearch) {
+    public void resetClientTiles(String clientSearch, int page) {
         parentLoader.setVisibility(View.VISIBLE);
         marketStatusFinished = true;
         String selectedContextId = agent.getAgent_id();
@@ -1668,16 +1714,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         updateActionBarTitle(currentScopeFilter.getName());
         if(currentMarketStatusFilter != null) {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch);
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
         }
         else {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch);
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
         }
     }
 
     public void resetDashboardTiles() {
         parentLoader.setVisibility(View.VISIBLE);
         updateActionBarTitle(currentScopeFilter.getName());
+        tileTemplateFinished = false;
+        scopeFinished = false;
+        apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
         apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
     }
 

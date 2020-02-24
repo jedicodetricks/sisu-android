@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -23,11 +24,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -77,6 +80,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ConstraintLayout paginateInfo;
     private JSONObject paginateObject;
     private String count;
+    private ScrollView tileScrollView;
+    private boolean updatingClients = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -105,6 +110,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     public void teamSwap() {
+        parentActivity.resetDashboardTiles();
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
 //        loader.setVisibility(View.VISIBLE);
 //        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
@@ -123,6 +129,33 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         RelativeLayout parentRelativeLayout;
         View parentLayout = inflater.inflate(R.layout.activity_client_tile_parentlayout, container, false);
+        tileScrollView = parentLayout.findViewById(R.id.tileScrollView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            tileScrollView.getViewTreeObserver()
+                    .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                        @Override
+                        public void onScrollChanged() {
+                            if (!tileScrollView.canScrollVertically(1)) {
+                                // bottom of scroll view
+                                System.out.println("TEST");
+                                if(!updatingClients) {
+                                    updatingClients = true;
+                                    try {
+                                        if(paginateObject.getBoolean("has_next") == true) {
+                                            //GO GET THE NEXT SET OF CLIENTS
+                                            int currentPage = paginateObject.getInt("page");
+                                            parentActivity.resetClientTiles("", currentPage + 1);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                        }
+                    });
+        }
         clientSearch = parentLayout.findViewById(R.id.clientTileSearch);
         clientSearch.setId(1);
         if (tileTemplate != null) {
@@ -350,7 +383,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         TextView paginationText = paginateInfo.findViewById(R.id.paginateText);
         try {
-            paginationText.setText("Showing: 1 to " + paginateObject.getString("page_count") + " of " + paginateObject.getString("total") + " entities");
+            paginationText.setText("Showing: 1 to " + count + " of " + paginateObject.getString("total") + " entities");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -370,7 +403,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             else {
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetClientTiles("");
+                parentActivity.resetClientTiles("", 1);
             }
             return false;
         });
@@ -394,7 +427,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
             scopePopup.dismiss();
             parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
-            parentActivity.resetClientTiles("");
+            parentActivity.resetClientTiles("", 1);
             return false;
         });
 //        List<String> timelineArray = initSpinnerArray();
@@ -791,7 +824,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        parentActivity.resetClientTiles(query);
+        parentActivity.resetClientTiles(query, 1);
         return false;
     }
 
@@ -843,4 +876,5 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             parentActivity.showToast("+1 to your contacts");
         }
     }
+
 }

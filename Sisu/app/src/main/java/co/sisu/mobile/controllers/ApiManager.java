@@ -257,7 +257,7 @@ public class ApiManager {
 
     //START OF POST CALLS
 
-    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter, String clientSearch) {
+    public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter, String clientSearch, int page) {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENTS;
         String currentUrl = url + "api/v2/team/get-team-clients";
@@ -285,7 +285,7 @@ public class ApiManager {
         filter.addProperty("record_limit", 0);
         filter.addProperty("order_by", "last_name");
         filter.addProperty("order_direction", "asc");
-        filter.addProperty("page", 1);
+        filter.addProperty("page", page);
         filter.addProperty("per_page", 40);
         filter.addProperty("name_filter", clientSearch);
         JsonObject stringFilters = new JsonObject();

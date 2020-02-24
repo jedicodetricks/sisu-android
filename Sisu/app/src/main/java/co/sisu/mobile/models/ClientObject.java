@@ -67,7 +67,7 @@ public class ClientObject implements Comparable<ClientObject>{
                 this.is_locked = Integer.valueOf((Integer) clientJson.get("is_locked"));
             } catch(Exception e) {
                 this.is_locked = 0;
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             this.last_name = String.valueOf(clientJson.get("last_name")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("last_name"));
             this.lead_type_id = String.valueOf(clientJson.get("lead_type_id")).equalsIgnoreCase("null") ? null : String.valueOf(clientJson.get("lead_type_id"));

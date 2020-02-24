@@ -71,14 +71,14 @@ public class RecordListAdapter extends BaseAdapter {
         View rowView = null;
         final Metric metric = (Metric) getItem(position);
 
-        if(metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type()) && position != getCount() - 1) {
-            rowView = mInflater.inflate(R.layout.adapter_record_list_other_hack, parent, false);
-            TextView otherText = rowView.findViewById(R.id.otherText);
-            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        }
-        else {
-            rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
-        }
+//        if(metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type()) && position != getCount() - 1) {
+//            rowView = mInflater.inflate(R.layout.adapter_record_list_other_hack, parent, false);
+//            TextView otherText = rowView.findViewById(R.id.otherText);
+//            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        }
+//        else {
+        rowView = mInflater.inflate(R.layout.adapter_record_list, parent, false);
+//        }
 
 
         // Get title element

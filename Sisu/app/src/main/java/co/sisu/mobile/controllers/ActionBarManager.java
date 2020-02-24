@@ -66,6 +66,7 @@ public class ActionBarManager {
         Toolbar parent =(Toolbar) customView.getParent();
         parent.setContentInsetsAbsolute(0,0);
         parent.setPaddingRelative(0,0,0,0);
+
         drawerLayout = parentActivity.findViewById(R.id.drawer_layout);
 //        teamAgentListView = parentActivity.findViewById(R.id.team_agent_list);
 //        teamAgentListView.setDivider(null);
@@ -151,7 +152,7 @@ public class ActionBarManager {
     public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
-//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
             backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
             backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
             TextView saveButton = parentActivity.findViewById(R.id.saveButton);
@@ -169,6 +170,22 @@ public class ActionBarManager {
             } else {
                 backtionTitle.setText(parentActivity.localizeLabel(titleString));
             }
+
+            manageDrawerEnabled(isDrawerEnabled);
+        });
+    }
+
+    public void swapToSaveAction(final String titleString, final boolean isDrawerEnabled, boolean isClientTileFragment) {
+        parentActivity.runOnUiThread(() -> {
+            parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_back_layout);
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
+            backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
+            backtionTitle.setTextColor(colorSchemeManager.getLighterTextColor());
+            TextView saveButton = parentActivity.findViewById(R.id.saveButton);
+            saveButton.setText("Filters");
+            saveButton.setTextColor(colorSchemeManager.getActionbarText());
+
+            backtionTitle.setText(parentActivity.localizeLabel(titleString));
 
             manageDrawerEnabled(isDrawerEnabled);
         });
@@ -195,14 +212,15 @@ public class ActionBarManager {
         });
     }
 
-    public void swapToTitleBar(final String titleString, final boolean isDrawerEnabled) {
+    public void swapToTitleBar(final String titleString, final boolean isDrawerEnabled, String actualTitleString) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-//            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            View actionBar = parentActivity.getSupportActionBar().getCustomView();
+            actionBar.setBackground(new ColorDrawable(colorSchemeManager.getAppBackground()));
 
             pageTitle = parentActivity.findViewById(R.id.action_bar_title);
-            pageTitle.setTextColor(colorSchemeManager.getActionbarText());
-            pageTitle.setText(displayTitle);
+            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
+            pageTitle.setText(actualTitleString);
             teamAgentsTitle = parentActivity.findViewById(R.id.team_agents_title);
 
             if(isAdminMode) {
@@ -235,7 +253,7 @@ public class ActionBarManager {
     public void swapToClientListBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_clients_layout);
-//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
             pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
             if(title != null) {
                 pageTitle.setText(parentActivity.localizeLabel(title));
@@ -249,7 +267,7 @@ public class ActionBarManager {
     public void swapToAddClientBar(final String title, final boolean isDrawerEnabled) {
         parentActivity.runOnUiThread(() -> {
             parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_add_client_layout);
-//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
             pageTitle = parentActivity.findViewById(R.id.actionBarTitle);
             if(title != null) {
                 pageTitle.setText(parentActivity.localizeLabel(title));
@@ -320,7 +338,7 @@ public class ActionBarManager {
             @Override
             public void run() {
                 parentActivity.getSupportActionBar().setCustomView(R.layout.action_bar_client_edit_layout);
-//                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
                 backtionTitle = parentActivity.findViewById(R.id.actionBarTitle);
                 backtionTitle.setTextColor(colorSchemeManager.getActionbarText());
                 String displayName = "";
@@ -465,10 +483,8 @@ public class ActionBarManager {
                     teamIcon.setVisibility(View.INVISIBLE);
                 }
             }
-            if(!actionBarColorSet) {
-                parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
-                actionBarColorSet = true;
-            }
+            parentActivity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colorSchemeManager.getActionbarBackground()));
+            actionBarColorSet = true;
         });
 
 
@@ -479,11 +495,11 @@ public class ActionBarManager {
     }
 
     public void setTitle(String title) {
-        parentActivity.runOnUiThread(() -> {
-            displayTitle = title;
-            pageTitle.setText(title);
-            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
-        });
+//        parentActivity.runOnUiThread(() -> {
+//            displayTitle = title;
+//            pageTitle.setText(title);
+//            pageTitle.setTextColor(colorSchemeManager.getLighterTextColor());
+//        });
 
     }
 }

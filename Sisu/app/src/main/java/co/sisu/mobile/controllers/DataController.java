@@ -145,10 +145,10 @@ public class DataController {
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
         Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 99);
-        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
-        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
-        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
-        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
+//        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
+//        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
+//        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
+//        Metric contract = new Metric("Under Contract", "UCNTR", 0, 0, R.drawable.contract_icon, R.color.colorCorporateOrange, 96);
 
 
         for(int i = 0; i < counters.length; i++) {
@@ -164,30 +164,30 @@ public class DataController {
                     contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
                     setupMetricGoals(contact);
                     break;
-                case "BSGND":
-                case "SSGND":
-                    signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
-                    signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
-                    setupMetricGoals(signed);
-                    break;
-                case "BUNDC":
-                case "SUNDC":
-                    contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
-                    contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
-                    setupMetricGoals(contract);
-                    break;
-                case "BCLSD":
-                case "SCLSD":
-                    closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
-                    closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
-                    setupMetricGoals(closed);
-                    break;
-                case "BAPPT":
-                case "SAPPT":
-                    firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
-                    firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
-                    setupMetricGoals(firstAppointment);
-                    break;
+//                case "BSGND":
+//                case "SSGND":
+//                    signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
+//                    signed.setGoalNum(signed.getGoalNum() + metric.getGoalNum());
+//                    setupMetricGoals(signed);
+//                    break;
+//                case "BUNDC":
+//                case "SUNDC":
+//                    contract.setCurrentNum(contract.getCurrentNum() + metric.getCurrentNum());
+//                    contract.setGoalNum(contract.getGoalNum() + metric.getGoalNum());
+//                    setupMetricGoals(contract);
+//                    break;
+//                case "BCLSD":
+//                case "SCLSD":
+//                    closed.setCurrentNum(closed.getCurrentNum() + metric.getCurrentNum());
+//                    closed.setGoalNum(closed.getGoalNum() + metric.getGoalNum());
+//                    setupMetricGoals(closed);
+//                    break;
+//                case "BAPPT":
+//                case "SAPPT":
+//                    firstAppointment.setCurrentNum(firstAppointment.getCurrentNum() + metric.getCurrentNum());
+//                    firstAppointment.setGoalNum(firstAppointment.getGoalNum() + metric.getGoalNum());
+//                    setupMetricGoals(firstAppointment);
+//                    break;
             }
         }
 
@@ -196,12 +196,12 @@ public class DataController {
         }
 
         if(!isRecruiting) {
-            recordObject.add(contract);
-            recordObject.add(signed);
+//            recordObject.add(contract);
+//            recordObject.add(signed);
         }
         recordObject.add(contact);
-        recordObject.add(firstAppointment);
-        recordObject.add(closed);
+//        recordObject.add(firstAppointment);
+//        recordObject.add(closed);
         List<Metric> secondaryRecordObject = new ArrayList<>();
         List<Metric> selectedActivitiesRecordObject = new ArrayList<>();
         List<Metric> formattedSelectedRecordObject = new ArrayList<>();

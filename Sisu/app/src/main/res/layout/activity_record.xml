@@ -9,24 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--<include-->
+            <!--android:id="@+id/tileRecordDateSelector"-->
+            <!--layout="@layout/date_selector_group"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="35dp"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"/>-->
+
         <include
             android:id="@+id/tileRecordDateSelector"
-            layout="@layout/date_selector_group"
+            layout="@layout/date_selector_mini_group"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <include layout="@layout/status_radio_group"
-            android:id="@+id/statusRadioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_below="@id/tileRecordDateSelector"/>
+        <!--<TextView-->
+            <!--android:id="@+id/activitiesTitle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="25dp"-->
+            <!--android:layout_below="@id/tileRecordDateSelector"-->
+            <!--android:background="@color/colorCorporateOrange"-->
+            <!--android:text="Activities"-->
+            <!--android:textAlignment="center" />-->
+
 
         <!--<android.support.constraint.ConstraintLayout-->
             <!--android:id="@+id/record_list_date"-->
@@ -63,19 +70,28 @@
 
 
         <!--</android.support.constraint.ConstraintLayout>-->
+        <!--<TableLayout-->
+            <!--android:id="@+id/activitiesTable"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:stretchColumns="*"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_below="@id/activitiesTitle">-->
 
-        <RelativeLayout
-            android:id="@+id/divider"
-            style="@style/DividerStyle"
-            android:layout_width="match_parent"
-            android:layout_below="@id/statusRadioGroup"/>
+        <!--</TableLayout>-->
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/divider"-->
+            <!--style="@style/DividerStyle"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_below="@id/activitiesTitle"/>-->
 
-        <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/divider">
+        <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/tileRecordDateSelector">
             <ListView
                 android:id="@+id/record_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"
+
                 />
         </RelativeLayout>
 

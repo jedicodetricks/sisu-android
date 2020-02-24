@@ -65,14 +65,14 @@ public class ReportListAdapter extends BaseAdapter {
         View rowView = null;
         Metric metric = (Metric) getItem(position);
 
-        if(metric != null && metric.getType() != null && metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type())) {
-            rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
-            TextView otherText = rowView.findViewById(R.id.otherText);
-            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        }
-        else {
-            rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
-        }
+//        if(metric != null && metric.getType() != null && metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type())) {
+//            rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
+//            TextView otherText = rowView.findViewById(R.id.otherText);
+//            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        }
+//        else {
+        rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
+//        }
 
 
         // Get title element

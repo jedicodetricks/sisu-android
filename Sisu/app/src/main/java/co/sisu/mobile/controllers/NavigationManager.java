@@ -38,6 +38,7 @@ public class NavigationManager {
         this.colorSchemeManager = parentActivity.colorSchemeManager;
         this.parentActivity = parentActivity;
         this.toolbarManager = new ToolbarManager(parentActivity);
+        //TODO: Action Bar issue
         this.actionBarManager = new ActionBarManager(parentActivity);
         this.actionBarManager.initializeActionBar(fragmentTag);
         backStack = new Stack<>();
@@ -55,7 +56,7 @@ public class NavigationManager {
             e.printStackTrace();
         }
 
-        manageActionBar(fragmentClass);
+        manageActionBar(fragmentClass, "");
         if(backStack.size() > 0) {
             backStack.pop();
         }
@@ -65,7 +66,9 @@ public class NavigationManager {
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
     }
 
-    private void manageActionBar(Class fragmentClass) {
+    private void manageActionBar(Class fragmentClass, String titleString) {
+        //TODO: Action Bar issue
+
         if(fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
             if(parentActivity.getIsNoteFragment()) {
                 actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
@@ -94,9 +97,8 @@ public class NavigationManager {
         else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
                 fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
                 fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment") ||
-                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment") ||
-                fragmentClass.getSimpleName().equals("ClientTileFragment")) {
-            sortTitleBar(fragmentClass);
+                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
+            sortTitleBar(fragmentClass, titleString);
         }
         else if(fragmentClass.getSimpleName().equals("ClientManageFragment")) {
             if(parentActivity.getSelectedClient() == null) {
@@ -107,12 +109,14 @@ public class NavigationManager {
             }
         }
         else {
-            sortSaveActionBar(fragmentClass);
+            sortSaveActionBar(fragmentClass, titleString);
         }
 
     }
 
-    private void sortSaveActionBar(Class fragmentClass) {
+    private void sortSaveActionBar(Class fragmentClass, String titleString) {
+        //TODO: Action Bar issue
+
         if(fragmentClass.getSimpleName().equals("RecordFragment")) {
             fragmentTag = "Record";
             actionBarManager.swapToSaveAction("Record", ENABLE_DRAWER);
@@ -138,9 +142,16 @@ public class NavigationManager {
             fragmentTag = "Add Client Note";
             actionBarManager.swapToSaveAction("Add Client Note", DISABLE_DRAWER);
         }
+        else if(fragmentClass.getSimpleName().equalsIgnoreCase("ClientTileFragment")) {
+            fragmentTag = "Report";
+            actionBarManager.swapToSaveAction(titleString, DISABLE_DRAWER, true);
+            toolbarManager.resetToolbarImages(fragmentTag);
+        }
     }
 
-    private void sortTitleBar(Class fragmentClass) {
+    private void sortTitleBar(Class fragmentClass, String titleString) {
+        //TODO: Action Bar issue
+
         boolean isDrawerEnabled = ENABLE_DRAWER;
         if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
             fragmentTag = "Feedback";
@@ -168,7 +179,7 @@ public class NavigationManager {
 //        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
 //            fragmentTag = "Add Client Note";
 //        }
-        actionBarManager.swapToTitleBar(fragmentTag, isDrawerEnabled);
+        actionBarManager.swapToTitleBar(fragmentTag, isDrawerEnabled, titleString);
         toolbarManager.resetToolbarImages(fragmentTag);
     }
 
@@ -180,12 +191,13 @@ public class NavigationManager {
             e.printStackTrace();
         }
         fragmentTag = fragmentClass.getSimpleName();
-        manageActionBar(fragmentClass);
+        manageActionBar(fragmentClass, "");
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
+
 
     public void clearStackReplaceFragment(Class fragmentClass) {
         Fragment fragment = null;
@@ -195,7 +207,25 @@ public class NavigationManager {
             e.printStackTrace();
         }
 
-        manageActionBar(fragmentClass);
+        manageActionBar(fragmentClass, "");
+        if(backStack.size() > 0) {
+            backStack.clear();
+        }
+        backStack.add(fragmentClass);
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
+    }
+
+    public void clearStackReplaceFragment(Class fragmentClass, String titleString) {
+        Fragment fragment = null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        manageActionBar(fragmentClass, titleString);
         if(backStack.size() > 0) {
             backStack.clear();
         }
@@ -206,6 +236,7 @@ public class NavigationManager {
     }
 
     public void navigateToClientList(String tab) {
+        //TODO: Action Bar issue
         Fragment fragment = null;
         try {
             fragment = ClientListFragment.newInstance(tab);
@@ -222,6 +253,8 @@ public class NavigationManager {
     }
 
     public void navigateToClientListAndClearStack(String tab) {
+        //TODO: Action Bar issue
+
         Fragment fragment = null;
         try {
             fragment = ClientListFragment.newInstance(tab);
@@ -241,6 +274,8 @@ public class NavigationManager {
     }
 
     public void onBackPressed() {
+        //TODO: Action Bar issue
+
         if(fragmentTag != null && !fragmentTag.equalsIgnoreCase("ClientNoteFragment")) {
             actionBarManager.resetClient();
         }
@@ -309,14 +344,20 @@ public class NavigationManager {
     //Actionbar Management
 
     public void initializeTeamBar(List<TeamObject> teamsObject) {
+        //TODO: Action Bar issue
+
         actionBarManager.initializeTeamBar(teamsObject);
     }
 
     public void initScopeBar(List<ScopeBarModel> scopeBar, String myAgentId) {
+        //TODO: Action Bar issue
+
         actionBarManager.initializeTeamAgents(scopeBar, myAgentId);
     }
 
     public void updateTeam(TeamObject team) {
+        //TODO: Action Bar issue
+
         actionBarManager.updateTeam(team);
     }
 
@@ -337,6 +378,8 @@ public class NavigationManager {
     }
 
     public void setSelectedClient(ClientObject selectedClient) {
+        //TODO: Action Bar issue
+
         actionBarManager.setSelectedClient(selectedClient);
     }
 
@@ -357,6 +400,8 @@ public class NavigationManager {
     }
 
     public int getMarketId() {
+        //TODO: Action Bar issue
+
         return actionBarManager.getMarketId();
     }
 
@@ -365,6 +410,8 @@ public class NavigationManager {
     }
 
     public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
+        //TODO: Action Bar issue
+
         this.colorSchemeManager = colorSchemeManager;
         actionBarManager.updateColorSchemeManager(colorSchemeManager);
         toolbarManager.updateColorSchemeManager(colorSchemeManager);

@@ -125,7 +125,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
         loader.setVisibility(View.VISIBLE);
-        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+        parentActivity.resetDashboardTiles();
+//        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
 //        parentActivity.runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -1425,7 +1426,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             try {
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
-                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, parentActivity.getCurrentScopeFilter().getName());
 //                loader.setVisibility(View.INVISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
