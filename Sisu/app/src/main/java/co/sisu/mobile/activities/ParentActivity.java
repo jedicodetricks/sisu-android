@@ -214,6 +214,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         //TODO: Eventually you won't need the non tile debug stuff
         if(tileDebug) {
+            noNavigation = true;
             initTimelineDate();
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
             apiManager.getTeams(this, agent.getAgent_id());
@@ -445,13 +446,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        parentLoader.setVisibility(View.GONE);
-        paginateInfo.setVisibility(View.GONE);
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
 
-        if(!teamSwap) {
+        if(!teamSwap && !noNavigation) {
+            parentLoader.setVisibility(View.GONE);
+            paginateInfo.setVisibility(View.GONE);
             switch (v.getId()) {
                 case R.id.action_bar_home:
                 case R.id.team_icon:
@@ -759,7 +760,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamParamFinished = false;
             colorSchemeFinished = false;
             labelsFinished = false;
-            noNavigation = true;
+            noNavigation = false;
             activitySettingsParamFinished = false;
             teamsFinished = false;
     }
