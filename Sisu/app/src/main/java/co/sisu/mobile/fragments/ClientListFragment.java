@@ -391,7 +391,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             });
         }
         else if(returnType == ApiReturnTypes.CREATE_NOTE) {}
-        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENTS) {
+        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENT_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 JSONObject clientObject = new JSONObject(tileString);

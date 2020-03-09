@@ -228,13 +228,22 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         month += 1;
         String formatDate = year + "/" + month + "/" + day;
+        String formattedMonth = String.valueOf(month);
+        if(month < 10) {
+            formattedMonth = "0" + formattedMonth;
+        }
+        String formattedDay = String.valueOf(day);
+        if(day < 10) {
+            formattedDay = "0" + formattedDay;
+        }
+        String displayDate = year + "-" + formattedMonth + "-" + formattedDay;
 
         try {
             d = formatter.parse(formatDate);
             Calendar updatedTime = Calendar.getInstance();
             updatedTime.setTime(d);
 
-            rightSelector.setText(sdf.format(updatedTime.getTime()));
+            rightSelector.setText(displayDate);
         } catch (ParseException e) {
             parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();

@@ -46,5 +46,5 @@ public enum ApiReturnTypes {
     GET_SCOPE,
     GET_AGENT_FILTERS,
     GET_MARKET_STATUS,
-    GET_TEAM_CLIENTS
+    GET_TEAM_CLIENT_TILES
 }

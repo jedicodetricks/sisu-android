@@ -745,7 +745,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     else {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            if(getCurrentScopeFilter() != null) {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            }
+                            else {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                            }
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
@@ -909,7 +914,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
             navigateToScoreboard(true);
         }
-        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENTS) {
+        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENT_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 JSONObject newClientTiles = new JSONObject(tileString);
@@ -1055,6 +1060,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
                 }
                 if(teamsFinished) {
+                    //TODO: Probably don't need either of these
                     apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
                     apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
@@ -1077,6 +1083,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                     dataController.setMessageCenterVisible(true);
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    //TODO: Probably don't get to getClients now
                     apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                     SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                     if(settingsFinished && !tileDebug) {
@@ -1089,6 +1096,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
                 else {
+                    //TODO: Probably don't get to getClients now
                     apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                     dataController.setMessageCenterVisible(false);
                     teamParamFinished = true;
@@ -1096,8 +1104,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 teamsFinished = true;
                 apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+                //TODO: Could probably get activity settings later (record or settings page)
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
 //                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 if(tileDebug) {
@@ -1497,6 +1507,41 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         mCurrentAnimator = set;
     }
 
+    public void resetClientTiles(String clientSearch, int page) {
+        parentLoader.setVisibility(View.VISIBLE);
+        marketStatusFinished = true;
+        String selectedContextId = agent.getAgent_id();
+        if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
+            selectedContextId = currentScopeFilter.getIdValue().substring(1);
+        }
+        updateActionBarTitle(currentScopeFilter.getName());
+        if(currentMarketStatusFilter != null) {
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
+        }
+        else {
+            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
+        }
+    }
+
+    public void resetDashboardTiles() {
+        parentLoader.setVisibility(View.VISIBLE);
+        updateActionBarTitle(currentScopeFilter.getName());
+        tileTemplateFinished = false;
+        scopeFinished = false;
+        apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+    }
+
+
+    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
+        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
+    }
+
+    public void updateActionBarTitle(String title) {
+        navigationManager.getActionBarManager().setTitle(title);
+    }
+
     // GETTERS AND SETTERS
 
     public NotesObject getSelectedNote() {
@@ -1708,39 +1753,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
 
-    public void resetClientTiles(String clientSearch, int page) {
-        parentLoader.setVisibility(View.VISIBLE);
-        marketStatusFinished = true;
-        String selectedContextId = agent.getAgent_id();
-        if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
-            selectedContextId = currentScopeFilter.getIdValue().substring(1);
-        }
-        updateActionBarTitle(currentScopeFilter.getName());
-        if(currentMarketStatusFilter != null) {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
-        }
-        else {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
-        }
-    }
-
-    public void resetDashboardTiles() {
-        parentLoader.setVisibility(View.VISIBLE);
-        updateActionBarTitle(currentScopeFilter.getName());
-        tileTemplateFinished = false;
-        scopeFinished = false;
-        apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
-    }
-
-
-    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
-        this.colorSchemeManager = colorSchemeManager;
-        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
-    }
-
-    public void updateActionBarTitle(String title) {
-        navigationManager.getActionBarManager().setTitle(title);
-    }
 }
 

@@ -7,11 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +15,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 import co.sisu.mobile.BuildConfig;
-import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncAuthenticatorNEW;
 import co.sisu.mobile.api.AsyncDelete;
 import co.sisu.mobile.api.AsyncGet;
@@ -259,7 +254,7 @@ public class ApiManager {
 
     public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter, String clientSearch, int page) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENTS;
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENT_TILES;
         String currentUrl = url + "api/v2/team/get-team-clients";
         JsonObject jsonRequest = new JsonObject();
         jsonRequest.addProperty("team_id", teamId);
