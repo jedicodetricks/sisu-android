@@ -733,9 +733,16 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         }
 
         if(rounded) {
+            // I'm doing this try catch because apparently there is some bad color data coming in sometimes
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(Color.parseColor(assignedTileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            try {
+                roundedCorners.setColor(Color.parseColor(assignedTileColor));
+                rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            } catch (Exception e) {
+                roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            }
+
         }
         else {
             int topBorder = 0;

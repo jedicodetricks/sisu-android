@@ -1103,6 +1103,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     dataController.setSlackInfo(null);
                 }
                 teamsFinished = true;
+                scopeFinished = false;
                 apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 //TODO: I don't think I need goals anymore, that's passed in with the tiles I think
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
@@ -1525,7 +1526,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void resetDashboardTiles() {
         parentLoader.setVisibility(View.VISIBLE);
-        updateActionBarTitle(currentScopeFilter.getName());
+        if(currentScopeFilter != null) {
+            updateActionBarTitle(currentScopeFilter.getName());
+        }
         tileTemplateFinished = false;
         scopeFinished = false;
         apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
