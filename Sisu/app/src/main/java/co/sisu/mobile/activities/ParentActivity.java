@@ -471,7 +471,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     else {
                         if(tileDebug) {
                             parentLoader.setVisibility(View.VISIBLE);
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+                            if(currentScopeFilter != null) {
+                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+                            }
+                            else {
+                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
+                            }
 //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
@@ -483,9 +488,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     noNavigation = false;
                     parentLoader.setVisibility(View.VISIBLE);
                     String selectedContextId = agent.getAgent_id();
-                    if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
-                        selectedContextId = currentScopeFilter.getIdValue().substring(1);
+                    if(currentScopeFilter != null) {
+                        if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
+                            selectedContextId = currentScopeFilter.getIdValue().substring(1);
+                        }
                     }
+
                     if(currentMarketStatusFilter != null) {
                         apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
                     }
