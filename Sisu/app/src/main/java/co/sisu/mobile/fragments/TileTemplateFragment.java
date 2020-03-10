@@ -1594,7 +1594,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorBeginDateText.setText(formattedStartTime);
         dateSelectorEndDateText.setText(formattedEndTime);
         loader.setVisibility(View.VISIBLE);
-        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+        }
+        else {
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+        }
 
         return false;
     }
@@ -1628,6 +1633,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         endDateSelected = false;
 
         loader.setVisibility(View.VISIBLE);
-        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+        }
+        else {
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType,"a" + parentActivity.getAgent().getAgent_id());
+        }
     }
 }
