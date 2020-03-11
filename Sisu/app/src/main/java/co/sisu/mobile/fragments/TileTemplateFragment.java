@@ -1312,7 +1312,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 dashboardType = "team";
             }
             loader.setVisibility(View.VISIBLE);
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+            if(parentActivity.getCurrentScopeFilter() != null) {
+                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+            }
+            else {
+                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+            }
         }
     }
 
@@ -1433,7 +1438,12 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             try {
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
-                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, parentActivity.getCurrentScopeFilter().getName());
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, parentActivity.getCurrentScopeFilter().getName());
+                }
+                else {
+                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "a" + parentActivity.getAgent().getAgent_id());
+                }
 //                loader.setVisibility(View.INVISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();

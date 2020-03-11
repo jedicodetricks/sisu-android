@@ -495,10 +495,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
 
                     if(currentMarketStatusFilter != null) {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
+                        if(currentScopeFilter != null) {
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
+                        }
+                        else {
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
+                        }
                     }
                     else {
-                        apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1);
+                        if(currentScopeFilter != null) {
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1);
+                        }
+                        else {
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1);
+                        }
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
 //                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
@@ -1528,7 +1538,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
         }
         else {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
+            if(currentScopeFilter != null) {
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
+            }
+            else {
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page);
+            }
         }
     }
 
@@ -1540,7 +1555,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         tileTemplateFinished = false;
         scopeFinished = false;
         apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+        if(currentScopeFilter != null) {
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+        }
+        else {
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
+        }
     }
 
 
