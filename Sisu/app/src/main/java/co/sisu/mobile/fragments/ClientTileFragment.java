@@ -82,6 +82,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private String count;
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
+    private ImageView addButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -90,6 +91,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
+        addButton = parentActivity.findViewById(R.id.addView);
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getClientTiles();
 
@@ -389,6 +391,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         }
         initScopePopupMenu();
         initMarketStatusPopupMenu();
+        addButton.bringToFront();
     }
 
     private void initScopePopupMenu() {

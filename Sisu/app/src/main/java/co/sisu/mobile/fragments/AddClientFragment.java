@@ -934,6 +934,7 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(i, PICK_CONTACT);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
