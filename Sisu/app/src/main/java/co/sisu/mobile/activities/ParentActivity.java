@@ -55,6 +55,7 @@ import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.ClientTileFragment;
 import co.sisu.mobile.fragments.LeaderboardFragment;
 import co.sisu.mobile.fragments.MoreFragment;
@@ -174,6 +175,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
     private ScopeBarModel currentScopeFilter = null;
     private MarketStatusModel currentMarketStatusFilter = null;
+    private ImageView addClientButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -442,6 +444,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         ImageView moreButton = findViewById(R.id.moreView);
         moreButton.setOnClickListener(this);
+
+        addClientButton = findViewById(R.id.addView);
+        addClientButton.setOnClickListener(this);
     }
 
     @Override
@@ -449,6 +454,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(dataController.getUpdatedRecords().size() > 0) {
             updateRecordedActivities();
         }
+
+        addClientButton.setVisibility(View.GONE);
 
         if(!teamSwap && !noNavigation) {
             parentLoader.setVisibility(View.GONE);
@@ -459,6 +466,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.toggleDrawer();
                     break;
                 case R.id.scoreboardView:
+                    addClientButton.setVisibility(View.VISIBLE);
                     if(isRecruiting()) {
                         if(tileDebug) {
                             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
@@ -529,9 +537,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.cancelButton:
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                     break;
-//                case R.id.team_agents_title:
-//                    navigationManager.toggleTeamDrawer();
-//                    break;
+                case R.id.addView:
+                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
+                    break;
                 default:
                     break;
             }
@@ -894,6 +902,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         navigationManager.onBackPressed();
+        String currentFragment = navigationManager.getCurrentFragment();
+        if(currentFragment.equalsIgnoreCase("scoreboard")) {
+            addClientButton.setVisibility(View.VISIBLE);
+        }
     }
 
     public void showToast(final CharSequence msg){

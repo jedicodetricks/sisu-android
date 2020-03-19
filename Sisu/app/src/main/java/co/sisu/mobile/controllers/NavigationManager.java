@@ -253,7 +253,7 @@ public class NavigationManager {
         toolbarManager.resetToolbarImages("More");
     }
 
-    public void navigateToClientListAndClearStack(String tab) {
+    public void naviganavigateToClientListAndClearStackteToClientListAndClearStack(String tab) {
         //TODO: Action Bar issue
 
         Fragment fragment = null;

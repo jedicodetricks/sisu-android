@@ -1778,7 +1778,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 @Override
                 public void run() {
                     parentActivity.showToast("Client Saved");
-                    navigationManager.navigateToClientListAndClearStack(currentStatus);
+//                    navigationManager.navigateToClientListAndClearStack(currentStatus);
+                    parentActivity.onBackPressed();
                 }
             });
         }

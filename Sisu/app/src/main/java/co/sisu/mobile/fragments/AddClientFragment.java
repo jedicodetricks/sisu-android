@@ -1177,7 +1177,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         if(returnType == ApiReturnTypes.CREATE_CLIENT) {
             parentActivity.runOnUiThread(() -> {
                 parentActivity.showToast("Client Saved");
-                navigationManager.navigateToClientListAndClearStack(currentStatus);
+                navigationManager.onBackPressed();
+
             });
         }
         else if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
