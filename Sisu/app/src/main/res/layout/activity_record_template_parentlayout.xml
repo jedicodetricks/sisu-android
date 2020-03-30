@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:id="@+id/tileScrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -13,13 +14,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <include
-            android:id="@+id/tileDashboardDateSelector"
-            layout="@layout/date_selector_group"
+            android:id="@+id/tileRecordDateSelector"
+            layout="@layout/date_selector_mini_group"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
-
 
     </RelativeLayout>
 
