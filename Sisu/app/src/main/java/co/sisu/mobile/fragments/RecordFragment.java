@@ -52,6 +52,7 @@ import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
+import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
 import okhttp3.Response;
 
@@ -251,12 +252,24 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void initializeListView(List<Metric> metricList) {
+        List<DoubleMetric> doubleMetricList = new ArrayList<>();
+        for(int i = 0; i < metricList.size(); i++) {
+            if(i % 2 == 0) {
+                if(i + 1 >= metricList.size()) {
+                    doubleMetricList.add(new DoubleMetric(metricList.get(i), null));
+                }
+                else {
+                    doubleMetricList.add(new DoubleMetric(metricList.get(i), metricList.get(i + 1)));
+                }
+            }
+        }
+
         if(getView() != null) {
             mListView = getView().findViewById(R.id.record_list_view);
             mListView.setDivider(null);
             mListView.setDividerHeight(30);
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), metricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
+            RecordListAdapter adapter = new RecordListAdapter(getContext(), doubleMetricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
             mListView.setAdapter(adapter);
         }
 

@@ -7,6 +7,17 @@
     <dimen name="font_large">18dp</dimen>
     <dimen name="font_normal">15dp</dimen>
     <dimen name="font_small">12dp</dimen>
+    <dimen name="font_smaller">10dp</dimen>
+    <dimen name="font_smallest">6dp</dimen>
+
+    <dimen name="text_size_mega">64dp</dimen>
+    <dimen name="text_size_largest">32dp</dimen>
+    <dimen name="text_size_larger">22dp</dimen>
+    <dimen name="text_size_large">18dp</dimen>
+    <dimen name="text_size_normal">15dp</dimen>
+    <dimen name="text_size_small">12dp</dimen>
+    <dimen name="text_size_smaller">10dp</dimen>
+    <dimen name="text_size_smallest">8dp</dimen>
 
     <!-- spacing between two views -->
     <dimen name="spacing_huge">40dp</dimen>
