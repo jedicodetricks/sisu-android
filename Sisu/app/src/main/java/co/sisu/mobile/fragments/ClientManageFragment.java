@@ -1,21 +1,26 @@
 package co.sisu.mobile.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -40,6 +45,7 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -73,6 +79,8 @@ import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 import okhttp3.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ClientManageFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener, AsyncServerEventListener, View.OnFocusChangeListener {
 
     private ParentActivity parentActivity;
@@ -104,6 +112,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     private int counter;
     private LinkedHashMap leadSources;
     private String currentStatus = "";
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
+    public final int PICK_CONTACT = 2015;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -167,7 +177,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
         setupCommonLabels();
         setCommonColorScheme();
-
     }
 
     private void setupEditClientLabels() {
@@ -476,14 +485,14 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         setInputTextLayoutHintColor(firstNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(lastNameLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(emailLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutHintColor(phoneLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(transAmountLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(paidIncomeLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(gciLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(noteLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutHintColor(noteLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(gciPercentLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(commissionInputLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutHintColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
 
 
 
@@ -578,7 +587,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         seller.setBackgroundResource(R.drawable.rounded_button);
         drawable = (GradientDrawable) seller.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
-
 
         exportContact.setHighlightColor(colorSchemeManager.getButtonSelected());
         exportContact.setBackgroundResource(R.drawable.rounded_button);
@@ -1263,29 +1271,65 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
                 break;
             case R.id.exportContactButton:
-                Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
-                contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+                if(parentActivity.getSelectedClient() == null) {
+                    //IMPORT
+                    if (ContextCompat.checkSelfPermission(parentActivity,
+                            Manifest.permission.READ_CONTACTS)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                String phone = "";
-                int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
+                        // Permission is not granted
+                        // Should we show an explanation?
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(parentActivity,
+                                Manifest.permission.READ_CONTACTS)) {
 
-                if(currentClient != null) {
-                    if(currentClient.getMobile_phone() != null) {
-                        phone = currentClient.getMobile_phone();
-                    } else {
-                        phone = currentClient.getHome_phone();
-                        phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+                            // Show an explanation to the user *asynchronously* -- don't block
+                            // this thread waiting for the user's response! After the user
+                            // sees the explanation, try again to request the permission.
+
+                        } else {
+
+                            // No explanation needed; request the permission
+                            ActivityCompat.requestPermissions(parentActivity,
+                                    new String[]{Manifest.permission.READ_CONTACTS},
+                                    MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        }
+                    }
+                    else {
+                        Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                        startActivityForResult(i, PICK_CONTACT);
                     }
                 }
+                else {
+                    //EXPORT
+                    Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+                    contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
-                contactIntent
-                        .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() != null ? currentClient.getFirst_name() : "" + " " + currentClient.getLast_name() != null ? currentClient.getLast_name() : "")
-                        .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
-                        .putExtra(ContactsContract.Intents.Insert.PHONE, phone)
-                        .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, phoneType);
+                    String phone = "";
+                    int phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
+
+                    if(currentClient != null) {
+                        if(currentClient.getMobile_phone() != null) {
+                            phone = currentClient.getMobile_phone();
+                        } else {
+                            phone = currentClient.getHome_phone();
+                            phoneType = ContactsContract.CommonDataKinds.Phone.TYPE_HOME;
+                        }
+                    }
+
+                    contactIntent
+                            .putExtra(ContactsContract.Intents.Insert.NAME, currentClient.getFirst_name() != null ? currentClient.getFirst_name() : "" + " " + currentClient.getLast_name() != null ? currentClient.getLast_name() : "")
+                            .putExtra(ContactsContract.Intents.Insert.EMAIL, currentClient.getEmail())
+                            .putExtra(ContactsContract.Intents.Insert.PHONE, phone)
+                            .putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, phoneType);
 
 
-                startActivityForResult(contactIntent, 1);
+                    startActivityForResult(contactIntent, 1);
+                }
+
                 break;
             case R.id.archiveButton:
                 if(parentActivity.isRecruiting()) {
@@ -1297,6 +1341,9 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 break;
             case R.id.activateButton:
                 popReasonDialog("Reason for Activating Client?", "Activated");
+                break;
+            case R.id.cancelButton:
+                parentActivity.onBackPressed();
                 break;
             case R.id.clientNotesButton:
                 parentActivity.setNoteOrMessage("Note");
@@ -1394,6 +1441,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         newClient.setType_id(typeSelected);
         newClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
         newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
+        newClient.setTeam_id(parentActivity.getSelectedTeamId());
 
         if(!appointmentDisplay.getText().equals("")) {
             newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -1774,6 +1822,12 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             });
         }
         else if(returnType == ApiReturnTypes.CREATE_CLIENT) {
+            String returnString = "";
+            try {
+                returnString = ((Response) returnObject).body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -1830,5 +1884,114 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             return null;
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    startActivityForResult(i, PICK_CONTACT);
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PICK_CONTACT:
+                    Cursor cursor = null;
+                    String email = "";
+                    String phone = "";
+                    String firstName = "";
+                    String lastName = "";
+                    try {
+                        Uri result = data.getData();
+                        Log.v("TEST", "Got a contact result: "
+                                + result.toString());
+
+                        // get the contact id from the Uri
+                        String id = result.getLastPathSegment();
+
+                        cursor = parentActivity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?", new String[] { id },
+                                null);
+
+                        int phoneIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+                        if(cursor.moveToFirst()) {
+                            phone = cursor.getString(phoneIdx);
+                            Log.v("TEST", "Got phone: " + phone);
+                            Log.v("TEST", "Got phone: " + cursor.getCount());
+                        } else {
+                            Log.w("TEST", "No results");
+                        }
+
+                        int nameIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+
+                        if(cursor.moveToFirst()) {
+                            String name = cursor.getString(nameIdx);
+                            Log.v("TEST", "Got name: " + name);
+                            Log.v("TEST", "Got name: " + cursor.getCount());
+                            String[] nameList = name.split(" ");
+                            firstName = nameList[0];
+                            lastName = nameList[1];
+                        } else {
+                            Log.w("TEST", "No results");
+                        }
+
+                        // query for everything email
+                        cursor = parentActivity.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                                null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + "=?", new String[] { id },
+                                null);
+
+
+
+                        int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+                        // let's just get the first email
+                        if (cursor.moveToFirst()) {
+                            email = cursor.getString(emailIdx);
+
+                            Log.v("TEST", "Got email: " + email);
+                            Log.v("TEST", "Got email: " + cursor.getCount());
+                        } else {
+                            Log.w("TEST", "No results");
+                        }
+
+
+                        firstNameText.setText(firstName);
+                        lastNameText.setText(lastName);
+                        emailText.setText(email);
+                        phoneText.setText(PhoneNumberUtils.formatNumber(phone, Locale.getDefault().getCountry()));
+                    } catch (Exception e) {
+                        Log.e("TEST", "Failed to get data", e);
+                    } finally {
+                        if (cursor != null) {
+                            cursor.close();
+                        }
+
+                    }
+                    break;
+            }
+
+        } else {
+            Log.w("TEST", "Warning: parentActivity result not ok");
+        }
     }
 }

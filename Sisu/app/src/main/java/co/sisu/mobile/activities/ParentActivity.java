@@ -456,6 +456,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         addClientButton.setVisibility(View.GONE);
+        setSelectedClient(null);
 
         if(!teamSwap && !noNavigation) {
             parentLoader.setVisibility(View.GONE);
@@ -495,6 +496,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.reportView:
                     noNavigation = false;
                     parentLoader.setVisibility(View.VISIBLE);
+                    addClientButton.setVisibility(View.VISIBLE);
                     String selectedContextId = agent.getAgent_id();
                     if(currentScopeFilter != null) {
                         if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
@@ -903,7 +905,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onBackPressed() {
         navigationManager.onBackPressed();
         String currentFragment = navigationManager.getCurrentFragment();
-        if(currentFragment.equalsIgnoreCase("scoreboard")) {
+        setSelectedClient(null);
+        if(currentFragment.equalsIgnoreCase("scoreboard") || currentFragment.equalsIgnoreCase("report")) {
             addClientButton.setVisibility(View.VISIBLE);
         }
     }
@@ -999,12 +1002,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 JSONObject marketStatusObject = new JSONObject(tileString);
                 try {
                     JSONArray marketStatuses = marketStatusObject.getJSONArray("client_status");
-                    for(int k = 0; k < marketStatuses.length(); k++) {
-                        JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
-                        MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
-                        marketStatusBar.add(currentModel);
-                        if(currentModel.getKey().equalsIgnoreCase("")) {
-                            currentMarketStatusFilter = currentModel;
+                    if(marketStatuses != null) {
+                        for(int k = 0; k < marketStatuses.length(); k++) {
+                            JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
+                            MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
+                            marketStatusBar.add(currentModel);
+                            if(currentModel.getKey().equalsIgnoreCase("")) {
+                                currentMarketStatusFilter = currentModel;
+                            }
                         }
                     }
                 } catch (JSONException e) {
