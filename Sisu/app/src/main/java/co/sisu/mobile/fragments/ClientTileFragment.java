@@ -364,7 +364,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         scopeSelectorText = view.findViewById(R.id.contextFilterRight);
-        scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
+        }
         scopeSelectorText.setOnClickListener(this);
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
         scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
