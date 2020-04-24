@@ -25,6 +25,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
+        <TextView
+            android:id="@+id/recordTransactionTitleView"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@id/tileRecordDateSelector"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorCorporateOrange"
+            android:text="Transactions"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/font_larger" />
+
+        <include
+            android:id="@+id/tileRecordTransactionButtons"
+            layout="@layout/record_transactions_buttons"
+            android:layout_below="@id/recordTransactionTitleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
         <!--<TextView-->
             <!--android:id="@+id/activitiesTitle"-->
             <!--android:layout_width="match_parent"-->
@@ -84,8 +107,25 @@
             <!--style="@style/DividerStyle"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_below="@id/activitiesTitle"/>-->
+        <TextView
+            android:id="@+id/recordTitleView"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_below="@id/tileRecordTransactionButtons"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorCorporateOrange"
+            android:text="Activities"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/font_larger" />
 
-        <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/record_list_view_parent" android:layout_below="@id/tileRecordDateSelector">
+        <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent"
+            android:id="@+id/record_list_view_parent"
+            android:layout_below="@id/recordTitleView"
+            >
+
             <ListView
                 android:id="@+id/record_list_view"
                 android:layout_width="match_parent"

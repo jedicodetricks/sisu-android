@@ -205,7 +205,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("14055");
+//        agent.setAgent_id("3812");
 //        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
@@ -706,7 +706,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     case "Scoreboard":
                         try {
                             if(tileDebug) {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                if(getCurrentScopeFilter() != null) {
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                }
+                                else {
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                }
                             }
                             else {
                                 if(isRecruiting()) {
@@ -721,7 +726,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         catch(Exception e) {
                             if(tileDebug) {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                if(getCurrentScopeFilter() != null) {
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                }
+                                else {
+                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                }
                             }
                             else {
                                 if(isRecruiting()) {
@@ -906,9 +916,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         navigationManager.onBackPressed();
         String currentFragment = navigationManager.getCurrentFragment();
         setSelectedClient(null);
-        if(currentFragment.equalsIgnoreCase("scoreboard") || currentFragment.equalsIgnoreCase("report")) {
-            addClientButton.setVisibility(View.VISIBLE);
+        if(currentFragment != null) {
+            if(currentFragment.equalsIgnoreCase("scoreboard") || currentFragment.equalsIgnoreCase("report")) {
+                addClientButton.setVisibility(View.VISIBLE);
+            }
         }
+        else {
+
+        }
+
     }
 
     public void showToast(final CharSequence msg){
@@ -988,7 +1004,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                 clientTilesFinished = true;
                 if(marketStatusFinished) {
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
+                    if(getCurrentScopeFilter() != null) {
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
+                    }
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -1017,7 +1038,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 marketStatusFinished = true;
                 if(clientTilesFinished) {
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
+                    if(getCurrentScopeFilter() != null) {
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
+                    }
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -1547,12 +1573,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parentLoader.setVisibility(View.VISIBLE);
         marketStatusFinished = true;
         String selectedContextId = agent.getAgent_id();
-        if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
-            selectedContextId = currentScopeFilter.getIdValue().substring(1);
+        if(currentScopeFilter != null) {
+            if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
+                selectedContextId = currentScopeFilter.getIdValue().substring(1);
+            }
+            updateActionBarTitle(currentScopeFilter.getName());
         }
-        updateActionBarTitle(currentScopeFilter.getName());
+
         if(currentMarketStatusFilter != null) {
-            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
+            if(currentScopeFilter != null) {
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
+            }
+            else {
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page);
+            }
         }
         else {
             if(currentScopeFilter != null) {

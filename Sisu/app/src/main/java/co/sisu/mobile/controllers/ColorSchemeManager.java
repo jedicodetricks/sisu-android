@@ -46,6 +46,7 @@ public class ColorSchemeManager {
     public ColorSchemeManager() {}
 
     public ColorSchemeManager(JSONObject theme) throws JSONException {
+        // TODO: Fix how we deal with this. There is no error handling
             if(theme.has("app_background")) {
                 appBackground = Color.parseColor(theme.getString("app_background"));
             }
