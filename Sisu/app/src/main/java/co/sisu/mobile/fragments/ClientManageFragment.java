@@ -494,47 +494,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         setInputTextLayoutHintColor(commissionInputLayout, colorSchemeManager.getIconActive());
         setInputTextLayoutHintColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
 
-
-
-
-        // TODO: This is the stuff I'm unsure of
-//        Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
-//        imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
-//        archiveButton.setImageDrawable(imageDraw);
-//
-//        exportContact.setHighlightColor(colorSchemeManager.getButtonSelected());
-//        exportContact.setBackgroundResource(R.drawable.rounded_button);
-//        exportContact.setTextColor(colorSchemeManager.getButtonText());
-//        GradientDrawable drawable = (GradientDrawable) exportContact.getBackground();
-//        drawable.setColor(colorSchemeManager.getButtonBackground());
-//
-//        typeSelected = currentClient.getType_id();
-//        if(typeSelected.equals("b")) {
-//            buyer.setBackgroundResource(R.drawable.rounded_button);
-//            drawable = (GradientDrawable) buyer.getBackground();
-//            drawable.setColor(colorSchemeManager.getButtonSelected());
-//
-//            seller.setBackgroundResource(R.drawable.rounded_button);
-//            drawable = (GradientDrawable) seller.getBackground();
-//            drawable.setColor(colorSchemeManager.getButtonBackground());
-//        } else {
-//            seller.setBackgroundResource(R.drawable.rounded_button);
-//            drawable = (GradientDrawable) seller.getBackground();
-//            drawable.setColor(colorSchemeManager.getButtonSelected());
-//
-//            buyer.setBackgroundResource(R.drawable.rounded_button);
-//            drawable = (GradientDrawable) buyer.getBackground();
-//            drawable.setColor(colorSchemeManager.getButtonBackground());
-//        }
-//
-//        buyer.setTextColor(colorSchemeManager.getButtonText());
-//        seller.setTextColor(colorSchemeManager.getButtonText());
-//
-//        activateButton.setTextColor(colorSchemeManager.getButtonText());
-//        activateButton.setBackgroundResource(R.drawable.rounded_button);
-//        drawable = (GradientDrawable) activateButton.getBackground();
-//        drawable.setColor(colorSchemeManager.getButtonBackground());
-
         signedClear.setTextColor(colorSchemeManager.getButtonText());
         signedClear.setBackgroundResource(R.drawable.rounded_button);
         GradientDrawable drawable = (GradientDrawable) signedClear.getBackground();

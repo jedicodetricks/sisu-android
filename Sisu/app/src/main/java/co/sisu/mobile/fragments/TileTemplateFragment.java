@@ -61,6 +61,7 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.CircularProgressBar;
+import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 import static android.view.FrameMetrics.ANIMATION_DURATION;
@@ -76,21 +77,22 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private DateManager dateManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
 
-    private int selectedStartYear = 0;
-    private int selectedStartMonth = 0;
-    private int selectedStartDay = 0;
-    private int selectedEndYear = 0;
-    private int selectedEndMonth = 0;
-    private int selectedEndDay = 0;
+//    private int selectedStartYear = 0;
+//    private int selectedStartMonth = 0;
+//    private int selectedStartDay = 0;
+//    private int selectedEndYear = 0;
+//    private int selectedEndMonth = 0;
+//    private int selectedEndDay = 0;
     private Spinner spinner;
-    private String formattedStartTime;
-    private String formattedEndTime;
+//    private String formattedStartTime;
+//    private String formattedEndTime;
     private Calendar calendar = Calendar.getInstance();
-    private Date selectedStartTime;
-    private Date selectedEndTime;
+//    private Date selectedStartTime;
+//    private Date selectedEndTime;
 
     private int numOfRows = 1;
     private boolean isAgentDashboard;
@@ -114,6 +116,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
+        dateManager = parentActivity.getDateManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         this.isAgentDashboard = parentActivity.isAgentDashboard();
@@ -187,7 +190,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             initDateSelector(parentLayout);
             initPopupMenu();
             initializeCalendarHandler();
-            initDashboardTypeSelector(parentLayout);
             //
 
             try {
@@ -1216,16 +1218,16 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorDateText.setTextColor(colorSchemeManager.getLighterTextColor());
 
         dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
-        dateSelectorBeginDateText.setText(parentActivity.getFormattedStartTime());
+        dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
         dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
         dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterTextColor());
-        selectedStartTime = getDateFromFormattedTime(parentActivity.getFormattedStartTime());
+//        selectedStartTime = getDateFromFormattedTime(dateManager.getFormattedStartTime());
 
         dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
-        dateSelectorEndDateText.setText(parentActivity.getFormattedEndTime());
+        dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
         dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
         dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
-        selectedEndTime = getDateFromFormattedTime(parentActivity.getFormattedEndTime());
+//        selectedEndTime = getDateFromFormattedTime(dateManager.getFormattedEndTime());
 
         scopeSelectorText = view.findViewById(R.id.scopeSelector);
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
@@ -1235,42 +1237,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         dateSelectorBeginDateText.setOnClickListener(this);
         dateSelectorEndDateText.setOnClickListener(this);
         scopeSelectorText.setOnClickListener(this);
-    }
-
-    private void initDashboardTypeSelector(View view) {
-        // TODO: I think I can delete this
-//        leftLayout = view.findViewById(R.id.dashboardTypeTileLeftLayout);
-//        leftLayout.setOnClickListener(this);
-//
-//        rightLayout = view.findViewById(R.id.dashboardTypeTileRightLayout);
-//        rightLayout.setOnClickListener(this);
-//
-//        LayerDrawable underlineDrawable = getBorders(
-//                colorSchemeManager.getAppBackground(), // Background color
-//                Color.GRAY, // Border color
-//                0, // Left border in pixels
-//                0, // Top border in pixels
-//                0, // Right border in pixels
-//                5 // Bottom border in pixels
-//        );
-//
-//        LayerDrawable noUnderlineDrawable = getBorders(
-//                colorSchemeManager.getAppBackground(), // Background color
-//                Color.GRAY, // Border color
-//                0, // Left border in pixels
-//                0, // Top border in pixels
-//                0, // Right border in pixels
-//                0 // Bottom border in pixels
-//        );
-//
-//        if(isAgentDashboard) {
-//            leftLayout.setBackground(underlineDrawable);
-//            rightLayout.setBackground(noUnderlineDrawable);
-//        }
-//        else {
-//            leftLayout.setBackground(noUnderlineDrawable);
-//            rightLayout.setBackground(underlineDrawable);
-//        }
     }
 
     private void toggleDashboardTypeSelector(boolean isAgentClicked) {
@@ -1313,10 +1279,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
             loader.setVisibility(View.VISIBLE);
             if(parentActivity.getCurrentScopeFilter() != null) {
-                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
             }
             else {
-                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, "a" + parentActivity.getAgent().getAgent_id());
             }
         }
     }
@@ -1465,157 +1431,165 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        calendar = Calendar.getInstance();
+//        calendar = Calendar.getInstance();
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
-                parentActivity.setTimeline("day");
-                parentActivity.setTimelineSelection(0);
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                dateManager.setToYesterday();
+//                parentActivity.setTimeline("day");
+//                parentActivity.setTimelineSelection(0);
+//                calendar.add(Calendar.DAY_OF_MONTH, -1);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 1:
                 //Today
-                parentActivity.setTimeline("day");
-                parentActivity.setTimelineSelection(1);
-
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                dateManager.setToToday();
+//                parentActivity.setTimeline("day");
+//                parentActivity.setTimelineSelection(1);
+//
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 2:
                 //Last Week
-                parentActivity.setTimeline("week");
-                parentActivity.setTimelineSelection(2);
-
-                calendar.add(Calendar.WEEK_OF_YEAR, -1);
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+                dateManager.setToLastWeek();
+//                parentActivity.setTimeline("week");
+//                parentActivity.setTimelineSelection(2);
+//
+//                calendar.add(Calendar.WEEK_OF_YEAR, -1);
+//                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//
+//                calendar.add(Calendar.DAY_OF_WEEK, 6);
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                 break;
             case 3:
                 //This Week
-                parentActivity.setTimeline("week");
-                parentActivity.setTimelineSelection(3);
-
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+                dateManager.setToThisWeek();
+//                parentActivity.setTimeline("week");
+//                parentActivity.setTimelineSelection(3);
+//
+//                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//
+//                calendar.add(Calendar.DAY_OF_WEEK, 6);
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                 break;
             case 4:
                 //Last Month
-                parentActivity.setTimeline("month");
-                parentActivity.setTimelineSelection(4);
-
-                calendar.add(Calendar.MONTH, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                dateManager.setToLastMonth();
+//                parentActivity.setTimeline("month");
+//                parentActivity.setTimelineSelection(4);
+//
+//                calendar.add(Calendar.MONTH, -1);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = 1;
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 break;
             case 5:
                 //This Month
-                parentActivity.setTimeline("month");
-                parentActivity.setTimelineSelection(5);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                dateManager.setToThisMonth();
+//                parentActivity.setTimeline("month");
+//                parentActivity.setTimelineSelection(5);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = 1;
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 break;
             case 6:
                 //Last year
-                parentActivity.setTimeline("year");
-                parentActivity.setTimelineSelection(6);
-                calendar.add(Calendar.YEAR, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = 12;
-                selectedEndDay = 31;
+                dateManager.setToLastYear();
+//                parentActivity.setTimeline("year");
+//                parentActivity.setTimelineSelection(6);
+//                calendar.add(Calendar.YEAR, -1);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = 1;
+//                selectedStartDay = 1;
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = 12;
+//                selectedEndDay = 31;
                 break;
             case 7:
                 //This year
-                parentActivity.setTimeline("year");
-                parentActivity.setTimelineSelection(7);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = 12;
-                selectedEndDay = 31;
+                dateManager.setToThisYear();
+//                parentActivity.setTimeline("year");
+//                parentActivity.setTimelineSelection(7);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = 1;
+//                selectedStartDay = 1;
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = 12;
+//                selectedEndDay = 31;
                 break;
             default:
                 return false;
         }
 
-        String formattedStartMonth = String.valueOf(selectedStartMonth);
-        String formattedEndMonth = String.valueOf(selectedEndMonth);
-        String formattedStartDay = String.valueOf(selectedStartDay);
-        String formattedEndDay = String.valueOf(selectedEndDay);
+//        String formattedStartMonth = String.valueOf(selectedStartMonth);
+//        String formattedEndMonth = String.valueOf(selectedEndMonth);
+//        String formattedStartDay = String.valueOf(selectedStartDay);
+//        String formattedEndDay = String.valueOf(selectedEndDay);
+//
+//        if(selectedStartDay < 10) {
+//            formattedStartDay = "0" + selectedStartDay;
+//        }
+//
+//        if(selectedEndDay < 10) {
+//            formattedEndDay = "0" + selectedEndDay;
+//        }
+//
+//        if(selectedStartMonth < 10) {
+//            formattedStartMonth = "0" + selectedStartMonth;
+//        }
+//
+//        if(selectedEndMonth < 10) {
+//            formattedEndMonth = "0" + selectedEndMonth;
+//        }
+//
+//        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+//        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+//        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
+//        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-        if(selectedStartDay < 10) {
-            formattedStartDay = "0" + selectedStartDay;
-        }
+//        dateManager.setFormattedStartTime(formattedStartTime);
+//        dateManager.setFormattedEndTime(formattedEndTime);
 
-        if(selectedEndDay < 10) {
-            formattedEndDay = "0" + selectedEndDay;
-        }
-
-        if(selectedStartMonth < 10) {
-            formattedStartMonth = "0" + selectedStartMonth;
-        }
-
-        if(selectedEndMonth < 10) {
-            formattedEndMonth = "0" + selectedEndMonth;
-        }
-
-        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
-        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
-
-        parentActivity.setFormattedStartTime(formattedStartTime);
-        parentActivity.setFormattedEndTime(formattedEndTime);
-
-        dateSelectorBeginDateText.setText(formattedStartTime);
-        dateSelectorEndDateText.setText(formattedEndTime);
+        dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
+        dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, "a" + parentActivity.getAgent().getAgent_id());
         }
 
         return false;
@@ -1637,13 +1611,13 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         if(beginDateSelected) {
             dateSelectorBeginDateText.setText(year + "-" + formattedMonth + "-" + formattedDay);
-            selectedStartTime = getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay);
-            parentActivity.setFormattedStartTime(year + "-" + formattedMonth + "-" + formattedDay);
+            dateManager.setSelectedStartTime(getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay));
+            dateManager.setFormattedStartTime(year + "-" + formattedMonth + "-" + formattedDay);
         }
         else if(endDateSelected) {
             dateSelectorEndDateText.setText(year + "-" + formattedMonth + "-" + formattedDay);
-            selectedEndTime = getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay);
-            parentActivity.setFormattedEndTime(year + "-" + formattedMonth + "-" + formattedDay);
+            dateManager.setSelectedEndTime(getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay));
+            dateManager.setFormattedEndTime(year + "-" + formattedMonth + "-" + formattedDay);
         }
 
         beginDateSelected = false;
@@ -1651,10 +1625,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType,"a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType,"a" + parentActivity.getAgent().getAgent_id());
         }
     }
 }

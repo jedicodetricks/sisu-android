@@ -81,7 +81,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
     private ParentActivity parentActivity;
     private DataController dataController;
     private NavigationManager navigationManager;
-//    private ClientCommonManager clientCommonManager;
     private ApiManager apiManager;
     private String currentStatus;
     private ColorSchemeManager colorSchemeManager;
@@ -103,7 +102,6 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
-//        clientCommonManager = new ClientCommonManager();F
         counter = 1;
         initializeButtons();
         initializeForm();

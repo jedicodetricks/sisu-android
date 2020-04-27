@@ -4,10 +4,8 @@ package co.sisu.mobile.fragments;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -19,18 +17,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +48,7 @@ import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 
@@ -71,6 +66,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private DateManager dateManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
     private TextView dateDisplay, otherLabel, leftSelector, rightSelector;
@@ -79,16 +75,16 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private TableLayout activitiesTable;
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
-    private int selectedStartYear = 0;
-    private int selectedStartMonth = 0;
-    private int selectedStartDay = 0;
-    private int selectedEndYear = 0;
-    private int selectedEndMonth = 0;
-    private int selectedEndDay = 0;
-    private String formattedStartTime;
-    private String formattedEndTime;
-    private Date selectedStartTime;
-    private Date selectedEndTime;
+//    private int selectedStartYear = 0;
+//    private int selectedStartMonth = 0;
+//    private int selectedStartDay = 0;
+//    private int selectedEndYear = 0;
+//    private int selectedEndMonth = 0;
+//    private int selectedEndDay = 0;
+//    private String formattedStartTime;
+//    private String formattedEndTime;
+//    private Date selectedStartTime;
+//    private Date selectedEndTime;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -116,6 +112,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        dateManager = parentActivity.getDateManager();
         calendar = Calendar.getInstance();
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
 
@@ -500,79 +497,81 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
-                parentActivity.setTimeline("day");
-                parentActivity.setTimelineSelection(0);
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                dateManager.setToYesterday();
+//                parentActivity.setTimeline("day");
+//                parentActivity.setTimelineSelection(0);
+//                calendar.add(Calendar.DAY_OF_MONTH, -1);
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 1:
                 //Today
-                parentActivity.setTimeline("day");
-                parentActivity.setTimelineSelection(1);
-
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+                dateManager.setToToday();
+//                parentActivity.setTimeline("day");
+//                parentActivity.setTimelineSelection(1);
+//
+//                selectedStartYear = calendar.get(Calendar.YEAR);
+//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                selectedEndYear = calendar.get(Calendar.YEAR);
+//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             default:
                 return false;
         }
 
-        String formattedStartMonth = String.valueOf(selectedStartMonth);
-        String formattedEndMonth = String.valueOf(selectedEndMonth);
-        String formattedStartDay = String.valueOf(selectedStartDay);
-        String formattedEndDay = String.valueOf(selectedEndDay);
+//        String formattedStartMonth = String.valueOf(selectedStartMonth);
+//        String formattedEndMonth = String.valueOf(selectedEndMonth);
+//        String formattedStartDay = String.valueOf(selectedStartDay);
+//        String formattedEndDay = String.valueOf(selectedEndDay);
+//
+//        if(selectedStartDay < 10) {
+//            formattedStartDay = "0" + selectedStartDay;
+//        }
+//
+//        if(selectedEndDay < 10) {
+//            formattedEndDay = "0" + selectedEndDay;
+//        }
+//
+//        if(selectedStartMonth < 10) {
+//            formattedStartMonth = "0" + selectedStartMonth;
+//        }
+//
+//        if(selectedEndMonth < 10) {
+//            formattedEndMonth = "0" + selectedEndMonth;
+//        }
+//
+//        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+//        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+//        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
+//        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
 
-        if(selectedStartDay < 10) {
-            formattedStartDay = "0" + selectedStartDay;
-        }
+//        dateManager.setFormattedStartTime(formattedStartTime);
+//        dateManager.setFormattedEndTime(formattedEndTime);
 
-        if(selectedEndDay < 10) {
-            formattedEndDay = "0" + selectedEndDay;
-        }
-
-        if(selectedStartMonth < 10) {
-            formattedStartMonth = "0" + selectedStartMonth;
-        }
-
-        if(selectedEndMonth < 10) {
-            formattedEndMonth = "0" + selectedEndMonth;
-        }
-
-        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
-        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
-
-        parentActivity.setFormattedStartTime(formattedStartTime);
-        parentActivity.setFormattedEndTime(formattedEndTime);
-
-        rightSelector.setText(formattedStartTime);
+        rightSelector.setText(dateManager.getFormattedStartTime());
         loader.setVisibility(View.VISIBLE);
 
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), selectedStartTime, selectedStartTime, parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getSelectedStartTime(), dateManager.getSelectedStartTime(), parentActivity.getSelectedTeamMarketId());
 
         return false;
     }
 
-    private Date getDateFromFormattedTime(String formattedTime) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date d = formatter.parse(formattedTime);
-            return d;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    private Date getDateFromFormattedTime(String formattedTime) {
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        try {
+//            Date d = formatter.parse(formattedTime);
+//            return d;
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }

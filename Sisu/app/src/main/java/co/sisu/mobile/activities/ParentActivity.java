@@ -37,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +46,6 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -89,6 +87,7 @@ import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 /**
@@ -99,7 +98,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private DataController dataController;
     private NavigationManager navigationManager;
-    private ActionBarManager actionBarManager;
+    private DateManager dateManager;
     private ApiManager apiManager;
     public ColorSchemeManager colorSchemeManager;
     private MyFirebaseMessagingService myFirebaseMessagingService;
@@ -115,14 +114,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean labelsFinished = false;
     private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
-    private boolean teamAgentsFinished = false;
+//    private boolean teamAgentsFinished = false;
     private boolean clientTilesFinished = false;
     private boolean marketStatusFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
-    private String timeline = "month";
-    private int timelineSelection = 5;
+//    private String timeline = "month";
+//    private int timelineSelection = 5;
     private AgentModel agent;
     private NotesObject selectedNote;
     private LruCache<String, Bitmap> mMemoryCache;
@@ -154,17 +153,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean tileDebug = true;
 
-    private int selectedStartYear = 0;
-    private int selectedStartMonth = 0;
-    private int selectedStartDay = 0;
-    private int selectedEndYear = 0;
-    private int selectedEndMonth = 0;
-    private int selectedEndDay = 0;
-    private String formattedStartTime;
-    private String formattedEndTime;
-    private Calendar calendar = Calendar.getInstance();
-    private Date selectedStartTime;
-    private Date selectedEndTime;
+//    private String formattedStartTime;
+//    private String formattedEndTime;
     private ConstraintLayout paginateInfo;
 
     private JSONObject tileTemplate;
@@ -189,7 +179,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         apiManager = new ApiManager(this);
-//        actionBarManager = navigationManager.getActionBarManager();
+        dateManager = new DateManager();
 
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
@@ -214,10 +204,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         initCache();
 
-        //TODO: Eventually you won't need the non tile debug stuff
+        //Eventually you won't need the non tile debug stuff
         if(tileDebug) {
             noNavigation = true;
-            initTimelineDate();
+            dateManager.initTimelineDate();
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
             apiManager.getTeams(this, agent.getAgent_id());
         }
@@ -225,138 +215,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             apiManager.getTeams(this, agent.getAgent_id());
         }
 
-    }
-
-    private void initTimelineDate() {
-        calendar = Calendar.getInstance();
-
-        switch (timelineSelection) {
-            case 0:
-                //Yesterday
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
-                break;
-            case 1:
-                //Today
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
-                break;
-            case 2:
-                //Last Week
-                calendar.add(Calendar.WEEK_OF_YEAR, -1);
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-                break;
-            case 3:
-                //This Week
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-                break;
-            case 4:
-                //Last Month
-                calendar.add(Calendar.MONTH, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                break;
-            case 5:
-                //This Month
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                break;
-            case 6:
-                //Last year
-                calendar.add(Calendar.YEAR, -1);
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = 12;
-                selectedEndDay = 31;
-                break;
-            case 7:
-                //This year
-                selectedStartYear = calendar.get(Calendar.YEAR);
-                selectedStartMonth = 1;
-                selectedStartDay = 1;
-
-                selectedEndYear = calendar.get(Calendar.YEAR);
-                selectedEndMonth = 12;
-                selectedEndDay = 31;
-                break;
-        }
-
-        String formattedStartMonth = String.valueOf(selectedStartMonth);
-        String formattedEndMonth = String.valueOf(selectedEndMonth);
-        String formattedStartDay = String.valueOf(selectedStartDay);
-        String formattedEndDay = String.valueOf(selectedEndDay);
-
-        if(selectedStartDay < 10) {
-            formattedStartDay = "0" + selectedStartDay;
-        }
-
-        if(selectedEndDay < 10) {
-            formattedEndDay = "0" + selectedEndDay;
-        }
-
-        if(selectedStartMonth < 10) {
-            formattedStartMonth = "0" + selectedStartMonth;
-        }
-
-        if(selectedEndMonth < 10) {
-            formattedEndMonth = "0" + selectedEndMonth;
-        }
-
-        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
-        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
-    }
-
-    private Date getDateFromFormattedTime(String formattedTime) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date d = formatter.parse(formattedTime);
-            return d;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private void initCache() {
@@ -470,7 +328,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     addClientButton.setVisibility(View.VISIBLE);
                     if(isRecruiting()) {
                         if(tileDebug) {
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
 //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
@@ -481,10 +339,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         if(tileDebug) {
                             parentLoader.setVisibility(View.VISIBLE);
                             if(currentScopeFilter != null) {
-                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                             }
                             else {
-                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
+                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                             }
 //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
@@ -605,11 +463,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            }
                 if(isAdminMode) {
                     isAdminMode = false;
-                    actionBarManager.setAdminMode(false);
+//                    actionBarManager.setAdminMode(false);
                 }
                 else {
                     isAdminMode = true;
-                    actionBarManager.setAdminMode(true);
+//                    actionBarManager.setAdminMode(true);
                 }
 //            }
                 navigationManager.closeTeamAgentsDrawer();
@@ -617,7 +475,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
                     currentScopeFilter = selectedScope;
                     updateActionBarTitle(currentScopeFilter.getName());
-                    apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", selectedScope.getIdValue());
+                    apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", selectedScope.getIdValue());
                 }
                 else {
 //                apiManager.getAgent(this, selectedAgent.getAgent_id());
@@ -638,7 +496,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(!isAgentDashboard) {
                 dashboardType = "team";
             }
-            apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
+            apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
         }
         else {
             apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
@@ -1122,7 +980,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 if(teamsFinished) {
                     //TODO: Probably don't need either of these
-                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+                    colorSchemeFinished = true;
                     apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
                 navigateToScoreboard();
@@ -1144,11 +1003,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.updateTeam(dataController.getTeamsObject().get(0));
                     dataController.setMessageCenterVisible(true);
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
-                    //TODO: Probably don't get to getClients now
-                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    //TODO: Probably don't need to getClients now
+//                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    clientFinished = true;
                     SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
                     if(settingsFinished && !tileDebug) {
-                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
+                        colorSchemeFinished = true;
+//                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
                         apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
                     }
                     else if(tileDebug) {
@@ -1157,8 +1018,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
                 else {
-                    //TODO: Probably don't get to getClients now
-                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    //TODO: Probably don't need to getClients now
+//                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    clientFinished = true;
                     dataController.setMessageCenterVisible(false);
                     teamParamFinished = true;
                     dataController.setSlackInfo(null);
@@ -1173,7 +1035,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
 //                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 if(tileDebug) {
-                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
+                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                 }
             });
         }
@@ -1233,6 +1095,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
+            //TODO: Probably can delete this after some further testing
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject, isRecruiting());
             clientFinished = true;
@@ -1271,10 +1134,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+            //TODO: Probably can delete this after some further testing
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             if(colorScheme.length < 5) {
-                apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 0, dataController.getColorSchemeId());
+                colorSchemeFinished = true;
+//                apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 0, dataController.getColorSchemeId());
             }
             else {
                 colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
@@ -1607,10 +1472,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         scopeFinished = false;
         apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
         if(currentScopeFilter != null) {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", currentScopeFilter.getIdValue());
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
         }
         else {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), selectedStartTime, selectedEndTime, "agent", "a" + agent.getAgent_id());
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
         }
     }
 
@@ -1649,21 +1514,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentSelectedRecordDate = formattedDate;
     }
 
-    public String getTimeline() {
-        return timeline;
-    }
-
-    public void setTimeline(String timeline) {
-        this.timeline = timeline;
-    }
-
-    public int getTimelineSelection() {
-        return timelineSelection;
-    }
-
-    public void setTimelineSelection(int timelineSelection) {
-        this.timelineSelection = timelineSelection;
-    }
+//    public String getTimeline() {
+//        return timeline;
+//    }
+//
+//    public void setTimeline(String timeline) {
+//        this.timeline = timeline;
+//    }
+//
+//    public int getTimelineSelection() {
+//        return timelineSelection;
+//    }
+//
+//    public void setTimelineSelection(int timelineSelection) {
+//        this.timelineSelection = timelineSelection;
+//    }
 
     public int getSelectedTeamId() {
         int teamId = navigationManager.getSelectedTeamId();
@@ -1799,21 +1664,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         isAgentDashboard = agentDashboard;
     }
 
-    public String getFormattedStartTime() {
-        return formattedStartTime;
-    }
-
-    public void setFormattedStartTime(String formattedStartTime) {
-        this.formattedStartTime = formattedStartTime;
-    }
-
-    public String getFormattedEndTime() {
-        return formattedEndTime;
-    }
-
-    public void setFormattedEndTime(String formattedEndTime) {
-        this.formattedEndTime = formattedEndTime;
-    }
+//    public String getFormattedStartTime() {
+//        return formattedStartTime;
+//    }
+//
+//    public void setFormattedStartTime(String formattedStartTime) {
+//        this.formattedStartTime = formattedStartTime;
+//    }
+//
+//    public String getFormattedEndTime() {
+//        return formattedEndTime;
+//    }
+//
+//    public void setFormattedEndTime(String formattedEndTime) {
+//        this.formattedEndTime = formattedEndTime;
+//    }
 
     public List<ScopeBarModel> getScopeBarAgents() {
         return scopeBarAgents;
@@ -1835,5 +1700,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
 
+    public DateManager getDateManager() {
+        return dateManager;
+    }
 }
 

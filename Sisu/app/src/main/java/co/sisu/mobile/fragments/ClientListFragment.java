@@ -124,8 +124,6 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         priorityLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
 
 
-        // TODO: 9/25/2018  
-        //THIS IS THE SEARCH BAR COLORING AND MAY NEED TO CHANGE WHEN WE CONFIRM DB COLORS FOR THEMES
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             clientSearch.setBackgroundColor(colorSchemeManager.getProgressBackground());
             android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
