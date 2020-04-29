@@ -244,7 +244,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
-    @SuppressLint("ResourceType")
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
 //        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {

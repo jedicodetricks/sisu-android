@@ -114,14 +114,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean labelsFinished = false;
     private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
-//    private boolean teamAgentsFinished = false;
     private boolean clientTilesFinished = false;
     private boolean marketStatusFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
-//    private String timeline = "month";
-//    private int timelineSelection = 5;
     private AgentModel agent;
     private NotesObject selectedNote;
     private LruCache<String, Bitmap> mMemoryCache;
@@ -153,8 +150,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private boolean tileDebug = true;
 
-//    private String formattedStartTime;
-//    private String formattedEndTime;
     private ConstraintLayout paginateInfo;
 
     private JSONObject tileTemplate;
@@ -379,8 +374,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         }
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
-//                    navigationManager.clearStackReplaceFragment(ReportFragment.class);
-//                    navigationManager.clearStackReplaceFragment(ClientListFragment.class);
                     break;
                 case R.id.recordView:
                     noNavigation = false;
@@ -1084,9 +1077,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             scopeFinished = true;
-//            this.runOnUiThread(() -> {
-//                navigationManager.initScopeBar(scopeBarAgents, myAgentId);
-//            });
             if(teamSwap) {
                 navigateToScoreboard(true);
             }
@@ -1514,22 +1504,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentSelectedRecordDate = formattedDate;
     }
 
-//    public String getTimeline() {
-//        return timeline;
-//    }
-//
-//    public void setTimeline(String timeline) {
-//        this.timeline = timeline;
-//    }
-//
-//    public int getTimelineSelection() {
-//        return timelineSelection;
-//    }
-//
-//    public void setTimelineSelection(int timelineSelection) {
-//        this.timelineSelection = timelineSelection;
-//    }
-
     public int getSelectedTeamId() {
         int teamId = navigationManager.getSelectedTeamId();
         return teamId;
@@ -1663,22 +1637,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setAgentDashboard(boolean agentDashboard) {
         isAgentDashboard = agentDashboard;
     }
-
-//    public String getFormattedStartTime() {
-//        return formattedStartTime;
-//    }
-//
-//    public void setFormattedStartTime(String formattedStartTime) {
-//        this.formattedStartTime = formattedStartTime;
-//    }
-//
-//    public String getFormattedEndTime() {
-//        return formattedEndTime;
-//    }
-//
-//    public void setFormattedEndTime(String formattedEndTime) {
-//        this.formattedEndTime = formattedEndTime;
-//    }
 
     public List<ScopeBarModel> getScopeBarAgents() {
         return scopeBarAgents;

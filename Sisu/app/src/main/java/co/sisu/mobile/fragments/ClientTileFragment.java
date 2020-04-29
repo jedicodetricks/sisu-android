@@ -83,6 +83,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
     private ImageView addButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -319,7 +320,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 returnSize = getResources().getDimension(R.dimen.font_small);
                 break;
             case "medium":
-            case "mediam":
+            case "mediam": //I don't know if Rick is still sending this typo down
                 returnSize = getResources().getDimension(R.dimen.font_large);
                 break;
             case "large":

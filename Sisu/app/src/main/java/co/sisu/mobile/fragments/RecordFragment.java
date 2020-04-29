@@ -4,15 +4,22 @@ package co.sisu.mobile.fragments;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +32,9 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,9 +101,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     public void teamSwap() {
-        loader.setVisibility(View.VISIBLE);
-        Date d = calendar.getTime();
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
+//        loader.setVisibility(View.VISIBLE);
+//        Date d = calendar.getTime();
+//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
     }
 
 
@@ -269,7 +279,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             RecordListAdapter adapter = new RecordListAdapter(getContext(), doubleMetricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
             mListView.setAdapter(adapter);
         }
-
     }
 
     private void initTableView(List<Metric> metricList) {
@@ -498,63 +507,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             case 0:
                 //Yesterday
                 dateManager.setToYesterday();
-//                parentActivity.setTimeline("day");
-//                parentActivity.setTimelineSelection(0);
-//                calendar.add(Calendar.DAY_OF_MONTH, -1);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 1:
                 //Today
                 dateManager.setToToday();
-//                parentActivity.setTimeline("day");
-//                parentActivity.setTimelineSelection(1);
-//
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             default:
                 return false;
         }
-
-//        String formattedStartMonth = String.valueOf(selectedStartMonth);
-//        String formattedEndMonth = String.valueOf(selectedEndMonth);
-//        String formattedStartDay = String.valueOf(selectedStartDay);
-//        String formattedEndDay = String.valueOf(selectedEndDay);
-//
-//        if(selectedStartDay < 10) {
-//            formattedStartDay = "0" + selectedStartDay;
-//        }
-//
-//        if(selectedEndDay < 10) {
-//            formattedEndDay = "0" + selectedEndDay;
-//        }
-//
-//        if(selectedStartMonth < 10) {
-//            formattedStartMonth = "0" + selectedStartMonth;
-//        }
-//
-//        if(selectedEndMonth < 10) {
-//            formattedEndMonth = "0" + selectedEndMonth;
-//        }
-//
-//        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-//        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-//        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
-//        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
-
-//        dateManager.setFormattedStartTime(formattedStartTime);
-//        dateManager.setFormattedEndTime(formattedEndTime);
 
         rightSelector.setText(dateManager.getFormattedStartTime());
         loader.setVisibility(View.VISIBLE);
@@ -564,14 +524,163 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         return false;
     }
 
-//    private Date getDateFromFormattedTime(String formattedTime) {
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            Date d = formatter.parse(formattedTime);
-//            return d;
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    // TESTING AREA
+
+    private View createNormalView(ViewGroup row, JSONObject tileObject) throws JSONException {
+        View rowView = null;
+        boolean isSideView = false;
+        if(tileObject.has("side")) {
+            if(tileObject.getBoolean("side") == true) {
+                rowView = inflater.inflate(R.layout.tile_normal_side_layout, row, false);
+                isSideView = true;
+            }
+            else {
+                rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
+            }
+        }
+        else {
+            rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
+        }
+        String headerText = tileObject.getString("header");
+        String footerText = tileObject.getString("value");
+        String headerColor = tileObject.getString("header_text_color");
+        String footerColor = tileObject.getString("footer_text_color");
+        String headerSize = tileObject.getString("font_header");
+        String footerSize = tileObject.getString("font_footer");
+        JSONObject progressBar = null;
+        if(tileObject.has("progress_bar")) {
+            progressBar = tileObject.getJSONObject("progress_bar");
+        }
+
+        TextView header = rowView.findViewById(R.id.normalTileHeader);
+        TextView footer = rowView.findViewById(R.id.normalTileFooter);
+        ProgressBar progress = rowView.findViewById(R.id.normalTileProgressBar);
+
+        header.setText(headerText);
+        header.setTextColor(Color.parseColor(headerColor));
+        if(!isSideView) {
+            if(headerText.length() > 15) {
+                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+            }
+            else {
+                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
+            }
+        }
+
+        footer.setText(footerText);
+        footer.setTextColor(Color.parseColor(footerColor));
+        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
+        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+        if(progress != null) {
+            Double completedPercent = 0.0;
+            if(progressBar.has("completed")) {
+                completedPercent = progressBar.getDouble("completed");
+            }
+            String progressColor = progressBar.getString("progress_color");
+            progress.setProgress(completedPercent.intValue());
+            progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+        }
+
+        String tileColor = tileObject.getString("tile_color");
+        Boolean rounded = tileObject.getBoolean("rounded");
+
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+
+        if(rounded) {
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(Color.parseColor(tileColor));
+            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+        }
+        else {
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
+        }
+
+        return rowView;
+    }
+
+    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
+        // Initialize new color drawables
+        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
+        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
+
+        // Initialize a new array of drawable objects
+        Drawable[] drawables = new Drawable[]{
+                borderColorDrawable,
+                backgroundColorDrawable
+        };
+
+        // Initialize a new layer drawable instance from drawables array
+        LayerDrawable layerDrawable = new LayerDrawable(drawables);
+
+        // Set padding for background color layer
+        layerDrawable.setLayerInset(
+                1, // Index of the drawable to adjust [background color layer]
+                left, // Number of pixels to add to the left bound [left border]
+                top, // Number of pixels to add to the top bound [top border]
+                right, // Number of pixels to add to the right bound [right border]
+                bottom // Number of pixels to add to the bottom bound [bottom border]
+        );
+
+        // Finally, return the one or more sided bordered background drawable
+        return layerDrawable;
+    }
+
+    private float getTextViewSizing(String size) {
+        float returnSize;
+        switch(size) {
+            case "small":
+                returnSize = getResources().getDimension(R.dimen.font_small);
+                break;
+            case "medium":
+                returnSize = getResources().getDimension(R.dimen.font_large);
+                break;
+            case "large":
+                returnSize = getResources().getDimension(R.dimen.font_larger);
+                break;
+            default:
+                returnSize = getResources().getDimension(R.dimen.font_mega);
+                Log.e("TEXTVIEW SIZE", "Error setting TextView Size: " + size);
+                break;
+        }
+
+        return returnSize;
+    }
 }
