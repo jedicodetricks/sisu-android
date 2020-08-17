@@ -291,6 +291,29 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void getClientList(AsyncServerEventListener cb, String agentId, int selectedTeamMarketId, String filterValue) {
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_LIST;
+        String currentUrl = url + "api/v1/client/list";
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("market_id", selectedTeamMarketId);
+        jsonRequest.addProperty("column_filter", filterValue);
+        jsonRequest.addProperty("partial_filter", "");
+
+        JsonArray returnColumnsArray = new JsonArray();
+        returnColumnsArray.add(filterValue);
+        returnColumnsArray.add("is_locked");
+        returnColumnsArray.add("client_id");
+        returnColumnsArray.add("type_id");
+        jsonRequest.add("add_return_columns", returnColumnsArray);
+
+        jsonRequest.addProperty("limit", 100);
+        jsonRequest.addProperty("context", "agent");
+        jsonRequest.addProperty("context_id", Integer.valueOf(agentId));
+
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;

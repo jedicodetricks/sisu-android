@@ -11,12 +11,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -33,9 +35,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +75,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
 
     private ListView mListView;
-    private int selectedYear, selectedMonth, selectedDay;
     private List<Metric> metricList;
     private ParentActivity parentActivity;
     private DataController dataController;
@@ -85,16 +90,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private TableLayout activitiesTable;
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
-//    private int selectedStartYear = 0;
-//    private int selectedStartMonth = 0;
-//    private int selectedStartDay = 0;
-//    private int selectedEndYear = 0;
-//    private int selectedEndMonth = 0;
-//    private int selectedEndDay = 0;
-//    private String formattedStartTime;
-//    private String formattedEndTime;
-//    private Date selectedStartTime;
-//    private Date selectedEndTime;
+    private final int smallerTitleSize = 18;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -137,10 +133,26 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             save.setOnClickListener(this);
         }
         initDateSelectors(view);
-
+        initTransactionButtons(view);
         setColorScheme();
 //        activitiesTable = view.findViewById(R.id.activitiesTable);
 
+    }
+
+    private void initTransactionButtons(View view){
+        ImageView addTransactionButton = view.findViewById(R.id.addTransactionButton);
+        ImageView appointmentSetButton = view.findViewById(R.id.appointmentSetButton);
+        ImageView appointmentMetButton = view.findViewById(R.id.appointmentMetButton);
+        ImageView signedButton = view.findViewById(R.id.signedButton);
+        ImageView underContractButton = view.findViewById(R.id.underContractButton);
+        ImageView closedButton = view.findViewById(R.id.closedButton);
+
+        addTransactionButton.setOnClickListener(this);
+        appointmentSetButton.setOnClickListener(this);
+        appointmentMetButton.setOnClickListener(this);
+        signedButton.setOnClickListener(this);
+        underContractButton.setOnClickListener(this);
+        closedButton.setOnClickListener(this);
     }
 
     private void initDateSelectors(View view) {
@@ -162,12 +174,9 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
             counter++;
         }
+        dateManager.setRecordDateToToday();
 
-        selectedYear = Calendar.getInstance().get(Calendar.YEAR);
-        selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-
-        updateDisplayDate(selectedYear, selectedMonth, selectedDay);
+        updateDisplayDate(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
     }
 
     private void setLabels() {
@@ -177,7 +186,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void setColorScheme() {
-        ConstraintLayout layout = getView().findViewById(R.id.record_list_parent_layout);
+        RelativeLayout layout = getView().findViewById(R.id.record_list_parent_layout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
 //        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -211,26 +220,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         return spinnerArray;
     }
 
-//    private void initializeCalendarHandler() {
-//        calendarLauncher = getView().findViewById(R.id.calender_date_picker);
-//        dateDisplay = getView().findViewById(R.id.record_date);
-//
-//        selectedYear = Calendar.getInstance().get(Calendar.YEAR);
-//        selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
-//        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-//
-//        updateDisplayDate(selectedYear, selectedMonth, selectedDay);
-//
-//        calendarLauncher.setOnClickListener(this);
-//        dateDisplay.setOnClickListener(this);
-//
-//    }
-
     private void updateDisplayDate(int year, int month, int day) {
-        selectedYear = year;
-        selectedMonth = month;
-        selectedDay = day;
-
         Date d;
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -271,14 +261,251 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             }
         }
 
-        if(getView() != null) {
-            mListView = getView().findViewById(R.id.record_list_view);
-            mListView.setDivider(null);
-            mListView.setDividerHeight(30);
+        RelativeLayout parentRelativeLayout = getView().findViewById(R.id.record_activities_list_parent);
+        parentRelativeLayout.removeAllViews();
+        int numOfRows = 0;
+        for(int i = 0; i < doubleMetricList.size(); i++) {
+            View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
+            view = createActivityRowView(view, doubleMetricList.get(i));
 
-            RecordListAdapter adapter = new RecordListAdapter(getContext(), doubleMetricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
-            mListView.setAdapter(adapter);
+            view.setId(numOfRows + 1);
+            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+            parentRelativeLayout.addView(view, horizontalParam);
+            numOfRows++;
         }
+
+
+
+
+
+
+
+//        List<DoubleMetric> doubleMetricList = new ArrayList<>();
+//        for(int i = 0; i < metricList.size(); i++) {
+//            if(i % 2 == 0) {
+//                if(i + 1 >= metricList.size()) {
+//                    doubleMetricList.add(new DoubleMetric(metricList.get(i), null));
+//                }
+//                else {
+//                    doubleMetricList.add(new DoubleMetric(metricList.get(i), metricList.get(i + 1)));
+//                }
+//            }
+//        }
+//
+//        if(getView() != null) {
+//            mListView = getView().findViewById(R.id.record_list_view);
+//            mListView.setDivider(null);
+//            mListView.setDividerHeight(30);
+//
+//            RecordListAdapter adapter = new RecordListAdapter(getContext(), doubleMetricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
+//            mListView.setAdapter(adapter);
+//        }
+    }
+
+    private View createActivityRowView(View rowView, DoubleMetric doubleMetric) {
+        final Metric leftMetric = doubleMetric.getLeftMetric();
+        final Metric rightMetric = doubleMetric.getRightMetric();
+
+        TextView leftTitleView = rowView.findViewById(R.id.leftRecordTitle);
+        leftTitleView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        leftTitleView.setText(leftMetric.getTitle());
+        if(leftMetric.getTitle().length() >= smallerTitleSize) {
+            leftTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, parentActivity.getResources().getDimension(R.dimen.font_smaller));
+        }
+//        if(leftMetric.getTitle().length() >= smallestTitleSize) {
+//            leftTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, parentActivity.getResources().getDimension(R.dimen.font_smallest));
+//        }
+
+        // Get the row counter element
+        final EditText leftRowCounter = rowView.findViewById(R.id.leftRowCounter);
+
+        ImageView leftMinusButton = rowView.findViewById(R.id.leftMinusButton);
+        Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
+        minusDrawable.setTint(colorSchemeManager.getRoundedButtonColor());
+        leftMinusButton.setImageDrawable(minusDrawable);
+
+        VectorChildFinder vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, leftMinusButton);
+        for (int i = 0; i < 7; i++) {
+            String pathName = "orange_area" + (i + 1);
+            VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
+            path.setFillColor(colorSchemeManager.getRoundedButtonColor());
+            path.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+        }
+
+        leftMinusButton.invalidate();
+
+
+        ImageView leftPlusButton = rowView.findViewById(R.id.leftPlusButton);
+        VectorChildFinder plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, leftPlusButton);
+        VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
+        plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+        leftPlusButton.invalidate();
+
+
+        leftMinusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!parentActivity.isTeamSwapOccurring()) {
+                    int minusOne = leftMetric.getCurrentNum();
+                    if(minusOne > 0) {
+                        minusOne -= 1;
+                    }
+                    leftRowCounter.setText(String.valueOf(minusOne));
+                }
+
+            }
+        });
+
+        leftPlusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!parentActivity.isTeamSwapOccurring()) {
+                    int plusOne = leftMetric.getCurrentNum() + 1;
+                    leftRowCounter.setText(String.valueOf(plusOne));
+                }
+
+            }
+        });
+
+        leftRowCounter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!leftRowCounter.getText().toString().equals("")) {
+                    if(Integer.valueOf(leftRowCounter.getText().toString()) != leftMetric.getCurrentNum()) {
+                        switch(leftMetric.getType()) {
+                            case "1TAPT":
+                            case "CLSD":
+                            case "UCNTR":
+                            case "SGND":
+//                                mRecordEventHandler.onClientDirectorClicked(leftMetric);
+                                break;
+                            default:
+                                onNumberChanged(leftMetric, Integer.valueOf(leftRowCounter.getText().toString()));
+                                break;
+                        }
+                    }
+                }
+            }
+        });
+
+        leftRowCounter.setText(String.valueOf(leftMetric.getCurrentNum()));
+        leftRowCounter.setTextColor(colorSchemeManager.getDarkerTextColor());
+
+
+        //EVERYTHING FOR THE RIGHT SIDE
+
+        TextView rightTitleView = rowView.findViewById(R.id.rightRecordTitle);
+        rightTitleView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        final EditText rightRowCounter = rowView.findViewById(R.id.rightRowCounter);
+        ImageView rightMinusButton = rowView.findViewById(R.id.rightMinusButton);
+        ImageView rightPlusButton = rowView.findViewById(R.id.rightPlusButton);
+
+        if(rightMetric != null) {
+            rightTitleView.setText(rightMetric.getTitle());
+            if(rightMetric.getTitle().length() >= smallerTitleSize) {
+                rightTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, parentActivity.getResources().getDimension(R.dimen.font_smaller));
+            }
+//            if(rightMetric.getTitle().length() >= smallestTitleSize) {
+//                rightTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, parentActivity.getResources().getDimension(R.dimen.font_smallest));
+//            }
+            // Get the row counter element
+
+            minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
+            minusDrawable.setTint(colorSchemeManager.getRoundedButtonColor());
+            rightMinusButton.setImageDrawable(minusDrawable);
+
+            vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, rightMinusButton);
+            for (int i = 0; i < 7; i++) {
+                String pathName = "orange_area" + (i + 1);
+                VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
+                path.setFillColor(colorSchemeManager.getRoundedButtonColor());
+                path.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+            }
+
+            rightMinusButton.invalidate();
+
+
+            plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, rightPlusButton);
+            plusPath = plusVector.findPathByName("orange_area");
+            plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
+            plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+            rightPlusButton.invalidate();
+
+
+            rightMinusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!parentActivity.isTeamSwapOccurring()) {
+                        int minusOne = rightMetric.getCurrentNum();
+                        if(minusOne > 0) {
+                            minusOne -= 1;
+                        }
+                        rightRowCounter.setText(String.valueOf(minusOne));
+                    }
+
+                }
+            });
+
+            rightPlusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!parentActivity.isTeamSwapOccurring()) {
+                        int plusOne = rightMetric.getCurrentNum() + 1;
+                        rightRowCounter.setText(String.valueOf(plusOne));
+                    }
+
+                }
+            });
+
+            rightRowCounter.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if(!rightRowCounter.getText().toString().equals("")) {
+                        if(Integer.valueOf(rightRowCounter.getText().toString()) != rightMetric.getCurrentNum()) {
+                            switch(rightMetric.getType()) {
+                                case "1TAPT":
+                                case "CLSD":
+                                case "UCNTR":
+                                case "SGND":
+//                                    mRecordEventHandler.onClientDirectorClicked(rightMetric);
+                                    break;
+                                default:
+                                    onNumberChanged(rightMetric, Integer.valueOf(rightRowCounter.getText().toString()));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            });
+
+            rightRowCounter.setText(String.valueOf(rightMetric.getCurrentNum()));
+            rightRowCounter.setTextColor(colorSchemeManager.getDarkerTextColor());
+        }
+        else {
+            //Make all the elements GONE
+            rightTitleView.setVisibility(View.GONE);
+            rightRowCounter.setVisibility(View.GONE);
+            rightMinusButton.setVisibility(View.GONE);
+            rightPlusButton.setVisibility(View.GONE);
+        }
+
+
+
+        return rowView;
     }
 
     private void initTableView(List<Metric> metricList) {
@@ -348,10 +575,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day);
+                dateManager.setRecordDateToDate(cal);
                 updateDisplayDate(year, month, day);
                 updateRecordInfo();
             }
-        }, selectedYear, selectedMonth, selectedDay);
+        }, dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
@@ -359,18 +589,11 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void updateRecordInfo() {
-        String formattedMonth = String.valueOf(selectedMonth + 1);
-        if(selectedMonth + 1 < 10) {
-            formattedMonth = "0" + formattedMonth;
-        }
-        String formattedDay = String.valueOf(selectedDay);
-        if(selectedDay < 10) {
-            formattedDay = "0" + formattedDay;
-        }
+        Calendar cal = Calendar.getInstance();
+        cal.set(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
-        String formattedDate = selectedYear + "-" + formattedMonth + "-" + formattedDay;
-        parentActivity.updateSelectedRecordDate(formattedDate);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), formattedDate, formattedDate, parentActivity.getSelectedTeamMarketId());
+        dateManager.setRecordDateToDate(cal);
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), parentActivity.getSelectedTeamMarketId());
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -390,6 +613,29 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 else {
                     saveRecords();
                 }
+                break;
+            case R.id.addTransactionButton:
+                navigationManager.stackReplaceFragment(ClientManageFragment.class);
+                break;
+            case R.id.appointmentSetButton:
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "appt_set_dt");
+                parentActivity.setRecordClientListType("'Appointment Set'");
+                break;
+            case R.id.appointmentMetButton:
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "appt_dt");
+                parentActivity.setRecordClientListType("'Appointment Met'");
+                break;
+            case R.id.signedButton:
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "signed_dt");
+                parentActivity.setRecordClientListType("'Signed'");
+                break;
+            case R.id.underContractButton:
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "uc_dt");
+                parentActivity.setRecordClientListType("'Under Contract'");
+                break;
+            case R.id.closedButton:
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "closed_dt");
+                parentActivity.setRecordClientListType("'Closed'");
                 break;
             default:
                 break;
@@ -490,6 +736,18 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             Date d = calendar.getTime();
             apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         }
+        else if(returnType == ApiReturnTypes.GET_CLIENT_LIST) {
+            try {
+                String clientString = ((Response) returnObject).body().string();
+                JSONObject clientJson = new JSONObject(clientString);
+                parentActivity.setRecordClientsList(clientJson);
+                navigationManager.stackReplaceFragment(TransactionFragment.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -506,20 +764,20 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
-                dateManager.setToYesterday();
+                dateManager.setRecordDateToYesterday();
                 break;
             case 1:
                 //Today
-                dateManager.setToToday();
+                dateManager.setRecordDateToToday();
                 break;
             default:
                 return false;
         }
 
-        rightSelector.setText(dateManager.getFormattedStartTime());
+        rightSelector.setText(dateManager.getFormattedRecordDate());
         loader.setVisibility(View.VISIBLE);
 
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getSelectedStartTime(), dateManager.getSelectedStartTime(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), parentActivity.getSelectedTeamMarketId());
 
         return false;
     }

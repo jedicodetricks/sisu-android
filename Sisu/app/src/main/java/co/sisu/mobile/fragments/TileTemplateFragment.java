@@ -1352,7 +1352,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.dateSelectorDate:
                 popup.show();
-
                 break;
             case R.id.dateSelectorBeginDate:
                 beginDateSelected = true;

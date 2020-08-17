@@ -141,7 +141,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                         public void onScrollChanged() {
                             if (!tileScrollView.canScrollVertically(1)) {
                                 // bottom of scroll view
-                                System.out.println("TEST");
                                 if(!updatingClients) {
                                     updatingClients = true;
                                     try {

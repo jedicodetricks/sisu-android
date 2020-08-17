@@ -15,9 +15,17 @@ public class DateManager {
     private int selectedEndDay = 0;
     private String formattedStartTime;
     private String formattedEndTime;
-    private Calendar calendar = Calendar.getInstance();
     private Date selectedStartTime;
     private Date selectedEndTime;
+
+    private int recordYear = 0;
+    private int recordMonth = 0;
+    private int recordDay = 0;
+    private String formattedRecordDate;
+
+
+    private Calendar calendar = Calendar.getInstance();
+
     private int timelineSelection = 5;
     private String timeline = "month";
 
@@ -249,6 +257,26 @@ public class DateManager {
         this.timeline = timeline;
     }
 
+    public String getFormattedRecordDate() {
+        return formattedRecordDate;
+    }
+
+    public void setFormattedRecordDate(String formattedRecordDate) {
+        this.formattedRecordDate = formattedRecordDate;
+    }
+
+    public int getRecordYear() {
+        return recordYear;
+    }
+
+    public int getRecordMonth() {
+        return recordMonth;
+    }
+
+    public int getRecordDay() {
+        return recordDay;
+    }
+
     public void setFormattedTimes() {
         String formattedStartMonth = String.valueOf(selectedStartMonth);
         String formattedEndMonth = String.valueOf(selectedEndMonth);
@@ -275,6 +303,21 @@ public class DateManager {
         formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
         selectedStartTime = getDateFromFormattedTime(formattedStartTime);
         selectedEndTime = getDateFromFormattedTime(formattedEndTime);
+    }
+
+    public void setFormattedRecordDate() {
+        String formattedStartMonth = String.valueOf(recordMonth);
+        String formattedStartDay = String.valueOf(recordDay);
+
+        if(recordDay < 10) {
+            formattedStartDay = "0" + recordDay;
+        }
+
+        if(recordMonth < 10) {
+            formattedStartMonth = "0" + recordMonth;
+        }
+
+        formattedRecordDate = recordYear + "-" + formattedStartMonth + "-" + formattedStartDay;
     }
 
     public void setToYesterday() {
@@ -402,5 +445,47 @@ public class DateManager {
         selectedEndMonth = 12;
         selectedEndDay = 31;
         setFormattedTimes();
+    }
+
+    public void setToDate(Calendar calendar) {
+        this.calendar = calendar;
+        timeline = "day";
+        timelineSelection = 0;
+        selectedStartYear = calendar.get(Calendar.YEAR);
+        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        selectedEndYear = calendar.get(Calendar.YEAR);
+        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+        setFormattedTimes();
+    }
+
+    public void setRecordDateToDate(Calendar calendar) {
+        this.calendar = calendar;
+        recordYear = calendar.get(Calendar.YEAR);
+        recordMonth = calendar.get(Calendar.MONTH) + 1;
+        recordDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        setFormattedRecordDate();
+    }
+
+    public void setRecordDateToYesterday() {
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        recordYear = calendar.get(Calendar.YEAR);
+        recordMonth = calendar.get(Calendar.MONTH) + 1;
+        recordDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        setFormattedRecordDate();
+    }
+
+    public void setRecordDateToToday() {
+        calendar = Calendar.getInstance();
+        recordYear = calendar.get(Calendar.YEAR);
+        recordMonth = calendar.get(Calendar.MONTH) + 1;
+        recordDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        setFormattedRecordDate();
     }
 }

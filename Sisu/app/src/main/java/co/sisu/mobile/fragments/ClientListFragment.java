@@ -110,7 +110,6 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         loader.setVisibility(View.VISIBLE);
         initAddButton();
         loadColorScheme();
-
     }
 
     private void loadColorScheme() {
@@ -122,7 +121,6 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
         total.setTextColor(colorSchemeManager.getDarkerTextColor());
         divider.setBackgroundColor(colorSchemeManager.getLine());
         priorityLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
-
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             clientSearch.setBackgroundColor(colorSchemeManager.getProgressBackground());

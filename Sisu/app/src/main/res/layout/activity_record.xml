@@ -1,149 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/record_list_parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/record_list_parent_layout"
+    <include
+        android:id="@+id/tileRecordDateSelector"
+        layout="@layout/date_selector_mini_group"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
+        android:layout_height="35dp"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/record_list_child_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tileRecordDateSelector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tileRecordDateSelector">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
 
-            <!--<include-->
-                <!--android:id="@+id/tileRecordDateSelector"-->
-                <!--layout="@layout/date_selector_group"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="35dp"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintStart_toStartOf="parent"/>-->
-
-            <include
-                android:id="@+id/tileRecordDateSelector"
-                layout="@layout/date_selector_mini_group"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/recordTransactionTitleView"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_below="@id/tileRecordDateSelector"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/colorCorporateOrange"
-                android:text="Transactions"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/font_larger" />
+                    <TextView
+                        android:id="@+id/recordTransactionTitleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/colorCorporateOrange"
+                        android:text="Transactions"
+                        android:textAlignment="center"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_larger" />
 
-            <include
-                android:id="@+id/tileRecordTransactionButtons"
-                layout="@layout/record_transactions_buttons"
-                android:layout_below="@id/recordTransactionTitleView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                    <include
+                        android:id="@+id/tileRecordTransactionButtons"
+                        layout="@layout/record_transactions_buttons"
+                        android:layout_below="@id/recordTransactionTitleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
 
-            <!--<TextView-->
-                <!--android:id="@+id/activitiesTitle"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="25dp"-->
-                <!--android:layout_below="@id/tileRecordDateSelector"-->
-                <!--android:background="@color/colorCorporateOrange"-->
-                <!--android:text="Activities"-->
-                <!--android:textAlignment="center" />-->
+                    <TextView
+                        android:id="@+id/recordTitleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:layout_below="@id/tileRecordTransactionButtons"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/colorCorporateOrange"
+                        android:text="Activities"
+                        android:textAlignment="center"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_larger" />
 
+                    <!--<RelativeLayout -->
+                        <!--android:layout_height="match_parent" -->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:id="@+id/record_list_view_parent"-->
+                        <!--android:layout_below="@id/recordTitleView" >-->
 
-            <!--<android.support.constraint.ConstraintLayout-->
-                <!--android:id="@+id/record_list_date"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp">-->
+                        <!--<ListView-->
+                            <!--android:id="@+id/record_list_view"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginBottom="8dp"-->
+                            <!--/>-->
+                    <!--</RelativeLayout>-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/record_date"-->
-                    <!--style="@style/RecordLabelText"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="8dp"-->
-                    <!--android:layout_marginEnd="8dp"-->
-                    <!--android:layout_marginStart="20dp"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:layout_toEndOf="@id/record_list_date"-->
-                    <!--android:text="@string/record_date"-->
-                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--app:layout_constraintStart_toEndOf="@id/calender_date_picker"-->
-                    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-                <!--<ImageView-->
-                    <!--android:id="@+id/calender_date_picker"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="0dp"-->
-                    <!--android:layout_marginStart="16dp"-->
-                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--app:layout_constraintDimensionRatio="1:1"-->
-                    <!--app:layout_constraintStart_toStartOf="parent"-->
-                    <!--app:layout_constraintTop_toTopOf="parent"-->
-                    <!--app:srcCompat="@drawable/appointment_icon" />-->
-
-
-            <!--</android.support.constraint.ConstraintLayout>-->
-            <!--<TableLayout-->
-                <!--android:id="@+id/activitiesTable"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:stretchColumns="*"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_below="@id/activitiesTitle">-->
-
-            <!--</TableLayout>-->
-            <!--<RelativeLayout-->
-                <!--android:id="@+id/divider"-->
-                <!--style="@style/DividerStyle"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_below="@id/activitiesTitle"/>-->
-            <TextView
-                android:id="@+id/recordTitleView"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_below="@id/tileRecordTransactionButtons"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/colorCorporateOrange"
-                android:text="Activities"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/font_larger" />
-
-            <RelativeLayout android:layout_height="match_parent" android:layout_width="match_parent"
-                android:id="@+id/record_list_view_parent"
-                android:layout_below="@id/recordTitleView"
-                >
-
-                <ListView
-                    android:id="@+id/record_list_view"
-                    android:layout_width="match_parent"
+                <RelativeLayout
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:id="@+id/record_activities_list_parent"
+                    android:layout_below="@id/recordTitleView" />
 
-                    />
             </RelativeLayout>
-
-        </RelativeLayout>
-
+        </ScrollView>
     </android.support.constraint.ConstraintLayout>
-</ScrollView>
-
+</RelativeLayout>

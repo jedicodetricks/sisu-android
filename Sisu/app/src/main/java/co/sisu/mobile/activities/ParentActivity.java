@@ -155,12 +155,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private JSONObject tileTemplate;
     private JSONObject clientTiles;
     private JSONObject scopes;
+    private JSONObject recordClientsList;
+    private String recordClientListType;
     private boolean isAgentDashboard = true;
     private List<ScopeBarModel> scopeBarAgents = new ArrayList<>();
     private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
     private ScopeBarModel currentScopeFilter = null;
     private MarketStatusModel currentMarketStatusFilter = null;
     private ImageView addClientButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -404,17 +407,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
 
-        Calendar c = Calendar.getInstance();
-        Date d = c.getTime();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
+        String currentSelectedDate = dateManager.getFormattedRecordDate();
         for(Metric m : updatedRecords) {
-            if(currentSelectedRecordDate.equals("")) {
-                updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
-            }
-            else {
-                updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedRecordDate, m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
-            }
+            updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedDate, m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
         }
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
@@ -1660,6 +1656,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public DateManager getDateManager() {
         return dateManager;
+    }
+
+    public JSONObject getRecordClientsList() {
+        return recordClientsList;
+    }
+
+    public void setRecordClientsList(JSONObject recordClientsList) {
+        this.recordClientsList = recordClientsList;
+    }
+
+    public String getRecordClientListType() {
+        return recordClientListType;
+    }
+
+    public void setRecordClientListType(String recordClientListType) {
+        this.recordClientListType = recordClientListType;
     }
 }
 
