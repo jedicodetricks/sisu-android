@@ -468,6 +468,19 @@ public class ApiManager {
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void sendAsyncUpdateClientsNoNulls(AsyncServerEventListener cb, String agentId, ClientObject currentClient) {
+        //PUT
+        getJWT(agentId);
+        String body = gson.toJson(currentClient);
+        body = body.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
+        body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
+        //TODO: Need this state replacement until Rick fixes the api (It's in the add as well)
+        body = body.replace("\"state\":null", "\"state\":\"\"");
+        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_CLIENT;
+        String currentUrl = url + "api/v1/client/edit-client/" + currentClient.getClient_id();
+        new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+    }
+
     public void sendAsyncUpdateAgent(AsyncServerEventListener cb, String agentId, int teamId, String income, String reason) {
         //PUT
         //TODO: I don't know if this needs teamId / I don't think so, can probably remove

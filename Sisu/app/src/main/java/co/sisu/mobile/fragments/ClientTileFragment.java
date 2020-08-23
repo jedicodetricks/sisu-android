@@ -37,7 +37,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -53,6 +55,7 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
+import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -83,6 +86,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
     private ImageView addButton;
+    private List agentFilters = new ArrayList();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,15 +118,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     public void teamSwap() {
         parentActivity.resetDashboardTiles();
-//        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
-//        loader.setVisibility(View.VISIBLE);
-//        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
-//        parentActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                setupUiVisuals();
-//            }
-//        });
     }
 
     @SuppressLint("ResourceType")
@@ -390,6 +385,11 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             paginationText.setText("Showing: 1 to " + count + " of " + paginateObject.getString("total") + " entities");
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        TextView save = parentActivity.findViewById(R.id.saveButton);
+        if(save != null) {
+            save.setOnClickListener(this);
         }
         initScopePopupMenu();
         initMarketStatusPopupMenu();
@@ -797,6 +797,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //                loader.setVisibility(View.VISIBLE);
 //                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;
+            case R.id.saveButton:
+                apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+                break;
             default:
                 break;
         }
@@ -809,7 +812,30 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+        if(returnType == ApiReturnTypes.GET_AGENT_FILTERS) {
+            String tileString = null;
+            try {
+                tileString = ((Response) returnObject).body().string();
+                JSONObject responseJson = new JSONObject(tileString);
+                JSONArray filtersArray = responseJson.getJSONArray("filters");
+                JSONObject filtersObject = (JSONObject) filtersArray.get(0);
+                JSONObject filters = filtersObject.getJSONObject("filters");
+                Iterator<String> keys = filters.keys();
 
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    // do something with jsonObject here
+                    JSONObject currentFilter = filters.getJSONObject(key);
+                    String garbo = "";
+                }
+                String garbo = "";
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

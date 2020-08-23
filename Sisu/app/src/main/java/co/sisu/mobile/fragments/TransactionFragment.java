@@ -2,6 +2,8 @@ package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -13,12 +15,14 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,6 +84,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private ImageView addButton;
     private TextView leftSelector, rightSelector;
     private PopupMenu dateSelectorPopup;
+    private View currentlySelectedRow;
+    private JSONObject currentlySelectedClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,39 +94,15 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
-        dateManager = parentActivity.getDateManager();
+        dateManager = new DateManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getRecordClientsList();
 
-//        try {
-//            if(tileTemplate.has("pagination")) {
-//                paginateObject = tileTemplate.getJSONObject("pagination");
-//            }
-//
-//            if(tileTemplate.has("count")) {
-//                count = tileTemplate.getString("count");
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-
         return createFullView(container, tileTemplate);
     }
 
-    public void teamSwap() {
-        parentActivity.resetDashboardTiles();
-//        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
-//        loader.setVisibility(View.VISIBLE);
-//        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
-//        parentActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                setupUiVisuals();
-//            }
-//        });
-    }
+    public void teamSwap() {}
 
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
@@ -230,15 +212,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             header.setText(clientObject.getString("text") + " " + dateText);
 
             rowView.setOnClickListener(view -> {
-//                try {
-//                    ClientObject selectedClient = new ClientObject(tileObject.getJSONObject("tile_data"));
-//                    parentActivity.setSelectedClient(selectedClient);
-//                    paginateInfo.setVisibility(View.GONE);
-//                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-
+                manageRowSelection(rowView, clientObject);
             });
 
             ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
@@ -283,6 +257,71 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         }
 
         return rowView;
+    }
+
+    private void manageRowSelection(View newSelectedRow, JSONObject clientObject) {
+        if(currentlySelectedRow != null) {
+            currentlySelectedRow.setBackgroundColor(colorSchemeManager.getAppBackground());
+            TextView oldHeader = currentlySelectedRow.findViewById(R.id.client_list_title);
+            oldHeader.setTextColor(colorSchemeManager.getLighterTextColor());
+        }
+        newSelectedRow.setBackgroundColor(colorSchemeManager.getMenuSelected());
+        TextView newHeader = newSelectedRow.findViewById(R.id.client_list_title);
+        newHeader.setTextColor(colorSchemeManager.getMenuSelectedText());
+        currentlySelectedRow = newSelectedRow;
+        currentlySelectedClient = clientObject;
+        String dateText = "";
+        try {
+            if(clientObject.has("appt_set_dt")) {
+                String dateString = clientObject.getString("appt_set_dt");
+                if(dateString != null && !dateString.equalsIgnoreCase("null")) {
+                    dateText = formatDateTime(dateString);
+                }
+            }
+            else if(clientObject.has("appt_dt")) {
+                String dateString = clientObject.getString("appt_dt");
+                if(dateString != null && !dateString.equalsIgnoreCase("null")) {
+                    dateText = formatDateTime(dateString);
+                }
+            }
+            else if(clientObject.has("signed_dt")) {
+                String dateString = clientObject.getString("signed_dt");
+                if(dateString != null && !dateString.equalsIgnoreCase("null")) {
+                    dateText = formatDateTime(dateString);
+                }
+            }
+            else if(clientObject.has("uc_dt")) {
+                String dateString = clientObject.getString("uc_dt");
+                if(dateString != null && !dateString.equalsIgnoreCase("null")) {
+                    dateText = formatDateTime(dateString);
+                }
+            }
+            else if(clientObject.has("closed_dt")) {
+                String dateString = clientObject.getString("closed_dt");
+                if(dateString != null && !dateString.equalsIgnoreCase("null")) {
+                    dateText = formatDateTime(dateString);
+                }
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+        if(!dateText.equalsIgnoreCase("")) {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat format1 = new SimpleDateFormat("(yyyy-MM-dd)");
+            Date d;
+            try {
+                d = format1.parse(dateText);
+                calendar.setTime(d);
+                dateManager.setToDate(calendar);
+                rightSelector.setText(dateManager.getFormattedStartTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            dateManager.setToToday();
+            rightSelector.setText(dateManager.getFormattedStartTime());
+        }
     }
 
     private String formatDateTime(String dateString) {
@@ -338,6 +377,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         rightSelector.setOnClickListener(this);
 
         leftSelector.setText(parentActivity.getRecordClientListType() + " date:");
+        rightSelector.setText(dateManager.getFormattedStartTime());
+        TextView save = parentActivity.findViewById(R.id.saveButton);
+        if(save != null) {
+            save.setOnClickListener(this);
+        }
+
         setColorScheme();
 //        clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
 //        SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
@@ -366,8 +411,77 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             case R.id.miniDateSelectorDateFormat:
                 showDatePickerDialog();
                 break;
+            case R.id.saveButton:
+                displaySaveDialog();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void save() {
+        try {
+            if(!currentlySelectedClient.getBoolean("is_locked")) {
+                ClientObject clientToSave = new ClientObject();
+                clientToSave.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
+                clientToSave.setTeam_id(parentActivity.getSelectedTeamId());
+
+                if(currentlySelectedClient.has("appt_set_dt")) {
+                    clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());
+                    clientToSave.setAppt_set_by_agent_id(parentActivity.getAgent().getAgent_id());
+                }
+                else if(currentlySelectedClient.has("appt_dt")) {
+                    clientToSave.setAppt_dt(dateManager.getFormattedStartTime());
+                }
+                else if(currentlySelectedClient.has("signed_dt")) {
+                    clientToSave.setSigned_dt(dateManager.getFormattedStartTime());
+                }
+                else if(currentlySelectedClient.has("uc_dt")) {
+                    clientToSave.setUc_dt(dateManager.getFormattedStartTime());
+                }
+                else if(currentlySelectedClient.has("closed_dt")) {
+                    clientToSave.setClosed_dt(dateManager.getFormattedStartTime());
+                }
+
+                try {
+                    clientToSave.setClient_id(currentlySelectedClient.getString("client_id"));
+                    apiManager.sendAsyncUpdateClientsNoNulls(this, parentActivity.getAgent().getAgent_id(), clientToSave);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                parentActivity.showToast("That client is currently locked and can't be updated.");
+            }
+        } catch (JSONException e) {
+            // This means that the boolean is false
+            ClientObject clientToSave = new ClientObject();
+            clientToSave.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
+            clientToSave.setTeam_id(parentActivity.getSelectedTeamId());
+
+            if(currentlySelectedClient.has("appt_set_dt")) {
+                clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());
+                clientToSave.setAppt_set_by_agent_id(parentActivity.getAgent().getAgent_id());
+            }
+            else if(currentlySelectedClient.has("appt_dt")) {
+                clientToSave.setAppt_dt(dateManager.getFormattedStartTime());
+            }
+            else if(currentlySelectedClient.has("signed_dt")) {
+                clientToSave.setSigned_dt(dateManager.getFormattedStartTime());
+            }
+            else if(currentlySelectedClient.has("uc_dt")) {
+                clientToSave.setUc_dt(dateManager.getFormattedStartTime());
+            }
+            else if(currentlySelectedClient.has("closed_dt")) {
+                clientToSave.setClosed_dt(dateManager.getFormattedStartTime());
+            }
+
+            try {
+                clientToSave.setClient_id(currentlySelectedClient.getString("client_id"));
+                apiManager.sendAsyncUpdateClientsNoNulls(this, parentActivity.getAgent().getAgent_id(), clientToSave);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -377,14 +491,71 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day);
-                dateManager.setRecordDateToDate(cal);
-                updateDisplayDate(year, month, day);
+                dateManager.setToDate(cal);
+                rightSelector.setText(dateManager.getFormattedStartTime());
             }
-        }, dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
+        }, dateManager.getSelectedStartYear(), dateManager.getSelectedStartMonth() - 1, dateManager.getSelectedStartDay());
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         dialog.show();
+    }
+
+    private void displaySaveDialog() {
+        if(currentlySelectedClient != null) {
+            if(colorSchemeManager.getAppBackground() != Color.WHITE) {
+                try {
+                    AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)
+                            .setTitle(parentActivity.getRecordClientListType())
+                            .setMessage("Would you like to set the " + parentActivity.getRecordClientListType() + " date to '" + dateManager.getFormattedStartTime() + "' for: " + currentlySelectedClient.getString("text"))
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    save();
+                                }
+
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+                            })
+                            .show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.lightDialog)
+                            .setTitle(parentActivity.getRecordClientListType())
+                            .setMessage("Would you like to set the " + parentActivity.getRecordClientListType() + " date to '" + dateManager.getFormattedStartTime() + "' for: " + currentlySelectedClient.getString("text"))
+                            .setPositiveButton("Save", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    save();
+                                }
+
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+                            })
+                            .show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void updateDisplayDate(int year, int month, int day) {
@@ -422,7 +593,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
+            parentActivity.onBackPressed();
+        }
     }
 
     @Override
@@ -432,7 +605,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
+            parentActivity.showToast("There was an error updating the client. Please try again later.");
+            parentActivity.onBackPressed();
+        }
     }
 
     @Override

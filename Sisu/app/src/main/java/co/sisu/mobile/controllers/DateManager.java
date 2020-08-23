@@ -29,6 +29,11 @@ public class DateManager {
     private int timelineSelection = 5;
     private String timeline = "month";
 
+    public DateManager() {
+        initTimelineDate();
+        setToToday();
+    }
+
     public void initTimelineDate() {
         calendar = Calendar.getInstance();
 
