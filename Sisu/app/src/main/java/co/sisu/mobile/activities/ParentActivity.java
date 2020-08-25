@@ -1449,6 +1449,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    public void resetClientTilesPresetFilter(JSONObject filters, int page) {
+        parentLoader.setVisibility(View.VISIBLE);
+        apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), getSelectedTeamId(), filters, page);
+
+    }
+
     public void resetDashboardTiles() {
         parentLoader.setVisibility(View.VISIBLE);
         if(currentScopeFilter != null) {

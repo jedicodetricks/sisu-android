@@ -7,10 +7,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -287,6 +291,60 @@ public class ApiManager {
         stringFilters.addProperty("status", "N");
         filter.add("string_filters", stringFilters);
         jsonRequest.add("filter", filter);
+
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getTeamClientsPresetFilter(AsyncServerEventListener cb, String agentId, int teamId, JSONObject filters, int page) {
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENT_TILES;
+        String currentUrl = url + "api/v2/team/get-team-clients";
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("team_id", teamId);
+        jsonRequest.addProperty("agent_id", Integer.valueOf(agentId));
+        jsonRequest.addProperty("return_tiles", true);
+        jsonRequest.addProperty("lighter", false);
+        JsonArray fieldsArray = new JsonArray();
+        fieldsArray.add("client_id");
+        fieldsArray.add("first_name");
+        fieldsArray.add("last_name");
+        fieldsArray.add("email");
+        fieldsArray.add("mobile_phone");
+        fieldsArray.add("type_id");
+        fieldsArray.add("is_locked");
+        fieldsArray.add("commission_amt");
+        jsonRequest.add("fieldsX", fieldsArray);
+
+        JsonObject formattedFilters = new JsonObject();
+        Iterator<String> keys = filters.keys();
+        while(keys.hasNext()) {
+            String key = keys.next();
+
+            try {
+                if(filters.get(key) instanceof String) {
+                    String currentFilter = filters.getString(key);
+                    formattedFilters.addProperty(key, currentFilter);
+                }
+                else if(filters.get(key) instanceof JSONObject) {
+                    JSONObject currentFilter = filters.getJSONObject(key);
+                    if(currentFilter.has("NO IDEA WHAT THE STRING NAME IS")) {
+                        //TODO: Create a filter that has this!
+                    }
+                    else {
+                        formattedFilters.add(key, new JsonObject());
+                    }
+                }
+
+
+
+            } catch (Exception e) {
+                // This means it's probably null
+                formattedFilters.add(key, null);
+            }
+        }
+
+
+        jsonRequest.add("filter", formattedFilters);
 
         new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
     }

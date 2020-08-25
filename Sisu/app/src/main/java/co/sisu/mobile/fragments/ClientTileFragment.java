@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Filter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +54,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.FilterObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
@@ -71,8 +74,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private LayoutInflater inflater;
 
     private int numOfRows = 1;
-    private TextView scopeSelectorText, marketStatusFilterText;
-    private PopupMenu scopePopup, marketStatusPopup;
+    private TextView scopeSelectorText, marketStatusFilterText, saveButtonFilterText;
+    private PopupMenu scopePopup, marketStatusPopup, filterPopup;
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
@@ -86,7 +89,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
     private ImageView addButton;
-    private List agentFilters = new ArrayList();
+    private List<FilterObject> agentFilters = new ArrayList();
+    private Boolean filterMenuPrepared = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -387,9 +391,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
         }
 
-        TextView save = parentActivity.findViewById(R.id.saveButton);
-        if(save != null) {
-            save.setOnClickListener(this);
+        saveButtonFilterText = parentActivity.findViewById(R.id.saveButton);
+        if(saveButtonFilterText != null) {
+            saveButtonFilterText.setOnClickListener(this);
         }
         initScopePopupMenu();
         initMarketStatusPopupMenu();
@@ -443,7 +447,27 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             marketStatusPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
+    }
 
+    private void initFilterPopupMenu() {
+        filterPopup = new PopupMenu(getContext(), saveButtonFilterText);
+
+        filterPopup.setOnMenuItemClickListener(item -> {
+            FilterObject selectedFilter = agentFilters.get(item.getItemId());
+            parentActivity.resetClientTilesPresetFilter(selectedFilter.getFilters(), 1);
+            scopePopup.dismiss();
+            return false;
+        });
+
+        int counter = 0;
+        for(FilterObject currentFilter : agentFilters) {
+            SpannableString s = new SpannableString(currentFilter.getFilterName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            filterPopup.getMenu().add(1, counter, counter, s);
+            counter++;
+        }
+
+        filterMenuPrepared = true;
     }
 
     private View createClientView(ViewGroup row, JSONObject tileObject) throws JSONException {
@@ -798,7 +822,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;
             case R.id.saveButton:
+                agentFilters = new ArrayList<>();
+                filterMenuPrepared = false;
                 apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+                while(!filterMenuPrepared) {
+                    // Just wait here for the async to finish
+                }
+                filterPopup.show();
                 break;
             default:
                 break;
@@ -818,16 +848,27 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 tileString = ((Response) returnObject).body().string();
                 JSONObject responseJson = new JSONObject(tileString);
                 JSONArray filtersArray = responseJson.getJSONArray("filters");
-                JSONObject filtersObject = (JSONObject) filtersArray.get(0);
-                JSONObject filters = filtersObject.getJSONObject("filters");
-                Iterator<String> keys = filters.keys();
-
-                while(keys.hasNext()) {
-                    String key = keys.next();
-                    // do something with jsonObject here
-                    JSONObject currentFilter = filters.getJSONObject(key);
-                    String garbo = "";
+                //
+                for(int i = 0; i < filtersArray.length(); i++) {
+                    JSONObject filtersObject = (JSONObject) filtersArray.get(i);
+                    JSONObject filters = filtersObject.getJSONObject("filters");
+                    String filtersString = filters.toString();
+                    agentFilters.add(new FilterObject(filtersObject.getString("filter_name"), filters));
                 }
+                //
+
+                initFilterPopupMenu();
+//                JSONObject filtersObject = (JSONObject) filtersArray.get(0);
+//
+//                JSONObject filters = filtersObject.getJSONObject("filters");
+//                Iterator<String> keys = filters.keys();
+//
+//                while(keys.hasNext()) {
+//                    String key = keys.next();
+//                    // do something with jsonObject here
+//                    JSONObject currentFilter = filters.getJSONObject(key);
+//                    String garbo = "";
+//                }
                 String garbo = "";
 
             } catch (IOException e) {
@@ -845,7 +886,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-
+        if(returnType == ApiReturnTypes.GET_AGENT_FILTERS) {
+            Log.e("Error!", "error");
+        }
     }
 
     @Override
