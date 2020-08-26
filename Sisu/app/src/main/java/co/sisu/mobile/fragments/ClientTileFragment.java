@@ -146,7 +146,12 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                                         if(paginateObject.getBoolean("has_next") == true) {
                                             //GO GET THE NEXT SET OF CLIENTS
                                             int currentPage = paginateObject.getInt("page");
-                                            parentActivity.resetClientTiles("", currentPage + 1);
+                                            if(parentActivity.getSelectedFilter() == null) {
+                                                parentActivity.resetClientTiles("", currentPage + 1);
+                                            }
+                                            else {
+                                                parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
+                                            }
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -413,6 +418,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
                 parentActivity.resetClientTiles("", 1);
+                parentActivity.setSelectedFilter(null);
             }
             return false;
         });
@@ -437,6 +443,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             scopePopup.dismiss();
             parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
             parentActivity.resetClientTiles("", 1);
+            parentActivity.setSelectedFilter(null);
             return false;
         });
 //        List<String> timelineArray = initSpinnerArray();
@@ -453,8 +460,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         filterPopup = new PopupMenu(getContext(), saveButtonFilterText);
 
         filterPopup.setOnMenuItemClickListener(item -> {
-            FilterObject selectedFilter = agentFilters.get(item.getItemId());
-            parentActivity.resetClientTilesPresetFilter(selectedFilter.getFilters(), 1);
+            parentActivity.setSelectedFilter(agentFilters.get(item.getItemId()));
+            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), 1);
             scopePopup.dismiss();
             return false;
         });
@@ -899,6 +906,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public boolean onQueryTextSubmit(String query) {
         parentActivity.resetClientTiles(query, 1);
+        parentActivity.setSelectedFilter(null);
         return false;
     }
 

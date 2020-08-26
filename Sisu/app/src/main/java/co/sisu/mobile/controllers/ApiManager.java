@@ -342,6 +342,7 @@ public class ApiManager {
                 formattedFilters.add(key, null);
             }
         }
+        formattedFilters.addProperty("page", page);
 
 
         jsonRequest.add("filter", formattedFilters);

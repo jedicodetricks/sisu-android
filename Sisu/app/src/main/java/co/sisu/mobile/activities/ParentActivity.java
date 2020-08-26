@@ -77,6 +77,7 @@ import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.models.FilterObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
@@ -163,6 +164,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ScopeBarModel currentScopeFilter = null;
     private MarketStatusModel currentMarketStatusFilter = null;
     private ImageView addClientButton;
+    private FilterObject selectedFilter;
 
 
     @Override
@@ -1452,7 +1454,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void resetClientTilesPresetFilter(JSONObject filters, int page) {
         parentLoader.setVisibility(View.VISIBLE);
         apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), getSelectedTeamId(), filters, page);
-
     }
 
     public void resetDashboardTiles() {
@@ -1678,6 +1679,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setRecordClientListType(String recordClientListType) {
         this.recordClientListType = recordClientListType;
+    }
+
+    public FilterObject getSelectedFilter() {
+        return selectedFilter;
+    }
+
+    public void setSelectedFilter(FilterObject selectedFilter) {
+        this.selectedFilter = selectedFilter;
     }
 }
 
