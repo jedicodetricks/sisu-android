@@ -81,18 +81,8 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private ProgressBar loader;
     private LayoutInflater inflater;
 
-//    private int selectedStartYear = 0;
-//    private int selectedStartMonth = 0;
-//    private int selectedStartDay = 0;
-//    private int selectedEndYear = 0;
-//    private int selectedEndMonth = 0;
-//    private int selectedEndDay = 0;
     private Spinner spinner;
-//    private String formattedStartTime;
-//    private String formattedEndTime;
     private Calendar calendar = Calendar.getInstance();
-//    private Date selectedStartTime;
-//    private Date selectedEndTime;
 
     private int numOfRows = 1;
     private boolean isAgentDashboard;
@@ -154,7 +144,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
             return false;
         });
-//        List<String> timelineArray = initSpinnerArray();
+
         int counter = 0;
         for(ScopeBarModel scope : parentActivity.getScopeBarAgents()) {
             SpannableString s = new SpannableString(scope.getName());
