@@ -7,17 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
-
-import java.util.List;
 import java.util.Stack;
-
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.fragments.ClientListFragment;
-import co.sisu.mobile.models.AgentModelStringSuperUser;
-import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.ScopeBarModel;
-import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by bradygroharing on 5/22/18.
@@ -27,25 +20,15 @@ public class NavigationManager {
 
     private ParentActivity parentActivity;
     private ToolbarManager toolbarManager;
-    private ActionBarManager actionBarManager;
     private String fragmentTag;
     private Stack<Class> backStack;
     private ColorSchemeManager colorSchemeManager;
-    private static final boolean ENABLE_DRAWER = true;
-    private static final boolean DISABLE_DRAWER = false;
 
     public NavigationManager(ParentActivity parentActivity) {
         this.colorSchemeManager = parentActivity.colorSchemeManager;
         this.parentActivity = parentActivity;
         this.toolbarManager = new ToolbarManager(parentActivity);
-        //TODO: Action Bar issue
-        this.actionBarManager = new ActionBarManager(parentActivity);
-        this.actionBarManager.initializeActionBar(fragmentTag);
         backStack = new Stack<>();
-    }
-
-    public ActionBarManager getActionBarManager() {
-        return actionBarManager;
     }
 
     public void replaceFragment(Class fragmentClass) {
@@ -55,133 +38,17 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        manageActionBar(fragmentClass, "");
+        fragmentTag = fragmentClass.getSimpleName();
+        // TODO: Action Bar Issue
+//        manageActionBar(fragmentClass, "");
         if(backStack.size() > 0) {
             backStack.pop();
         }
+        toolbarManager.manage(fragmentClass);
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-    }
-
-    private void manageActionBar(Class fragmentClass, String titleString) {
-        //TODO: Action Bar issue
-
-        if(fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
-            if(parentActivity.getIsNoteFragment()) {
-                actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
-            }
-            else {
-                actionBarManager.swapToAddClientBar("Send Push Notification", DISABLE_DRAWER);
-            }
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
-            if(fragmentClass.getSimpleName().equals("ClientListFragment") && parentActivity.isRecruiting()) {
-                // We're passing in the word Clients so that the label will localize to Recruits
-                actionBarManager.swapToClientListBar("Clients", DISABLE_DRAWER);
-            }
-            else if(fragmentClass.getSimpleName().equals("ClientListFragment") && !parentActivity.isRecruiting()) {
-                actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
-            }
-            else {
-                if(parentActivity.getIsNoteFragment()) {
-                    actionBarManager.swapToClientListBar("Client Notes", DISABLE_DRAWER);
-                }
-                else {
-                    actionBarManager.swapToClientListBar("Message Center", DISABLE_DRAWER);
-                }
-            }
-        }
-        else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
-                fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
-                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment") ||
-                fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
-            sortTitleBar(fragmentClass, titleString);
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientManageFragment")) {
-            if(parentActivity.getSelectedClient() == null) {
-                actionBarManager.swapToAddClientBar(null, DISABLE_DRAWER);
-            }
-            else {
-                actionBarManager.swapToEditClientBar(DISABLE_DRAWER);
-            }
-        }
-        else {
-            sortSaveActionBar(fragmentClass, titleString);
-        }
-
-    }
-
-    private void sortSaveActionBar(Class fragmentClass, String titleString) {
-        //TODO: Action Bar issue
-
-        if(fragmentClass.getSimpleName().equals("RecordFragment")) {
-            fragmentTag = "Record";
-            actionBarManager.swapToSaveAction("Record", DISABLE_DRAWER);
-            toolbarManager.resetToolbarImages(fragmentTag);
-        }
-        else if(fragmentClass.getSimpleName().equals("MyProfileFragment")) {
-            fragmentTag = "MyProfile";
-            actionBarManager.swapToSaveAction("My Profile", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("GoalSetupFragment") || fragmentClass.getSimpleName().equals("RecruitingGoalSetupFragment")) {
-            fragmentTag = "GoalSetup";
-            actionBarManager.swapToSaveAction("Goal Setup", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
-            fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveEditAction("Record Settings", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
-            fragmentTag = "Settings";
-            actionBarManager.swapToSaveAction("Settings", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
-            fragmentTag = "Add Client Note";
-            actionBarManager.swapToSaveAction("Add Client Note", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equalsIgnoreCase("ClientTileFragment")) {
-            fragmentTag = "Report";
-            actionBarManager.swapToSaveAction(titleString, DISABLE_DRAWER, true);
-            toolbarManager.resetToolbarImages(fragmentTag);
-        }
-    }
-
-    private void sortTitleBar(Class fragmentClass, String titleString) {
-        //TODO: Action Bar issue
-
-        boolean isDrawerEnabled = DISABLE_DRAWER;
-        if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
-            fragmentTag = "Feedback";
-            isDrawerEnabled = DISABLE_DRAWER;
-        }
-        else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
-            fragmentTag = "More";
-        }
-        else if(fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
-            fragmentTag = "Scoreboard";
-            isDrawerEnabled = ENABLE_DRAWER;
-        }
-        else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
-            fragmentTag = "Scoreboard";
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientTileFragment")) {
-            fragmentTag = "Report";
-        }
-        else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
-            fragmentTag = "Leaderboard";
-        }
-        else if(fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
-            fragmentTag = "Change Password";
-            isDrawerEnabled = DISABLE_DRAWER;
-        }
-//        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
-//            fragmentTag = "Add Client Note";
-//        }
-        actionBarManager.swapToTitleBar(fragmentTag, isDrawerEnabled, titleString);
-        toolbarManager.resetToolbarImages(fragmentTag);
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
@@ -192,13 +59,14 @@ public class NavigationManager {
             e.printStackTrace();
         }
         fragmentTag = fragmentClass.getSimpleName();
-        manageActionBar(fragmentClass, "");
+        // TODO: Action Bar Issue
+        toolbarManager.manage(fragmentClass);
+//        manageActionBar(fragmentClass, "");
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
     }
-
 
     public void clearStackReplaceFragment(Class fragmentClass) {
         Fragment fragment = null;
@@ -207,11 +75,13 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        manageActionBar(fragmentClass, "");
+        fragmentTag = fragmentClass.getSimpleName();
+        // TODO: Action Bar Issue
+//        manageActionBar(fragmentClass, "");
         if(backStack.size() > 0) {
             backStack.clear();
         }
+        toolbarManager.manage(fragmentClass);
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
@@ -225,11 +95,13 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        manageActionBar(fragmentClass, titleString);
+        fragmentTag = fragmentClass.getSimpleName();
+        //TODO: Action Bar Issue
+//        manageActionBar(fragmentClass, titleString);
         if(backStack.size() > 0) {
             backStack.clear();
         }
+        toolbarManager.manage(fragmentClass);
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
@@ -246,28 +118,7 @@ public class NavigationManager {
         }
         // Insert the fragment by replacing any existing fragment
         backStack.add(ClientListFragment.class);
-        actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
-        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
-        toolbarManager.resetToolbarImages("More");
-    }
-
-    public void naviganavigateToClientListAndClearStackteToClientListAndClearStack(String tab) {
-        //TODO: Action Bar issue
-
-        Fragment fragment = null;
-        try {
-            fragment = ClientListFragment.newInstance(tab);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(backStack.size() > 0) {
-            backStack.clear();
-        }
-        backStack.add(ClientListFragment.class);
-        // Insert the fragment by replacing any existing fragment
-        actionBarManager.swapToClientListBar(tab, DISABLE_DRAWER);
+//        actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
@@ -275,10 +126,9 @@ public class NavigationManager {
     }
 
     public void onBackPressed() {
-        //TODO: Action Bar issue
-
         if(fragmentTag != null && !fragmentTag.equalsIgnoreCase("ClientNoteFragment")) {
-            actionBarManager.resetClient();
+            //TODO: Action Bar issue
+//            actionBarManager.resetClient();
         }
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
             if(colorSchemeManager.getAppBackground() != Color.WHITE) {
@@ -336,85 +186,12 @@ public class NavigationManager {
             }
         } else {
             backStack.pop();
-//            Log.e("BACK STACK", String.valueOf(backStack.size()));
-//            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
             replaceFragment(backStack.get(backStack.size() - 1));
         }
-    }
-
-    //Actionbar Management
-
-    public void initializeTeamBar(List<TeamObject> teamsObject) {
-        //TODO: Action Bar issue
-
-        actionBarManager.initializeTeamBar(teamsObject);
-    }
-
-    public void initScopeBar(List<ScopeBarModel> scopeBar, String myAgentId) {
-        //TODO: Action Bar issue
-
-        actionBarManager.initializeTeamAgents(scopeBar, myAgentId);
-    }
-
-    public void updateTeam(TeamObject team) {
-        //TODO: Action Bar issue
-
-        actionBarManager.updateTeam(team);
-    }
-
-    public void toggleDrawer() {
-        actionBarManager.toggleDrawer();
-    }
-
-    public void toggleTeamDrawer() {
-        actionBarManager.toggleTeamDrawer();
-    }
-
-    public void closeDrawer() {
-        actionBarManager.closeDrawer();
-    }
-
-    public void closeTeamAgentsDrawer() {
-        actionBarManager.closeTeamAgentsDrawer();
-    }
-
-    public void setSelectedClient(ClientObject selectedClient) {
-        //TODO: Action Bar issue
-
-        actionBarManager.setSelectedClient(selectedClient);
-    }
-
-    public ClientObject getSelectedClient() {
-        return actionBarManager.getSelectedClient();
     }
 
     public String getCurrentFragment() {
         return fragmentTag;
     }
 
-    public int getSelectedTeamId() {
-        return actionBarManager.getSelectedTeamId();
-    }
-
-    public TeamObject getCurrentTeam() {
-        return actionBarManager.getCurrentTeam();
-    }
-
-    public int getMarketId() {
-        //TODO: Action Bar issue
-
-        return actionBarManager.getMarketId();
-    }
-
-    public void updateSelectedTeam(int position) {
-        actionBarManager.updateSelectedTeam(position);
-    }
-
-    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
-        //TODO: Action Bar issue
-
-        this.colorSchemeManager = colorSchemeManager;
-        actionBarManager.updateColorSchemeManager(colorSchemeManager);
-        toolbarManager.updateColorSchemeManager(colorSchemeManager);
-    }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ScopeBarModel;
 
 /**

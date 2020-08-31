@@ -149,19 +149,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         closedVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
         underContractVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
 
-        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getLighterTextColor());
+        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getLighterTextColor());
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();

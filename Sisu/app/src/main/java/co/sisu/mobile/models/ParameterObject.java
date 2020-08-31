@@ -1,7 +1,5 @@
 package co.sisu.mobile.models;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

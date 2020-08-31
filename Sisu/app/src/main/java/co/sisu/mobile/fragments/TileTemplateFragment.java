@@ -57,11 +57,11 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.CircularProgressBar;
-import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 import static android.view.FrameMetrics.ANIMATION_DURATION;
@@ -132,7 +132,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         scopePopup = new PopupMenu(getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarAgents().get(item.getItemId());
+            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
             if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
                 // DO NOTHING
                 scopePopup.dismiss();
@@ -146,7 +146,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         });
 
         int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarAgents()) {
+        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
 

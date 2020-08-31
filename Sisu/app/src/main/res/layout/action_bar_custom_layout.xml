@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        >
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/action_bar_parent"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="4dp"
+            >
+
+            <View
+                android:id="@+id/action_bar_home"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:background="@color/colorCorporateOrange"
+                android:elevation="1dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </View>
+
+            <TextView
+                android:id="@+id/team_letter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorCorporateOrange"
+                android:elevation="1dp"
+                android:text="Z"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/font_larger"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+                app:layout_constraintStart_toStartOf="@id/action_bar_home"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/team_icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:elevation="1dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/action_bar_home"
+                app:layout_constraintStart_toStartOf="@id/action_bar_home"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@id/actionBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="@dimen/font_large" />
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="@dimen/font_large"/>
+
+    </TableRow>
+
+</TableLayout>

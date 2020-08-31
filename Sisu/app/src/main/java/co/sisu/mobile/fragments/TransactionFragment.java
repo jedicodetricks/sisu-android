@@ -2,15 +2,11 @@ package co.sisu.mobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -18,17 +14,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -43,7 +34,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
@@ -55,8 +45,6 @@ import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.MarketStatusModel;
-import co.sisu.mobile.models.ScopeBarModel;
 
 /**
  * Created by bradygroharing on 2/21/18.

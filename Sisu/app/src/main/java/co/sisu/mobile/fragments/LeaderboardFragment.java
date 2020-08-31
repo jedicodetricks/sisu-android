@@ -41,8 +41,6 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.enums.ApiReturnTypes;
-import co.sisu.mobile.models.AgentGoalsObject;
-import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;

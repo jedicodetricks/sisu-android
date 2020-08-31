@@ -79,8 +79,8 @@ public class TeamBarAdapter extends BaseAdapter {
         }
 
         textViewHome.setText(info.getName());
-        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-        textViewHome.setBackgroundColor(colorSchemeManager.getAppBackground());
+//        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+//        textViewHome.setBackgroundColor(colorSchemeManager.getAppBackground());
         //TODO: This isn't changing colors correctly for some reason so it's GRAY right now
         textViewHome.setTextColor(Color.GRAY);
 

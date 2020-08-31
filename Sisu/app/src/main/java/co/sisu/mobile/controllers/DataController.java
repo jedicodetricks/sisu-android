@@ -63,6 +63,10 @@ public class DataController {
     private boolean messageCenterVisible = false;
     private AsyncActivitySettingsObject[] activitySettings;
 
+    private ClientObject selectedClient;
+    private int selectedTeamPosition = 0;
+    private TeamObject selectedTeamObject = null;
+
     public DataController(){
         teamsObject = new ArrayList<>();
         activitiesObject = new ArrayList<>();
@@ -1484,5 +1488,29 @@ public class DataController {
 
     public int getNumOfActiveAgents() {
         return contractList.size();
+    }
+
+    public ClientObject getSelectedClient() {
+        return selectedClient;
+    }
+
+    public void setSelectedClient(ClientObject selectedClient) {
+        this.selectedClient = selectedClient;
+    }
+
+    public int getSelectedTeamPosition() {
+        return selectedTeamPosition;
+    }
+
+    public void setSelectedTeamPosition(int selectedTeamPosition) {
+        this.selectedTeamPosition = selectedTeamPosition;
+    }
+
+    public TeamObject getSelectedTeamObject() {
+        return selectedTeamObject;
+    }
+
+    public void setSelectedTeamObject(TeamObject selectedTeamObject) {
+        this.selectedTeamObject = selectedTeamObject;
     }
 }

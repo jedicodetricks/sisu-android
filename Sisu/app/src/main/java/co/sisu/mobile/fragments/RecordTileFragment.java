@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -24,13 +23,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -334,7 +331,7 @@ public class RecordTileFragment extends Fragment implements View.OnClickListener
         scopePopup = new PopupMenu(getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarAgents().get(item.getItemId());
+            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
             if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
                 // DO NOTHING
                 scopePopup.dismiss();
@@ -348,7 +345,7 @@ public class RecordTileFragment extends Fragment implements View.OnClickListener
         });
 //        List<String> timelineArray = initSpinnerArray();
         int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarAgents()) {
+        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
 
@@ -720,7 +717,7 @@ public class RecordTileFragment extends Fragment implements View.OnClickListener
                 marketStatusPopup.show();
                 break;
             case R.id.scopeSelector:
-                parentActivity.getNavigationManager().toggleTeamDrawer();
+//                parentActivity.getNavigationManager().toggleTeamDrawer();
 //                loader.setVisibility(View.VISIBLE);
 //                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;

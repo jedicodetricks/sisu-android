@@ -84,13 +84,13 @@
         <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
-    <style name="ParentTheme" parent="Theme.AppCompat">
+    <style name="ParentTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
         <item name="colorPrimary">@color/colorAlmostBlack</item>
         <item name="android:popupBackground">@color/transparent</item>
-        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>
+<!--        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>-->
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
         <item name="android:colorForeground">@color/colorAlmostBlack</item>

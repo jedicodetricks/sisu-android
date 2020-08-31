@@ -29,10 +29,10 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 

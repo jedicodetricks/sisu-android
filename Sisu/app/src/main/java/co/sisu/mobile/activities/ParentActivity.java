@@ -17,10 +17,17 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.LruCache;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
@@ -37,18 +44,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
@@ -88,23 +95,21 @@ import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
-import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 2/26/18.
  */
 
-public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener {
+public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener {
 
     private DataController dataController;
     private NavigationManager navigationManager;
     private DateManager dateManager;
     private ApiManager apiManager;
     public ColorSchemeManager colorSchemeManager;
-    private MyFirebaseMessagingService myFirebaseMessagingService;
+    public ActionBarManager actionBarManager;
     public ProgressBar parentLoader;
-    private String currentSelectedRecordDate = "";
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
@@ -144,8 +149,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private final Rect finalBounds = new Rect();
     private final Point globalOffset = new Point();
     private int mShortAnimationDuration;
-    private TeamObject updatedTeam;
-    private int updateTeamPosition;
     private boolean isAdminMode = false;
     private boolean adminTransferring = false;
 
@@ -159,13 +162,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private JSONObject recordClientsList;
     private String recordClientListType;
     private boolean isAgentDashboard = true;
-    private List<ScopeBarModel> scopeBarAgents = new ArrayList<>();
+    private List<ScopeBarModel> scopeBarList = new ArrayList<>();
     private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
     private ScopeBarModel currentScopeFilter = null;
     private MarketStatusModel currentMarketStatusFilter = null;
     private ImageView addClientButton;
     private FilterObject selectedFilter;
 
+    private DrawerLayout drawerLayout;
+    private PopupMenu teamSelectorPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,18 +208,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initParentFields();
         initializeButtons();
         initCache();
+        initActionBar();
+        initDrawer();
 
         //Eventually you won't need the non tile debug stuff
         if(tileDebug) {
             noNavigation = true;
             dateManager.initTimelineDate();
             apiManager.getFirebaseDevices(this, agent.getAgent_id());
-            apiManager.getTeams(this, agent.getAgent_id());
         }
-        else {
-            apiManager.getTeams(this, agent.getAgent_id());
-        }
-
+        apiManager.getTeams(this, agent.getAgent_id());
     }
 
     private void initCache() {
@@ -243,6 +246,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         navTitle = findViewById(R.id.nav_title);
     }
 
+    private void initActionBar() {
+        actionBarManager = new ActionBarManager(this);
+    }
+
+    private void initDrawer() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+    }
+
     public void setActivityColors() {
         if(!tileDebug) {
             this.runOnUiThread(() -> {
@@ -267,20 +278,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
                     parentLoader.getIndeterminateDrawable().setBounds(bounds);
                 }
-                navigationManager.updateColorScheme(colorSchemeManager);
+//                navigationManager.updateColorScheme(colorSchemeManager);
             });
         }
 
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
-        else {
+        if (getBitmapFromMemCache(key) != null) {
             Log.e("Key already exists", "Replacing " + key);
-            mMemoryCache.put(key, bitmap);
         }
+        mMemoryCache.put(key, bitmap);
     }
 
     public Bitmap getBitmapFromMemCache(String key) {
@@ -307,6 +315,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         addClientButton.setOnClickListener(this);
     }
 
+    private void initTeamSelectorPopup() {
+        teamSelectorPopup = new PopupMenu(this, findViewById(R.id.team_icon));
+
+        teamSelectorPopup.setOnMenuItemClickListener(this);
+        int counter = 0;
+        for(TeamObject teamObject : dataController.getTeamsObject()) {
+            SpannableString s = new SpannableString(teamObject.getName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            teamSelectorPopup.getMenu().add(1, counter, counter, s);
+            counter++;
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if(dataController.getUpdatedRecords().size() > 0) {
@@ -322,14 +343,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             switch (v.getId()) {
                 case R.id.action_bar_home:
                 case R.id.team_icon:
-                    navigationManager.toggleDrawer();
+                case R.id.team_letter:
+//                    toggleDrawer();
+                    teamSelectorPopup.show();
                     break;
                 case R.id.scoreboardView:
                     addClientButton.setVisibility(View.VISIBLE);
                     if(isRecruiting()) {
                         if(tileDebug) {
                             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
-//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
@@ -382,26 +404,39 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.recordView:
                     noNavigation = false;
+                    actionBarManager.setToSaveBar("Record");
                     navigationManager.clearStackReplaceFragment(RecordFragment.class);
                     break;
                 case R.id.leaderBoardView:
                     noNavigation = false;
+                    actionBarManager.setToTitleBar("Leaderboards", false);
                     navigationManager.clearStackReplaceFragment(LeaderboardFragment.class);
                     break;
                 case R.id.moreView:
                     noNavigation = false;
+                    actionBarManager.setToTitleBar("More", false);
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
                     break;
                 case R.id.cancelButton:
                     navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                     break;
                 case R.id.addView:
+                    actionBarManager.setToSaveBar("Add Client");
                     navigationManager.stackReplaceFragment(ClientManageFragment.class);
                     break;
                 default:
                     break;
             }
 
+        }
+    }
+
+    private void toggleDrawer() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(Gravity.LEFT);
+        }
+        else {
+            drawerLayout.openDrawer(Gravity.LEFT);
         }
     }
 
@@ -412,7 +447,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
         String currentSelectedDate = dateManager.getFormattedRecordDate();
         for(Metric m : updatedRecords) {
-            updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedDate, m.getType(), m.getCurrentNum(), Integer.valueOf(agent.getAgent_id())));
+            updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedDate, m.getType(), m.getCurrentNum(), Integer.parseInt(agent.getAgent_id())));
         }
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
@@ -426,50 +461,32 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         parentLoader.setVisibility(View.VISIBLE);
         try {
+            // TODO: This will need to be moved to the teamSelectorPopup
             // This is what goes off when you click a new TEAM
             TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-            updatedTeam = team;
-            updateTeamPosition = position;
-            navigationManager.updateTeam(updatedTeam);
-            navigationManager.updateSelectedTeam(updateTeamPosition);
+            dataController.setSelectedTeamObject(team);
+            dataController.setSelectedTeamPosition(position);
             FragmentManager fragmentManager = getSupportFragmentManager();
             f = fragmentManager.findFragmentById(R.id.your_placeholder);
 
             sendTeamSwapApiCalls(team);
 
-            navigationManager.closeDrawer();
+//            navigationManager.closeDrawer();
         } catch ( ClassCastException cce) {
             //This is what goes off when you click a new scope.
+            //TODO: I don't think this is being used anymore.
             ScopeBarModel selectedScope = (ScopeBarModel) parent.getItemAtPosition(position);
             if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
                 // DO NOTHING
-                navigationManager.closeTeamAgentsDrawer();
+//                navigationManager.closeTeamAgentsDrawer();
                 parentLoader.setVisibility(View.INVISIBLE);
             }
             else {
-//            if(selectedAgent.getAgent_id().equals(myAgentId)) {
-//                // This is what will trigger when you return to yourself
-//                isAdminMode = false;
-//                actionBarManager.setAdminMode(false);
-//            }
-                if(isAdminMode) {
-                    isAdminMode = false;
-//                    actionBarManager.setAdminMode(false);
-                }
-                else {
-                    isAdminMode = true;
-//                    actionBarManager.setAdminMode(true);
-                }
-//            }
-                navigationManager.closeTeamAgentsDrawer();
+//                navigationManager.closeTeamAgentsDrawer();
                 if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
-//                apiManager.getAgent(this, selectedAgent.getAgent_id());
                     currentScopeFilter = selectedScope;
-                    updateActionBarTitle(currentScopeFilter.getName());
+                    actionBarManager.setTitle(currentScopeFilter.getName());
                     apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", selectedScope.getIdValue());
-                }
-                else {
-//                apiManager.getAgent(this, selectedAgent.getAgent_id());
                 }
             }
         }
@@ -512,28 +529,30 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 teamSwap = false;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
 
-                switch (f.getTag()) {
-                    case "Scoreboard":
-//                        try {
-//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-//                        }
-//                        catch(Exception e) {
-//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-//                        }
-                        ((TileTemplateFragment) f).teamSwap();
-                        break;
-                    case "Record":
-                        ((RecordFragment) f).teamSwap();
-                        break;
-                    case "Report":
-                        ((ClientTileFragment) f).teamSwap();
-                        break;
-                    case "Leaderboard":
-                        ((LeaderboardFragment) f).teamSwap();
-                        break;
-                    case "More":
-                        ((MoreFragment) f).teamSwap();
-                        break;
+                if (f.getTag() != null) {
+                    switch (f.getTag()) {
+                        case "Scoreboard":
+    //                        try {
+    //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+    //                        }
+    //                        catch(Exception e) {
+    //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
+    //                        }
+                            ((TileTemplateFragment) f).teamSwap();
+                            break;
+                        case "Record":
+                            ((RecordFragment) f).teamSwap();
+                            break;
+                        case "Report":
+                            ((ClientTileFragment) f).teamSwap();
+                            break;
+                        case "Leaderboard":
+                            ((LeaderboardFragment) f).teamSwap();
+                            break;
+                        case "More":
+                            ((MoreFragment) f).teamSwap();
+                            break;
+                    }
                 }
             }
         }
@@ -551,61 +570,63 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 activitySettingsParamFinished = false;
                 teamSwap = false;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-                switch (f.getTag()) {
-                    case "Scoreboard":
-                        try {
-                            if(tileDebug) {
-                                if(getCurrentScopeFilter() != null) {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                if (f.getTag() != null) {
+                    switch (f.getTag()) {
+                        case "Scoreboard":
+                            try {
+                                if(tileDebug) {
+                                    if(getCurrentScopeFilter() != null) {
+                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                    }
+                                    else {
+                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                    }
                                 }
                                 else {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                    if(isRecruiting()) {
+                                        ((RecruitingScoreboardFragment) f).teamSwap();
+                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                                    }
+                                    else {
+                                        ((ScoreboardFragment) f).teamSwap();
+                                    }
                                 }
+
                             }
-                            else {
-                                if(isRecruiting()) {
-                                    ((RecruitingScoreboardFragment) f).teamSwap();
-                                    navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                            catch(Exception e) {
+                                if(tileDebug) {
+                                    if(getCurrentScopeFilter() != null) {
+                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                    }
+                                    else {
+                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                    }
                                 }
                                 else {
-                                    ((ScoreboardFragment) f).teamSwap();
+                                    if(isRecruiting()) {
+                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                                    }
+                                    else {
+                                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+                                    }
                                 }
+
                             }
 
-                        }
-                        catch(Exception e) {
-                            if(tileDebug) {
-                                if(getCurrentScopeFilter() != null) {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
-                                }
-                                else {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
-                                }
-                            }
-                            else {
-                                if(isRecruiting()) {
-                                    navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                                }
-                                else {
-                                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                                }
-                            }
-
-                        }
-
-                        break;
-                    case "Record":
-                        ((RecordFragment) f).teamSwap();
-                        break;
-                    case "Report":
-                        ((ReportFragment) f).teamSwap();
-                        break;
-                    case "Leaderboard":
-                        ((LeaderboardFragment) f).teamSwap();
-                        break;
-                    case "More":
-                        ((MoreFragment) f).teamSwap();
-                        break;
+                            break;
+                        case "Record":
+                            ((RecordFragment) f).teamSwap();
+                            break;
+                        case "Report":
+                            ((ReportFragment) f).teamSwap();
+                            break;
+                        case "Leaderboard":
+                            ((LeaderboardFragment) f).teamSwap();
+                            break;
+                        case "More":
+                            ((MoreFragment) f).teamSwap();
+                            break;
+                    }
                 }
             }
         }
@@ -613,7 +634,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public TeamObject getCurrentTeam() {
-        return navigationManager.getCurrentTeam();
+        return dataController.getSelectedTeamObject();
     }
 
     private void navigateToScoreboard(boolean b) {
@@ -634,9 +655,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         if(tileDebug) {
                             if(getCurrentScopeFilter() != null) {
                                 navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
                             }
                             else {
                                 navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                actionBarManager.setToTitleBar("", true);
                             }
                         }
                         else {
@@ -662,24 +685,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
         }
         if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(isRecruiting()) {
-                        if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
-                        }
-                        else {
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                        }
+            this.runOnUiThread(() -> {
+                if(isRecruiting()) {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
-                        if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
-                        }
-                        else {
-                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                        }
+                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                    }
+                }
+                else {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                     }
                 }
             });
@@ -770,25 +790,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 addClientButton.setVisibility(View.VISIBLE);
             }
         }
-        else {
-
-        }
-
     }
 
     public void showToast(final CharSequence msg){
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast toast = Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                TextView text = (TextView) view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-                view.setBackgroundResource(R.color.colorCorporateOrange);
-                text.setPadding(20, 8, 20, 8);
-                toast.show();
-            }
+        this.runOnUiThread(() -> {
+            Toast toast = Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT);
+            View view = toast.getView();
+            TextView text = view.findViewById(android.R.id.message);
+            text.setTextColor(Color.WHITE);
+            text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
+            view.setBackgroundResource(R.color.colorCorporateOrange);
+            text.setPadding(20, 8, 20, 8);
+            toast.show();
         });
     }
 
@@ -854,9 +867,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 clientTilesFinished = true;
                 if(marketStatusFinished) {
                     if(getCurrentScopeFilter() != null) {
+                        actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
                         navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
+                        actionBarManager.setToFilterBar("");
                         navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
                     }
                 }
@@ -888,9 +903,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 marketStatusFinished = true;
                 if(clientTilesFinished) {
                     if(getCurrentScopeFilter() != null) {
+                        actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
                         navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
+                        actionBarManager.setToFilterBar("");
                         navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
                     }
                 }
@@ -969,6 +986,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(reminderActive == 1) {
                     createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
                 }
+                // TODO: Don't need to check if teamsFinished anymore I think
                 if(teamsFinished) {
                     //TODO: Probably don't need either of these
 //                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
@@ -987,23 +1005,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
             dataController.setTeamsObject(ParentActivity.this, teamsObject);
             this.runOnUiThread(() -> {
-                //TODO: Action Bar issue
-                navigationManager.initializeTeamBar(dataController.getTeamsObject());
+                actionBarManager.initTeamBar();
+                initTeamSelectorPopup();
                 if(dataController.getTeamsObject().size() > 0) {
-                    //TODO: Action Bar issue
-                    navigationManager.updateTeam(dataController.getTeamsObject().get(0));
+                    dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
                     dataController.setMessageCenterVisible(true);
-                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getTeamsObject().get(0).getId());
+                    // TODO: I don't need the team params to be a race condition
+                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
                     //TODO: Probably don't need to getClients now
 //                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                     clientFinished = true;
-                    SaveSharedPreference.setTeam(ParentActivity.this, navigationManager.getSelectedTeamId() + "");
-                    if(settingsFinished && !tileDebug) {
-                        colorSchemeFinished = true;
-//                        apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId(), dataController.getColorSchemeId());
-                        apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), navigationManager.getSelectedTeamId());
-                    }
-                    else if(tileDebug) {
+                    SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
+                    if(tileDebug) {
                         colorSchemeFinished = true;
                         labelsFinished = true;
                     }
@@ -1019,7 +1032,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 teamsFinished = true;
                 scopeFinished = false;
                 apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think
+                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think Update: 8/30/20 I no longer think that's true but I can probably get it later now.
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                 //TODO: Could probably get activity settings later (record or settings page)
@@ -1033,39 +1046,37 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.GET_SCOPE) {
             try {
                 String tileString = ((Response) returnObject).body().string();
-                scopeBarAgents = new ArrayList<>();
+                scopeBarList = new ArrayList<>();
                 scopes =  new JSONObject(tileString);
                 JSONObject allScopes = scopes.getJSONObject("scopes");
                 JSONArray scopeAgents = allScopes.getJSONArray("agents");
                 JSONArray scopeGroups = allScopes.getJSONArray("groups");
                 JSONObject scopeTeam = allScopes.getJSONObject("team");
 
+                scopeBarList.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
+                scopeBarList.add(new ScopeBarModel("-- Groups --", "Groups"));
+
+                for(int i = 0; i < scopeGroups.length(); i++) {
+                    JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
+                    scopeBarList.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
+                }
+
+                scopeBarList.add(new ScopeBarModel("-- Agents --", "Groups"));
+
                 for(int i = 0; i < scopeAgents.length(); i++) {
                     JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
                     if(currentAgent.getString("agent_id").equalsIgnoreCase(myAgentId)) {
                         ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
-                        scopeBarAgents.add(agentScope);
+                        scopeBarList.add(0, agentScope);
                         if(currentScopeFilter == null) {
                             currentScopeFilter = agentScope;
                         }
-                        updateActionBarTitle(currentScopeFilter.getName());
+                        actionBarManager.setTitle(currentScopeFilter.getName());
                         break;
                     }
-                }
-
-                scopeBarAgents.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
-                scopeBarAgents.add(new ScopeBarModel("-- Groups --", "Groups"));
-
-                for(int i = 0; i < scopeGroups.length(); i++) {
-                    JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
-                    scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
-                }
-
-                scopeBarAgents.add(new ScopeBarModel("-- Agents --", "Groups"));
-
-                for(int i = 0; i < scopeAgents.length(); i++) {
-                    JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
-                    scopeBarAgents.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                    else {
+                        scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                    }
                 }
 
             } catch (IOException e) {
@@ -1112,7 +1123,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     currentDevice = fdo;
                 }
             }
-            myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+            MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
             if(firebaseDeviceId.equals("")) {
                 myFirebaseMessagingService.initFirebase();
@@ -1132,7 +1143,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             else {
                 colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
                 setActivityColors();
-                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
+//                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
                 colorSchemeFinished = true;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
                 navigateToScoreboard();
@@ -1222,13 +1233,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             tileTemplateFinished = true;
         }
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                executeTeamSwap();
-            }
-        });
+        this.runOnUiThread(() -> executeTeamSwap());
     }
+
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
         if(pendingIntent == null) {
@@ -1430,7 +1437,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
                 selectedContextId = currentScopeFilter.getIdValue().substring(1);
             }
-            updateActionBarTitle(currentScopeFilter.getName());
+            actionBarManager.setTitle(currentScopeFilter.getName());
         }
 
         if(currentMarketStatusFilter != null) {
@@ -1459,7 +1466,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void resetDashboardTiles() {
         parentLoader.setVisibility(View.VISIBLE);
         if(currentScopeFilter != null) {
-            updateActionBarTitle(currentScopeFilter.getName());
+            actionBarManager.setTitle(currentScopeFilter.getName());
         }
         tileTemplateFinished = false;
         scopeFinished = false;
@@ -1475,11 +1482,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
-        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
-    }
-
-    public void updateActionBarTitle(String title) {
-        navigationManager.getActionBarManager().setTitle(title);
+//        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
     }
 
     // GETTERS AND SETTERS
@@ -1496,25 +1499,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        if(client.getIs_locked() == null) {
 //            client.setIs_locked("0");
 //        }
-        navigationManager.setSelectedClient(client);
+        dataController.setSelectedClient(client);
+//        navigationManager.setSelectedClient(client);
     }
 
     public ClientObject getSelectedClient() {
-        return navigationManager.getSelectedClient();
-    }
-
-    public void updateSelectedRecordDate(String formattedDate) {
-        this.currentSelectedRecordDate = formattedDate;
+        return dataController.getSelectedClient();
+//        return navigationManager.getSelectedClient();
     }
 
     public int getSelectedTeamId() {
-        int teamId = navigationManager.getSelectedTeamId();
-        return teamId;
+        return dataController.getSelectedTeamObject().getId();
     }
 
     public int getSelectedTeamMarketId() {
-        int marketId = navigationManager.getMarketId();
-        return marketId;
+        return dataController.getSelectedTeamObject().getMarket_id();
     }
 
     public NavigationManager getNavigationManager() {
@@ -1599,10 +1598,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public boolean isRecruiting() {
-        if(getSelectedTeamMarketId() == 2) {
-            return true;
-        }
-        return false;
+        return getSelectedTeamMarketId() == 2;
     }
 
     public boolean isAdminMode() {
@@ -1625,10 +1621,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return marketStatusBar;
     }
 
-    public JSONObject getScopes() {
-        return scopes;
-    }
-
     public void setTileTemplate(JSONObject tileTemplate) {
         this.tileTemplate = tileTemplate;
     }
@@ -1641,8 +1633,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         isAgentDashboard = agentDashboard;
     }
 
-    public List<ScopeBarModel> getScopeBarAgents() {
-        return scopeBarAgents;
+    public List<ScopeBarModel> getScopeBarList() {
+        return scopeBarList;
     }
 
     public void setScopeFilter(ScopeBarModel selectedScope) {
@@ -1687,6 +1679,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setSelectedFilter(FilterObject selectedFilter) {
         this.selectedFilter = selectedFilter;
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
     }
 }
 

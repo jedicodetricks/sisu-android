@@ -51,11 +51,11 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.RecordListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.enums.ApiReturnTypes;
@@ -64,7 +64,6 @@ import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.controllers.DateManager;
 import okhttp3.Response;
 
 
