@@ -200,10 +200,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("3812");
+//        agent.setAgent_id("18272");
 //        dataController.setAgent(agent);
         //
-        myAgentId = agent.getAgent_id();
+//        myAgentId = agent.getAgent_id();
 
         initParentFields();
         initializeButtons();
@@ -281,7 +281,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                navigationManager.updateColorScheme(colorSchemeManager);
             });
         }
-
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -576,15 +575,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             try {
                                 if(tileDebug) {
                                     if(getCurrentScopeFilter() != null) {
+                                        actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
                                         navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                                     }
                                     else {
+                                        actionBarManager.setToTitleBar("", true);
                                         navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
                                     }
                                 }
                                 else {
                                     if(isRecruiting()) {
-                                        ((RecruitingScoreboardFragment) f).teamSwap();
+//                                        ((RecruitingScoreboardFragment) f).teamSwap();
                                         navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
                                     }
                                     else {
@@ -596,9 +597,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             catch(Exception e) {
                                 if(tileDebug) {
                                     if(getCurrentScopeFilter() != null) {
+                                        actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
                                         navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                                     }
                                     else {
+                                        actionBarManager.setToTitleBar("", true);
                                         navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
                                     }
                                 }
@@ -645,24 +648,33 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(scopeFinished && tileTemplateFinished) {
                     if(isRecruiting()) {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            if(getCurrentScopeFilter() != null) {
+                                actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            }
+                            else {
+                                actionBarManager.setToTitleBar("", true);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                            }
                         }
                         else {
+                            actionBarManager.setToTitleBar("", true);
                             navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
                         }
                     }
                     else {
                         if(tileDebug) {
                             if(getCurrentScopeFilter() != null) {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                                 actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                             }
                             else {
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
                                 actionBarManager.setToTitleBar("", true);
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
                             }
                         }
                         else {
+                            actionBarManager.setToTitleBar("", true);
                             navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                         }
                     }
@@ -680,6 +692,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamsFinished = false;
     }
 
+    // TODO: I think this is deprecated and we don't need it anymore
     private void navigateToScoreboard() {
         if(!tileDebug) {
             tileTemplateFinished = true;
@@ -1049,33 +1062,38 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 scopeBarList = new ArrayList<>();
                 scopes =  new JSONObject(tileString);
                 JSONObject allScopes = scopes.getJSONObject("scopes");
-                JSONArray scopeAgents = allScopes.getJSONArray("agents");
-                JSONArray scopeGroups = allScopes.getJSONArray("groups");
-                JSONObject scopeTeam = allScopes.getJSONObject("team");
 
-                scopeBarList.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
-                scopeBarList.add(new ScopeBarModel("-- Groups --", "Groups"));
-
-                for(int i = 0; i < scopeGroups.length(); i++) {
-                    JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
-                    scopeBarList.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
+                if(allScopes.has("team")) {
+                    JSONObject scopeTeam = allScopes.getJSONObject("team");
+                    scopeBarList.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
                 }
+                if(allScopes.has("groups")) {
+                    JSONArray scopeGroups = allScopes.getJSONArray("groups");
+                    scopeBarList.add(new ScopeBarModel("-- Groups --", "Groups"));
 
-                scopeBarList.add(new ScopeBarModel("-- Agents --", "Groups"));
-
-                for(int i = 0; i < scopeAgents.length(); i++) {
-                    JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
-                    if(currentAgent.getString("agent_id").equalsIgnoreCase(myAgentId)) {
-                        ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
-                        scopeBarList.add(0, agentScope);
-                        if(currentScopeFilter == null) {
-                            currentScopeFilter = agentScope;
-                        }
-                        actionBarManager.setTitle(currentScopeFilter.getName());
-                        break;
+                    for(int i = 0; i < scopeGroups.length(); i++) {
+                        JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
+                        scopeBarList.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
                     }
-                    else {
-                        scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                }
+                if(allScopes.has("agents")) {
+                    JSONArray scopeAgents = allScopes.getJSONArray("agents");
+                    scopeBarList.add(new ScopeBarModel("-- Agents --", "Groups"));
+
+                    for(int i = 0; i < scopeAgents.length(); i++) {
+                        JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
+                        if(currentAgent.getString("agent_id").equalsIgnoreCase(getAgent().getAgent_id())) {
+                            ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
+                            scopeBarList.add(0, agentScope);
+                            if(currentScopeFilter == null) {
+                                currentScopeFilter = agentScope;
+                            }
+                            actionBarManager.setTitle(currentScopeFilter.getName());
+                            break;
+                        }
+                        else {
+                            scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                        }
                     }
                 }
 
