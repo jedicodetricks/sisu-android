@@ -195,7 +195,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("3812");
+//        agent.setAgent_id("18272");
 //        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
@@ -624,7 +624,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(scopeFinished && tileTemplateFinished) {
                     if(isRecruiting()) {
                         if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            if(getCurrentScopeFilter() != null) {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                            }
+                            else {
+                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                            }
                         }
                         else {
                             navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
@@ -1037,7 +1042,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 scopes =  new JSONObject(tileString);
                 JSONObject allScopes = scopes.getJSONObject("scopes");
                 JSONArray scopeAgents = allScopes.getJSONArray("agents");
-                JSONArray scopeGroups = allScopes.getJSONArray("groups");
+                JSONArray scopeGroups = null;
+                if(allScopes.has("groups")) {
+                    scopeGroups = allScopes.getJSONArray("groups");
+                }
                 JSONObject scopeTeam = allScopes.getJSONObject("team");
 
                 for(int i = 0; i < scopeAgents.length(); i++) {
@@ -1054,12 +1062,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 scopeBarAgents.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
-                scopeBarAgents.add(new ScopeBarModel("-- Groups --", "Groups"));
+                if(scopeGroups != null) {
+                    scopeBarAgents.add(new ScopeBarModel("-- Groups --", "Groups"));
 
-                for(int i = 0; i < scopeGroups.length(); i++) {
-                    JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
-                    scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
+                    for(int i = 0; i < scopeGroups.length(); i++) {
+                        JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
+                        scopeBarAgents.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
+                    }
                 }
+
 
                 scopeBarAgents.add(new ScopeBarModel("-- Agents --", "Groups"));
 
