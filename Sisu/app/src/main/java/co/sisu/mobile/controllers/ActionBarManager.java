@@ -59,6 +59,7 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     private TextView actionBarActionText;
     private TextView teamLetter;
     private View teamBlock;
+    private ImageView actionImage;
     //
 
     public ActionBarManager(ParentActivity parentActivity) {
@@ -81,6 +82,9 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
 
         teamBlock = parentActivity.findViewById(R.id.team_icon);
         teamBlock.setOnClickListener(parentActivity);
+
+        actionImage = parentActivity.findViewById(R.id.actionBarActionImage);
+        actionImage.setOnClickListener(parentActivity);
     }
 
     public void initTeamBar() {
@@ -117,7 +121,7 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             }
             actionBarTitle.setText(titleString);
             actionBarActionText.setVisibility(View.INVISIBLE);
-
+            actionImage.setVisibility(View.GONE);
             // TODO: We'll need to move this to the popupMenu so we don't manage the drawer
 
 //            if(dataController.getSelectedTeamObject() != null) {
@@ -146,6 +150,7 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             teamSelectButton.setVisibility(View.INVISIBLE);
             teamLetter.setVisibility(View.INVISIBLE);
             teamBlock.setVisibility(View.INVISIBLE);
+            actionImage.setVisibility(View.GONE);
         });
     }
 
@@ -157,6 +162,47 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             teamSelectButton.setVisibility(View.INVISIBLE);
             teamLetter.setVisibility(View.INVISIBLE);
             teamBlock.setVisibility(View.INVISIBLE);
+            actionImage.setVisibility(View.GONE);
+        });
+    }
+
+    public void setToEditBar(final String titleString) {
+        parentActivity.runOnUiThread(() -> {
+            actionBarTitle.setText(titleString);
+            actionBarActionText.setVisibility(View.GONE);
+            teamSelectButton.setVisibility(View.INVISIBLE);
+            teamLetter.setVisibility(View.INVISIBLE);
+            teamBlock.setVisibility(View.INVISIBLE);
+            actionImage.setVisibility(View.VISIBLE);
+            // TODO: Manage the colorscheme
+            actionImage.setImageResource(R.drawable.drag_drop);
+        });
+    }
+
+    public void setToAddBar(final String titleString) {
+        parentActivity.runOnUiThread(() -> {
+            actionBarTitle.setText(titleString);
+            actionBarActionText.setVisibility(View.GONE);
+            teamSelectButton.setVisibility(View.INVISIBLE);
+            teamLetter.setVisibility(View.INVISIBLE);
+            teamBlock.setVisibility(View.INVISIBLE);
+            actionImage.setVisibility(View.VISIBLE);
+            // TODO: Find the normal looking plus button
+            actionImage.setImageResource(R.drawable.add_icon);
+        });
+    }
+
+    public void setToSaveDeleteBar(final String titleString) {
+        parentActivity.runOnUiThread(() -> {
+            actionBarTitle.setText(titleString);
+            actionBarActionText.setVisibility(View.VISIBLE);
+            actionBarActionText.setText("Save");
+            teamSelectButton.setVisibility(View.INVISIBLE);
+            teamLetter.setVisibility(View.INVISIBLE);
+            teamBlock.setVisibility(View.INVISIBLE);
+            actionImage.setVisibility(View.VISIBLE);
+            // TODO: Manage the colorscheme
+            actionImage.setImageResource(R.drawable.trash_icon);
         });
     }
 

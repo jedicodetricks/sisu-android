@@ -638,10 +638,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    public TeamObject getCurrentTeam() {
-        return dataController.getSelectedTeamObject();
-    }
-
     private void navigateToScoreboard(boolean b) {
         if(!tileDebug) {
             tileTemplateFinished = true;
@@ -806,6 +802,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(currentFragment != null) {
             if(currentFragment.equalsIgnoreCase("scoreboard") || currentFragment.equalsIgnoreCase("report")) {
                 addClientButton.setVisibility(View.VISIBLE);
+            }
+            if(currentFragment.equalsIgnoreCase("MoreFragment")) {
+                actionBarManager.setToTitleBar("More", false);
             }
         }
     }
@@ -1485,16 +1484,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), getSelectedTeamId(), filters, page);
     }
 
-    public void resetDashboardTiles() {
+    public void resetDashboardTiles(boolean scopeSelected) {
         parentLoader.setVisibility(View.VISIBLE);
         if(currentScopeFilter != null) {
             actionBarManager.setTitle(currentScopeFilter.getName());
         }
         tileTemplateFinished = false;
-        scopeFinished = false;
-        marketStatusFinished = false;
-        apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-        apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+        if(scopeSelected) {
+            scopeFinished = true;
+            marketStatusFinished = true;
+        }
+        else {
+            scopeFinished = false;
+            marketStatusFinished = false;
+            apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+            apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+        }
+
         if(currentScopeFilter != null) {
             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
         }
@@ -1550,6 +1556,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public ApiManager getApiManager() {
         return apiManager;
+    }
+
+    public ActionBarManager getActionBarManager() {
+        return actionBarManager;
     }
 
     public ColorSchemeManager getColorSchemeManager() {
@@ -1703,6 +1713,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setSelectedFilter(FilterObject selectedFilter) {
         this.selectedFilter = selectedFilter;
+    }
+
+    public TeamObject getCurrentTeam() {
+        return dataController.getSelectedTeamObject();
     }
 
     @Override

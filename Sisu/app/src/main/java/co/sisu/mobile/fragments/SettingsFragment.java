@@ -90,6 +90,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // TODO: This needs to save on any change now, there is no save button
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
@@ -145,7 +146,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
         DrawableCompat.setTintList(DrawableCompat.wrap(lightsSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
     }
-
 
     private void initAdditionalFields() {
         timeZoneDisplay = getView().findViewById(R.id.timeZoneDisplay);
@@ -261,6 +261,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
+                updateSettingsObject();
+                saveSettingsObject();
                 break;
             case R.id.lightsSwitch:
                 activateLights(isChecked);
@@ -269,7 +271,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
-
+                updateSettingsObject();
+                saveSettingsObject();
                 break;
             //Keep this, we'll need it for V2
 //            case R.id.idSwitch:
@@ -384,7 +387,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
         apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject);
 
-        parentActivity.createNotificationAlarm(currentSelectedHour,currentSelectedMinute,pendingIntent);
+        parentActivity.createNotificationAlarm(currentSelectedHour, currentSelectedMinute, pendingIntent);
 
     }
 
@@ -411,6 +414,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 }
                 displayTime.setText( "" + selectedHour + ":" + timePrepend + selectedMinute + " " + selectedPeriod);
 //                createNotificationAlarm();
+                updateSettingsObject();
+                saveSettingsObject();
             }
         }, currentSelectedHour, currentSelectedMinute, false);
 

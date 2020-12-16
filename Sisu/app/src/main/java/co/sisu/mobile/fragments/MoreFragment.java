@@ -21,6 +21,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.MoreListAdapter;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -39,6 +40,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private ParentActivity parentActivity;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private String m_Text;
 
     public MoreFragment() {
@@ -62,6 +64,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        actionBarManager = parentActivity.getActionBarManager();
         initializeListView();
         setColorScheme();
     }
@@ -91,14 +94,15 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
         if(!parentActivity.isTeamSwapOccurring()) {
             switch(value.getTitle()) {
-                case "Teams":
-                    break;
-                case "Clients":
-                case "Recruits":
-                    navigationManager.stackReplaceFragment(ClientListFragment.class);
-                    break;
+//                case "Teams":
+//                    break;
+//                case "Clients":
+//                case "Recruits":
+//                    navigationManager.stackReplaceFragment(ClientListFragment.class);
+//                    break;
                 case "My Profile":
                     navigationManager.stackReplaceFragment(MyProfileFragment.class);
+                    actionBarManager.setToSaveBar("My Profile");
                     break;
                 case "Goal Setup":
                     if(parentActivity.isRecruiting()) {
@@ -107,22 +111,30 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     else {
                         navigationManager.stackReplaceFragment(GoalSetupFragment.class);
                     }
+                    actionBarManager.setToSaveBar("Goal Setup");
                     break;
                 case "Activity Settings":
                     navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
+                    // TODO: Need to create the list edit bar
+                    actionBarManager.setToEditBar("Record Settings");
                     break;
                 case "Settings":
                     navigationManager.stackReplaceFragment(SettingsFragment.class);
+                    actionBarManager.setToTitleBar("Settings", false);
                     break;
                 case "Feedback":
                     navigationManager.stackReplaceFragment(FeedbackFragment.class);
+                    actionBarManager.setToTitleBar("Feedback", false);
                     break;
                 case "Slack":
                     navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    actionBarManager.setToTitleBar("Slack", false);
                     break;
                 case "Message Center":
                     parentActivity.setNoteOrMessage("Message");
                     navigationManager.stackReplaceFragment(ClientNoteFragment.class);
+                    // TODO: Need to create the add bar
+                    actionBarManager.setToAddBar("Message Center");
                     break;
                 case "Sisu Login":
                     popAgentIdDialog("Enter Agent ID", "agentId");

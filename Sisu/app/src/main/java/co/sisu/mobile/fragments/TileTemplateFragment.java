@@ -119,7 +119,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     public void teamSwap() {
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
         loader.setVisibility(View.VISIBLE);
-        parentActivity.resetDashboardTiles();
+        parentActivity.resetDashboardTiles(false);
 //        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
 //        parentActivity.runOnUiThread(new Runnable() {
 //            @Override
@@ -141,7 +141,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             else {
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetDashboardTiles();
+                parentActivity.resetDashboardTiles(true);
             }
             return false;
         });

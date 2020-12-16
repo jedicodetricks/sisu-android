@@ -90,7 +90,7 @@ public class RecordTileFragment extends Fragment implements View.OnClickListener
     }
 
     public void teamSwap() {
-        parentActivity.resetDashboardTiles();
+        parentActivity.resetDashboardTiles(false);
 //        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
 //        loader.setVisibility(View.VISIBLE);
 //        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);

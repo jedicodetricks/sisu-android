@@ -64,6 +64,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.AppointmentListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -88,6 +89,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private ProgressBar loader;
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, leadSource, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
@@ -132,6 +134,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        actionBarManager = parentActivity.getActionBarManager();
         loader = view.findViewById(R.id.clientLoader);
 
         counter = 1;
@@ -150,6 +153,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         else {
             // This is the flow to edit a client
             currentClient = parentActivity.getSelectedClient();
+            actionBarManager.setToSaveDeleteBar(currentClient.getFirst_name());
             if (parentActivity.getAgent().getLast_name().equalsIgnoreCase("Groharing")) {
                 parentActivity.showToast("Client ID: " + parentActivity.getSelectedClient().getClient_id());
             }
@@ -382,6 +386,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         archivedReason.setTextColor(colorSchemeManager.getDarkerTextColor());
         Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
         imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+        // TODO: Archive button doesn't exist here
         archiveButton.setImageDrawable(imageDraw);
 
         setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerTextColor());
@@ -805,7 +810,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         saveButton.setOnClickListener(null);
         archiveButton.setOnClickListener(null);
         saveButton.setVisibility(View.GONE);
-        lock = parentActivity.findViewById(R.id.lock);
+        lock = parentActivity.findViewById(R.id.actionBarActionImage);
+        lock.setImageResource(R.drawable.lock_icon);
         lock.setVisibility(View.VISIBLE);
         lock.setOnClickListener(this);
         ConstraintLayout c = (ConstraintLayout) parentActivity.findViewById(R.id.editClientLayout);
@@ -1480,7 +1486,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
     private void initEditClientButtons() {
 
-        archiveButton = parentActivity.findViewById(R.id.archiveButton);
+        archiveButton = parentActivity.findViewById(R.id.actionBarActionImage);
         if(archiveButton != null) {
             archiveButton.setOnClickListener(this);
         }

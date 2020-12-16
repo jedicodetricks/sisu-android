@@ -118,7 +118,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     public void teamSwap() {
-        parentActivity.resetDashboardTiles();
+        parentActivity.resetDashboardTiles(false);
     }
 
     @SuppressLint("ResourceType")

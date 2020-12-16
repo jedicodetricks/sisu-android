@@ -91,7 +91,8 @@ public class DataController {
 //            morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
 //        }
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
-        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
+        // TODO: Ask why goal setup is gone now?
+//        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
         if(isAdmin) {
             morePage.add(new MorePageContainer("Activity Settings", "Select which activities you want to track", R.drawable.record_icon_active));
         }

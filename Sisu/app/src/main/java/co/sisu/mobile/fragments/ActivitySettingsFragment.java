@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.ActivityListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -50,12 +52,14 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ApiManager apiManager;
     private DataController dataController;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private AsyncActivitySettingsObject[] selectedActivities;
     private AsyncActivitySettingsObject[] currentActivitiesSorting;
     private ProgressBar loader;
     private ArrayList mItemArray = new ArrayList<>();
     private boolean editMode = false;
-    private TextView saveButton, editButton, title;
+    private TextView saveButton, title;
+    private ImageView editButton;
     private boolean activitySaveComplete = false;
     private boolean settingsSaveComplete = false;
 
@@ -78,6 +82,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        actionBarManager = parentActivity.getActionBarManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         initializeButtons();
         initializeListView();
@@ -116,7 +121,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
         }
-        editButton = parentActivity.findViewById(R.id.editButton);
+        editButton = parentActivity.findViewById(R.id.actionBarActionImage);
         if(editButton != null) {
             editButton.setOnClickListener(this);
         }
@@ -136,9 +141,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         mItemArray = new ArrayList<>();
         if(getContext() != null) {
             for (AsyncActivitySettingsObject setting : selectedActivities) {
-                SelectedActivities value = new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName());
-                mItemArray.add(new Pair<>((long) counter, value));
-                counter++;
+                if(!setting.getActivity_type().equalsIgnoreCase("CONTA")) {
+                    SelectedActivities value = new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName());
+                    mItemArray.add(new Pair<>((long) counter, value));
+                    counter++;
+                }
             }
         }
 
@@ -170,26 +177,29 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     @Override
     public void onClick(View v) {
+        // TODO: There is no save button, needs to save after any edit
         switch (v.getId()) {
-            case R.id.saveButton://notify of success update api
-                if(editMode) {
+            case R.id.saveButton:
+                editMode = !editMode;
+//                if(editMode) {
                     //This would save the editing of priority
                     dataController.sortSelectedActivities(currentActivitiesSorting);
                     saveSorting();
-                }
-                else {
-                    saveSettings();
-                }
+                    actionBarManager.setToEditBar("Record Settings");
+//                }
+//                else {
+//                    saveSettings();
+//                }
                 break;
-            case R.id.editButton:
+            case R.id.actionBarActionImage:
                 editMode = !editMode;
-                if(editMode) {
+//                if(editMode) {
+                    actionBarManager.setToSaveBar("Record Settings");
                     saveButton.setText("Done");
-                    editButton.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    saveButton.setText("Save");
-                }
+//                }
+//                else {
+//                    actionBarManager.setToEditBar("Record Settings");
+//                }
                 fillListViewWithData(dataController.getActivitiesSelected());
                 break;
         }
@@ -202,13 +212,11 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
         for(AsyncActivitySettingsObject s : currentActivitiesSorting) {
             for(Metric m : allActivities) {
-//                if(m.getWeight() < 80) {
                 if(m.getType().equalsIgnoreCase(s.getActivity_type())) {
                     m.setWeight(currentActivitiesSorting.length - weightCounter);
                     weightCounter++;
                     break;
                 }
-//                }
             }
         }
         updateRecordedActivities(allActivities);
@@ -222,23 +230,23 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         Date d = c.getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
-        for(Metric m : updatedRecords) {
-            switch(m.getType()) {
-                case "BSGND":
-                case "SSGND":
-                case "BUNDC":
-                case "SUNDC":
-                case "BCLSD":
-                case "SCLSD":
-                case "BAPPT":
-                case "SAPPT":
-                case "CONTA":
-                    break;
-                default:
-                    updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(dataController.getAgent().getAgent_id()), m.getWeight()));
-                    break;
-            }
-        }
+//        for(Metric m : updatedRecords) {
+//            switch(m.getType()) {
+//                case "BSGND":
+//                case "SSGND":
+//                case "BUNDC":
+//                case "SUNDC":
+//                case "BCLSD":
+//                case "SCLSD":
+//                case "BAPPT":
+//                case "SAPPT":
+//                case "CONTA":
+//                    break;
+//                default:
+//                    updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(dataController.getAgent().getAgent_id()), m.getWeight()));
+//                    break;
+//            }
+//        }
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
 
