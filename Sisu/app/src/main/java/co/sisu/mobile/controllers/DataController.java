@@ -1116,7 +1116,7 @@ public class DataController {
             }
 
         }
-        this.settings = relevantSettings;
+        this.settings = newSettings;
     }
 
     private LinkedHashMap<String, SelectedActivities> setupSelectedActivities(AsyncActivitySettingsObject[] s) {
