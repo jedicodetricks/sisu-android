@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -513,7 +514,8 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
                 buyerButton.setTextColor(colorSchemeManager.getButtonText());
                 buyerButton.setBackgroundResource(R.drawable.rounded_button);
                 GradientDrawable drawable = (GradientDrawable) buyerButton.getBackground();
-                drawable.setColor(colorSchemeManager.getButtonSelected());
+                drawable.setColor(Color.RED);
+//                drawable.setColor(colorSchemeManager.getButtonSelected());
 
                 sellerButton.setTextColor(colorSchemeManager.getButtonText());
                 sellerButton.setBackgroundResource(R.drawable.rounded_button);
@@ -1043,11 +1045,11 @@ public class AddClientFragment extends Fragment implements View.OnClickListener,
 
     private void initializeButtons(){
 
-//        buyerButton= getView().findViewById(R.id.buyerButton);
-//        buyerButton.setOnClickListener(this);
+        buyerButton= getView().findViewById(R.id.buyerButton);
+        buyerButton.setOnClickListener(this);
 //
-//        sellerButton= getView().findViewById(R.id.sellerButton);
-//        sellerButton.setOnClickListener(this);
+        sellerButton= getView().findViewById(R.id.sellerButton);
+        sellerButton.setOnClickListener(this);
 
         importContactButton = getView().findViewById(R.id.importContactButton);
         importContactButton.setOnClickListener(this);

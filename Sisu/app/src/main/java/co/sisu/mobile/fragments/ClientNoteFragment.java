@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,7 +76,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
         else {
-            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id());
+            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
         }
         initAddButton();
     }
@@ -95,7 +99,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         if(getContext() != null) {
             PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, parentActivity.colorSchemeManager);
             mListView.setAdapter(adapter);
-
 //            mListView.setOnItemClickListener(this);
         }
 

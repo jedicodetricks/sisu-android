@@ -107,11 +107,11 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId) {
+    public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
         //GET
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.GET_MESSAGE_CENTER;
-        String currentUrl = url + "api/v1/agent/push-message/" + agentId;
+        String currentUrl = url + "api/v1/agent/push-message/" + agentId + "/" + selectedTeamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 

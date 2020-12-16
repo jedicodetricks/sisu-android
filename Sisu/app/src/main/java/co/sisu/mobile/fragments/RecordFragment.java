@@ -90,6 +90,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
     private final int smallerTitleSize = 18;
+    private View view;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -112,6 +113,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        this.view = view;
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
@@ -260,20 +262,18 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             }
         }
 
-        RelativeLayout parentRelativeLayout = getView().findViewById(R.id.record_activities_list_parent);
-        if(parentRelativeLayout != null) {
-            parentRelativeLayout.removeAllViews();
-            int numOfRows = 0;
-            for(int i = 0; i < doubleMetricList.size(); i++) {
-                View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
-                view = createActivityRowView(view, doubleMetricList.get(i));
+        RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
+        parentRelativeLayout.removeAllViews();
+        int numOfRows = 0;
+        for(int i = 0; i < doubleMetricList.size(); i++) {
+            View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
+            view = createActivityRowView(view, doubleMetricList.get(i));
 
-                view.setId(numOfRows + 1);
-                RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
-                parentRelativeLayout.addView(view, horizontalParam);
-                numOfRows++;
-            }
+            view.setId(numOfRows + 1);
+            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+            parentRelativeLayout.addView(view, horizontalParam);
+            numOfRows++;
         }
 //        List<DoubleMetric> doubleMetricList = new ArrayList<>();
 //        for(int i = 0; i < metricList.size(); i++) {
@@ -824,7 +824,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
-        if(progress != null) {
+        if(progress != null && progressBar != null) {
             Double completedPercent = 0.0;
             if(progressBar.has("completed")) {
                 completedPercent = progressBar.getDouble("completed");

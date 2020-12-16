@@ -60,6 +60,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.CircularProgressBar;
 import okhttp3.Response;
@@ -485,9 +486,16 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         ImageView onPace = rowView.findViewById(R.id.legendTilePaceCircle);
         ImageView onGoal = rowView.findViewById(R.id.legendTileGoalCircle);
 
-        noPace.setColorFilter(Color.parseColor(tileObject.getString("progress_offtrack")), PorterDuff.Mode.SRC_ATOP);
-        onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
-        onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
+        try {
+            noPace.setColorFilter(Color.parseColor(tileObject.getString("progress_offtrack")), PorterDuff.Mode.SRC_ATOP);
+            onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
+            onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
+        } catch(IllegalArgumentException e) {
+            noPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+            onPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
+            onGoal.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+        }
+
         return rowView;
     }
 
@@ -610,7 +618,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
             }
             String progressColor = progressBar.getString("progress_color");
             progress.setProgress(completedPercent.intValue());
-            progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+            try {
+                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+            } catch (IllegalArgumentException e) {
+                progress.getProgressDrawable().setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_IN);
+            }
         }
 
         String tileColor = tileObject.getString("tile_color");
@@ -997,6 +1009,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         View rowView = inflater.inflate(R.layout.tile_progress_layout, row, false);
         ConstraintLayout constraintLayout = rowView.findViewById(R.id.progressTileLayout);
         String title = tileObject.getString("under_title");
+
         Double currentProgress = tileObject.getDouble("current");
         Double maxProgress = tileObject.getDouble("max");
         String progressColor = tileObject.getString("color");
@@ -1027,7 +1040,11 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         currentProgressText.setText(currentProgress.intValue() + "");
         TextView goalProgressText = rowView.findViewById(R.id.progressTileGoalNumber);
         goalProgressText.setText(maxProgress.intValue() + "");
-        progress.setColor(Color.parseColor(progressColor));
+        try {
+            progress.setColor(Color.parseColor(progressColor));
+        } catch(IllegalArgumentException e) {
+            progress.setColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+        }
         progress.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         double percentCompleted = getPercentComplete(currentProgress, maxProgress);
@@ -1081,29 +1098,58 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         }
 
         if(tileObject.has("tap")) {
-            final String clickDestination = tileObject.getString("tap");
-            constraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    progressOnClick(clickDestination);
-                }
-            });
+            if(tileObject.has("tap_client_filter")) {
+                final String tapClientFilter = tileObject.getString("tap_client_filter");
+                final String clickDestination = tileObject.getString("tap");
+                constraintLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        progressOnClick(clickDestination, tapClientFilter);
+                    }
+                });
 
-            progressMark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    progressOnClick(clickDestination);
-                }
-            });
+                progressMark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        progressOnClick(clickDestination, tapClientFilter);
+                    }
+                });
+            }
+            else {
+                final String clickDestination = tileObject.getString("tap");
+                constraintLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        progressOnClick(clickDestination, "");
+                    }
+                });
+
+                progressMark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        progressOnClick(clickDestination, "");
+                    }
+                });
+            }
+
         }
 
         return rowView;
     }
 
-    private void progressOnClick(String clickDestination) {
+    private void progressOnClick(String clickDestination, String marketStatusKey) {
         switch (clickDestination) {
             case "clients":
-                navigationManager.stackReplaceFragment(ClientListFragment.class);
+                if(!marketStatusKey.equals("")) {
+                    MarketStatusModel selectedMarketStatus = new MarketStatusModel(marketStatusKey, "", true);
+
+                    parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
+                    parentActivity.resetClientTiles("", 1);
+                    parentActivity.setSelectedFilter(null);
+                }
+                else {
+                    parentActivity.resetClientTiles("", 1);
+                }
                 break;
             case "scoreboard":
                 navigationManager.stackReplaceFragment(ScoreboardFragment.class);
