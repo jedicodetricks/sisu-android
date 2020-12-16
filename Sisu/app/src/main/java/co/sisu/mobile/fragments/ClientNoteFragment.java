@@ -72,7 +72,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
         else {
-            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id());
+            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
         }
         initAddButton();
     }

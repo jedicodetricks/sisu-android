@@ -307,6 +307,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             case R.id.saveButton:
                 updateSettingsObject();
                 saveSettingsObject();
+                break;
         }
     }
 
@@ -447,7 +448,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             }
             colorFinished = true;
         }
-        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
+        else if(returnType == ApiReturnTypes.UPDATE_SETTINGS) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
