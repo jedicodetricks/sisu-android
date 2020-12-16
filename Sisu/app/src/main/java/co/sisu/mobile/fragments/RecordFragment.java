@@ -91,6 +91,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
     private final int smallerTitleSize = 18;
+    private View view;
 
     public RecordFragment() {
         // Required empty public constructor
@@ -113,6 +114,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        this.view = view;
         parentActivity = (ParentActivity) getActivity();
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
@@ -260,8 +262,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 }
             }
         }
-
-        RelativeLayout parentRelativeLayout = getView().findViewById(R.id.record_activities_list_parent);
+        
+        RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
         parentRelativeLayout.removeAllViews();
         int numOfRows = 0;
         for(int i = 0; i < doubleMetricList.size(); i++) {

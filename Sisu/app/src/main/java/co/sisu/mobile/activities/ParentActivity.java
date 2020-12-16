@@ -195,7 +195,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("18272");
+//        agent.setAgent_id("31192");
 //        dataController.setAgent(agent);
         //
         myAgentId = agent.getAgent_id();
@@ -326,9 +326,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.scoreboardView:
                     addClientButton.setVisibility(View.VISIBLE);
+                    scopeFinished = true;
+                    marketStatusFinished = true;
                     if(isRecruiting()) {
                         if(tileDebug) {
                             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+
 //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
                         }
                         else {
@@ -621,7 +624,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
         }
             this.runOnUiThread(() -> {
-                if(scopeFinished && tileTemplateFinished) {
+                if(scopeFinished && tileTemplateFinished && marketStatusFinished) {
                     if(isRecruiting()) {
                         if(tileDebug) {
                             if(getCurrentScopeFilter() != null) {
@@ -648,6 +651,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                         }
                     }
+                    scopeFinished = false;
+                    tileTemplateFinished = false;
+                    marketStatusFinished = false;
                 }
 
             });
@@ -666,17 +672,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(!tileDebug) {
             tileTemplateFinished = true;
         }
-        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished) {
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(isRecruiting()) {
-                        if(tileDebug) {
-                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
-                        }
-                        else {
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                        }
+        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished && marketStatusFinished) {
+            this.runOnUiThread(() -> {
+                if(isRecruiting()) {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                    }
+                    else {
+                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                    }
+                }
+                else {
+                    if(tileDebug) {
+                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
                         if(tileDebug) {
@@ -891,6 +899,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();
                 }
                 marketStatusFinished = true;
+                navigateToScoreboard(false);
                 if(clientTilesFinished) {
                     if(getCurrentScopeFilter() != null) {
                         navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
@@ -1024,7 +1033,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 teamsFinished = true;
                 scopeFinished = false;
                 apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think
+
+                apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
+
+                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think Update: 8/30/20 I no longer think that's true but I can probably get it later now.
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
                 //TODO: Could probably get activity settings later (record or settings page)
@@ -1086,12 +1098,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             scopeFinished = true;
-            if(teamSwap) {
-                navigateToScoreboard(true);
-            }
-            else {
-                navigateToScoreboard();
-            }
+            navigateToScoreboard(true);
         }
         else if(returnType == ApiReturnTypes.GET_CLIENTS) {
             //TODO: Probably can delete this after some further testing
@@ -1474,7 +1481,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         tileTemplateFinished = false;
         scopeFinished = false;
+        marketStatusFinished = false;
         apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+        apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
         if(currentScopeFilter != null) {
             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
         }

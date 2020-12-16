@@ -95,7 +95,6 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         if(getContext() != null) {
             PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, parentActivity.colorSchemeManager);
             mListView.setAdapter(adapter);
-
 //            mListView.setOnItemClickListener(this);
         }
 

@@ -1093,27 +1093,27 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buyerButton:
-                buyer.setTextColor(colorSchemeManager.getButtonText());
+                buyer.setTextColor(colorSchemeManager.getMenuSelectedText());
                 buyer.setBackgroundResource(R.drawable.rounded_button);
                 GradientDrawable drawable = (GradientDrawable) buyer.getBackground();
-                drawable.setColor(colorSchemeManager.getButtonSelected());
+                drawable.setColorFilter(colorSchemeManager.getMenuSelected(), PorterDuff.Mode.SRC_ATOP);
 
-                seller.setTextColor(colorSchemeManager.getButtonText());
+                seller.setTextColor(colorSchemeManager.getMenuText());
                 seller.setBackgroundResource(R.drawable.rounded_button);
                 drawable = (GradientDrawable) seller.getBackground();
-                drawable.setColor(colorSchemeManager.getButtonBackground());
+                drawable.setColorFilter(colorSchemeManager.getButtonBackground(), PorterDuff.Mode.SRC_ATOP);
                 typeSelected = "b";
                 break;
             case R.id.sellerButton:
-                seller.setTextColor(colorSchemeManager.getButtonText());
+                seller.setTextColor(colorSchemeManager.getMenuSelectedText());
                 seller.setBackgroundResource(R.drawable.rounded_button);
                 drawable = (GradientDrawable) seller.getBackground();
-                drawable.setColor(colorSchemeManager.getButtonSelected());
+                drawable.setColorFilter(colorSchemeManager.getMenuSelected(), PorterDuff.Mode.SRC_ATOP);
 
-                buyer.setTextColor(colorSchemeManager.getButtonText());
+                buyer.setTextColor(colorSchemeManager.getMenuText());
                 buyer.setBackgroundResource(R.drawable.rounded_button);
                 drawable = (GradientDrawable) buyer.getBackground();
-                drawable.setColor(colorSchemeManager.getButtonBackground());
+                drawable.setColorFilter(colorSchemeManager.getButtonBackground(), PorterDuff.Mode.SRC_ATOP);
                 typeSelected = "s";
                 break;
             case R.id.calculateGciPercent:
