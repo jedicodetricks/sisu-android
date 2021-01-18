@@ -715,7 +715,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
 
-//            currentActivitiesSorting = dataController.getActivitiesSelected();
+//            currentActivitiesSorting = dataController.getActivitySettings();
 //            parentActivity.runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {
@@ -724,7 +724,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 //                    setLabels();
 //                    initializeListView(metricList);
 ////                    setupFieldsWithData();
-////                    fillListViewWithData(dataController.getActivitiesSelected());
+////                    fillListViewWithData(dataController.getActivitySettings());
 //                }
 //            });
             Date d = calendar.getTime();

@@ -1141,7 +1141,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                         saveClient();
                     }
                 }
-
                 break;
             case R.id.addClientSaveButton://notify of success update api
                 if(parentActivity.isAdminMode()) {

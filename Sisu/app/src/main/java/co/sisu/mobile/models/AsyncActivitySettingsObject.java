@@ -1,12 +1,28 @@
 package co.sisu.mobile.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AsyncActivitySettingsObject {
 
     private String activity_type;
     private String display_locked;
-    private long display_order;
+    private int display_order;
     private String name;
     private boolean value;
+
+    public AsyncActivitySettingsObject(JSONObject currentActivitySetting) {
+        try {
+            this.activity_type = currentActivitySetting.getString("activity_type");
+            // TODO: Why am I not using this as a boolean but as a string?!
+            this.display_locked = String.valueOf(currentActivitySetting.getBoolean("display_locked"));
+            this.display_order = currentActivitySetting.getInt("display_order");
+            this.name = currentActivitySetting.getString("name");
+            this.value = currentActivitySetting.getBoolean("value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public String getActivity_type() {
         return activity_type;
@@ -28,7 +44,7 @@ public class AsyncActivitySettingsObject {
         return display_order;
     }
 
-    public void setDisplay_order(long display_order) {
+    public void setDisplay_order(int display_order) {
         this.display_order = display_order;
     }
 

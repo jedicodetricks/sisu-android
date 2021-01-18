@@ -1056,7 +1056,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: I don't think I need goals anymore, that's passed in with the tiles I think Update: 8/30/20 I no longer think that's true but I can probably get it later now.
                 apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                //TODO: Could probably get activity settings later (record or settings page)
+                //TODO: Could probably get activity settings later (record or settings page). Or maybe never as of 12/22/20
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
 //                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 if(tileDebug) {

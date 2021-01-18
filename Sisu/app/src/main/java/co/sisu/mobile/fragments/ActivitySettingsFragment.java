@@ -15,6 +15,11 @@ import android.widget.TextView;
 
 import com.woxthebox.draglistview.DragListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,12 +89,12 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
+        loader.setVisibility(View.VISIBLE);
         initializeButtons();
         initializeListView();
         initializeFields();
-        loader.setVisibility(View.VISIBLE);
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
         setColorScheme();
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
     }
 
     private void initializeFields() {
@@ -103,8 +108,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         title.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
+    // TODO: I don't think I need this.
     private void setupFieldsWithData() {
-        selectedActivities = dataController.getActivitiesSelected();
+        selectedActivities = dataController.getActivitySettings();
 //        selectedActivities = new ArrayList<>();
 
 //        for ( String key : activitiesSelected.keySet() ) {
@@ -200,7 +206,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 //                else {
 //                    actionBarManager.setToEditBar("Record Settings");
 //                }
-                fillListViewWithData(dataController.getActivitiesSelected());
+                fillListViewWithData(dataController.getActivitySettings());
                 break;
         }
     }
@@ -257,7 +263,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     private void saveSettings() {
         List<AsyncActivitySettingsObject> updatedSettings = new ArrayList<>();
-        AsyncActivitySettingsObject[] currentActivitySettings = dataController.getActivitiesSelected();
+        AsyncActivitySettingsObject[] currentActivitySettings = dataController.getActivitySettings();
         for(int i = 0; i < mItemArray.size(); i++) {
             Pair<Long, SelectedActivities> currentPair = (Pair<Long, SelectedActivities>) mItemArray.get(i);
             SelectedActivities selectedActivity = currentPair.second;
@@ -268,7 +274,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             }
         }
         dataController.setActivitiesSelected(currentActivitySettings);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitiesSelected()), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitySettings()), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
     }
 
     private String createUpdateObject(AsyncActivitySettingsObject[] selectedActivities) {
@@ -299,17 +305,25 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
-            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
-            dataController.setActivitiesSelected(settings);
-            currentActivitiesSorting = dataController.getActivitiesSelected();
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loader.setVisibility(View.GONE);
-                    setupFieldsWithData();
-                    fillListViewWithData(dataController.getActivitiesSelected());
-                }
+//            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
+//            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+
+            try {
+                String activitySettingsString = ((Response) returnObject).body().string();
+                ((Response) returnObject).close();
+                JSONObject activitySettingsJson = new JSONObject(activitySettingsString);
+                JSONArray activitySettings = activitySettingsJson.getJSONArray("record_activities");
+                dataController.setActivitySettings(activitySettings);
+                currentActivitiesSorting = dataController.getActivitySettings();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            parentActivity.runOnUiThread(() -> {
+                loader.setVisibility(View.GONE);
+                setupFieldsWithData();
+                fillListViewWithData(currentActivitiesSorting);
             });
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
@@ -321,13 +335,24 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                         editMode = false;
                         saveButton.setText("Save");
                         editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitiesSelected());
+                        fillListViewWithData(dataController.getActivitySettings());
                     }
 
                 }
             });
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
+            try {
+                String activitySettingsString = ((Response) returnObject).body().string();
+                ((Response) returnObject).close();
+                JSONObject activitySettingsJson = new JSONObject(activitySettingsString);
+                int bogus = 1;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             if(editMode) {
                 parentActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -336,7 +361,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                         editMode = false;
                         saveButton.setText("Save");
                         editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitiesSelected());
+                        fillListViewWithData(dataController.getActivitySettings());
                     }
                 });
 

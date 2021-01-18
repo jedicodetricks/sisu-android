@@ -71,6 +71,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private List<ParameterObject> settings;
     private boolean settingsFinished = false;
     private boolean colorFinished = false;
+    private boolean colorSchemeChanged = false;
     private TeamColorSchemeObject[] colorScheme;
 
     public SettingsFragment() {
@@ -96,6 +97,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        apiManager.getSettings(this, dataController.getAgent().getAgent_id());
         initAdditionalFields();
         initTimeSelector();
         initNotificationAlarm();
@@ -248,7 +250,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
         switch (buttonView.getId()) {
             case R.id.reminderSwitch:
                 if(!reminderSwitch.isChecked()) {
@@ -261,18 +262,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
-                updateSettingsObject();
-                saveSettingsObject();
+
                 break;
             case R.id.lightsSwitch:
                 activateLights(isChecked);
+//                colorSchemeChanged = true;
                 for(ParameterObject so : settings) {
                     if(so.getName().equalsIgnoreCase("lights")) {
                         so.setValue(isCheckedBinaryValue(so));
                     }
                 }
-                updateSettingsObject();
-                saveSettingsObject();
                 break;
             //Keep this, we'll need it for V2
 //            case R.id.idSwitch:
@@ -284,8 +283,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 //                Log.d("CHECK LISTENER", "ID");
 //                break;
         }
-
-
+        updateSettingsObject();
+        saveSettingsObject();
     }
 
     private void activateLights(Boolean isChecked) {
@@ -306,10 +305,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 if(reminderSwitch.isChecked()) {
                     launchTimePicker();
                 }
-                break;
-            case R.id.saveButton:
-                updateSettingsObject();
-                saveSettingsObject();
                 break;
         }
     }
@@ -384,11 +379,10 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             settingsObjects.add(new UpdateSettingsObject(so.getName(), so.getValue(), Integer.valueOf(so.getParameter_type_id())));
         }
 
-        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
-        apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), asyncUpdateSettingsJsonObject);
+//        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
+        apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), 2, settingsObjects);
 
         parentActivity.createNotificationAlarm(currentSelectedHour, currentSelectedMinute, pendingIntent);
-
     }
 
     private void launchTimePicker() {
@@ -457,12 +451,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ParameterObject[] array = new ParameterObject[settings.size()];
-                    try {
-                        dataController.setSettings(new JSONArray(settings.toArray(array)));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    dataController.setSettings(settings);
                     if(colorScheme != null) {
                         colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
                         parentActivity.setActivityColors();
@@ -472,7 +461,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                         colorFinished = true;
                     }
                     if(colorFinished) {
-                        navigationManager.onBackPressed();
+//                        navigationManager.onBackPressed();
                         parentActivity.showToast("Your settings have been updated");
                     }
                     settingsFinished = true;

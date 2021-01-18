@@ -62,6 +62,7 @@ public class DataController {
     private String slackInfo;
     private boolean messageCenterVisible = false;
     private AsyncActivitySettingsObject[] activitySettings;
+    private JSONArray activitySettingsNew;
 
     private ClientObject selectedClient;
     private int selectedTeamPosition = 0;
@@ -999,6 +1000,47 @@ public class DataController {
         return updatedRecords;
     }
 
+    public void setSettings(List<ParameterObject> settings) {
+        List<ParameterObject> relevantSettings = new ArrayList<>();
+        for(int i = 0; i < settings.size(); i++) {
+            ParameterObject currentParam = settings.get(i);
+            switch (currentParam.getName()) {
+                case "local_timezone":
+                    if (currentParam.getValue().equals("{}")) {
+                        currentParam.setValue("America/Denver");
+                    }
+                    relevantSettings.add(currentParam);
+                    break;
+                case "daily_reminder_time":
+                    if (currentParam.getValue().equals("{}")) {
+                        currentParam.setValue("17:00");
+                    }
+                    relevantSettings.add(currentParam);
+                    break;
+                case "lights":
+                    if (currentParam.getValue().equals("{}")) {
+                        currentParam.setValue("0");
+                    }
+                    relevantSettings.add(currentParam);
+                    break;
+//                    case "biometrics":
+                case "daily_reminder":
+                    if (currentParam.getValue().equals("{}")) {
+                        currentParam.setValue("1");
+                    }
+                    relevantSettings.add(currentParam);
+                    break;
+                case "record_activities":
+//                    if(currentParam.getValue().equals("{}")) {
+//                        currentParam = setDefaultActivitesSelected();
+//                    }
+//                    setupSelectedActivities(currentParam);
+                    break;
+            }
+        }
+        this.settings = relevantSettings;
+    }
+
     public void setSettings(JSONArray settings) {
         int arraySize = settings.length();
         List<String> existingSettings = new ArrayList<>();
@@ -1037,7 +1079,6 @@ public class DataController {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
 
@@ -1193,18 +1234,41 @@ public class DataController {
         updatedRecords = new ArrayList<>();
     }
 
-    public AsyncActivitySettingsObject[] getActivitiesSelected() {
+    public AsyncActivitySettingsObject[] getActivitySettings() {
         return activitySettings;
     }
 
-    public void setActivitiesSelected(AsyncActivitySettingsObject[] activitiesSelected) {
+    public void setActivitiesSelected(AsyncActivitySettingsObject[] activitySettings) {
         //TODO: Reinstate the defaults
 //        if(activitiesSelected == null) {
 //            activitiesSelected = setDefaultActivitesSelected();
 //        }
-        this.activitySettings = activitiesSelected;
-        this.activitiesSelected = setupSelectedActivities(activitiesSelected);
+        this.activitySettings = activitySettings;
+        this.activitiesSelected = setupSelectedActivities(activitySettings);
 //        addActivitySettingsToRecordActivities();
+    }
+
+    public void setActivitySettingsNew(JSONArray activitySettings) {
+        activitySettingsNew = activitySettings;
+    }
+
+    public JSONArray getActivitySettingsNew() {
+        return activitySettingsNew;
+    }
+
+    public void setActivitySettings(JSONArray activitySettings) {
+        // TODO: Make activitySettings just play nicely with JSONArray instead of this weirdness
+        AsyncActivitySettingsObject[] activitySettingsObjects = new AsyncActivitySettingsObject[activitySettings.length()];
+        for(int i = 0; i < activitySettings.length(); i++) {
+            try {
+                JSONObject currentActivitySetting = activitySettings.getJSONObject(i);
+                activitySettingsObjects[i] = new AsyncActivitySettingsObject(currentActivitySetting);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        this.activitySettings = activitySettingsObjects;
+        this.activitiesSelected = setupSelectedActivities(activitySettingsObjects);
     }
 
     private void addActivitySettingsToRecordActivities() {
@@ -1514,4 +1578,5 @@ public class DataController {
     public void setSelectedTeamObject(TeamObject selectedTeamObject) {
         this.selectedTeamObject = selectedTeamObject;
     }
+
 }

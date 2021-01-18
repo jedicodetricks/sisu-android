@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;
+import co.sisu.mobile.models.UpdateSettingsObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -595,14 +597,50 @@ public class ApiManager {
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject) {
-        //PUT
+    public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, int type, List<UpdateSettingsObject> settingsObjects) {
+        //POST
         getJWT(agentId);
         ApiReturnTypes returnType = ApiReturnTypes.UPDATE_SETTINGS;
-        String body = gson.toJson(asyncUpdateSettingsJsonObject);
         String currentUrl = url + "api/v1/parameter/edit-parameter";
-        new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
+        int agentIdInteger = Integer.valueOf(agentId);
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("id", agentIdInteger);
+        jsonRequest.addProperty("type", type);
+        JsonArray settingsArray = new JsonArray();
+        for(UpdateSettingsObject settingsObject: settingsObjects) {
+            JsonObject currentParamObject = new JsonObject();
+            currentParamObject.addProperty("name", settingsObject.getName());
+            currentParamObject.addProperty("parameter_type_id", settingsObject.getParameter_type_id());
+            currentParamObject.addProperty("value", settingsObject.getValue());
+            settingsArray.add(currentParamObject);
+        }
+        jsonRequest.add("parameters", settingsArray);
+
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
     }
+
+//    public void getClientList(AsyncServerEventListener cb, String agentId, int selectedTeamMarketId, String filterValue) {
+//        getJWT(agentId);
+//        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_LIST;
+//        String currentUrl = url + "api/v1/client/list";
+//        JsonObject jsonRequest = new JsonObject();
+//        jsonRequest.addProperty("market_id", selectedTeamMarketId);
+//        jsonRequest.addProperty("column_filter", filterValue);
+//        jsonRequest.addProperty("partial_filter", "");
+//
+//        JsonArray returnColumnsArray = new JsonArray();
+//        returnColumnsArray.add(filterValue);
+//        returnColumnsArray.add("is_locked");
+//        returnColumnsArray.add("client_id");
+//        returnColumnsArray.add("type_id");
+//        jsonRequest.add("add_return_columns", returnColumnsArray);
+//
+//        jsonRequest.addProperty("limit", 100);
+//        jsonRequest.addProperty("context", "agent");
+//        jsonRequest.addProperty("context_id", Integer.valueOf(agentId));
+//
+//        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+//    }
 
     public void updateNote(AsyncServerEventListener cb, String agentId, String noteId, String note, String noteType) {
         //PUT
