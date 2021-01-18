@@ -44,6 +44,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
@@ -67,6 +68,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
 
@@ -98,6 +100,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         apiManager = parentActivity.getApiManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         addButton = parentActivity.findViewById(R.id.addView);
+        actionBarManager = parentActivity.getActionBarManager();
+        actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getClientTiles();
 

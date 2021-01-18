@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -37,10 +37,8 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
-import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import okhttp3.Response;
@@ -59,7 +57,9 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
     private AsyncActivitySettingsObject[] selectedActivities;
-    private AsyncActivitySettingsObject[] currentActivitiesSorting;
+//    private AsyncActivitySettingsObject[] currentActivitiesSorting;
+    private JSONArray currentActivitySettings;
+    private List<SelectedActivities> currentActivitySorting;
     private ProgressBar loader;
     private ArrayList mItemArray = new ArrayList<>();
     private boolean editMode = false;
@@ -108,20 +108,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         title.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
-    // TODO: I don't think I need this.
-    private void setupFieldsWithData() {
-        selectedActivities = dataController.getActivitySettings();
-//        selectedActivities = new ArrayList<>();
-
-//        for ( String key : activitiesSelected.keySet() ) {
-//            SelectedActivities selectedActivity = activitiesSelected.get(key);
-//
-//            if(selectedActivity.getName() != null) {
-//                selectedActivities.add(selectedActivity);
-//            }
-//        }
-    }
-
     private void initializeButtons() {
         saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
@@ -142,27 +128,49 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
 
 
-    private void fillListViewWithData(AsyncActivitySettingsObject[] selectedActivities) {
+    private void fillListViewWithData(JSONArray selectedActivities) {
         int counter = 0;
         mItemArray = new ArrayList<>();
+        currentActivitySorting = new ArrayList<>();
         if(getContext() != null) {
-            for (AsyncActivitySettingsObject setting : selectedActivities) {
-                if(!setting.getActivity_type().equalsIgnoreCase("CONTA")) {
-                    SelectedActivities value = new SelectedActivities(setting.getValue(), setting.getActivity_type(), setting.getName());
-                    mItemArray.add(new Pair<>((long) counter, value));
-                    counter++;
+            for(int i = 0; i < selectedActivities.length(); i++) {
+                try {
+                    JSONObject currentSetting = selectedActivities.getJSONObject(i);
+                    String activityType = null;
+                    Boolean value = null;
+                    String name = null;
+
+                    if(currentSetting.has("activity_type")) {
+                        activityType = currentSetting.getString("activity_type");
+                    }
+                    if(currentSetting.has("value")) {
+                        value = currentSetting.getBoolean("value");
+                    }
+                    if(currentSetting.has("name")) {
+                        name = currentSetting.getString("name");
+                    }
+
+                    if(!activityType.equalsIgnoreCase("CONTA")) {
+                        SelectedActivities activity = new SelectedActivities(value, activityType, name);
+                        currentActivitySorting.add(activity);
+                        mItemArray.add(new Pair<>((long) counter, activity));
+                        counter++;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
             }
         }
 
         ActivityListAdapter activityListAdapter;
 
         if(!editMode) {
-            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false, colorSchemeManager, false);
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false, colorSchemeManager, false, this);
             mListView.setDragEnabled(false);
         }
         else {
-            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false, colorSchemeManager, true);
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false, colorSchemeManager, true, this);
             mListView.setDragEnabled(true);
         }
         mListView.setAdapter(activityListAdapter, false);
@@ -171,118 +179,80 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //ActivitiesPageContainer value = (ActivitiesPageContainer) parent.getItemAtPosition(position);
-
-//        switch() {
-//            default:
-//                break;
-//        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        // TODO: There is no save button, needs to save after any edit
-        switch (v.getId()) {
-            case R.id.saveButton:
-                editMode = !editMode;
-//                if(editMode) {
-                    //This would save the editing of priority
-                    dataController.sortSelectedActivities(currentActivitiesSorting);
-                    saveSorting();
-                    actionBarManager.setToEditBar("Record Settings");
-//                }
-//                else {
-//                    saveSettings();
-//                }
-                break;
-            case R.id.actionBarActionImage:
-                editMode = !editMode;
-//                if(editMode) {
-                    actionBarManager.setToSaveBar("Record Settings");
-                    saveButton.setText("Done");
-//                }
-//                else {
-//                    actionBarManager.setToEditBar("Record Settings");
-//                }
-                fillListViewWithData(dataController.getActivitySettings());
-                break;
-        }
-    }
-
-
-    private void saveSorting() {
-        List<Metric> allActivities = dataController.getMasterActivitiesObject();
-        int weightCounter = 0;
-
-        for(AsyncActivitySettingsObject s : currentActivitiesSorting) {
-            for(Metric m : allActivities) {
-                if(m.getType().equalsIgnoreCase(s.getActivity_type())) {
-                    m.setWeight(currentActivitiesSorting.length - weightCounter);
-                    weightCounter++;
-                    break;
+    private void fillListViewWithData(List<SelectedActivities> newActivitySorting) {
+        int counter = 0;
+        mItemArray = new ArrayList<>();
+        currentActivitySorting = new ArrayList<>();
+        if(getContext() != null) {
+            for(SelectedActivities currentActivity: newActivitySorting) {
+                if(!currentActivity.getType().equalsIgnoreCase("CONTA")) {
+                    SelectedActivities activity = new SelectedActivities(currentActivity.getValue(), currentActivity.getType(), currentActivity.getName());
+                    currentActivitySorting.add(activity);
+                    mItemArray.add(new Pair<>((long) counter, activity));
+                    counter++;
                 }
             }
         }
-        updateRecordedActivities(allActivities);
+
+        ActivityListAdapter activityListAdapter;
+
+        if(!editMode) {
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_activity_list, R.id.activity_list_title, false, colorSchemeManager, false, this);
+            mListView.setDragEnabled(false);
+        }
+        else {
+            activityListAdapter = new ActivityListAdapter(mItemArray, R.layout.adapter_edit_activity_list, R.id.editButton, false, colorSchemeManager, true, this);
+            mListView.setDragEnabled(true);
+        }
+        mListView.setAdapter(activityListAdapter, false);
+        mListView.setCanDragHorizontally(false);
+        mListView.setCustomDragItem(null);
     }
 
-    public void updateRecordedActivities(List<Metric> updatedRecords) {
-//        List<Metric> updatedRecords = dataController.getUpdatedRecords();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.saveButton:
+                editMode = !editMode;
+                updateRecordedActivities();
+                actionBarManager.setToEditBar("Record Settings");
+                fillListViewWithData(currentActivitySorting);
+                break;
+            case R.id.actionBarActionImage:
+                editMode = !editMode;
+                actionBarManager.setToSaveBar("Record Settings");
+                saveButton.setText("Done");
+                fillListViewWithData(currentActivitySorting);
+                break;
+        }
+    }
+
+    public void updateRecordedActivities() {
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
 
         Calendar c = Calendar.getInstance();
         Date d = c.getTime();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
-//        for(Metric m : updatedRecords) {
-//            switch(m.getType()) {
-//                case "BSGND":
-//                case "SSGND":
-//                case "BUNDC":
-//                case "SUNDC":
-//                case "BCLSD":
-//                case "SCLSD":
-//                case "BAPPT":
-//                case "SAPPT":
-//                case "CONTA":
-//                    break;
-//                default:
-//                    updateActivitiesModels.add(new UpdateActivitiesModel(formatter.format(d), m.getType(), m.getCurrentNum(), Integer.valueOf(dataController.getAgent().getAgent_id()), m.getWeight()));
-//                    break;
-//            }
-//        }
+
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
 
         activitiesJsonObject.setActivities(array);
-        dataController.setActivitiesSelected(currentActivitiesSorting);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitiesSorting), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitySorting), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
     }
 
-    private void saveSettings() {
-        List<AsyncActivitySettingsObject> updatedSettings = new ArrayList<>();
-        AsyncActivitySettingsObject[] currentActivitySettings = dataController.getActivitySettings();
-        for(int i = 0; i < mItemArray.size(); i++) {
-            Pair<Long, SelectedActivities> currentPair = (Pair<Long, SelectedActivities>) mItemArray.get(i);
-            SelectedActivities selectedActivity = currentPair.second;
-            for(AsyncActivitySettingsObject setting : currentActivitySettings) {
-                if(selectedActivity.getType().equalsIgnoreCase(setting.getActivity_type())) {
-                    setting.setValue(selectedActivity.getValue());
-                }
-            }
-        }
-        dataController.setActivitiesSelected(currentActivitySettings);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(dataController.getActivitySettings()), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
-    }
 
-    private String createUpdateObject(AsyncActivitySettingsObject[] selectedActivities) {
+    private String createUpdateObject(List<SelectedActivities> selectedActivities) {
+        // TODO: This could be a lot cleaner. Should just use JsonArray and all that. Could probably move it to the apiManager
         String valueString = "{\"record_activities\":[";
         int counter = 0;
-        for(AsyncActivitySettingsObject setting: selectedActivities) {
-            valueString += "{\"activity_type\":\"" + setting.getActivity_type() + "\", \"value\":" + setting.getValue();
-            if(counter < selectedActivities.length - 1) {
+        for(SelectedActivities setting: selectedActivities) {
+            valueString += "{\"activity_type\":\"" + setting.getType() + "\", \"value\":" + setting.getValue();
+            if(counter < selectedActivities.size() - 1) {
                 valueString += "},";
             }
             else {
@@ -291,9 +261,6 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
             counter++;
         }
         valueString += "]}";
-//        List<UpdateSettingsObject> list = new ArrayList<>();
-//        list.add(new UpdateSettingsObject("record_activities", valueString));
-//        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(Integer.valueOf(dataController.getAgent().getAgent_id()), list);
         return valueString;
     }
 
@@ -305,40 +272,21 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
-//            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-//            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
-
             try {
                 String activitySettingsString = ((Response) returnObject).body().string();
                 ((Response) returnObject).close();
                 JSONObject activitySettingsJson = new JSONObject(activitySettingsString);
                 JSONArray activitySettings = activitySettingsJson.getJSONArray("record_activities");
-                dataController.setActivitySettings(activitySettings);
-                currentActivitiesSorting = dataController.getActivitySettings();
+                dataController.setActivitySettingsNew(activitySettings);
+                currentActivitySettings = dataController.getActivitySettingsNew();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             parentActivity.runOnUiThread(() -> {
+                fillListViewWithData(currentActivitySettings);
                 loader.setVisibility(View.GONE);
-                setupFieldsWithData();
-                fillListViewWithData(currentActivitiesSorting);
-            });
-        }
-        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    activitySaveComplete = true;
-                    if(settingsSaveComplete) {
-                        editMode = false;
-                        saveButton.setText("Save");
-                        editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitySettings());
-                    }
-
-                }
             });
         }
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
@@ -361,91 +309,38 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                         editMode = false;
                         saveButton.setText("Save");
                         editButton.setVisibility(View.VISIBLE);
-                        fillListViewWithData(dataController.getActivitySettings());
+                        fillListViewWithData(dataController.getActivitySettingsNew());
                     }
                 });
 
             }
             else {
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
                 parentActivity.showToast("Activity updates saved");
+                actionBarManager.setToEditBar("Record Settings");
             }
         }
     }
 
-    private List<String> setupCurrentSorting(LinkedHashMap<String, SelectedActivities> activitiesSelected) {
-        List<String> currentSorting = new ArrayList<>();
-        for (String key : activitiesSelected.keySet()) {
-            currentSorting.add(key);
-        }
-        return currentSorting;
-    }
+    @Override
+    public void onEventFailed(Object returnObject, String asyncReturnType) {}
 
     @Override
-    public void onEventFailed(Object returnObject, String asyncReturnType) {
-
-    }
+    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {}
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-
-    }
+    public void onItemDragStarted(int position) {}
 
     @Override
-    public void onItemDragStarted(int position) {
-
-    }
-
-    @Override
-    public void onItemDragging(int itemPosition, float x, float y) {
-
-    }
+    public void onItemDragging(int itemPosition, float x, float y) {}
 
     @Override
     public void onItemDragEnded(int fromPosition, int toPosition) {
-        AsyncActivitySettingsObject fromActivity = currentActivitiesSorting[fromPosition];
-        sortActivities(fromActivity, fromPosition, toPosition);
+        SelectedActivities fromActivity = currentActivitySorting.get(fromPosition);
+        currentActivitySorting.remove(fromPosition);
+        currentActivitySorting.add(toPosition, fromActivity);
     }
 
-    private void sortActivities(AsyncActivitySettingsObject fromActivity, int fromPosition, int toPosition) {
-        List<AsyncActivitySettingsObject> newSorting = new ArrayList<>();
-        if(fromPosition > toPosition) {
-            for(int i = 0; i < toPosition; i++) {
-                if(i != fromPosition) {
-                    newSorting.add(currentActivitiesSorting[i]);
-                }
-            }
-            newSorting.add(fromActivity);
-            for(int i = toPosition; i < currentActivitiesSorting.length; i++) {
-                if(i != fromPosition) {
-                    newSorting.add(currentActivitiesSorting[i]);
-                }
-            }
-        }
-        else if(toPosition > fromPosition) {
-            for(int i = 0; i <= toPosition; i++) {
-                if(i != fromPosition) {
-                    newSorting.add(currentActivitiesSorting[i]);
-                }
-            }
-            newSorting.add(fromActivity);
-            for(int i = toPosition + 1; i < currentActivitiesSorting.length; i++) {
-                newSorting.add(currentActivitiesSorting[i]);
-            }
-        }
-        else {
-            for(int i = 0; i < currentActivitiesSorting.length; i++) {
-                newSorting.add(currentActivitiesSorting[i]);
-            }
-        }
-        currentActivitiesSorting = newSorting.toArray(new AsyncActivitySettingsObject[0]);
-        setupLocalWeighting(currentActivitiesSorting);
-    }
-
-    private void setupLocalWeighting(AsyncActivitySettingsObject[] currentActivitiesSorting) {
-
-        for(int i = 0; i < currentActivitiesSorting.length; i++) {
-            currentActivitiesSorting[i].setDisplay_order(currentActivitiesSorting.length - i);
-        }
+    public void onCheckChanged() {
+        updateRecordedActivities();
     }
 }

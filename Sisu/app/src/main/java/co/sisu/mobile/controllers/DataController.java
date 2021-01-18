@@ -1519,13 +1519,13 @@ public class DataController {
         return masterActivitiesObject;
     }
 
-    public void sortSelectedActivities(AsyncActivitySettingsObject[] currentActivitiesSorting) {
-        LinkedHashMap<String, SelectedActivities> itemArray = new LinkedHashMap<>();
-        for(int i = 0; i < activitiesSelected.size(); i++) {
-            itemArray.put(currentActivitiesSorting[i].getActivity_type(), activitiesSelected.get(currentActivitiesSorting[i]));
-        }
-        activitiesSelected = itemArray;
-    }
+//    public void sortSelectedActivities(List<SelectedActivities> currentActivitySorting) {
+//        LinkedHashMap<String, SelectedActivities> itemArray = new LinkedHashMap<>();
+//        for(int i = 0; i < activitiesSelected.size(); i++) {
+//            itemArray.put(currentActivitiesSorting[i].getActivity_type(), activitiesSelected.get(currentActivitiesSorting[i]));
+//        }
+//        activitiesSelected = itemArray;
+//    }
 
     public void setMessageCenterVisible(boolean b) {
         messageCenterVisible = b;
