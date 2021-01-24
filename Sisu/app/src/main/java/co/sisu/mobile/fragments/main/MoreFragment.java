@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.fragments.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,6 +25,14 @@ import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.fragments.ActivitySettingsFragment;
+import co.sisu.mobile.fragments.ClientNoteFragment;
+import co.sisu.mobile.fragments.FeedbackFragment;
+import co.sisu.mobile.fragments.GoalSetupFragment;
+import co.sisu.mobile.fragments.MyProfileFragment;
+import co.sisu.mobile.fragments.RecruitingGoalSetupFragment;
+import co.sisu.mobile.fragments.SettingsFragment;
+import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -65,6 +73,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         dataController = parentActivity.getDataController();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
+        actionBarManager.setToTitleBar("More", false);
         initializeListView();
         setColorScheme();
     }
@@ -115,7 +124,6 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     break;
                 case "Activity Settings":
                     navigationManager.stackReplaceFragment(ActivitySettingsFragment.class);
-                    // TODO: Need to create the list edit bar
                     actionBarManager.setToEditBar("Record Settings");
                     break;
                 case "Settings":
@@ -133,7 +141,6 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                 case "Message Center":
                     parentActivity.setNoteOrMessage("Message");
                     navigationManager.stackReplaceFragment(ClientNoteFragment.class);
-                    // TODO: Need to create the add bar
                     actionBarManager.setToAddBar("Message Center");
                     break;
                 case "Sisu Login":

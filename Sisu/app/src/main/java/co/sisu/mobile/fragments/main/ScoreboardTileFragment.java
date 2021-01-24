@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.fragments.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -54,14 +54,18 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.ScopeBarModel;
+import co.sisu.mobile.oldFragments.ClientListFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.utils.CircularProgressBar;
 import okhttp3.Response;
 
@@ -71,7 +75,7 @@ import static android.view.FrameMetrics.ANIMATION_DURATION;
  * Created by bradygroharing on 2/21/18.
  */
 
-public class TileTemplateFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, DatePickerDialog.OnDateSetListener {
+public class ScoreboardTileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, DatePickerDialog.OnDateSetListener {
 
     private ParentActivity parentActivity;
     private DataController dataController;
@@ -79,6 +83,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private DateManager dateManager;
+    private ActionBarManager actionBarManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
 
@@ -108,6 +113,7 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         dateManager = parentActivity.getDateManager();
+        actionBarManager = parentActivity.getActionBarManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         this.isAgentDashboard = parentActivity.isAgentDashboard();
@@ -382,7 +388,6 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     }
 
-
     private float getTextViewSizing(String size) {
         float returnSize;
         switch(size) {
@@ -458,6 +463,9 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
+        parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
+
         if(parentActivity.shouldDisplayPushNotification()) {
             parentActivity.setShouldDisplayPushNotification(false);
             String title = parentActivity.getPushNotificationTitle();
@@ -1439,10 +1447,10 @@ public class TileTemplateFragment extends Fragment implements View.OnClickListen
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
                 if(parentActivity.getCurrentScopeFilter() != null) {
-                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, parentActivity.getCurrentScopeFilter().getName());
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, parentActivity.getCurrentScopeFilter().getName());
                 }
                 else {
-                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "a" + parentActivity.getAgent().getAgent_id());
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "a" + parentActivity.getAgent().getAgent_id());
                 }
 //                loader.setVisibility(View.INVISIBLE);
             } catch (IOException e) {

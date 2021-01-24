@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.fragments.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -51,11 +51,15 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientManageFragment;
+import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FilterObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
+import co.sisu.mobile.oldFragments.ClientListFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import okhttp3.Response;
 
 /**
@@ -371,6 +375,10 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopeSelectorText = view.findViewById(R.id.contextFilterRight);
         if(parentActivity.getCurrentScopeFilter() != null) {
             scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
+            actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
+        }
+        else {
+            actionBarManager.setToFilterBar("");
         }
         scopeSelectorText.setOnClickListener(this);
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());

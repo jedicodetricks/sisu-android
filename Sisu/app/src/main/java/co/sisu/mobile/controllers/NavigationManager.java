@@ -10,7 +10,7 @@ import android.view.KeyEvent;
 import java.util.Stack;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.fragments.ClientListFragment;
+import co.sisu.mobile.oldFragments.ClientListFragment;
 
 /**
  * Created by bradygroharing on 5/22/18.

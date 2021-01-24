@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.NoteListAdapter;
 import co.sisu.mobile.adapters.PushModelListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientNoteEvent;
 import co.sisu.mobile.controllers.DataController;
@@ -46,8 +48,9 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private DataController dataController;
     private ApiManager apiManager;
     private NavigationManager navigationManager;
+    private ActionBarManager actionBarManager;
     private ConstraintLayout contentView;
-    private TextView addButton;
+    private ImageView addButton;
     private Gson gson;
 
     public ClientNoteFragment() {
@@ -72,6 +75,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
+        actionBarManager = parentActivity.getActionBarManager();
         if(parentActivity.getIsNoteFragment()) {
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
@@ -101,29 +105,28 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             mListView.setAdapter(adapter);
 //            mListView.setOnItemClickListener(this);
         }
-
     }
 
     private void initAddButton() {
-        addButton = parentActivity.findViewById(R.id.addClientButton);
+        addButton = parentActivity.findViewById(R.id.actionBarActionImage);
         if(addButton != null) {
             if(parentActivity.getIsNoteFragment()) {
                 addButton.setVisibility(View.VISIBLE);
                 addButton.setOnClickListener(this);
-                TextView edit = parentActivity.findViewById(R.id.editClientListButton);
-                edit.setVisibility(View.GONE);
+//                TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+//                edit.setVisibility(View.GONE);
             }
             else {
                 if(parentActivity.getCurrentTeam().getRole() != null && parentActivity.getCurrentTeam().getRole().equals("ADMIN")) {
                     addButton.setVisibility(View.VISIBLE);
                     addButton.setOnClickListener(this);
-                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
-                    edit.setVisibility(View.GONE);
+//                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+//                    edit.setVisibility(View.GONE);
                 }
                 else {
                     addButton.setVisibility(View.INVISIBLE);
-                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
-                    edit.setVisibility(View.GONE);
+//                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);
+//                    edit.setVisibility(View.GONE);
                 }
             }
 
@@ -176,15 +179,17 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.addClientButton:
+            case R.id.actionBarActionImage:
                 if(parentActivity.getIsNoteFragment()) {
                     parentActivity.setSelectedNote(null);
                     navigationManager.stackReplaceFragment(AddNoteFragment.class);
+                    actionBarManager.setToSaveBar("Client Note");
                     break;
                 }
                 else {
                     parentActivity.setSelectedNote(null);
                     navigationManager.stackReplaceFragment(SlackMessageFragment.class);
+                    actionBarManager.setToSaveBar("Team Message");
                     break;
                 }
 

@@ -75,7 +75,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     private void initForm() {
         noteText = getView().findViewById(R.id.addNoteEditText);
-        sendSlackButton = parentActivity.findViewById(R.id.addClientSaveButton);
+        sendSlackButton = parentActivity.findViewById(R.id.saveButton);
         if(sendSlackButton != null) {
             if(!parentActivity.getIsNoteFragment()) {
                 sendSlackButton.setText("Send");
@@ -91,7 +91,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.addClientSaveButton:
+            case R.id.saveButton:
                 if(!noteText.getText().toString().equals("")) {
                     if(parentActivity.getIsNoteFragment()) {
                         apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());

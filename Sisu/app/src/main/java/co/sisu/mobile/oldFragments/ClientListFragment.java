@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.oldFragments;
 
 
 import android.content.Context;
@@ -41,6 +41,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncClientJsonObject;
 import co.sisu.mobile.models.ClientObject;

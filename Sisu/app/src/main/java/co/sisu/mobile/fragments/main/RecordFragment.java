@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.fragments.main;
 
 
 import android.app.DatePickerDialog;
@@ -52,6 +52,7 @@ import java.util.List;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -59,11 +60,13 @@ import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
+import co.sisu.mobile.oldFragments.TransactionFragment;
 import okhttp3.Response;
 
 
@@ -80,6 +83,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private DateManager dateManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
@@ -120,6 +124,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         dateManager = parentActivity.getDateManager();
+        actionBarManager = parentActivity.getActionBarManager();
+        actionBarManager.setToSaveBar("Record");
         calendar = Calendar.getInstance();
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
 

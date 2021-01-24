@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.oldFragments;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;

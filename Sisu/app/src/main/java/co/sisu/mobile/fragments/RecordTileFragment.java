@@ -46,10 +46,17 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientManageFragment;
+import co.sisu.mobile.fragments.ReportFragment;
+import co.sisu.mobile.fragments.main.LeaderboardFragment;
+import co.sisu.mobile.fragments.main.MoreFragment;
+import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
+import co.sisu.mobile.oldFragments.ClientListFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
 
 /**
  * Created by bradygroharing on 2/21/18.

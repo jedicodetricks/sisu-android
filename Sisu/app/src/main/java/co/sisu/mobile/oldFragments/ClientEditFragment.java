@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.oldFragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -63,6 +63,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;

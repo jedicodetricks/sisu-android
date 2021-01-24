@@ -45,6 +45,8 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -145,6 +147,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
         if(parentActivity.getSelectedClient() == null) {
             // This is the flow to add a client
+            actionBarManager.setToSaveBar("Add Client");
             loader.setVisibility(View.GONE);
             initAddClientButtons();
             initAddClientForm();
@@ -153,7 +156,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         else {
             // This is the flow to edit a client
             currentClient = parentActivity.getSelectedClient();
-            actionBarManager.setToSaveDeleteBar(currentClient.getFirst_name());
+            actionBarManager.setToSaveDeleteBar(currentClient.getFirst_name() + " " + currentClient.getLast_name());
             if (parentActivity.getAgent().getLast_name().equalsIgnoreCase("Groharing")) {
                 parentActivity.showToast("Client ID: " + parentActivity.getSelectedClient().getClient_id());
             }
@@ -1296,6 +1299,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
                 break;
             case R.id.archiveButton:
+            case R.id.actionBarActionImage:
                 if(parentActivity.isRecruiting()) {
                     popReasonDialog("Reason for Losing Recruit?", "Archived");
                 }
@@ -1749,6 +1753,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 @Override
                 public void run() {
                     parentActivity.onBackPressed();
+//                    JSONObject clientTiles = parentActivity.getClientTiles();
+                    // TODO: I need to put the changes into the correct client tile
                     parentActivity.showToast("Client updates saved");
                 }
             });

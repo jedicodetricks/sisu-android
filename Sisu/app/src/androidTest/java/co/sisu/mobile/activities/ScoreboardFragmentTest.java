@@ -22,8 +22,8 @@ import org.junit.runner.RunWith;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.fragments.ClientListFragment;
-import co.sisu.mobile.fragments.ScoreboardFragment;
+import co.sisu.mobile.oldFragments.ClientListFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;

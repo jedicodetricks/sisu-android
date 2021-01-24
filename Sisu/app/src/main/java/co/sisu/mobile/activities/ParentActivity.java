@@ -61,14 +61,14 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.fragments.ClientManageFragment;
-import co.sisu.mobile.fragments.ClientTileFragment;
-import co.sisu.mobile.fragments.LeaderboardFragment;
-import co.sisu.mobile.fragments.MoreFragment;
-import co.sisu.mobile.fragments.RecordFragment;
-import co.sisu.mobile.fragments.RecruitingScoreboardFragment;
+import co.sisu.mobile.fragments.main.ClientTileFragment;
+import co.sisu.mobile.fragments.main.LeaderboardFragment;
+import co.sisu.mobile.fragments.main.MoreFragment;
+import co.sisu.mobile.fragments.main.RecordFragment;
+import co.sisu.mobile.oldFragments.RecruitingScoreboardFragment;
 import co.sisu.mobile.fragments.ReportFragment;
-import co.sisu.mobile.fragments.ScoreboardFragment;
-import co.sisu.mobile.fragments.TileTemplateFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
+import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
@@ -539,7 +539,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     //                        catch(Exception e) {
     //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
     //                        }
-                            ((TileTemplateFragment) f).teamSwap();
+                            ((ScoreboardTileFragment) f).teamSwap();
                             break;
                         case "Record":
                             ((RecordFragment) f).teamSwap();
@@ -578,11 +578,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                                 if(tileDebug) {
                                     if(getCurrentScopeFilter() != null) {
                                         actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                                     }
                                     else {
                                         actionBarManager.setToTitleBar("", true);
-                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
                                     }
                                 }
                                 else {
@@ -600,11 +600,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                                 if(tileDebug) {
                                     if(getCurrentScopeFilter() != null) {
                                         actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                                     }
                                     else {
                                         actionBarManager.setToTitleBar("", true);
-                                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
                                     }
                                 }
                                 else {
@@ -648,11 +648,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         if(tileDebug) {
                             if(getCurrentScopeFilter() != null) {
                                 actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                             }
                             else {
                                 actionBarManager.setToTitleBar("", true);
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
                             }
                         }
                         else {
@@ -664,11 +664,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         if(tileDebug) {
                             if(getCurrentScopeFilter() != null) {
                                 actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                             }
                             else {
                                 actionBarManager.setToTitleBar("", true);
-                                navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, "");
+                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
                             }
                         }
                         else {
@@ -702,7 +702,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             this.runOnUiThread(() -> {
                 if(isRecruiting()) {
                     if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
                         navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
@@ -710,7 +710,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 else {
                     if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
                         navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
@@ -748,7 +748,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             System.out.println(navigationManager.getCurrentFragment());
                             this.runOnUiThread(() -> {
                                 if(tileDebug) {
-                                    navigationManager.clearStackReplaceFragment(TileTemplateFragment.class, getCurrentScopeFilter().getName());
+                                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                                 }
                                 else {
                                     if(isRecruiting()) {

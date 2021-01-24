@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.fragments.main;
 
 
 import android.content.res.ColorStateList;
@@ -37,6 +37,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
@@ -67,6 +68,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private DataController dataController;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -96,6 +98,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        actionBarManager = parentActivity.getActionBarManager();
+        actionBarManager.setToTitleBar("Leaderboards", false);
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
