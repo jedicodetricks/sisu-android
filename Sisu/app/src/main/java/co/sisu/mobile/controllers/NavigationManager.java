@@ -194,4 +194,7 @@ public class NavigationManager {
         return fragmentTag;
     }
 
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        toolbarManager.updateColorSchemeManager(colorSchemeManager);
+    }
 }

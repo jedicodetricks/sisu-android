@@ -88,21 +88,19 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     }
 
     public void initTeamBar() {
+        // TODO: This will need to be in the popup thingy now
         List<TeamObject> teamsList = dataController.getTeamsObject();
-        //Custom Action Bar stuff
+//        //Custom Action Bar stuff
         if(teamsList.size() > 0) {
-            ListView mListView = parentActivity.findViewById(R.id.navViewList);
-            mListView.setDivider(null);
-            mListView.setDividerHeight(30);
-
-            mListView.setOnItemClickListener(this);
+//            ListView mListView = parentActivity.findViewById(R.id.navViewList);
+//            mListView.setDivider(null);
+//            mListView.setDividerHeight(30);
+//
+//            mListView.setOnItemClickListener(this);
 
             teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(0).getColor());
-
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
-            TeamBarAdapter adapter = new TeamBarAdapter(parentActivity.getBaseContext(), teamsList, colorSchemeManager);
-            mListView.setAdapter(adapter);
         }
         //
     }

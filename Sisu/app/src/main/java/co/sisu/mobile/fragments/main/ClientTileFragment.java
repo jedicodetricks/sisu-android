@@ -584,8 +584,20 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         ClientObject clientObject = new ClientObject(tileObject.getJSONObject("tile_data"));
         ImageView textImage = rowView.findViewById(R.id.leftButton);
+        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        textImage.setImageDrawable(drawable);
+
         ImageView phoneImage = rowView.findViewById(R.id.centerButton);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        phoneImage.setImageDrawable(drawable);
+
         ImageView emailImage = rowView.findViewById(R.id.rightButton);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.email_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        emailImage.setImageDrawable(drawable);
+
 //
         if(clientObject.getHome_phone() == null || clientObject.getHome_phone().equals("")) {
             phoneImage.setVisibility(View.INVISIBLE);
@@ -634,18 +646,18 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
         if(clientObject.getIs_locked() == 1) {
             if(clientObject.getType_id().equalsIgnoreCase("b")) {
-                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
                 drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             } else {
-                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
                 drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             }
         }
         else {
             if(clientObject.getType_id().equalsIgnoreCase("b")) {
-                Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
+                drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
                 drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             } else {

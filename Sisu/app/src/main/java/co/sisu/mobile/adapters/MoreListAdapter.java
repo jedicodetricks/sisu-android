@@ -66,6 +66,7 @@ public class MoreListAdapter extends BaseAdapter {
         ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);
 
         MorePageContainer morePageContainer = (MorePageContainer) getItem(position);
+
         if(morePageContainer.getSubTitle().equals("")) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rowView.findViewById(R.id.more_list_title).getLayoutParams();
             layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
@@ -76,7 +77,7 @@ public class MoreListAdapter extends BaseAdapter {
         subTitleTextView.setText(morePageContainer.getSubTitle());
         if(!morePageContainer.getTitle().equals("Slack")) {
             Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
-            drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+            drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             thumbnailImageView.setImageDrawable(drawable);
         }
         else {

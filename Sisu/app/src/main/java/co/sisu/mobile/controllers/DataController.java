@@ -1,7 +1,9 @@
 package co.sisu.mobile.controllers;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,6 +93,7 @@ public class DataController {
 //        else {
 //            morePage.add(new MorePageContainer("Clients", "Modify your pipeline", R.drawable.clients_icon_active));
 //        }
+
         morePage.add(new MorePageContainer("My Profile", "Setup", R.drawable.client_icon_active));
         // TODO: Ask why goal setup is gone now?
 //        morePage.add(new MorePageContainer("Goal Setup", "Set goals, edit activities, record settings", R.drawable.setup_icon_active));
@@ -150,7 +153,7 @@ public class DataController {
         AsyncActivitiesJsonObject activitiesJsonObject = (AsyncActivitiesJsonObject) returnObject;
         ActivitiesCounterModel[] counters = activitiesJsonObject.getCounters();
 
-        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 99);
+//        Metric contact = new Metric("Contacts", "CONTA", 0, 0, R.drawable.contact_icon, R.color.colorCorporateOrange, 99);
 //        Metric firstAppointment = new Metric("1st Time Appts", "1TAPT", 0, 0, R.drawable.appointment_icon, R.color.colorCorporateOrange, 98);
 //        Metric signed = new Metric("Signed", "SGND", 0, 0, R.drawable.signed_icon, R.color.colorCorporateOrange, 97);
 //        Metric closed = new Metric("Closed", "CLSD", 0, 0, R.drawable.closed_icon, R.color.colorCorporateOrange, 95);
@@ -165,11 +168,11 @@ public class DataController {
             Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
             switch (counters[i].getActivity_type()) {
-                case "CONTA":
-                    contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
-                    contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
-                    setupMetricGoals(contact);
-                    break;
+//                case "CONTA":
+//                    contact.setCurrentNum(contact.getCurrentNum() + metric.getCurrentNum());
+//                    contact.setGoalNum(contact.getGoalNum() + metric.getGoalNum());
+//                    setupMetricGoals(contact);
+//                    break;
 //                case "BSGND":
 //                case "SSGND":
 //                    signed.setCurrentNum(signed.getCurrentNum() + metric.getCurrentNum());
@@ -205,7 +208,7 @@ public class DataController {
 //            recordObject.add(contract);
 //            recordObject.add(signed);
         }
-        recordObject.add(contact);
+//        recordObject.add(contact);
 //        recordObject.add(firstAppointment);
 //        recordObject.add(closed);
         List<Metric> secondaryRecordObject = new ArrayList<>();
@@ -213,16 +216,16 @@ public class DataController {
         List<Metric> formattedSelectedRecordObject = new ArrayList<>();
         for(Metric m : activitiesObject) {
             switch(m.getType()) {
-                case "CONTA":
-                case "BSGND":
-                case "SSGND":
-                case "BUNDC":
-                case "SUNDC":
-                case "BCLSD":
-                case "SCLSD":
-                case "BAPPT":
-                case "SAPPT":
-                    break;
+//                case "CONTA":
+//                case "BSGND":
+//                case "SSGND":
+//                case "BUNDC":
+//                case "SUNDC":
+//                case "BCLSD":
+//                case "SCLSD":
+//                case "BAPPT":
+//                case "SAPPT":
+//                    break;
                 default:
                     secondaryRecordObject.add(m);
             }
@@ -250,9 +253,9 @@ public class DataController {
         }
 
         for(Metric m : selectedActivitiesRecordObject) {
-            if(!m.getType().equalsIgnoreCase("CONTA")) {
-                recordObject.add(m);
-            }
+//            if(!m.getType().equalsIgnoreCase("CONTA")) {
+            recordObject.add(m);
+//            }
         }
 
         recordObject = sortActivitiesObjectByWeight(recordObject);
@@ -562,37 +565,37 @@ public class DataController {
 
             Metric metric = new Metric((counters[i].getName()), counters[i].getActivity_type(), Double.valueOf(counters[i].getCount()).intValue(), counters[i].getGoalNum(), 0, R.color.colorCorporateOrange, counters[i].getWeight());
             setMetricThumbnail(metric);
-            if(!isRecruiting) {
-                switch(counters[i].getActivity_type()) {
-                    case "CONTA":
-                        metric.setWeight(99);
-                        break;
-                    case "BSGND":
-                        metric.setWeight(96);
-                        break;
-                    case "SSGND":
-                        metric.setWeight(95);
-                        break;
-                    case "BUNDC":
-                        metric.setWeight(94);
-                        break;
-                    case "SUNDC":
-                        metric.setWeight(93);
-                        break;
-                    case "BCLSD":
-                        metric.setWeight(92);
-                        break;
-                    case "SCLSD":
-                        metric.setWeight(91);
-                        break;
-                    case "BAPPT":
-                        metric.setWeight(98);
-                        break;
-                    case "SAPPT":
-                        metric.setWeight(97);
-                        break;
-                }
-            }
+//            if(!isRecruiting) {
+//                switch(counters[i].getActivity_type()) {
+//                    case "CONTA":
+//                        metric.setWeight(99);
+//                        break;
+//                    case "BSGND":
+//                        metric.setWeight(96);
+//                        break;
+//                    case "SSGND":
+//                        metric.setWeight(95);
+//                        break;
+//                    case "BUNDC":
+//                        metric.setWeight(94);
+//                        break;
+//                    case "SUNDC":
+//                        metric.setWeight(93);
+//                        break;
+//                    case "BCLSD":
+//                        metric.setWeight(92);
+//                        break;
+//                    case "SCLSD":
+//                        metric.setWeight(91);
+//                        break;
+//                    case "BAPPT":
+//                        metric.setWeight(98);
+//                        break;
+//                    case "SAPPT":
+//                        metric.setWeight(97);
+//                        break;
+//                }
+//            }
 
             masterActivitiesObject.add(metric);
 
@@ -1204,24 +1207,24 @@ public class DataController {
 
     public boolean isSelectableActivity(String type) {
 
-        switch (type) {
-            case "CONTA":
-            case "BAPPT":
-            case "SAPPT":
-            case "BSGND":
-            case "SSGND":
-            case "BUNDC":
-            case "SUNDC":
-            case "BCLSD":
-            case "SCLSD":
-            case "SGND":
-            case "1TAPT":
-            case "CLSD":
-            case "UCNTR":
-            case "LSTT":
-            case "BBSGD":
-                return false;
-        }
+//        switch (type) {
+//            case "CONTA":
+//            case "BAPPT":
+//            case "SAPPT":
+//            case "BSGND":
+//            case "SSGND":
+//            case "BUNDC":
+//            case "SUNDC":
+//            case "BCLSD":
+//            case "SCLSD":
+//            case "SGND":
+//            case "1TAPT":
+//            case "CLSD":
+//            case "UCNTR":
+//            case "LSTT":
+//            case "BBSGD":
+//                return false;
+//        }
 
         return true;
     }

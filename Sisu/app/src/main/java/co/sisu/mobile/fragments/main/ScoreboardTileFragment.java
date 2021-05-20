@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -627,7 +628,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             String progressColor = progressBar.getString("progress_color");
             progress.setProgress(completedPercent.intValue());
             try {
-                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+                progress.setProgressTintList(ColorStateList.valueOf(Color.parseColor(progressColor)));
+//                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+
             } catch (IllegalArgumentException e) {
                 progress.getProgressDrawable().setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_IN);
             }

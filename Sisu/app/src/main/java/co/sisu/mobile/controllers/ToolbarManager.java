@@ -42,6 +42,7 @@ public class ToolbarManager {
 
             ImageView clientButton = parentActivity.findViewById(R.id.reportView);
             drawable = parentActivity.getResources().getDrawable(R.drawable.trans_disabled).mutate();
+            drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             clientButton.setImageDrawable(drawable);
 
             ImageView recordButton = parentActivity.findViewById(R.id.recordView);
@@ -62,28 +63,29 @@ public class ToolbarManager {
             switch (inputActivity) {
                 case "Scoreboard":
                     drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
-                    drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+                    drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     scoreBoardButton.setImageDrawable(drawable);
                     break;
                 case "Report":
                     drawable = parentActivity.getResources().getDrawable(R.drawable.trans_tab).mutate();
+                    drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     clientButton.setImageDrawable(drawable);
                     break;
                 case "Record":
                     drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();
-                    drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+                    drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     recordButton.setImageDrawable(drawable);
                     break;
                 case "Leaderboard":
                     drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active).mutate();
-                    drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+                    drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     leaderBoardButton.setImageDrawable(drawable);
                     break;
                 case "More":
                 case "Add Client Note":
                 case "Feedback":
                     drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
-                    drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+                    drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     moreButton.setImageDrawable(drawable);
                     break;
                 default:
@@ -95,7 +97,7 @@ public class ToolbarManager {
 
     public void manage(Class fragmentClass) {
         String currentFragmentName = "";
-        if(fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
+        if(fragmentClass.getSimpleName().equals("ScoreboardTileFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
             currentFragmentName = "Scoreboard";
         }
         else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {

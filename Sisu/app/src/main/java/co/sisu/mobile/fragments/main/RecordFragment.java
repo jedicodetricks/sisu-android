@@ -87,14 +87,15 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private DateManager dateManager;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
-    private TextView dateDisplay, otherLabel, leftSelector, rightSelector;
-    private ImageView calendarLauncher;
+    private TextView dateDisplay, otherLabel, leftSelector, rightSelector, transactionLabel, activitiesLabel;
+    private ImageView addTransactionButton, appointmentSetButton, appointmentMetButton, signedButton, underContractButton, closedButton;
     private AsyncActivitySettingsObject[] allActivities;
     private TableLayout activitiesTable;
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
     private final int smallerTitleSize = 18;
     private View view;
+
 
     public RecordFragment() {
         // Required empty public constructor
@@ -141,18 +142,32 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
         initDateSelectors(view);
         initTransactionButtons(view);
+        initLabels(view);
+        setTransactionSectionVisible(view);
         setColorScheme();
 //        activitiesTable = view.findViewById(R.id.activitiesTable);
 
     }
 
+    private void setTransactionSectionVisible(View view) {
+        if(parentActivity.getSelectedTeamMarketId() != 0) {
+            RelativeLayout transactionSection = view.findViewById(R.id.recordTransactionSection);
+            transactionSection.setVisibility(View.GONE);
+        }
+    }
+
+    private void initLabels(View view) {
+        transactionLabel = view.findViewById(R.id.recordTransactionTitleView);
+        activitiesLabel = view.findViewById(R.id.recordTitleView);
+    }
+
     private void initTransactionButtons(View view){
-        ImageView addTransactionButton = view.findViewById(R.id.addTransactionButton);
-        ImageView appointmentSetButton = view.findViewById(R.id.appointmentSetButton);
-        ImageView appointmentMetButton = view.findViewById(R.id.appointmentMetButton);
-        ImageView signedButton = view.findViewById(R.id.signedButton);
-        ImageView underContractButton = view.findViewById(R.id.underContractButton);
-        ImageView closedButton = view.findViewById(R.id.closedButton);
+        addTransactionButton = view.findViewById(R.id.addTransactionButton);
+        appointmentSetButton = view.findViewById(R.id.appointmentSetButton);
+        appointmentMetButton = view.findViewById(R.id.appointmentMetButton);
+        signedButton = view.findViewById(R.id.signedButton);
+        underContractButton = view.findViewById(R.id.underContractButton);
+        closedButton = view.findViewById(R.id.closedButton);
 
         addTransactionButton.setOnClickListener(this);
         appointmentSetButton.setOnClickListener(this);
@@ -217,6 +232,45 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         rightSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
         rightSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        VectorChildFinder plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, addTransactionButton);
+        VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        addTransactionButton.invalidate();
+
+        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, appointmentSetButton);
+        plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        appointmentSetButton.invalidate();
+
+        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, appointmentMetButton);
+        plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        appointmentMetButton.invalidate();
+
+        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, signedButton);
+        plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        signedButton.invalidate();
+
+        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, underContractButton);
+        plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        underContractButton.invalidate();
+
+        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, closedButton);
+        plusPath = plusVector.findPathByName("orange_area");
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+        closedButton.invalidate();
+
+        transactionLabel.setBackgroundColor(colorSchemeManager.getPrimaryColor());
+        activitiesLabel.setBackgroundColor(colorSchemeManager.getPrimaryColor());
     }
 
     private List<String> initSpinnerArray() {
@@ -322,15 +376,15 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
         ImageView leftMinusButton = rowView.findViewById(R.id.leftMinusButton);
         Drawable minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
-        minusDrawable.setTint(colorSchemeManager.getRoundedButtonColor());
+        minusDrawable.setTint(colorSchemeManager.getPrimaryColor());
         leftMinusButton.setImageDrawable(minusDrawable);
 
         VectorChildFinder vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, leftMinusButton);
         for (int i = 0; i < 7; i++) {
             String pathName = "orange_area" + (i + 1);
             VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
-            path.setFillColor(colorSchemeManager.getRoundedButtonColor());
-            path.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+            path.setFillColor(colorSchemeManager.getPrimaryColor());
+            path.setStrokeColor(colorSchemeManager.getPrimaryColor());
         }
 
         leftMinusButton.invalidate();
@@ -339,8 +393,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         ImageView leftPlusButton = rowView.findViewById(R.id.leftPlusButton);
         VectorChildFinder plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, leftPlusButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
-        plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
-        plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+        plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+        plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         leftPlusButton.invalidate();
 
 
@@ -419,15 +473,15 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             // Get the row counter element
 
             minusDrawable = rowView.getResources().getDrawable(R.drawable.minus_icon).mutate();
-            minusDrawable.setTint(colorSchemeManager.getRoundedButtonColor());
+            minusDrawable.setTint(colorSchemeManager.getPrimaryColor());
             rightMinusButton.setImageDrawable(minusDrawable);
 
             vector = new VectorChildFinder(rowView.getContext(), R.drawable.minus_icon, rightMinusButton);
             for (int i = 0; i < 7; i++) {
                 String pathName = "orange_area" + (i + 1);
                 VectorDrawableCompat.VFullPath path = vector.findPathByName(pathName);
-                path.setFillColor(colorSchemeManager.getRoundedButtonColor());
-                path.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+                path.setFillColor(colorSchemeManager.getPrimaryColor());
+                path.setStrokeColor(colorSchemeManager.getPrimaryColor());
             }
 
             rightMinusButton.invalidate();
@@ -435,8 +489,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
             plusVector = new VectorChildFinder(rowView.getContext(), R.drawable.add_icon, rightPlusButton);
             plusPath = plusVector.findPathByName("orange_area");
-            plusPath.setFillColor(colorSchemeManager.getRoundedButtonColor());
-            plusPath.setStrokeColor(colorSchemeManager.getRoundedButtonColor());
+            plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+            plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
             rightPlusButton.invalidate();
 
 

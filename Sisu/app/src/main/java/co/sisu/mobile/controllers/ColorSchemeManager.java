@@ -16,6 +16,8 @@ public class ColorSchemeManager {
     private int iconIdle;
     private int iconActive;
     private int appBackground;
+    private int bottomBarBackground;
+    private int bottomBarText;
     private int toolbarBackground;
     private int actionbarBackground;
     private int buttonText;
@@ -42,6 +44,7 @@ public class ColorSchemeManager {
     private int roundedButtonColor;
     private String icon;
     private int menuIcon;
+    private int primaryColor;
 
     public ColorSchemeManager() {}
 
@@ -51,10 +54,10 @@ public class ColorSchemeManager {
                 appBackground = Color.parseColor(theme.getString("app_background"));
             }
             if(theme.has("bottombar_background")) {
-//                appBackground = Color.parseColor(theme.getString("bottombar_background"));
+                bottomBarBackground = Color.parseColor(theme.getString("bottombar_background"));
             }
             if(theme.has("bottombar_text")) {
-//                appBackground = Color.parseColor(theme.getString("bottombar_text"));
+                bottomBarText = Color.parseColor(theme.getString("bottombar_text"));
             }
             if(theme.has("button_background")) {
                 buttonBackground = Color.parseColor(theme.getString("button_background"));
@@ -74,8 +77,8 @@ public class ColorSchemeManager {
             if(theme.has("icon_idle")) {
                 iconIdle = Color.parseColor(theme.getString("icon_idle"));
             }
-            if(theme.has("icon_selected")) {
-//                appBackground = Color.parseColor(theme.getString("icon_selected"));
+            if(theme.has("icon_active")) {
+                iconActive = Color.parseColor(theme.getString("icon_active"));
             }
             if(theme.has("lighter_text")) {
                 lighterTextColor = Color.parseColor(theme.getString("lighter_text"));
@@ -141,12 +144,14 @@ public class ColorSchemeManager {
             if(theme.has("topbar_text")) {
 //                appBackground = Color.parseColor(theme.getString("topbar_text"));
             }
+        if(theme.has("primary_color")) {
+            primaryColor = Color.parseColor(theme.getString("primary_color"));
+        }
 
     }
 
 
     public void setColorScheme(TeamColorSchemeObject[] colorScheme, String colorSchemeId) {
-
         setDefaults(colorSchemeId);
         icon = null;
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
@@ -325,6 +330,14 @@ public class ColorSchemeManager {
         return appBackground;
     }
 
+    public int getBottomBarBackground() {
+        return bottomBarBackground;
+    }
+
+    public int getBottomBarText() {
+        return bottomBarText;
+    }
+
     public int getToolbarBackground() {
         return toolbarBackground;
     }
@@ -431,5 +444,9 @@ public class ColorSchemeManager {
 
     public int getMenuIcon() {
         return menuIcon;
+    }
+
+    public int getPrimaryColor() {
+        return primaryColor;
     }
 }

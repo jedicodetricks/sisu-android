@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -37,6 +39,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -200,7 +204,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dataController.setAgent(agent);
         //TODO: Don't release with this uncommented, you fucktard.
         //MOCKING AN AGENT
-//        agent.setAgent_id("31192");
+//        agent.setAgent_id("49201"); // This is a good agent for color checking
 //        dataController.setAgent(agent);
         //
 //        myAgentId = agent.getAgent_id();
@@ -209,7 +213,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initializeButtons();
         initCache();
         initActionBar();
-        initDrawer();
+//        initDrawer();
 
         //Eventually you won't need the non tile debug stuff
         if(tileDebug) {
@@ -242,8 +246,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void initParentFields() {
         layout = findViewById(R.id.parentLayout);
         toolbar = findViewById(R.id.toolbar);
-        navViewList = findViewById(R.id.navViewList);
-        navTitle = findViewById(R.id.nav_title);
+//        navViewList = findViewById(R.id.navViewList);
+//        navTitle = findViewById(R.id.nav_title);
     }
 
     private void initActionBar() {
@@ -251,36 +255,44 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initDrawer() {
-        drawerLayout = findViewById(R.id.drawer_layout);
+//        drawerLayout = findViewById(R.id.drawer_layout);
     }
 
     public void setActivityColors() {
-        if(!tileDebug) {
-            this.runOnUiThread(() -> {
-                layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-                if(isAdminMode) {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
-                }
-                else {
-                    toolbar.setBackgroundColor(colorSchemeManager.getToolbarBackground());
-                }
-                navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
-                navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
-                navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-                //change parentLoader here, if needed
-                parentLoader = findViewById(R.id.parentLoader);
-                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
-                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                } else {
-                    Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                    parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
-                    parentLoader.getIndeterminateDrawable().setBounds(bounds);
-                }
+        this.runOnUiThread(() -> {
+            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+            if(isAdminMode) {
+                toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
+            }
+            else {
+                toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
+            }
+//            Drawable drawable = addClientButton.getDrawable();
+//            drawable.setTint(colorSchemeManager.getPrimaryColor());
+//            addClientButton.setImageDrawable(drawable);
+
+            VectorChildFinder plusVector = new VectorChildFinder(this, R.drawable.add_icon, addClientButton);
+            VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+            plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+            plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+            addClientButton.invalidate();
+
+//            navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
+//            navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
+//            navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+            //change parentLoader here, if needed
+            parentLoader = findViewById(R.id.parentLoader);
+            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                parentLoader.getIndeterminateDrawable().setBounds(bounds);
+            } else {
+                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                parentLoader.getIndeterminateDrawable().setBounds(bounds);
+            }
 //                navigationManager.updateColorScheme(colorSchemeManager);
-            });
-        }
+        });
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -317,11 +329,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void initTeamSelectorPopup() {
         teamSelectorPopup = new PopupMenu(this, findViewById(R.id.team_icon));
 
-        teamSelectorPopup.setOnMenuItemClickListener(this);
+        teamSelectorPopup.setOnMenuItemClickListener(item -> {
+            TeamObject team = dataController.getTeamsObject().get(item.getItemId());
+            dataController.setSelectedTeamObject(team);
+            dataController.setSelectedTeamPosition(item.getItemId());
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            f = fragmentManager.findFragmentById(R.id.your_placeholder);
+            this.runOnUiThread(() -> parentLoader.setVisibility(View.VISIBLE));
+            sendTeamSwapApiCalls(team);
+            return false;
+        });
+
         int counter = 0;
         for(TeamObject teamObject : dataController.getTeamsObject()) {
             SpannableString s = new SpannableString(teamObject.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getNormalTextColor()), 0, s.length(), 0);
             teamSelectorPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
@@ -329,14 +351,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if(dataController.getUpdatedRecords().size() > 0) {
-            updateRecordedActivities();
-        }
-
-        addClientButton.setVisibility(View.GONE);
-        setSelectedClient(null);
-
         if(!teamSwap && !noNavigation) {
+            if(dataController.getUpdatedRecords().size() > 0) {
+                updateRecordedActivities();
+            }
+            addClientButton.setVisibility(View.GONE);
+            setSelectedClient(null);
             parentLoader.setVisibility(View.GONE);
             paginateInfo.setVisibility(View.GONE);
             switch (v.getId()) {
@@ -344,6 +364,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.team_icon:
                 case R.id.team_letter:
 //                    toggleDrawer();
+                    addClientButton.setVisibility(View.VISIBLE);
                     teamSelectorPopup.show();
                     break;
                 case R.id.scoreboardView:
@@ -387,18 +408,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                     if(currentMarketStatusFilter != null) {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1);
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
                     else {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1);
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1);
+                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
@@ -497,9 +518,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         teamSwap = true;
 
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-        apiManager.getAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
+//        apiManager.getAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), getSelectedTeamMarketId());
-        apiManager.getClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
+//        apiManager.getClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
         if(tileDebug) {
             String dashboardType = "agent";
             if(!isAgentDashboard) {
@@ -516,7 +537,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private void executeTeamSwap() {
         if(tileDebug) {
-            if(clientFinished && goalsFinished && teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
+            if(teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
                 parentLoader.setVisibility(View.INVISIBLE);
                 clientFinished = false;
                 goalsFinished = false;
@@ -532,7 +553,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                 if (f.getTag() != null) {
                     switch (f.getTag()) {
-                        case "Scoreboard":
+                        case "ScoreboardTileFragment":
     //                        try {
     //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
     //                        }
@@ -679,6 +700,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     scopeFinished = false;
                     tileTemplateFinished = false;
                     marketStatusFinished = false;
+                    teamSwap = false;
+                    noNavigation = false;
                 }
 
             });
@@ -1255,7 +1278,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
         }
         this.runOnUiThread(() -> executeTeamSwap());
-    }
+}
 
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
@@ -1463,18 +1486,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(currentMarketStatusFilter != null) {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page);
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page);
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
         else {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page);
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page);
+                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
     }
@@ -1512,6 +1535,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
+        initTeamSelectorPopup();
+        setActivityColors();
+        navigationManager.updateColorSchemeManager(colorSchemeManager);
 //        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
     }
 
