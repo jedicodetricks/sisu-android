@@ -965,67 +965,12 @@ public class DataController {
             newSettings.add(getDefaultLights());
          }
 
-//        ParameterObject[] array = new ParameterObject[arraySize];
-//
-//        try {
-//            settings = new JSONArray(newSettings.toArray(array));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        for(int i = 0; i < settings.length(); i++) {
-//            JSONObject s = null;
-//            try {
-//                s =  settings.getJSONObject(i);
-//                ParameterObject currentParam = new ParameterObject(s);
-//                switch (s.getString("name")) {
-//                    case "local_timezone":
-//                        if(currentParam.getValue().equals("{}")) {
-//                            currentParam.setValue("America/Denver");
-//                        }
-//                        relevantSettings.add(currentParam);
-//                        break;
-//                    case "daily_reminder_time":
-//                        if(currentParam.getValue().equals("{}")) {
-//                            currentParam.setValue("17:00");
-//                        }
-//                        relevantSettings.add(currentParam);
-//                        break;
-//                    case "lights":
-//                        if(currentParam.getValue().equals("{}")) {
-//                            currentParam.setValue("0");
-//                        }
-//                        relevantSettings.add(currentParam);
-//                        break;
-////                    case "biometrics":
-//                    case "daily_reminder":
-//                        if(currentParam.getValue().equals("{}")) {
-//                            currentParam.setValue("1");
-//                        }
-//                        relevantSettings.add(currentParam);
-//                        break;
-//                    case "record_activities":
-////                    if(currentParam.getValue().equals("{}")) {
-////                        currentParam = setDefaultActivitesSelected();
-////                    }
-////                    setupSelectedActivities(currentParam);
-//                        break;
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-
-//        }
         this.settings = newSettings;
     }
 
     private LinkedHashMap<String, SelectedActivities> setupSelectedActivities(AsyncActivitySettingsObject[] s) {
         activitiesSelected = new LinkedHashMap<>();
-//        if(s != null) {
-//            String formattedString = s.getValue().replace("\"", "").replace("{", "").replace("}", "");
-//            String[] splitString = formattedString.split(",");
-//
-//            if(splitString.length > 1) {
+
         if(s != null) {
             for(AsyncActivitySettingsObject setting : s) {
                 if(setting.getValue()) {
@@ -1035,53 +980,6 @@ public class DataController {
         }
 
         return activitiesSelected;
-//            }
-//
-//
-//            if(masterActivitiesObject.size() > 0) {
-//                for(Metric m : masterActivitiesObject) {
-//                    if(activitiesSelected.containsKey(m.getType())) {
-//                        SelectedActivities selectedActivities = activitiesSelected.get(m.getType());
-//                        selectedActivities.setName(m.getTitle());
-//                        if(selectedActivities.getValue().equals("0")) {
-//                            continue;
-//                        }
-//                    }
-//                    else {
-////                        This is to reconcile the object to make sure it's got the new stuff in it.
-//                        if (isSelectableActivity(m.getType())) {
-//                            Log.e("PUTTING", m.getTitle());
-//                            activitiesSelected.put(m.getType(), new SelectedActivities("1", m.getType(), m.getTitle()));
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-    }
-
-    public boolean isSelectableActivity(String type) {
-// TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-//        switch (type) {
-//            case "CONTA":
-//            case "BAPPT":
-//            case "SAPPT":
-//            case "BSGND":
-//            case "SSGND":
-//            case "BUNDC":
-//            case "SUNDC":
-//            case "BCLSD":
-//            case "SCLSD":
-//            case "SGND":
-//            case "1TAPT":
-//            case "CLSD":
-//            case "UCNTR":
-//            case "LSTT":
-//            case "BBSGD":
-//                return false;
-//        }
-
-        return true;
     }
 
     public List<ParameterObject> getSettings() {

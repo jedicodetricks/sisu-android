@@ -158,7 +158,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private PopupMenu teamSelectorPopup;
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
-
+    // TODO: I should create an enum with the fragment names so that I only have to change it in one spot in the future if I change a fragment name
+    // TODO: The old Scoreboard fragment might still be getting called. Gotta fix that.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,8 +170,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
         cacheManager = new CacheManager();
-        // TODO: Pass the cacheManager to the apiManager when it's ready
-        apiManager = new ApiManager(this);
+        apiManager = new ApiManager(this, cacheManager);
         dateManager = new DateManager();
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
@@ -472,7 +472,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 //    private void navigateToScoreboard() {
-//        // TODO: I think this is deprecated and we don't need it anymore. Commenting to see
+        // TODO: I think this is deprecated and we don't need it anymore. Commenting to see
 //        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished && marketStatusFinished) {
 //            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName()));
 //            clientFinished = false;

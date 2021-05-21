@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiManager = new ApiManager(this);
+        apiManager = new ApiManager(this, cacheManager);
         colorSchemeManager = new ColorSchemeManager();
         setContentView(R.layout.activity_main);
         loader = findViewById(R.id.signInLoader);

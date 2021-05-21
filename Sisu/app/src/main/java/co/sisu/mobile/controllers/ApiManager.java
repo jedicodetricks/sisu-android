@@ -56,7 +56,7 @@ public class ApiManager {
     Cache cache;
     private Gson gson;
 
-    public ApiManager(Context context) {
+    public ApiManager(Context context, CacheManager cacheManager) {
         cache = new Cache(context.getCacheDir(), cacheSize);
         gson = new Gson();
     }

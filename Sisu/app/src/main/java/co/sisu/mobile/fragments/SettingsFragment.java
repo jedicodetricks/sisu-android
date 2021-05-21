@@ -87,7 +87,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // TODO: This needs to save on any change now, there is no save button
+        // TODO: This needs to save on any change now, there is no save button (I think I did this and didn't delete the todo)
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();

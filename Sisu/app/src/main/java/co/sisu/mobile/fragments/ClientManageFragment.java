@@ -387,7 +387,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         archivedReason.setTextColor(colorSchemeManager.getDarkerTextColor());
         Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
         imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
-        // TODO: Archive button doesn't exist here
+        // TODO: Archive button doesn't exist here (I may have fixed this and just need to double check)
         archiveButton.setImageDrawable(imageDraw);
 
         setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerTextColor());

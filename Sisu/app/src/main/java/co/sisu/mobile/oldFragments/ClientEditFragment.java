@@ -1393,12 +1393,9 @@ public class ClientEditFragment extends Fragment implements AdapterView.OnItemCl
             if(settings != null) {
                 currentClient.setActivate_client(settings.getValue());
             }
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initializeClient();
-                    loader.setVisibility(View.GONE);
-                }
+            parentActivity.runOnUiThread(() -> {
+                initializeClient();
+                loader.setVisibility(View.GONE);
             });
         }
         else if(returnType == ApiReturnTypes.CREATE_NOTE) {

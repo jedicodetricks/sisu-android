@@ -84,16 +84,8 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     }
 
     public void initTeamBar() {
-        // TODO: This will need to be in the popup thingy now
         List<TeamObject> teamsList = dataController.getTeamsObject();
-//        //Custom Action Bar stuff
         if(teamsList.size() > 0) {
-//            ListView mListView = parentActivity.findViewById(R.id.navViewList);
-//            mListView.setDivider(null);
-//            mListView.setDividerHeight(30);
-//
-//            mListView.setOnItemClickListener(this);
-
             teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
             teamLetter.setBackgroundColor(teamsList.get(0).getColor());
             teamBlock.setBackgroundColor(teamsList.get(0).getColor());
@@ -116,23 +108,6 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             actionBarTitle.setText(titleString);
             actionBarActionText.setVisibility(View.INVISIBLE);
             actionImage.setVisibility(View.GONE);
-            // TODO: We'll need to move this to the popupMenu so we don't manage the drawer
-
-//            if(dataController.getSelectedTeamObject() != null) {
-//                if(dataController.getSelectedTeamObject().getRole().equals("ADMIN") || isAdminMode) {
-//                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
-//                    if(teamAgentsTitle != null) {
-//                        teamAgentsTitle.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//                else {
-//                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-//                    if(teamAgentsTitle != null) {
-//                        teamAgentsTitle.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//            manageDrawerEnabled(isDrawerEnabled);
         });
     }
 
