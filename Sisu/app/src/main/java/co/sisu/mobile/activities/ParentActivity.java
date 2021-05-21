@@ -6,35 +6,25 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.LruCache;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +47,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
@@ -65,13 +56,11 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.fragments.ClientManageFragment;
+import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
-import co.sisu.mobile.oldFragments.RecruitingScoreboardFragment;
-import co.sisu.mobile.fragments.ReportFragment;
-import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
@@ -98,6 +87,8 @@ import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.oldFragments.RecruitingScoreboardFragment;
+import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
 import okhttp3.Response;
 
@@ -105,7 +96,7 @@ import okhttp3.Response;
  * Created by bradygroharing on 2/26/18.
  */
 
-public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener {
+public class ParentActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
 
     private DataController dataController;
     private NavigationManager navigationManager;
@@ -114,6 +105,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public ColorSchemeManager colorSchemeManager;
     public ActionBarManager actionBarManager;
     public ProgressBar parentLoader;
+    public CacheManager cacheManager;
     private boolean clientFinished = false;
     private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
@@ -131,21 +123,19 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean shouldDisplayPushNotification = false;
     private AgentModel agent;
     private NotesObject selectedNote;
-    private LruCache<String, Bitmap> mMemoryCache;
+//    private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
+    private ConstraintLayout paginateInfo;
     private Toolbar toolbar;
-    private ListView navViewList;
-    private TextView navTitle;
     private boolean isNoteFragment = false;
     private Gson gson;
     private String pushNotificationTitle = "";
     private String pushNotificationBody = "";
     private String pushNotificationIsHTML = "";
     private String pushNotificationPushId = "";
-    private String myAgentId = "";
     private Fragment f;
     private Animator mCurrentAnimator;
     private float startScale;
@@ -156,13 +146,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isAdminMode = false;
     private boolean adminTransferring = false;
 
-    private boolean tileDebug = true;
-
-    private ConstraintLayout paginateInfo;
-
     private JSONObject tileTemplate;
     private JSONObject clientTiles;
-    private JSONObject scopes;
     private JSONObject recordClientsList;
     private String recordClientListType;
     private boolean isAgentDashboard = true;
@@ -173,23 +158,23 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView addClientButton;
     private FilterObject selectedFilter;
 
-    private DrawerLayout drawerLayout;
     private PopupMenu teamSelectorPopup;
+
+    // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
 
-        paginateInfo = findViewById(R.id.paginateInfo);
-        parentLoader = findViewById(R.id.parentLoader);
         gson = new Gson();
         dataController = new DataController();
         colorSchemeManager = new ColorSchemeManager();
         navigationManager = new NavigationManager(this);
+        cacheManager = new CacheManager();
+        // TODO: Pass the cacheManager to the apiManager when it's ready
         apiManager = new ApiManager(this);
         dateManager = new DateManager();
-
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
         pushNotificationIsHTML = getIntent().getStringExtra("has_html");
@@ -207,55 +192,26 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //        agent.setAgent_id("49201"); // This is a good agent for color checking
 //        dataController.setAgent(agent);
         //
-//        myAgentId = agent.getAgent_id();
 
         initParentFields();
-        initializeButtons();
-        initCache();
+        initButtons();
         initActionBar();
-//        initDrawer();
 
-        //Eventually you won't need the non tile debug stuff
-        if(tileDebug) {
-            noNavigation = true;
-            dateManager.initTimelineDate();
-            apiManager.getFirebaseDevices(this, agent.getAgent_id());
-        }
+        noNavigation = true;
+        dateManager.initTimelineDate();
+        apiManager.getFirebaseDevices(this, agent.getAgent_id());
         apiManager.getTeams(this, agent.getAgent_id());
-    }
-
-    private void initCache() {
-        // Get max available VM memory, exceeding this amount will throw an
-        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
-        // int in its constructor.
-        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 4;
-
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
     }
 
     private void initParentFields() {
         layout = findViewById(R.id.parentLayout);
         toolbar = findViewById(R.id.toolbar);
-//        navViewList = findViewById(R.id.navViewList);
-//        navTitle = findViewById(R.id.nav_title);
+        paginateInfo = findViewById(R.id.paginateInfo);
+        parentLoader = findViewById(R.id.parentLoader);
     }
 
     private void initActionBar() {
         actionBarManager = new ActionBarManager(this);
-    }
-
-    private void initDrawer() {
-//        drawerLayout = findViewById(R.id.drawer_layout);
     }
 
     public void setActivityColors() {
@@ -267,9 +223,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             else {
                 toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
             }
-//            Drawable drawable = addClientButton.getDrawable();
-//            drawable.setTint(colorSchemeManager.getPrimaryColor());
-//            addClientButton.setImageDrawable(drawable);
 
             VectorChildFinder plusVector = new VectorChildFinder(this, R.drawable.add_icon, addClientButton);
             VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
@@ -277,9 +230,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
             addClientButton.invalidate();
 
-//            navViewList.setBackgroundColor(colorSchemeManager.getAppBackground());
-//            navTitle.setBackgroundColor(colorSchemeManager.getAppBackground());
-//            navTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
             //change parentLoader here, if needed
             parentLoader = findViewById(R.id.parentLoader);
             if(colorSchemeManager.getAppBackground() == Color.WHITE) {
@@ -291,22 +241,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
                 parentLoader.getIndeterminateDrawable().setBounds(bounds);
             }
-//                navigationManager.updateColorScheme(colorSchemeManager);
         });
     }
 
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) != null) {
-            Log.e("Key already exists", "Replacing " + key);
-        }
-        mMemoryCache.put(key, bitmap);
-    }
-
-    public Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
-    }
-
-    private void initializeButtons(){
+    private void initButtons(){
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
         scoreBoardButton.setOnClickListener(this);
 
@@ -332,7 +270,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         teamSelectorPopup.setOnMenuItemClickListener(item -> {
             TeamObject team = dataController.getTeamsObject().get(item.getItemId());
             dataController.setSelectedTeamObject(team);
-            dataController.setSelectedTeamPosition(item.getItemId());
             FragmentManager fragmentManager = getSupportFragmentManager();
             f = fragmentManager.findFragmentById(R.id.your_placeholder);
             this.runOnUiThread(() -> parentLoader.setVisibility(View.VISIBLE));
@@ -363,7 +300,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 case R.id.action_bar_home:
                 case R.id.team_icon:
                 case R.id.team_letter:
-//                    toggleDrawer();
                     addClientButton.setVisibility(View.VISIBLE);
                     teamSelectorPopup.show();
                     break;
@@ -372,27 +308,17 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     scopeFinished = true;
                     marketStatusFinished = true;
                     if(isRecruiting()) {
-                        if(tileDebug) {
+                        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+                    }
+                    else {
+                        parentLoader.setVisibility(View.VISIBLE);
+                        if(currentScopeFilter != null) {
                             apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                         }
                         else {
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                         }
-                    }
-                    else {
-                        if(tileDebug) {
-                            parentLoader.setVisibility(View.VISIBLE);
-                            if(currentScopeFilter != null) {
-                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
-                            }
-                            else {
-                                apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-                            }
-//                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-                        }
-                        else {
-                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                        }
+
                     }
                     break;
                 case R.id.reportView:
@@ -404,6 +330,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
                             selectedContextId = currentScopeFilter.getIdValue().substring(1);
                         }
+                    }
+                    else {
+                        Log.e("Garbage", "Garbage");
                     }
 
                     if(currentMarketStatusFilter != null) {
@@ -453,15 +382,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void toggleDrawer() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(Gravity.LEFT);
-        }
-        else {
-            drawerLayout.openDrawer(Gravity.LEFT);
-        }
-    }
-
     public void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
@@ -479,267 +399,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        parentLoader.setVisibility(View.VISIBLE);
-        try {
-            // TODO: This will need to be moved to the teamSelectorPopup
-            // This is what goes off when you click a new TEAM
-            TeamObject team = (TeamObject) parent.getItemAtPosition(position);
-            dataController.setSelectedTeamObject(team);
-            dataController.setSelectedTeamPosition(position);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            f = fragmentManager.findFragmentById(R.id.your_placeholder);
-
-            sendTeamSwapApiCalls(team);
-
-//            navigationManager.closeDrawer();
-        } catch ( ClassCastException cce) {
-            //This is what goes off when you click a new scope.
-            //TODO: I don't think this is being used anymore.
-            ScopeBarModel selectedScope = (ScopeBarModel) parent.getItemAtPosition(position);
-            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
-                // DO NOTHING
-//                navigationManager.closeTeamAgentsDrawer();
-                parentLoader.setVisibility(View.INVISIBLE);
-            }
-            else {
-//                navigationManager.closeTeamAgentsDrawer();
-                if(navigationManager.getCurrentFragment().equalsIgnoreCase("scoreboard")) {
-                    currentScopeFilter = selectedScope;
-                    actionBarManager.setTitle(currentScopeFilter.getName());
-                    apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", selectedScope.getIdValue());
-                }
-            }
-        }
-    }
-
     private void sendTeamSwapApiCalls(TeamObject team) {
         teamSwap = true;
-
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-//        apiManager.getAgentGoals(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), getSelectedTeamMarketId());
-//        apiManager.getClients(this, dataController.getAgent().getAgent_id(), team.getMarket_id());
-        if(tileDebug) {
-            String dashboardType = "agent";
-            if(!isAgentDashboard) {
-                dashboardType = "team";
-            }
-            apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
+        String dashboardType = "agent";
+        if(!isAgentDashboard) {
+            dashboardType = "team";
         }
-        else {
-            apiManager.getLabels(this, dataController.getAgent().getAgent_id(), team.getId());
-            apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getColorSchemeId());
-        }
-
+        apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
     }
 
     private void executeTeamSwap() {
-        if(tileDebug) {
-            if(teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
-                parentLoader.setVisibility(View.INVISIBLE);
-                clientFinished = false;
-                goalsFinished = false;
-                settingsFinished = false;
-                teamParamFinished = false;
-                colorSchemeFinished = false;
-                labelsFinished = false;
-                noNavigation = true;
-                activitySettingsParamFinished = false;
-                tileTemplateFinished = false;
-                teamSwap = false;
-                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-
-                if (f.getTag() != null) {
-                    switch (f.getTag()) {
-                        case "ScoreboardTileFragment":
-    //                        try {
-    //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-    //                        }
-    //                        catch(Exception e) {
-    //                            navigationManager.clearStackReplaceFragment(TileTemplateFragment.class);
-    //                        }
-                            ((ScoreboardTileFragment) f).teamSwap();
-                            break;
-                        case "Record":
-                            ((RecordFragment) f).teamSwap();
-                            break;
-                        case "Report":
-                            ((ClientTileFragment) f).teamSwap();
-                            break;
-                        case "Leaderboard":
-                            ((LeaderboardFragment) f).teamSwap();
-                            break;
-                        case "More":
-                            ((MoreFragment) f).teamSwap();
-                            break;
-                    }
-                }
-            }
-        }
-        else {
-            if(clientFinished && goalsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished) {
-
-                parentLoader.setVisibility(View.INVISIBLE);
-                clientFinished = false;
-                goalsFinished = false;
-                settingsFinished = false;
-                teamParamFinished = false;
-                colorSchemeFinished = false;
-                labelsFinished = false;
-                noNavigation = true;
-                activitySettingsParamFinished = false;
-                teamSwap = false;
-                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-                if (f.getTag() != null) {
-                    switch (f.getTag()) {
-                        case "Scoreboard":
-                            try {
-                                if(tileDebug) {
-                                    if(getCurrentScopeFilter() != null) {
-                                        actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                                    }
-                                    else {
-                                        actionBarManager.setToTitleBar("", true);
-                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
-                                    }
-                                }
-                                else {
-                                    if(isRecruiting()) {
-//                                        ((RecruitingScoreboardFragment) f).teamSwap();
-                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                                    }
-                                    else {
-                                        ((ScoreboardFragment) f).teamSwap();
-                                    }
-                                }
-
-                            }
-                            catch(Exception e) {
-                                if(tileDebug) {
-                                    if(getCurrentScopeFilter() != null) {
-                                        actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                                    }
-                                    else {
-                                        actionBarManager.setToTitleBar("", true);
-                                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
-                                    }
-                                }
-                                else {
-                                    if(isRecruiting()) {
-                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                                    }
-                                    else {
-                                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                                    }
-                                }
-
-                            }
-
-                            break;
-                        case "Record":
-                            ((RecordFragment) f).teamSwap();
-                            break;
-                        case "Report":
-                            ((ReportFragment) f).teamSwap();
-                            break;
-                        case "Leaderboard":
-                            ((LeaderboardFragment) f).teamSwap();
-                            break;
-                        case "More":
-                            ((MoreFragment) f).teamSwap();
-                            break;
-                    }
-                }
-            }
-        }
-
-    }
-
-    private void navigateToScoreboard(boolean b) {
-        if(!tileDebug) {
-            tileTemplateFinished = true;
-        }
-            this.runOnUiThread(() -> {
-                if(scopeFinished && tileTemplateFinished && marketStatusFinished) {
-                    if(isRecruiting()) {
-                        if(tileDebug) {
-                            if(getCurrentScopeFilter() != null) {
-                                actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                            }
-                            else {
-                                actionBarManager.setToTitleBar("", true);
-                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
-                            }
-                        }
-                        else {
-                            actionBarManager.setToTitleBar("", true);
-                            navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                        }
-                    }
-                    else {
-                        if(tileDebug) {
-                            if(getCurrentScopeFilter() != null) {
-                                actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                            }
-                            else {
-                                actionBarManager.setToTitleBar("", true);
-                                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
-                            }
-                        }
-                        else {
-                            actionBarManager.setToTitleBar("", true);
-                            navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                        }
-                    }
-                    scopeFinished = false;
-                    tileTemplateFinished = false;
-                    marketStatusFinished = false;
-                    teamSwap = false;
-                    noNavigation = false;
-                }
-
-            });
-            clientFinished = false;
-            goalsFinished = false;
-            settingsFinished = false;
-            teamParamFinished = false;
-            colorSchemeFinished = false;
-            labelsFinished = false;
-            noNavigation = false;
-            activitySettingsParamFinished = false;
-            teamsFinished = false;
-    }
-
-    // TODO: I think this is deprecated and we don't need it anymore
-    private void navigateToScoreboard() {
-        if(!tileDebug) {
-            tileTemplateFinished = true;
-        }
-        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished && marketStatusFinished) {
-            this.runOnUiThread(() -> {
-                if(isRecruiting()) {
-                    if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                    }
-                    else {
-                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                    }
-                }
-                else {
-                    if(tileDebug) {
-                        navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                    }
-                    else {
-                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                    }
-                }
-            });
+        if(teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
+            parentLoader.setVisibility(View.INVISIBLE);
             clientFinished = false;
             goalsFinished = false;
             settingsFinished = false;
@@ -749,73 +422,138 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             noNavigation = true;
             activitySettingsParamFinished = false;
             tileTemplateFinished = false;
-            teamsFinished = false;
-        }
-        else {
-            if(adminTransferring) {
-                if(clientFinished && goalsFinished && activitySettingsParamFinished && settingsFinished && teamParamFinished && noNavigation && tileTemplateFinished) {
-                    clientFinished = false;
-                    goalsFinished = false;
-                    settingsFinished = false;
-                    teamParamFinished = false;
-                    colorSchemeFinished = false;
-                    labelsFinished = false;
-                    noNavigation = true;
-                    activitySettingsParamFinished = false;
-                    tileTemplateFinished = false;
+            teamSwap = false;
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
 
-                    switch (navigationManager.getCurrentFragment()) {
-                        case "Scoreboard":
-                            noNavigation = false;
-                            adminTransferring = false;
-                            System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(() -> {
-                                if(tileDebug) {
-                                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-                                }
-                                else {
-                                    if(isRecruiting()) {
-                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-                                    }
-                                    else {
-                                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-                                    }
-                                }
-                            });
-                            break;
-                        case "Report":
-                            noNavigation = false;
-                            adminTransferring = false;
-                            System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ReportFragment.class));
-                            break;
-                        case "Record":
-                            noNavigation = false;
-                            adminTransferring = false;
-                            System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(RecordFragment.class));
-                            break;
-                        case "Leaderboard":
-                            noNavigation = false;
-                            adminTransferring = false;
-                            System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(LeaderboardFragment.class));
-                            break;
-                        case "More":
-                            noNavigation = false;
-                            adminTransferring = false;
-                            System.out.println(navigationManager.getCurrentFragment());
-                            this.runOnUiThread(() -> {
-                                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                                parentLoader.setVisibility(View.INVISIBLE);
-                            });
-                            break;
-                    }
-                    System.out.println(navigationManager.getCurrentFragment());
+            if (f.getTag() != null) {
+                switch (f.getTag()) {
+                    case "ScoreboardTileFragment":
+                        ((ScoreboardTileFragment) f).teamSwap();
+                        break;
+                    case "Report":
+                        ((ClientTileFragment) f).teamSwap();
+                        break;
+                    case "Leaderboard":
+                        ((LeaderboardFragment) f).teamSwap();
+                        break;
+                    case "More":
+                        ((MoreFragment) f).teamSwap();
+                        break;
                 }
             }
         }
     }
+
+    private void navigateToScoreboard(boolean b) {
+        this.runOnUiThread(() -> {
+            if(scopeFinished && tileTemplateFinished && marketStatusFinished) {
+                if(getCurrentScopeFilter() != null) {
+                    actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
+                }
+                else {
+                    actionBarManager.setToTitleBar("", true);
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
+                }
+                scopeFinished = false;
+                tileTemplateFinished = false;
+                marketStatusFinished = false;
+                teamSwap = false;
+                noNavigation = false;
+            }
+
+        });
+        clientFinished = false;
+        goalsFinished = false;
+        settingsFinished = false;
+        teamParamFinished = false;
+        colorSchemeFinished = false;
+        labelsFinished = false;
+        noNavigation = false;
+        activitySettingsParamFinished = false;
+        teamsFinished = false;
+    }
+
+//    private void navigateToScoreboard() {
+//        // TODO: I think this is deprecated and we don't need it anymore. Commenting to see
+//        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished && marketStatusFinished) {
+//            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName()));
+//            clientFinished = false;
+//            goalsFinished = false;
+//            settingsFinished = false;
+//            teamParamFinished = false;
+//            colorSchemeFinished = false;
+//            labelsFinished = false;
+//            noNavigation = true;
+//            activitySettingsParamFinished = false;
+//            tileTemplateFinished = false;
+//            teamsFinished = false;
+//        }
+//        else {
+//            if(adminTransferring) {
+//                if(clientFinished && goalsFinished && activitySettingsParamFinished && settingsFinished && teamParamFinished && noNavigation && tileTemplateFinished) {
+//                    clientFinished = false;
+//                    goalsFinished = false;
+//                    settingsFinished = false;
+//                    teamParamFinished = false;
+//                    colorSchemeFinished = false;
+//                    labelsFinished = false;
+//                    noNavigation = true;
+//                    activitySettingsParamFinished = false;
+//                    tileTemplateFinished = false;
+//
+//                    switch (navigationManager.getCurrentFragment()) {
+//                        case "Scoreboard":
+//                            noNavigation = false;
+//                            adminTransferring = false;
+//                            System.out.println(navigationManager.getCurrentFragment());
+//                            this.runOnUiThread(() -> {
+//                                if(tileDebug) {
+//                                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
+//                                }
+//                                else {
+//                                    if(isRecruiting()) {
+//                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
+//                                    }
+//                                    else {
+//                                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
+//                                    }
+//                                }
+//                            });
+//                            break;
+//                        case "Report":
+//                            noNavigation = false;
+//                            adminTransferring = false;
+//                            System.out.println(navigationManager.getCurrentFragment());
+//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ReportFragment.class));
+//                            break;
+//                        case "Record":
+//                            noNavigation = false;
+//                            adminTransferring = false;
+//                            System.out.println(navigationManager.getCurrentFragment());
+//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(RecordFragment.class));
+//                            break;
+//                        case "Leaderboard":
+//                            noNavigation = false;
+//                            adminTransferring = false;
+//                            System.out.println(navigationManager.getCurrentFragment());
+//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(LeaderboardFragment.class));
+//                            break;
+//                        case "More":
+//                            noNavigation = false;
+//                            adminTransferring = false;
+//                            System.out.println(navigationManager.getCurrentFragment());
+//                            this.runOnUiThread(() -> {
+//                                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+//                                parentLoader.setVisibility(View.INVISIBLE);
+//                            });
+//                            break;
+//                    }
+//                    System.out.println(navigationManager.getCurrentFragment());
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -832,7 +570,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void showToast(final CharSequence msg){
+    public void showToast(final CharSequence msg) {
+        // TODO: This feels like a util
         this.runOnUiThread(() -> {
             Toast toast = Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT);
             View view = toast.getView();
@@ -857,9 +596,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             try {
                 String tileString = ((Response) returnObject).body().string();
                 tileTemplate =  new JSONObject(tileString);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
             tileTemplateFinished = true;
@@ -960,35 +697,22 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
         }
-        else if(returnType == ApiReturnTypes.GET_TEAM_AGENTS) {
-//            AsyncTeamAgentJsonStringSuperUserObject teamAgentsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamAgentJsonStringSuperUserObject.class);
-//            AgentModelStringSuperUser[] agents = teamAgentsObject.getAgents();
-//            for(int i = 0; i < teamAgentsObject.getAgents().length; i++) {
-//                AgentModelStringSuperUser currentAgent = teamAgentsObject.getAgents()[i];
-//                String agentWholeName = currentAgent.getFirst_name() != null ? currentAgent.getFirst_name() : "" + " " + currentAgent.getLast_name() != null ? currentAgent.getLast_name() : "";
-//                scopeBarAgents.add(new ScopeBarModel(agentWholeName, "a" + currentAgent.getAgent_id()));
-//            }
-//            teamAgentsFinished = true;
-//            this.runOnUiThread(() -> {
-//                if(scopeFinished) {
-//                    navigationManager.initScopeBar(agents, myAgentId);
-//                }
-//            });
-        }
         else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsObject.getRecord_activities();
 
             dataController.setActivitiesSelected(settings);
             activitySettingsParamFinished = true;
-            navigateToScoreboard();
+//            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
+            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
+            // It does show up but I don't think I need it to. Will have to check back.
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
             goalsFinished = true;
-            navigateToScoreboard();
+//            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_SETTINGS) {
             try {
@@ -1034,7 +758,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     colorSchemeFinished = true;
                     apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
-                navigateToScoreboard();
+//                navigateToScoreboard();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -1051,16 +775,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(dataController.getTeamsObject().size() > 0) {
                     dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
                     dataController.setMessageCenterVisible(true);
-                    // TODO: I don't need the team params to be a race condition
+                    // TODO: I don't need/want the team params to be a race condition
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
                     //TODO: Probably don't need to getClients now
 //                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
                     clientFinished = true;
                     SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
-                    if(tileDebug) {
-                        colorSchemeFinished = true;
-                        labelsFinished = true;
-                    }
+                    colorSchemeFinished = true;
+                    labelsFinished = true;
                 }
                 else {
                     //TODO: Probably don't need to getClients now
@@ -1082,16 +804,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 //TODO: Could probably get activity settings later (record or settings page). Or maybe never as of 12/22/20
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
 //                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                if(tileDebug) {
-                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-                }
+                apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
             });
         }
         else if(returnType == ApiReturnTypes.GET_SCOPE) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 scopeBarList = new ArrayList<>();
-                scopes =  new JSONObject(tileString);
+                JSONObject scopes = new JSONObject(tileString);
                 JSONObject allScopes = scopes.getJSONObject("scopes");
 
                 if(allScopes.has("team")) {
@@ -1128,21 +848,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
             scopeFinished = true;
             navigateToScoreboard(true);
-        }
-        else if(returnType == ApiReturnTypes.GET_CLIENTS) {
-            //TODO: Probably can delete this after some further testing
-            AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
-            dataController.setClientListObject(clientObject, isRecruiting());
-            clientFinished = true;
-            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settings = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
@@ -1154,7 +865,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 dataController.setSlackInfo(params.getValue());
             }
             teamParamFinished = true;
-            navigateToScoreboard();
+//            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {
             AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncFirebaseDeviceJsonObject.class);
@@ -1177,7 +888,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
-            //TODO: Probably can delete this after some further testing
+            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             if(colorScheme.length < 5) {
@@ -1190,18 +901,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
                 colorSchemeFinished = true;
                 SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-                navigateToScoreboard();
+//                navigateToScoreboard();
             }
 
         }
         else if(returnType == ApiReturnTypes.GET_LABELS) {
+            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
             labelsFinished = true;
-            navigateToScoreboard();
+//            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_AGENT) {
+            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             adminTransferring = true;
             AsyncAgentJsonObject agentJsonObject = null;
             String r = null;
@@ -1270,9 +983,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             try {
                 String tileString = ((Response) returnObject).body().string();
                 tileTemplate =  new JSONObject(tileString);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
             tileTemplateFinished = true;
@@ -1280,8 +991,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.runOnUiThread(() -> executeTeamSwap());
 }
 
-
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
+        // TODO: This feels like a util
         if(pendingIntent == null) {
             Intent myIntent = new Intent(this, NotificationReceiver.class);
             pendingIntent = PendingIntent.getBroadcast(this, 1412, myIntent, 0);
@@ -1322,6 +1033,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp) {
+        // TODO: This feels like a util
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
         expanded = findViewById(R.id.expanded_image);
 
@@ -1420,17 +1132,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             // Upon clicking the zoomed-in image, it should zoom back down
             // to the original bounds and show the thumbnail instead of
             // the expanded image.
-            expanded.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    unzoomImageFromThumbnail();
-                }
-            });
+            expanded.setOnClickListener(view -> unzoomImageFromThumbnail());
         }
-
     }
 
     public void unzoomImageFromThumbnail() {
+        // TODO: This feels like a util
         imageIsExpanded = false;
         final float startScaleFinal = startScale;
         if (mCurrentAnimator != null) {
@@ -1483,6 +1190,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             actionBarManager.setTitle(currentScopeFilter.getName());
         }
+        else {
+            Log.e("Garage", "Garbage");
+        }
 
         if(currentMarketStatusFilter != null) {
             if(currentScopeFilter != null) {
@@ -1511,6 +1221,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         parentLoader.setVisibility(View.VISIBLE);
         if(currentScopeFilter != null) {
             actionBarManager.setTitle(currentScopeFilter.getName());
+        }
+        else {
+            Log.e("Garbage", "Garbage");
         }
         tileTemplateFinished = false;
         if(scopeSelected) {
@@ -1542,7 +1255,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     // GETTERS AND SETTERS
-
+    // TODO: Almost every single one of these should be moved to the dataController
     public NotesObject getSelectedNote() {
         return selectedNote;
     }
@@ -1592,16 +1305,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return colorSchemeManager;
     }
 
+    public CacheManager getCacheManager() {
+        return cacheManager;
+    }
+
     public void setColorSchemeManager(ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
-    }
-
-    public boolean imageExists(Context context, String id) {
-        return "".equals(id) || context.getDir(id, Context.MODE_PRIVATE).exists();
-    }
-
-    public HashMap<String, String> getLabels() {
-        return dataController.getLabels();
     }
 
     public String localizeLabel(String toCheck) {
@@ -1617,12 +1326,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setNoteOrMessage(String type) {
-        if(type.equals("Message")) {
-            isNoteFragment = false;
-        }
-        else {
-            isNoteFragment = true;
-        }
+        isNoteFragment = !type.equals("Message");
     }
 
     public Gson getGson() {
@@ -1653,8 +1357,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         shouldDisplayPushNotification = b;
     }
 
-    public boolean isTeamSwapOccurring() {
-        return teamSwap;
+    public boolean isTeamSwapFinished() {
+        return !teamSwap;
     }
 
     public boolean isRecruiting() {
@@ -1745,9 +1449,5 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return dataController.getSelectedTeamObject();
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return false;
-    }
 }
 

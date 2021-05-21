@@ -46,8 +46,6 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnTypes;
-import co.sisu.mobile.fragments.ClientManageFragment;
-import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;

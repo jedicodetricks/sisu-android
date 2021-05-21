@@ -848,7 +848,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        if(!parentActivity.isTeamSwapOccurring()) {
+        if(parentActivity.isTeamSwapFinished()) {
             switch (v.getId()) {
                 case R.id.addView:
                     launchAddClient();
@@ -892,18 +892,7 @@ public class RecruitingScoreboardFragment extends Fragment implements View.OnCli
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Activities")) {
-//            dataController.setScoreboardActivities(returnObject);
-//            dataController.setActivitiesObject(returnObject);
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.setVisibility(View.GONE);
-//                    animateProgressBars(dataController.getScoreboardObject());
-//                    calculateVolumes();
-//                }
-//            });
-//        }
+
     }
 
     @Override

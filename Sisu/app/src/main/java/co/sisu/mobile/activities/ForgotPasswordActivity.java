@@ -55,6 +55,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

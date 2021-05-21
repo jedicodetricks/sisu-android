@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
         agent = agentObject.getAgent();
         if (agentObject.getStatus_code().equals("-1")) {

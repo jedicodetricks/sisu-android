@@ -97,17 +97,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private View view;
 
 
-    public RecordFragment() {
-        // Required empty public constructor
-    }
-
-    public void teamSwap() {
-//        loader.setVisibility(View.VISIBLE);
-//        Date d = calendar.getTime();
-//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -147,13 +136,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         setColorScheme();
 //        activitiesTable = view.findViewById(R.id.activitiesTable);
 
-    }
-
-    private void setTransactionSectionVisible(View view) {
-        if(parentActivity.getSelectedTeamMarketId() != 0) {
-            RelativeLayout transactionSection = view.findViewById(R.id.recordTransactionSection);
-            transactionSection.setVisibility(View.GONE);
-        }
     }
 
     private void initLabels(View view) {
@@ -199,6 +181,41 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         dateManager.setRecordDateToToday();
 
         updateDisplayDate(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
+    }
+
+    private void initListView(List<Metric> metricList) {
+        List<DoubleMetric> doubleMetricList = new ArrayList<>();
+        for(int i = 0; i < metricList.size(); i++) {
+            if(i % 2 == 0) {
+                if(i + 1 >= metricList.size()) {
+                    doubleMetricList.add(new DoubleMetric(metricList.get(i), null));
+                }
+                else {
+                    doubleMetricList.add(new DoubleMetric(metricList.get(i), metricList.get(i + 1)));
+                }
+            }
+        }
+
+        RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
+        parentRelativeLayout.removeAllViews();
+        int numOfRows = 0;
+        for(int i = 0; i < doubleMetricList.size(); i++) {
+            View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
+            view = createActivityRowView(view, doubleMetricList.get(i));
+
+            view.setId(numOfRows + 1);
+            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+            parentRelativeLayout.addView(view, horizontalParam);
+            numOfRows++;
+        }
+    }
+
+    private void setTransactionSectionVisible(View view) {
+        if(parentActivity.getSelectedTeamMarketId() != 0) {
+            RelativeLayout transactionSection = view.findViewById(R.id.recordTransactionSection);
+            transactionSection.setVisibility(View.GONE);
+        }
     }
 
     private void setLabels() {
@@ -282,6 +299,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void updateDisplayDate(int year, int month, int day) {
+        // TODO: This feels like a DateManager Util
         Date d;
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -307,54 +325,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             parentActivity.showToast("Error parsing selected date");
             e.printStackTrace();
         }
-    }
-
-    private void initializeListView(List<Metric> metricList) {
-        List<DoubleMetric> doubleMetricList = new ArrayList<>();
-        for(int i = 0; i < metricList.size(); i++) {
-            if(i % 2 == 0) {
-                if(i + 1 >= metricList.size()) {
-                    doubleMetricList.add(new DoubleMetric(metricList.get(i), null));
-                }
-                else {
-                    doubleMetricList.add(new DoubleMetric(metricList.get(i), metricList.get(i + 1)));
-                }
-            }
-        }
-
-        RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
-        parentRelativeLayout.removeAllViews();
-        int numOfRows = 0;
-        for(int i = 0; i < doubleMetricList.size(); i++) {
-            View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
-            view = createActivityRowView(view, doubleMetricList.get(i));
-
-            view.setId(numOfRows + 1);
-            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
-            parentRelativeLayout.addView(view, horizontalParam);
-            numOfRows++;
-        }
-//        List<DoubleMetric> doubleMetricList = new ArrayList<>();
-//        for(int i = 0; i < metricList.size(); i++) {
-//            if(i % 2 == 0) {
-//                if(i + 1 >= metricList.size()) {
-//                    doubleMetricList.add(new DoubleMetric(metricList.get(i), null));
-//                }
-//                else {
-//                    doubleMetricList.add(new DoubleMetric(metricList.get(i), metricList.get(i + 1)));
-//                }
-//            }
-//        }
-//
-//        if(getView() != null) {
-//            mListView = getView().findViewById(R.id.record_list_view);
-//            mListView.setDivider(null);
-//            mListView.setDividerHeight(30);
-//
-//            RecordListAdapter adapter = new RecordListAdapter(getContext(), doubleMetricList, this, colorSchemeManager, dataController.getFirstOtherActivity(), parentActivity);
-//            mListView.setAdapter(adapter);
-//        }
     }
 
     private View createActivityRowView(View rowView, DoubleMetric doubleMetric) {
@@ -401,7 +371,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         leftMinusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!parentActivity.isTeamSwapOccurring()) {
+                if(parentActivity.isTeamSwapFinished()) {
                     int minusOne = leftMetric.getCurrentNum();
                     if(minusOne > 0) {
                         minusOne -= 1;
@@ -415,7 +385,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         leftPlusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!parentActivity.isTeamSwapOccurring()) {
+                if(parentActivity.isTeamSwapFinished()) {
                     int plusOne = leftMetric.getCurrentNum() + 1;
                     leftRowCounter.setText(String.valueOf(plusOne));
                 }
@@ -497,7 +467,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             rightMinusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!parentActivity.isTeamSwapOccurring()) {
+                    if(parentActivity.isTeamSwapFinished()) {
                         int minusOne = rightMetric.getCurrentNum();
                         if(minusOne > 0) {
                             minusOne -= 1;
@@ -511,7 +481,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             rightPlusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!parentActivity.isTeamSwapOccurring()) {
+                    if(parentActivity.isTeamSwapFinished()) {
                         int plusOne = rightMetric.getCurrentNum() + 1;
                         rightRowCounter.setText(String.valueOf(plusOne));
                     }
@@ -562,69 +532,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         return rowView;
     }
 
-    private void initTableView(List<Metric> metricList) {
-        if(getView() != null) {
-            TableRow currentRow = null;
-            for(int i = 0; i < metricList.size(); i++) {
-                Metric currentMetric = metricList.get(i);
-
-                if(i % 2 == 0) {
-                    TableRow tr = new TableRow(getContext());
-                    tr.setLayoutParams(new RelativeLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                    View rowView = inflater.inflate(R.layout.adapter_record_table_row, tr, false);
-                    TextView title = rowView.findViewById(R.id.recordTitle);
-                    currentRow = tr;
-                    title.setText(currentMetric.getTitle());
-                    tr.addView(rowView);
-                }
-                else {
-                    View rowView = inflater.inflate(R.layout.adapter_record_table_row, currentRow, false);
-                    TextView title = rowView.findViewById(R.id.recordTitle);
-                    title.setText(currentMetric.getTitle());
-                    currentRow.addView(rowView);
-                    activitiesTable.addView(currentRow);
-                }
-//                TableRow tr = new TableRow(getContext());
-//                Button b = new Button(getContext());
-//                b.setText("Dynamic Button");
-//
-//                Button c = new Button(getContext());
-//                c.setText("Dynamic Button");
-////            b.setLayoutParams(new RelativeLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-//                /* Add Button to row. */
-//                tr.addView(b);
-//                tr.addView(c);
-//                activitiesTable.addView(tr);
-            }
-            /* Create a Button to be the row-content. */
-
-
-            /* Add row to TableLayout. */
-            //tr.setBackgroundResource(R.drawable.sf_gradient_03);
-
-        }
-
-    }
-
-    private void recordMetric(String tab) {
-        String switchTab = "";
-        switch(tab) {
-            case "appts":
-                switchTab = "pipeline";
-                break;
-            case "signed":
-                switchTab = "pipeline";
-                break;
-            case "contract":
-                switchTab= "signed";
-                break;
-            case "closed":
-                switchTab = "contract";
-                break;
-        }
-        navigationManager.navigateToClientList(switchTab);
-    }
-
     private void showDatePickerDialog() {
         DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -643,6 +550,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void updateRecordInfo() {
+        // TODO: This feels like a util
         Calendar cal = Calendar.getInstance();
         cal.set(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
@@ -732,24 +640,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     @Override
-    public void onClientDirectorClicked(Metric metric) {
-        switch(metric.getType()) {
-            case "1TAPT":
-                recordMetric("appts");
-                break;
-            case "SGND":
-                recordMetric("signed");
-                break;
-            case "UCNTR":
-                recordMetric("contract");
-                break;
-            case "CLSD":
-                recordMetric("closed");
-                break;
-        }
-    }
-
-    @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
     @Override
@@ -758,15 +648,12 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             dataController.setRecordActivities(activitiesObject, parentActivity.isRecruiting());
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loader.setVisibility(View.GONE);
-                    metricList = dataController.getRecordActivities();
-                    setLabels();
-                    initializeListView(metricList);
+            parentActivity.runOnUiThread(() -> {
+                loader.setVisibility(View.GONE);
+                metricList = dataController.getRecordActivities();
+                setLabels();
+                initListView(metricList);
 //                    initTableView(metricList);
-                }
             });
 //            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
         }
@@ -775,18 +662,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
 
-//            currentActivitiesSorting = dataController.getActivitySettings();
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.setVisibility(View.GONE);
-//                    metricList = dataController.getRecordActivities();
-//                    setLabels();
-//                    initializeListView(metricList);
-////                    setupFieldsWithData();
-////                    fillListViewWithData(dataController.getActivitySettings());
-//                }
-//            });
             Date d = calendar.getTime();
             apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         }
@@ -796,9 +671,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 JSONObject clientJson = new JSONObject(clientString);
                 parentActivity.setRecordClientsList(clientJson);
                 navigationManager.stackReplaceFragment(TransactionFragment.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -814,7 +687,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        calendar = Calendar.getInstance();
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
@@ -834,165 +706,5 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), parentActivity.getSelectedTeamMarketId());
 
         return false;
-    }
-
-    // TESTING AREA
-
-    private View createNormalView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = null;
-        boolean isSideView = false;
-        if(tileObject.has("side")) {
-            if(tileObject.getBoolean("side") == true) {
-                rowView = inflater.inflate(R.layout.tile_normal_side_layout, row, false);
-                isSideView = true;
-            }
-            else {
-                rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
-            }
-        }
-        else {
-            rowView = inflater.inflate(R.layout.tile_normal_layout, row, false);
-        }
-        String headerText = tileObject.getString("header");
-        String footerText = tileObject.getString("value");
-        String headerColor = tileObject.getString("header_text_color");
-        String footerColor = tileObject.getString("footer_text_color");
-        String headerSize = tileObject.getString("font_header");
-        String footerSize = tileObject.getString("font_footer");
-        JSONObject progressBar = null;
-        if(tileObject.has("progress_bar")) {
-            progressBar = tileObject.getJSONObject("progress_bar");
-        }
-
-        TextView header = rowView.findViewById(R.id.normalTileHeader);
-        TextView footer = rowView.findViewById(R.id.normalTileFooter);
-        ProgressBar progress = rowView.findViewById(R.id.normalTileProgressBar);
-
-        header.setText(headerText);
-        header.setTextColor(Color.parseColor(headerColor));
-        if(!isSideView) {
-            if(headerText.length() > 15) {
-                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
-            }
-            else {
-                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
-            }
-        }
-
-        footer.setText(footerText);
-        footer.setTextColor(Color.parseColor(footerColor));
-        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
-        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-        if(progress != null && progressBar != null) {
-            Double completedPercent = 0.0;
-            if(progressBar.has("completed")) {
-                completedPercent = progressBar.getDouble("completed");
-            }
-            String progressColor = progressBar.getString("progress_color");
-            progress.setProgress(completedPercent.intValue());
-            progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
-        }
-
-        String tileColor = tileObject.getString("tile_color");
-        Boolean rounded = tileObject.getBoolean("rounded");
-
-        String border = "";
-        if(tileObject.has("border")) {
-            border = tileObject.getString("border");
-        }
-
-        if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
-        }
-        else {
-            int topBorder = 0;
-            int leftBorder = 0;
-            int rightBorder = 0;
-            int bottomBorder = 0;
-
-            switch (border) {
-                case "all":
-                    topBorder = 5;
-                    leftBorder = 5;
-                    rightBorder = 5;
-                    bottomBorder = 5;
-                    break;
-                case "top":
-                    topBorder = 5;
-                    break;
-                case "left":
-                    leftBorder = 5;
-                    break;
-                case "right":
-                    rightBorder = 5;
-                    break;
-                case "bottom":
-                    bottomBorder = 5;
-                    break;
-            }
-
-            LayerDrawable borderDrawable = getBorders(
-                    Color.parseColor(tileColor), // Background color
-                    Color.GRAY, // Border color
-                    leftBorder, // Left border in pixels
-                    topBorder, // Top border in pixels
-                    rightBorder, // Right border in pixels
-                    bottomBorder // Bottom border in pixels
-            );
-            rowView.setBackground(borderDrawable);
-        }
-
-        return rowView;
-    }
-
-    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
-        // Initialize new color drawables
-        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
-        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
-
-        // Initialize a new array of drawable objects
-        Drawable[] drawables = new Drawable[]{
-                borderColorDrawable,
-                backgroundColorDrawable
-        };
-
-        // Initialize a new layer drawable instance from drawables array
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-
-        // Set padding for background color layer
-        layerDrawable.setLayerInset(
-                1, // Index of the drawable to adjust [background color layer]
-                left, // Number of pixels to add to the left bound [left border]
-                top, // Number of pixels to add to the top bound [top border]
-                right, // Number of pixels to add to the right bound [right border]
-                bottom // Number of pixels to add to the bottom bound [bottom border]
-        );
-
-        // Finally, return the one or more sided bordered background drawable
-        return layerDrawable;
-    }
-
-    private float getTextViewSizing(String size) {
-        float returnSize;
-        switch(size) {
-            case "small":
-                returnSize = getResources().getDimension(R.dimen.font_small);
-                break;
-            case "medium":
-                returnSize = getResources().getDimension(R.dimen.font_large);
-                break;
-            case "large":
-                returnSize = getResources().getDimension(R.dimen.font_larger);
-                break;
-            default:
-                returnSize = getResources().getDimension(R.dimen.font_mega);
-                Log.e("TEXTVIEW SIZE", "Error setting TextView Size: " + size);
-                break;
-        }
-
-        return returnSize;
     }
 }

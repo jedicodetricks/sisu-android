@@ -25,9 +25,6 @@ import android.widget.TimePicker;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,7 +41,6 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
-import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;

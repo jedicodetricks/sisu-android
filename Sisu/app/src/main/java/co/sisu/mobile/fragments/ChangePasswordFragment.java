@@ -105,6 +105,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {

@@ -49,6 +49,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
@@ -76,6 +77,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private CacheManager cacheManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
@@ -107,13 +109,14 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        cacheManager = parentActivity.getCacheManager();
         agent = dataController.getAgent();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
         apiManager.getAgent(this, agent.getAgent_id());
 
-        Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
+        Bitmap profilePic = cacheManager.getBitmapFromMemCache("testImage");
         if(profilePic == null) {
             apiManager.getProfileImage(this, dataController.getAgent().getAgent_id());
         }
@@ -330,7 +333,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             else {
                 parentActivity.showToast("Saving profile picture...");
                 Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
-                parentActivity.addBitmapToMemoryCache("testImage", bitmap);
+                cacheManager.addBitmapToMemoryCache("testImage", bitmap);
             }
         }
     }
@@ -411,7 +414,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-            parentActivity.addBitmapToMemoryCache("testImage", bmp);
+            cacheManager.addBitmapToMemoryCache("testImage", bmp);
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);

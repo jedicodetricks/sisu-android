@@ -1,4 +1,4 @@
-package co.sisu.mobile.fragments;
+package co.sisu.mobile.oldFragments;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;

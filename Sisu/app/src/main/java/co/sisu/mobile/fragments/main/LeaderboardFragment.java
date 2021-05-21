@@ -39,6 +39,7 @@ import co.sisu.mobile.adapters.LeaderboardListExpandableAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.enums.ApiReturnTypes;
@@ -69,6 +70,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
+    private CacheManager cacheManager;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -99,6 +101,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
+        cacheManager = parentActivity.getCacheManager();
         actionBarManager.setToTitleBar("Leaderboards", false);
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
@@ -160,7 +163,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void initLeaderBoardImages(LeaderboardAgentModel leaderboardAgentModel) {
         if(leaderboardAgentModel.getProfile() != null) {
-            Bitmap bitmap = parentActivity.getBitmapFromMemCache(leaderboardAgentModel.getProfile());
+            Bitmap bitmap = cacheManager.getBitmapFromMemCache(leaderboardAgentModel.getProfile());
             if(bitmap == null) {
                 apiManager.getLeaderboardImage(this, dataController.getAgent().getAgent_id(), leaderboardAgentModel);
             }
@@ -382,11 +385,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Leaderboard Image")) {
             //TODO: This one is being used. Transition it
             LeaderboardAgentModel leaderboardAgentModel = (LeaderboardAgentModel) returnObject;
             if (leaderboardAgentModel.getBitmap() != null) {
-                parentActivity.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
+                cacheManager.addBitmapToMemoryCache(leaderboardAgentModel.getProfile(), leaderboardAgentModel.getBitmap());
             }
             agentDisplayCounting();
         }

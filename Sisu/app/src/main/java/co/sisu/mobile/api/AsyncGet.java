@@ -30,7 +30,6 @@ public class AsyncGet extends AsyncTask<String, String, String> {
     protected String doInBackground(String... strings) {
         Response response = null;
 
-
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)

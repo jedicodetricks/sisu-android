@@ -19,8 +19,6 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.adapters.TeamAgentsListAdapter;
-import co.sisu.mobile.adapters.TeamBarAdapter;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.ScopeBarModel;
@@ -48,8 +46,6 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     private AgentModelStringSuperUser[] allTeamAgents;
     private AgentModelStringSuperUser[] justMyAgent = new AgentModelStringSuperUser[1];
     private ListView teamAgentListView;
-    TeamAgentsListAdapter wholeTeamAdapter;
-    TeamAgentsListAdapter justMyAgentAdapter;
     private boolean actionBarColorSet = false;
     private String displayTitle = "";
 

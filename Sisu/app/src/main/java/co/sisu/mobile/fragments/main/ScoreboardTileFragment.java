@@ -123,47 +123,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         return createFullView(container, tileTemplate);
     }
 
-    public void teamSwap() {
-//        createAndAnimateProgressBars(dataController.updateScoreboardTimeline());
-        loader.setVisibility(View.VISIBLE);
-        parentActivity.resetDashboardTiles(false);
-//        apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
-//        parentActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                setupUiVisuals();
-//            }
-//        });
-    }
-
-    private void initScopePopupMenu() {
-        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
-
-        scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
-            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
-                // DO NOTHING
-                scopePopup.dismiss();
-            }
-            else {
-                scopePopup.dismiss();
-                parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetDashboardTiles(true);
-            }
-            return false;
-        });
-
-        int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
-            SpannableString s = new SpannableString(scope.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-
-            scopePopup.getMenu().add(1, counter, counter, s);
-
-            counter++;
-        }
-    }
-
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
         loader.setVisibility(View.VISIBLE);
@@ -187,7 +146,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 //            initTimelineSelector(parentLayout);
             initDateSelector(parentLayout);
             initPopupMenu();
-            initializeCalendarHandler();
+            initCalendarHandler();
             //
 
             try {
@@ -219,6 +178,59 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         return parentLayout;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
+        parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
+
+        if(parentActivity.shouldDisplayPushNotification()) {
+            parentActivity.setShouldDisplayPushNotification(false);
+            String title = parentActivity.getPushNotificationTitle();
+            String body = parentActivity.getPushNotificationBody();
+            String is_html = parentActivity.getPushNotificationIsHTML();
+            String pushId = parentActivity.getPushNotificationPushId();
+            if(is_html != null && is_html.equals("true")) {
+                //TODO: This will have to make an api call with pushId
+            }
+            else {
+                Intent intent = new Intent(parentActivity, NotificationActivity.class);
+                intent.putExtra("title", title);
+                intent.putExtra("body", body);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
+        initScopePopupMenu();
+    }
+
+    private void initScopePopupMenu() {
+        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
+
+        scopePopup.setOnMenuItemClickListener(item -> {
+            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
+            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
+                // DO NOTHING
+                scopePopup.dismiss();
+            }
+            else {
+                scopePopup.dismiss();
+                parentActivity.setScopeFilter(selectedScope);
+                parentActivity.resetDashboardTiles(true);
+            }
+            return false;
+        });
+
+        int counter = 0;
+        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
+            SpannableString s = new SpannableString(scope.getName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+
+            scopePopup.getMenu().add(1, counter, counter, s);
+
+            counter++;
+        }
+    }
+
     private void initPopupMenu() {
         popup = new PopupMenu(getContext(), dateSelectorDateText);
 
@@ -236,13 +248,75 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     }
 
-    private void initializeCalendarHandler() {
+    private void initCalendarHandler() {
+        // TODO: this should probably just be handled in the DateManager
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
         selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
+    private void initDateSelector(View view) {
+        dateSelectorDateText = view.findViewById(R.id.dateSelectorDate);
+        dateSelectorDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
+        dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
+        dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
+        dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
+        dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        scopeSelectorText = view.findViewById(R.id.scopeSelector);
+        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        dateSelectorDateText.setOnClickListener(this);
+        dateSelectorBeginDateText.setOnClickListener(this);
+        dateSelectorEndDateText.setOnClickListener(this);
+        scopeSelectorText.setOnClickListener(this);
+    }
+
+    private List<String> initSpinnerArray() {
+        // TODO: This should probably juse be handled in the DateManager
+        List<String> spinnerArray = new ArrayList<>();
+        spinnerArray.add("Yesterday");
+        spinnerArray.add("Today");
+        spinnerArray.add("Last Week");
+        spinnerArray.add("This Week");
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+
+        String thisMonth = sdf.format(calendar.getTime());
+
+        calendar.add(Calendar.MONTH, -1);
+        String lastMonth = sdf.format(calendar.getTime());
+        spinnerArray.add(lastMonth);
+        spinnerArray.add(thisMonth);
+
+        calendar = Calendar.getInstance();
+        sdf = new SimpleDateFormat("yyyy");
+        String thisYear = sdf.format(calendar.getTime());
+
+        calendar.add(Calendar.YEAR, -1);
+        String lastYear = sdf.format(calendar.getTime());
+        spinnerArray.add(lastYear);
+        spinnerArray.add(thisYear);
+
+        return spinnerArray;
+    }
+
+    public void teamSwap() {
+        loader.setVisibility(View.VISIBLE);
+        parentActivity.resetDashboardTiles(false);
+    }
+
     private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
+        // TODO: We can probably move this method into a util since I assume there is overlap.
 //        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
@@ -390,6 +464,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     private float getTextViewSizing(String size) {
+        // TODO: This feels like a util
         float returnSize;
         switch(size) {
             case "small":
@@ -435,58 +510,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
         // Finally, return the one or more sided bordered background drawable
         return layerDrawable;
-    }
-
-    public String loadJSONFromAsset(Context context) {
-        String json = null;
-        try {
-            AssetManager assets = context.getAssets();
-            InputStream is = assets.open("input.json");
-
-            int size = is.available();
-
-            byte[] buffer = new byte[size];
-
-            is.read(buffer);
-
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
-
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
-        parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
-
-        if(parentActivity.shouldDisplayPushNotification()) {
-            parentActivity.setShouldDisplayPushNotification(false);
-            String title = parentActivity.getPushNotificationTitle();
-            String body = parentActivity.getPushNotificationBody();
-            String is_html = parentActivity.getPushNotificationIsHTML();
-            String pushId = parentActivity.getPushNotificationPushId();
-            if(is_html != null && is_html.equals("true")) {
-                //TODO: This will have to make an api call with pushId
-            }
-            else {
-                Intent intent = new Intent(parentActivity, NotificationActivity.class);
-                intent.putExtra("title", title);
-                intent.putExtra("body", body);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        initScopePopupMenu();
-
-
     }
 
     private View createLegendView(ViewGroup row, JSONObject tileObject) throws JSONException {
@@ -1258,33 +1281,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         return rowView;
     }
 
-    private void initDateSelector(View view) {
-        dateSelectorDateText = view.findViewById(R.id.dateSelectorDate);
-        dateSelectorDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterTextColor());
-
-        dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
-        dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
-        dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterTextColor());
-//        selectedStartTime = getDateFromFormattedTime(dateManager.getFormattedStartTime());
-
-        dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
-        dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
-        dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
-//        selectedEndTime = getDateFromFormattedTime(dateManager.getFormattedEndTime());
-
-        scopeSelectorText = view.findViewById(R.id.scopeSelector);
-        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
-
-        dateSelectorDateText.setOnClickListener(this);
-        dateSelectorBeginDateText.setOnClickListener(this);
-        dateSelectorEndDateText.setOnClickListener(this);
-        scopeSelectorText.setOnClickListener(this);
-    }
-
     private void toggleDashboardTypeSelector(boolean isAgentClicked) {
         boolean toggled = false;
         LayerDrawable underlineDrawable = getBorders(
@@ -1333,36 +1329,8 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
     }
 
-    private List<String> initSpinnerArray() {
-        List<String> spinnerArray = new ArrayList<>();
-        spinnerArray.add("Yesterday");
-        spinnerArray.add("Today");
-        spinnerArray.add("Last Week");
-        spinnerArray.add("This Week");
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
-
-        String thisMonth = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.MONTH, -1);
-        String lastMonth = sdf.format(calendar.getTime());
-        spinnerArray.add(lastMonth);
-        spinnerArray.add(thisMonth);
-
-        calendar = Calendar.getInstance();
-        sdf = new SimpleDateFormat("yyyy");
-        String thisYear = sdf.format(calendar.getTime());
-
-        calendar.add(Calendar.YEAR, -1);
-        String lastYear = sdf.format(calendar.getTime());
-        spinnerArray.add(lastYear);
-        spinnerArray.add(thisYear);
-
-        return spinnerArray;
-    }
-
     private Date getDateFromFormattedTime(String formattedTime) {
+        // TODO: This is a DateManager Util
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date d = formatter.parse(formattedTime);
@@ -1374,6 +1342,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     public int getPercentComplete(double currentNum, double goalNum){
+        // TODO: This feels like a util
         if(goalNum == 0) {
             if(currentNum > 0) {
                 return 100;
@@ -1456,9 +1425,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                     navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "a" + parentActivity.getAgent().getAgent_id());
                 }
 //                loader.setVisibility(View.INVISIBLE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -1476,156 +1443,42 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-//        calendar = Calendar.getInstance();
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
                 dateManager.setToYesterday();
-//                parentActivity.setTimeline("day");
-//                parentActivity.setTimelineSelection(0);
-//                calendar.add(Calendar.DAY_OF_MONTH, -1);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 1:
                 //Today
                 dateManager.setToToday();
-//                parentActivity.setTimeline("day");
-//                parentActivity.setTimelineSelection(1);
-//
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                 break;
             case 2:
                 //Last Week
                 dateManager.setToLastWeek();
-//                parentActivity.setTimeline("week");
-//                parentActivity.setTimelineSelection(2);
-//
-//                calendar.add(Calendar.WEEK_OF_YEAR, -1);
-//                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-//
-//                calendar.add(Calendar.DAY_OF_WEEK, 6);
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                 break;
             case 3:
                 //This Week
                 dateManager.setToThisWeek();
-//                parentActivity.setTimeline("week");
-//                parentActivity.setTimelineSelection(3);
-//
-//                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
-//
-//                calendar.add(Calendar.DAY_OF_WEEK, 6);
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                 break;
             case 4:
                 //Last Month
                 dateManager.setToLastMonth();
-//                parentActivity.setTimeline("month");
-//                parentActivity.setTimelineSelection(4);
-//
-//                calendar.add(Calendar.MONTH, -1);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = 1;
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 break;
             case 5:
                 //This Month
                 dateManager.setToThisMonth();
-//                parentActivity.setTimeline("month");
-//                parentActivity.setTimelineSelection(5);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedStartDay = 1;
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-//                selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                 break;
             case 6:
                 //Last year
                 dateManager.setToLastYear();
-//                parentActivity.setTimeline("year");
-//                parentActivity.setTimelineSelection(6);
-//                calendar.add(Calendar.YEAR, -1);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = 1;
-//                selectedStartDay = 1;
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = 12;
-//                selectedEndDay = 31;
                 break;
             case 7:
                 //This year
                 dateManager.setToThisYear();
-//                parentActivity.setTimeline("year");
-//                parentActivity.setTimelineSelection(7);
-//                selectedStartYear = calendar.get(Calendar.YEAR);
-//                selectedStartMonth = 1;
-//                selectedStartDay = 1;
-//
-//                selectedEndYear = calendar.get(Calendar.YEAR);
-//                selectedEndMonth = 12;
-//                selectedEndDay = 31;
                 break;
             default:
                 return false;
         }
-
-//        String formattedStartMonth = String.valueOf(selectedStartMonth);
-//        String formattedEndMonth = String.valueOf(selectedEndMonth);
-//        String formattedStartDay = String.valueOf(selectedStartDay);
-//        String formattedEndDay = String.valueOf(selectedEndDay);
-//
-//        if(selectedStartDay < 10) {
-//            formattedStartDay = "0" + selectedStartDay;
-//        }
-//
-//        if(selectedEndDay < 10) {
-//            formattedEndDay = "0" + selectedEndDay;
-//        }
-//
-//        if(selectedStartMonth < 10) {
-//            formattedStartMonth = "0" + selectedStartMonth;
-//        }
-//
-//        if(selectedEndMonth < 10) {
-//            formattedEndMonth = "0" + selectedEndMonth;
-//        }
-//
-//        formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-//        formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-//        selectedStartTime = getDateFromFormattedTime(formattedStartTime);
-//        selectedEndTime = getDateFromFormattedTime(formattedEndTime);
-
-//        dateManager.setFormattedStartTime(formattedStartTime);
-//        dateManager.setFormattedEndTime(formattedEndTime);
 
         dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
         dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
@@ -1642,6 +1495,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+        // TODO: I bet all of this logic could just be passed into the DateManager
         monthOfYear = monthOfYear + 1;
         String formattedMonth = String.valueOf(monthOfYear);
         String formattedDay = String.valueOf(dayOfMonth);

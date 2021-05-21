@@ -121,6 +121,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Add Notes")) {
             hideKeyboard(getView());
             parentActivity.showToast("Added note");

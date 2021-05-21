@@ -354,22 +354,6 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if (asyncReturnType.equals("Add Notes")) {
-//
-//        }
-//        else {
-//            dataController.setClientListObject(returnObject);
-//
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.setVisibility(View.GONE);
-//                    selectTab(selectedTab);
-//                    fillListViewWithData(currentList);
-//                }
-//            });
-//        }
-
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ApiManager {
     private String timestamp;
     private String jwtStr;
     private String url = "https://api.sisu.co/";
-    int cacheSize = 10 * 1024 * 1024; // 10MB
+    int cacheSize = 20 * 1024 * 1024; // 20MB
     Cache cache;
     private Gson gson;
 
@@ -500,6 +500,28 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, int type, List<UpdateSettingsObject> settingsObjects) {
+        //POST
+        getJWT(agentId);
+        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_SETTINGS;
+        String currentUrl = url + "api/v1/parameter/edit-parameter";
+        int agentIdInteger = Integer.valueOf(agentId);
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("id", agentIdInteger);
+        jsonRequest.addProperty("type", type);
+        JsonArray settingsArray = new JsonArray();
+        for(UpdateSettingsObject settingsObject: settingsObjects) {
+            JsonObject currentParamObject = new JsonObject();
+            currentParamObject.addProperty("name", settingsObject.getName());
+            currentParamObject.addProperty("parameter_type_id", settingsObject.getParameter_type_id());
+            currentParamObject.addProperty("value", settingsObject.getValue());
+            settingsArray.add(currentParamObject);
+        }
+        jsonRequest.add("parameters", settingsArray);
+
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+    }
+
 
     //START OF PUT CALLS
 
@@ -599,51 +621,6 @@ public class ApiManager {
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, int type, List<UpdateSettingsObject> settingsObjects) {
-        //POST
-        getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_SETTINGS;
-        String currentUrl = url + "api/v1/parameter/edit-parameter";
-        int agentIdInteger = Integer.valueOf(agentId);
-        JsonObject jsonRequest = new JsonObject();
-        jsonRequest.addProperty("id", agentIdInteger);
-        jsonRequest.addProperty("type", type);
-        JsonArray settingsArray = new JsonArray();
-        for(UpdateSettingsObject settingsObject: settingsObjects) {
-            JsonObject currentParamObject = new JsonObject();
-            currentParamObject.addProperty("name", settingsObject.getName());
-            currentParamObject.addProperty("parameter_type_id", settingsObject.getParameter_type_id());
-            currentParamObject.addProperty("value", settingsObject.getValue());
-            settingsArray.add(currentParamObject);
-        }
-        jsonRequest.add("parameters", settingsArray);
-
-        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
-    }
-
-//    public void getClientList(AsyncServerEventListener cb, String agentId, int selectedTeamMarketId, String filterValue) {
-//        getJWT(agentId);
-//        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_LIST;
-//        String currentUrl = url + "api/v1/client/list";
-//        JsonObject jsonRequest = new JsonObject();
-//        jsonRequest.addProperty("market_id", selectedTeamMarketId);
-//        jsonRequest.addProperty("column_filter", filterValue);
-//        jsonRequest.addProperty("partial_filter", "");
-//
-//        JsonArray returnColumnsArray = new JsonArray();
-//        returnColumnsArray.add(filterValue);
-//        returnColumnsArray.add("is_locked");
-//        returnColumnsArray.add("client_id");
-//        returnColumnsArray.add("type_id");
-//        jsonRequest.add("add_return_columns", returnColumnsArray);
-//
-//        jsonRequest.addProperty("limit", 100);
-//        jsonRequest.addProperty("context", "agent");
-//        jsonRequest.addProperty("context_id", Integer.valueOf(agentId));
-//
-//        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
-//    }
-
     public void updateNote(AsyncServerEventListener cb, String agentId, String noteId, String note, String noteType) {
         //PUT
         getJWT(agentId);
@@ -662,16 +639,6 @@ public class ApiManager {
             String currentUrl = url + "api/v1/agent/device/" + agent.getAgent_id();
             new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
         }
-    }
-
-    public void setClientParameter(AsyncServerEventListener cb, String agentId, AsyncUpdateSettingsJsonObject activateClientObject) {
-        //This is to reactivate clients, can probably be merged or at least an override with sendAsyncUpdateSettings
-        //PUT
-        getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.ACTIVATE_CLIENT;
-        String body = gson.toJson(activateClientObject);
-        String currentUrl = url + "api/v1/parameter/edit-parameter";
-        new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
 
     //START OF DELETE CALLS

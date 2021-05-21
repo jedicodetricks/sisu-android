@@ -434,16 +434,6 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Activities")) {
-//            dataController.setActivitiesObject(returnObject);
-//            parentActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    loader.setVisibility(View.GONE);
-//                    setData(dataController.getActivitiesObject());
-//                }
-//            });
-//        }
     }
 
     @Override

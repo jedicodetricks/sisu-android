@@ -30,7 +30,7 @@ import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.fragments.FeedbackFragment;
 import co.sisu.mobile.fragments.GoalSetupFragment;
 import co.sisu.mobile.fragments.MyProfileFragment;
-import co.sisu.mobile.fragments.RecruitingGoalSetupFragment;
+import co.sisu.mobile.oldFragments.RecruitingGoalSetupFragment;
 import co.sisu.mobile.fragments.SettingsFragment;
 import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
@@ -101,7 +101,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
-        if(!parentActivity.isTeamSwapOccurring()) {
+        if(parentActivity.isTeamSwapFinished()) {
             switch(value.getTitle()) {
 //                case "Teams":
 //                    break;

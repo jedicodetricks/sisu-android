@@ -51,6 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Authenticator")) {
             //TODO: This is being used. Transition it.
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;

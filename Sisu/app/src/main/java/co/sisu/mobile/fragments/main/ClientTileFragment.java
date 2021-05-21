@@ -75,15 +75,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ActionBarManager actionBarManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
-
     private int numOfRows = 1;
     private TextView scopeSelectorText, marketStatusFilterText, saveButtonFilterText;
     private PopupMenu scopePopup, marketStatusPopup, filterPopup;
-    private int selectedYear = 0;
-    private int selectedMonth = 0;
-    private int selectedDay = 0;
-    private boolean beginDateSelected = false;
-    private boolean endDateSelected = false;
     private String dashboardType = "agent";
     private android.support.v7.widget.SearchView clientSearch;
     private ConstraintLayout paginateInfo;
@@ -123,10 +117,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
 
         return createFullView(container, tileTemplate);
-    }
-
-    public void teamSwap() {
-        parentActivity.resetDashboardTiles(false);
     }
 
     @SuppressLint("ResourceType")
@@ -222,6 +212,126 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         }
         loader.setVisibility(View.INVISIBLE);
         return parentLayout;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        scopeSelectorText = view.findViewById(R.id.contextFilterRight);
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
+            actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
+        }
+        else {
+            actionBarManager.setToFilterBar("");
+        }
+        scopeSelectorText.setOnClickListener(this);
+        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
+        marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
+        marketStatusFilterText.setOnClickListener(this);
+        marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        marketStatusFilterText.setTextColor(colorSchemeManager.getLighterTextColor());
+
+        clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
+        android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        search.setTextColor(colorSchemeManager.getLighterTextColor());
+        search.setHighlightColor(colorSchemeManager.getAppBackground());
+        search.setHintTextColor(colorSchemeManager.getLighterTextColor());
+
+        clientSearch.setOnQueryTextListener(this);
+
+        TextView paginationText = paginateInfo.findViewById(R.id.paginateText);
+        try {
+            paginationText.setText("Showing: 1 to " + count + " of " + paginateObject.getString("total") + " entities");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        saveButtonFilterText = parentActivity.findViewById(R.id.saveButton);
+        if(saveButtonFilterText != null) {
+            saveButtonFilterText.setOnClickListener(this);
+        }
+        initScopePopupMenu();
+        initMarketStatusPopupMenu();
+        addButton.bringToFront();
+    }
+
+    private void initScopePopupMenu() {
+        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
+
+        scopePopup.setOnMenuItemClickListener(item -> {
+            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
+            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
+                // DO NOTHING
+                scopePopup.dismiss();
+            }
+            else {
+                scopePopup.dismiss();
+                parentActivity.setScopeFilter(selectedScope);
+                parentActivity.resetClientTiles("", 1);
+                parentActivity.setSelectedFilter(null);
+            }
+            return false;
+        });
+
+        int counter = 0;
+        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
+            SpannableString s = new SpannableString(scope.getName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+
+            scopePopup.getMenu().add(1, counter, counter, s);
+
+            counter++;
+        }
+    }
+
+    private void initMarketStatusPopupMenu() {
+        marketStatusPopup = new PopupMenu(getContext(), marketStatusFilterText);
+
+        marketStatusPopup.setOnMenuItemClickListener(item -> {
+            MarketStatusModel selectedMarketStatus = parentActivity.getMarketStatuses().get(item.getItemId());
+
+            scopePopup.dismiss();
+            parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
+            parentActivity.resetClientTiles("", 1);
+            parentActivity.setSelectedFilter(null);
+            return false;
+        });
+
+        int counter = 0;
+        for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
+            SpannableString s = new SpannableString(marketStatusModel.getLabel());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            marketStatusPopup.getMenu().add(1, counter, counter, s);
+            counter++;
+        }
+    }
+
+    private void initFilterPopupMenu() {
+        filterPopup = new PopupMenu(getContext(), saveButtonFilterText);
+
+        filterPopup.setOnMenuItemClickListener(item -> {
+            parentActivity.setSelectedFilter(agentFilters.get(item.getItemId()));
+            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), 1);
+            scopePopup.dismiss();
+            return false;
+        });
+
+        int counter = 0;
+        for(FilterObject currentFilter : agentFilters) {
+            SpannableString s = new SpannableString(currentFilter.getFilterName());
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            filterPopup.getMenu().add(1, counter, counter, s);
+            counter++;
+        }
+
+        filterMenuPrepared = true;
+    }
+
+    public void teamSwap() {
+        parentActivity.resetDashboardTiles(false);
     }
 
     @SuppressLint("ResourceType")
@@ -368,122 +478,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         // Finally, return the one or more sided bordered background drawable
         return layerDrawable;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        scopeSelectorText = view.findViewById(R.id.contextFilterRight);
-        if(parentActivity.getCurrentScopeFilter() != null) {
-            scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
-            actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
-        }
-        else {
-            actionBarManager.setToFilterBar("");
-        }
-        scopeSelectorText.setOnClickListener(this);
-        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
-
-        marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
-        marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
-        marketStatusFilterText.setOnClickListener(this);
-        marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        marketStatusFilterText.setTextColor(colorSchemeManager.getLighterTextColor());
-
-        clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
-        android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        search.setTextColor(colorSchemeManager.getLighterTextColor());
-        search.setHighlightColor(colorSchemeManager.getAppBackground());
-        search.setHintTextColor(colorSchemeManager.getLighterTextColor());
-
-        clientSearch.setOnQueryTextListener(this);
-
-        TextView paginationText = paginateInfo.findViewById(R.id.paginateText);
-        try {
-            paginationText.setText("Showing: 1 to " + count + " of " + paginateObject.getString("total") + " entities");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        saveButtonFilterText = parentActivity.findViewById(R.id.saveButton);
-        if(saveButtonFilterText != null) {
-            saveButtonFilterText.setOnClickListener(this);
-        }
-        initScopePopupMenu();
-        initMarketStatusPopupMenu();
-        addButton.bringToFront();
-    }
-
-    private void initScopePopupMenu() {
-        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
-
-        scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
-            if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
-                // DO NOTHING
-                scopePopup.dismiss();
-            }
-            else {
-                scopePopup.dismiss();
-                parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetClientTiles("", 1);
-                parentActivity.setSelectedFilter(null);
-            }
-            return false;
-        });
-//        List<String> timelineArray = initSpinnerArray();
-        int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
-            SpannableString s = new SpannableString(scope.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-
-            scopePopup.getMenu().add(1, counter, counter, s);
-
-            counter++;
-        }
-    }
-
-    private void initMarketStatusPopupMenu() {
-        marketStatusPopup = new PopupMenu(getContext(), marketStatusFilterText);
-
-        marketStatusPopup.setOnMenuItemClickListener(item -> {
-            MarketStatusModel selectedMarketStatus = parentActivity.getMarketStatuses().get(item.getItemId());
-
-            scopePopup.dismiss();
-            parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
-            parentActivity.resetClientTiles("", 1);
-            parentActivity.setSelectedFilter(null);
-            return false;
-        });
-//        List<String> timelineArray = initSpinnerArray();
-        int counter = 0;
-        for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
-            SpannableString s = new SpannableString(marketStatusModel.getLabel());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-            marketStatusPopup.getMenu().add(1, counter, counter, s);
-            counter++;
-        }
-    }
-
-    private void initFilterPopupMenu() {
-        filterPopup = new PopupMenu(getContext(), saveButtonFilterText);
-
-        filterPopup.setOnMenuItemClickListener(item -> {
-            parentActivity.setSelectedFilter(agentFilters.get(item.getItemId()));
-            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), 1);
-            scopePopup.dismiss();
-            return false;
-        });
-
-        int counter = 0;
-        for(FilterObject currentFilter : agentFilters) {
-            SpannableString s = new SpannableString(currentFilter.getFilterName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-            filterPopup.getMenu().add(1, counter, counter, s);
-            counter++;
-        }
-
-        filterMenuPrepared = true;
     }
 
     private View createClientView(ViewGroup row, JSONObject tileObject) throws JSONException {
@@ -805,53 +799,19 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         return rowView;
     }
 
-    private void progressOnClick(String clickDestination) {
-        switch (clickDestination) {
-            case "clients":
-                navigationManager.stackReplaceFragment(ClientListFragment.class);
-                break;
-            case "scoreboard":
-                navigationManager.stackReplaceFragment(ScoreboardFragment.class);
-                break;
-            case "record":
-                navigationManager.stackReplaceFragment(RecordFragment.class);
-                break;
-            case "report":
-                navigationManager.stackReplaceFragment(ReportFragment.class);
-                break;
-            case "leaderboard":
-                navigationManager.stackReplaceFragment(LeaderboardFragment.class);
-                break;
-            case "more":
-                navigationManager.stackReplaceFragment(MoreFragment.class);
-                break;
-        }
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.dashboardTypeTileLeftLayout:
-//                toggleDashboardTypeSelector(true);
-                break;
-            case R.id.dashboardTypeTileRightLayout:
-//                toggleDashboardTypeSelector(false);
-                break;
             case R.id.contextFilterRight:
                 scopePopup.show();
                 break;
             case R.id.contextFilterLeft:
                 marketStatusPopup.show();
                 break;
-            case R.id.scopeSelector:
-//                parentActivity.getNavigationManager().toggleTeamDrawer();
-//                loader.setVisibility(View.VISIBLE);
-//                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
-                break;
             case R.id.saveButton:
                 agentFilters = new ArrayList<>();
                 filterMenuPrepared = false;
+                // TODO: We should probably do this is another spot.
                 apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
                 while(!filterMenuPrepared) {
                     // Just wait here for the async to finish
@@ -899,9 +859,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //                }
                 String garbo = "";
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -971,6 +929,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     private void addOneToContacts() {
+        // TODO: This feels like a util
         Metric contactMetric = dataController.getContactsMetric();
         if(contactMetric != null) {
             contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
