@@ -30,11 +30,11 @@ import co.sisu.mobile.fragments.ClientNoteFragment;
 import co.sisu.mobile.fragments.FeedbackFragment;
 import co.sisu.mobile.fragments.GoalSetupFragment;
 import co.sisu.mobile.fragments.MyProfileFragment;
-import co.sisu.mobile.oldFragments.RecruitingGoalSetupFragment;
 import co.sisu.mobile.fragments.SettingsFragment;
 import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.MorePageContainer;
+import co.sisu.mobile.oldFragments.RecruitingGoalSetupFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**

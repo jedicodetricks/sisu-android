@@ -31,7 +31,6 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
-import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.LeaderboardAgentModel;

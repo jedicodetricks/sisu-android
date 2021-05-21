@@ -1,9 +1,7 @@
 package co.sisu.mobile.fragments.main;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -12,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tsongkha.spinnerdatepicker.DatePicker;
@@ -43,7 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,15 +84,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     private ActionBarManager actionBarManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
-
-    private Spinner spinner;
-    private Calendar calendar = Calendar.getInstance();
-
     private int numOfRows = 1;
     private boolean isAgentDashboard;
 
     private ConstraintLayout leftLayout, rightLayout;
-    private boolean initialLoad = true;
     private TextView dateSelectorBeginDateText, dateSelectorEndDateText, dateSelectorDateText, scopeSelectorText;
     private PopupMenu popup;
     private int selectedYear = 0;
@@ -107,7 +99,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     private PopupMenu scopePopup;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
@@ -145,7 +137,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
 //            initTimelineSelector(parentLayout);
             initDateSelector(parentLayout);
-            initPopupMenu();
+            initPopupMenu(parentLayout);
             initCalendarHandler();
             //
 
@@ -179,7 +171,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
         parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
 
@@ -200,11 +192,11 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 startActivity(intent);
             }
         }
-        initScopePopupMenu();
+        initScopePopupMenu(view);
     }
 
-    private void initScopePopupMenu() {
-        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
+    private void initScopePopupMenu(View view) {
+        scopePopup = new PopupMenu(view.getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
             ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
@@ -231,8 +223,8 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
     }
 
-    private void initPopupMenu() {
-        popup = new PopupMenu(getContext(), dateSelectorDateText);
+    private void initPopupMenu(View view) {
+        popup = new PopupMenu(view.getContext(), dateSelectorDateText);
 
         popup.setOnMenuItemClickListener(this);
         List<String> timelineArray = initSpinnerArray();
@@ -245,7 +237,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
             counter++;
         }
-
     }
 
     private void initCalendarHandler() {
@@ -320,13 +311,13 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 //        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
-            Double height = rowObject.getDouble("rowheight");
+            double height = rowObject.getDouble("rowheight");
 //            Double innerGap = rowObject.getDouble("innerGap");
             Boolean disabled = rowObject.getBoolean("disabled");
 //            Boolean square = rowObject.getBoolean("square");
-            Integer maxTiles = rowObject.getInt("max_tiles");
+            int maxTiles = rowObject.getInt("max_tiles");
 
-            int correctedHeight = height.intValue() + 300;
+            int correctedHeight = (int) height + 300;
             List<View> rowViews = new ArrayList<>();
 
             for(int i = 0; i < rowTiles.length(); i++) {
@@ -340,7 +331,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                             side = tileObject.getBoolean("side");
                         }
                         if(side) {
-                            correctedHeight = height.intValue() + 150;
+                            correctedHeight = (int) height + 150;
                         }
                         View v = createNormalView(container, tileObject);
                         v.setId(i);
@@ -352,14 +343,14 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                             side = tileObject.getBoolean("side");
                         }
                         if(side) {
-                            correctedHeight = height.intValue() + 150;
+                            correctedHeight = (int) height + 150;
                         }
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "largeHeader":
-                        correctedHeight = height.intValue() + 150;
+                        correctedHeight = (int) height + 150;
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -380,7 +371,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                         rowViews.add(v);
                         break;
                     case "ratioDiamond":
-                        correctedHeight = height.intValue() + 400;
+                        correctedHeight = (int) height + 400;
                         v = createRatioDiamondView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -391,7 +382,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                         rowViews.add(v);
                         break;
                     case "ratio":
-                        correctedHeight = height.intValue() + 100;
+                        correctedHeight = (int) height + 100;
                         v = createRatioView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -404,7 +395,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
             HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
 
-            View view = null;
+            View view;
 
             if(rowViews.size() > maxTiles) {
                 view = inflater.inflate(R.layout.activity_tile_template_test, container, false);
@@ -444,10 +435,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         } catch (JSONException e) {
             // That means this is probably a spacer
             try {
-                Double height = rowObject.getDouble("rowheight");
+                double height = rowObject.getDouble("rowheight");
 
                 HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height.intValue());
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) height);
                 View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
                 view.setLayoutParams(relativeParams);
                 horizontalScrollView.addView(view);
@@ -486,6 +477,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
+        // TODO: This feels like a util
         // Initialize new color drawables
         ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
         ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
@@ -544,7 +536,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         titleText.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
         String tileColor = tileObject.getString("tile_color");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
 
         String border = "";
         if(tileObject.has("border")) {
@@ -552,9 +544,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
 
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -598,10 +590,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     private View createNormalView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = null;
+        View rowView;
         boolean isSideView = false;
         if(tileObject.has("side")) {
-            if(tileObject.getBoolean("side") == true) {
+            if(tileObject.getBoolean("side")) {
                 rowView = inflater.inflate(R.layout.tile_normal_side_layout, row, false);
                 isSideView = true;
             }
@@ -644,12 +636,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
         if(progress != null && progressBar != null) {
-            Double completedPercent = 0.0;
+            double completedPercent = 0.0;
             if(progressBar.has("completed")) {
                 completedPercent = progressBar.getDouble("completed");
             }
             String progressColor = progressBar.getString("progress_color");
-            progress.setProgress(completedPercent.intValue());
+            progress.setProgress((int) completedPercent);
             try {
                 progress.setProgressTintList(ColorStateList.valueOf(Color.parseColor(progressColor)));
 //                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
@@ -660,7 +652,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
 
         String tileColor = tileObject.getString("tile_color");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
 
         String border = "";
         if(tileObject.has("border")) {
@@ -668,9 +660,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
 
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -714,9 +706,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = null;
+        View rowView;
         if(tileObject.has("side")) {
-            if(tileObject.getBoolean("side") == true) {
+            if(tileObject.getBoolean("side")) {
                 rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
             }
             else {
@@ -729,7 +721,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
         ConstraintLayout parentLayout = rowView.findViewById(R.id.smallHeaderTileParent);
 
-        Boolean rounded = false;
+        boolean rounded = false;
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
         if(tileObject.has("rounded")) {
@@ -771,13 +763,13 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
         if(rounded) {
             // I'm doing this try catch because apparently there is some bad color data coming in sometimes
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             try {
                 roundedCorners.setColor(Color.parseColor(assignedTileColor));
-                rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+                rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
             } catch (Exception e) {
                 roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-                rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+                rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
             }
 
         }
@@ -858,7 +850,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         String headerText = tileObject.getString("header");
         String countText = tileObject.getString("value");
         String unitText = tileObject.getString("units");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
         String headerColor = tileObject.getString("header_text_color");
         String headerSize = tileObject.getString("font_header");
         String headerAlignment = tileObject.getString("header_alignment");
@@ -882,9 +874,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         unit.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
 
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -986,7 +978,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         ratioText.setTextColor(Color.parseColor(headerColor));
         ratioText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
 
-        Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.shape_diamond);
+        Drawable unwrappedDrawable = AppCompatResources.getDrawable(row.getContext(), R.drawable.shape_diamond);
         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
         DrawableCompat.setTint(wrappedDrawable, Color.parseColor(diamondColor));
 
@@ -1044,20 +1036,20 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         ConstraintLayout constraintLayout = rowView.findViewById(R.id.progressTileLayout);
         String title = tileObject.getString("under_title");
 
-        Double currentProgress = tileObject.getDouble("current");
-        Double maxProgress = tileObject.getDouble("max");
+        double currentProgress = tileObject.getDouble("current");
+        double maxProgress = tileObject.getDouble("max");
         String progressColor = tileObject.getString("color");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
         String border = "";
         if(tileObject.has("border")) {
             border = tileObject.getString("border");
         }
         String tileColor = tileObject.getString("tile_color");
-        Double pacer = tileObject.getDouble("pacer") - 90;
+        double pacer = tileObject.getDouble("pacer") - 90;
 
         CircularProgressBar progress = rowView.findViewById(R.id.progressTileProgressBar);
         CircularProgressBar progressMark = rowView.findViewById(R.id.progressTileProgressMark);
-        progressMark.setStartAngle(pacer.intValue());
+        progressMark.setStartAngle((int) pacer);
         progressMark.setColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
         progressMark.setProgressBarWidth(getResources().getDimension(R.dimen.circularBarWidth));
         progressMark.setProgressWithAnimation(1, 0);
@@ -1071,9 +1063,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("medium"));
         }
         TextView currentProgressText = rowView.findViewById(R.id.progressTileCurrentNumber);
-        currentProgressText.setText(currentProgress.intValue() + "");
+        currentProgressText.setText((int) currentProgress + "");
         TextView goalProgressText = rowView.findViewById(R.id.progressTileGoalNumber);
-        goalProgressText.setText(maxProgress.intValue() + "");
+        goalProgressText.setText((int) maxProgress + "");
         try {
             progress.setColor(Color.parseColor(progressColor));
         } catch(IllegalArgumentException e) {
@@ -1135,12 +1127,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             if(tileObject.has("tap_client_filter")) {
                 final String tapClientFilter = tileObject.getString("tap_client_filter");
                 final String clickDestination = tileObject.getString("tap");
-                constraintLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        progressOnClick(clickDestination, tapClientFilter);
-                    }
-                });
+                constraintLayout.setOnClickListener(view -> progressOnClick(clickDestination, tapClientFilter));
 
                 progressMark.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1151,19 +1138,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             }
             else {
                 final String clickDestination = tileObject.getString("tap");
-                constraintLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        progressOnClick(clickDestination, "");
-                    }
-                });
+                constraintLayout.setOnClickListener(view -> progressOnClick(clickDestination, ""));
 
-                progressMark.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        progressOnClick(clickDestination, "");
-                    }
-                });
+                progressMark.setOnClickListener(view -> progressOnClick(clickDestination, ""));
             }
 
         }
@@ -1209,7 +1186,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
 
         String headerText = tileObject.getString("header");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
         String headerColor = tileObject.getString("header_text_color");
         String headerSize = tileObject.getString("font_header");
         String headerAlignment = tileObject.getString("header_alignment");
@@ -1237,9 +1214,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         }
 
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(ContextCompat.getColor(getContext(), R.color.colorAlmostBlack));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(ContextCompat.getColor(row.getContext(), R.color.colorAlmostBlack));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -1282,6 +1259,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     private void toggleDashboardTypeSelector(boolean isAgentClicked) {
+        // TODO: I think this is never used. Adding a breakpoint to see.
         boolean toggled = false;
         LayerDrawable underlineDrawable = getBorders(
                 colorSchemeManager.getAppBackground(), // Background color
@@ -1301,6 +1279,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 0 // Bottom border in pixels
         );
 
+        // TODO: These two layouts could cause an issue. They're null. Does it never go into this block?
         if(isAgentDashboard && !isAgentClicked) {
             leftLayout.setBackground(noUnderlineDrawable);
             rightLayout.setBackground(underlineDrawable);
@@ -1352,9 +1331,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             }
         }
 
-        int percentComplete = (int) ((currentNum/goalNum) * 100);
-
-        return percentComplete;
+        return (int) ((currentNum/goalNum) * 100);
     }
 
     @Override

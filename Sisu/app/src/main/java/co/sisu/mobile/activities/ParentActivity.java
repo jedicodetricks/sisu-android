@@ -56,7 +56,6 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnTypes;
 import co.sisu.mobile.fragments.ClientManageFragment;
-import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
@@ -87,7 +86,6 @@ import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.oldFragments.RecruitingScoreboardFragment;
 import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
 import okhttp3.Response;
@@ -106,14 +104,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public ActionBarManager actionBarManager;
     public ProgressBar parentLoader;
     public CacheManager cacheManager;
-    private boolean clientFinished = false;
-    private boolean goalsFinished = false;
+//    private boolean clientFinished = false;
+//    private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
     private boolean activitySettingsParamFinished = false;
-    private boolean settingsFinished = false;
-    private boolean colorSchemeFinished = false;
+//    private boolean settingsFinished = false;
+//    private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
-    private boolean labelsFinished = false;
+//    private boolean labelsFinished = false;
     private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
     private boolean clientTilesFinished = false;
@@ -144,7 +142,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private final Point globalOffset = new Point();
     private int mShortAnimationDuration;
     private boolean isAdminMode = false;
-    private boolean adminTransferring = false;
 
     private JSONObject tileTemplate;
     private JSONObject clientTiles;
@@ -413,12 +410,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void executeTeamSwap() {
         if(teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
             parentLoader.setVisibility(View.INVISIBLE);
-            clientFinished = false;
-            goalsFinished = false;
-            settingsFinished = false;
+//            clientFinished = false;
+//            goalsFinished = false;
+//            settingsFinished = false;
             teamParamFinished = false;
-            colorSchemeFinished = false;
-            labelsFinished = false;
+//            colorSchemeFinished = false;
+//            labelsFinished = false;
             noNavigation = true;
             activitySettingsParamFinished = false;
             tileTemplateFinished = false;
@@ -463,12 +460,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         });
-        clientFinished = false;
-        goalsFinished = false;
-        settingsFinished = false;
+//        clientFinished = false;
+//        goalsFinished = false;
+//        settingsFinished = false;
         teamParamFinished = false;
-        colorSchemeFinished = false;
-        labelsFinished = false;
+//        colorSchemeFinished = false;
+//        labelsFinished = false;
         noNavigation = false;
         activitySettingsParamFinished = false;
         teamsFinished = false;
@@ -664,14 +661,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 JSONObject marketStatusObject = new JSONObject(tileString);
                 try {
                     JSONArray marketStatuses = marketStatusObject.getJSONArray("client_status");
-                    if(marketStatuses != null) {
-                        for(int k = 0; k < marketStatuses.length(); k++) {
-                            JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
-                            MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
-                            marketStatusBar.add(currentModel);
-                            if(currentModel.getKey().equalsIgnoreCase("")) {
-                                currentMarketStatusFilter = currentModel;
-                            }
+                    for(int k = 0; k < marketStatuses.length(); k++) {
+                        JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
+                        MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
+                        marketStatusBar.add(currentModel);
+                        if(currentModel.getKey().equalsIgnoreCase("")) {
+                            currentMarketStatusFilter = currentModel;
                         }
                     }
                 } catch (JSONException e) {
@@ -711,7 +706,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
-            goalsFinished = true;
+//            goalsFinished = true;
 //            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_SETTINGS) {
@@ -721,7 +716,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 JSONArray settings = settingsJson.getJSONArray("parameters");
                 dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
                 List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
-                settingsFinished = true;
+//                settingsFinished = true;
                 int hour = 0;
                 int minute = 0;
                 int reminderActive = 0;
@@ -755,13 +750,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(teamsFinished) {
                     //TODO: Probably don't need either of these
 //                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
-                    colorSchemeFinished = true;
+//                    colorSchemeFinished = true;
                     apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 }
 //                navigateToScoreboard();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
@@ -779,15 +772,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
                     //TODO: Probably don't need to getClients now
 //                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-                    clientFinished = true;
+//                    clientFinished = true;
                     SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
-                    colorSchemeFinished = true;
-                    labelsFinished = true;
+//                    colorSchemeFinished = true;
+//                    labelsFinished = true;
                 }
                 else {
                     //TODO: Probably don't need to getClients now
 //                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-                    clientFinished = true;
+//                    clientFinished = true;
                     dataController.setMessageCenterVisible(false);
                     teamParamFinished = true;
                     dataController.setSlackInfo(null);
@@ -891,18 +884,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            if(colorScheme.length < 5) {
-                colorSchemeFinished = true;
-//                apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), 0, dataController.getColorSchemeId());
-            }
-            else {
-                colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-                setActivityColors();
+            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            setActivityColors();
 //                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
-                colorSchemeFinished = true;
-                SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
+//                colorSchemeFinished = true;
+            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
 //                navigateToScoreboard();
-            }
 
         }
         else if(returnType == ApiReturnTypes.GET_LABELS) {
@@ -910,12 +897,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
-            labelsFinished = true;
+//            labelsFinished = true;
 //            navigateToScoreboard();
         }
         else if(returnType == ApiReturnTypes.GET_AGENT) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            adminTransferring = true;
+            boolean adminTransferring = true;
             AsyncAgentJsonObject agentJsonObject = null;
             String r = null;
             try {
@@ -948,7 +935,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
-            goalsFinished = true;
+//            goalsFinished = true;
         }
         else if(asyncReturnType == ApiReturnTypes.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
@@ -966,18 +953,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             setActivityColors();
-            colorSchemeFinished = true;
+//            colorSchemeFinished = true;
         }
         else if(asyncReturnType == ApiReturnTypes.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
-            labelsFinished = true;
+//            labelsFinished = true;
         }
         else if(asyncReturnType == ApiReturnTypes.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject, isRecruiting());
-            clientFinished = true;
+//            clientFinished = true;
         }
         else if(asyncReturnType == ApiReturnTypes.GET_TILES) {
             try {
@@ -1021,15 +1008,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {}
-        else if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {}
-        else if(returnType == ApiReturnTypes.GET_SETTINGS) {}
-        else if(returnType == ApiReturnTypes.GET_TEAMS) {}
-        else if(returnType == ApiReturnTypes.GET_CLIENTS) {}
-        else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {}
-        else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {}
-        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {}
-        else if(returnType == ApiReturnTypes.GET_LABELS) {}
     }
 
     public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp) {

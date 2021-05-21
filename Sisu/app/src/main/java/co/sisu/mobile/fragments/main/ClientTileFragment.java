@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,7 +78,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private int numOfRows = 1;
     private TextView scopeSelectorText, marketStatusFilterText, saveButtonFilterText;
     private PopupMenu scopePopup, marketStatusPopup, filterPopup;
-    private String dashboardType = "agent";
     private android.support.v7.widget.SearchView clientSearch;
     private ConstraintLayout paginateInfo;
     private JSONObject paginateObject;
@@ -90,7 +89,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private Boolean filterMenuPrepared = false;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
@@ -130,30 +129,27 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             tileScrollView.getViewTreeObserver()
-                    .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-                        @Override
-                        public void onScrollChanged() {
-                            if (!tileScrollView.canScrollVertically(1)) {
-                                // bottom of scroll view
-                                if(!updatingClients) {
-                                    updatingClients = true;
-                                    try {
-                                        if(paginateObject.getBoolean("has_next") == true) {
-                                            //GO GET THE NEXT SET OF CLIENTS
-                                            int currentPage = paginateObject.getInt("page");
-                                            if(parentActivity.getSelectedFilter() == null) {
-                                                parentActivity.resetClientTiles("", currentPage + 1);
-                                            }
-                                            else {
-                                                parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
-                                            }
+                    .addOnScrollChangedListener(() -> {
+                        if (!tileScrollView.canScrollVertically(1)) {
+                            // bottom of scroll view
+                            if(!updatingClients) {
+                                updatingClients = true;
+                                try {
+                                    if(paginateObject.getBoolean("has_next")) {
+                                        //GO GET THE NEXT SET OF CLIENTS
+                                        int currentPage = paginateObject.getInt("page");
+                                        if(parentActivity.getSelectedFilter() == null) {
+                                            parentActivity.resetClientTiles("", currentPage + 1);
                                         }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                        else {
+                                            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
+                                        }
                                     }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-
                             }
+
                         }
                     });
         }
@@ -253,13 +249,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         if(saveButtonFilterText != null) {
             saveButtonFilterText.setOnClickListener(this);
         }
-        initScopePopupMenu();
-        initMarketStatusPopupMenu();
+        initScopePopupMenu(view);
+        initMarketStatusPopupMenu(view);
         addButton.bringToFront();
     }
 
-    private void initScopePopupMenu() {
-        scopePopup = new PopupMenu(getContext(), scopeSelectorText);
+    private void initScopePopupMenu(View view) {
+        scopePopup = new PopupMenu(view.getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
             ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
@@ -287,8 +283,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void initMarketStatusPopupMenu() {
-        marketStatusPopup = new PopupMenu(getContext(), marketStatusFilterText);
+    private void initMarketStatusPopupMenu(View view) {
+        marketStatusPopup = new PopupMenu(view.getContext(), marketStatusFilterText);
 
         marketStatusPopup.setOnMenuItemClickListener(item -> {
             MarketStatusModel selectedMarketStatus = parentActivity.getMarketStatuses().get(item.getItemId());
@@ -339,13 +335,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //        Log.e("ROW OBJECT", String.valueOf(rowObject));
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
-            Double height = rowObject.getDouble("rowheight");
+            double height = rowObject.getDouble("rowheight");
 //            Double innerGap = rowObject.getDouble("innerGap");
-            Boolean disabled = rowObject.getBoolean("disabled");
+            boolean disabled = rowObject.getBoolean("disabled");
 //            Boolean square = rowObject.getBoolean("square");
-            Integer maxTiles = rowObject.getInt("max_tiles");
+            int maxTiles = rowObject.getInt("max_tiles");
 
-            int correctedHeight = height.intValue();
+            int correctedHeight = (int) height;
             List<View> rowViews = new ArrayList<>();
 
             for(int i = 0; i < rowTiles.length(); i++) {
@@ -354,13 +350,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
                 switch (type) {
                     case "clientList":
-                        correctedHeight = height.intValue() + 150;
+                        correctedHeight = (int) height + 150;
                         View v = createClientView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
                         break;
                     case "smallHeader":
-                        correctedHeight = height.intValue() + 225;
+                        correctedHeight = (int) height + 225;
                         v = createSmallHeaderView(container, tileObject);
                         v.setId(i);
                         rowViews.add(v);
@@ -373,7 +369,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
             HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
 
-            View view = null;
+            View view;
 
             if(rowViews.size() > maxTiles) {
                 view = inflater.inflate(R.layout.activity_tile_template_test, container, false);
@@ -413,10 +409,10 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         } catch (JSONException e) {
             // That means this is probably a spacer
             try {
-                Double height = rowObject.getDouble("rowheight");
+                double height = rowObject.getDouble("rowheight");
 
                 HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height.intValue());
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) height);
                 View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
                 view.setLayoutParams(relativeParams);
                 horizontalScrollView.addView(view);
@@ -481,8 +477,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     private View createClientView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = null;
-        boolean isSideView = false;
+        View rowView;
 
         rowView = inflater.inflate(R.layout.adapter_client_list, row, false);
 
@@ -498,13 +493,11 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         header.setText(headerText);
         header.setTextColor(Color.parseColor(headerColor));
-        if(!isSideView) {
-            if(headerText.length() > 15) {
-                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
-            }
-            else {
-                header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
-            }
+        if(headerText.length() > 15) {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
+        }
+        else {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
         }
 
         footer.setText(footerText);
@@ -513,7 +506,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         header.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
         String tileColor = tileObject.getString("tile_color");
-        Boolean rounded = tileObject.getBoolean("rounded");
+        boolean rounded = tileObject.getBoolean("rounded");
 
         String border = "";
         if(tileObject.has("border")) {
@@ -522,9 +515,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
 
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -605,18 +598,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         } else {
             phoneImage.setVisibility(View.VISIBLE);
             textImage.setVisibility(View.VISIBLE);
-            textImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onTextClicked(clientObject.getMobile_phone(), clientObject);
-                }
-            });
-            phoneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject);
-                }
-            });
+            textImage.setOnClickListener(v -> onTextClicked(clientObject.getMobile_phone(), clientObject));
+            phoneImage.setOnClickListener(v -> onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject));
 
         }
 
@@ -624,18 +607,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             emailImage.setVisibility(View.INVISIBLE);
         } else {
             emailImage.setVisibility(View.VISIBLE);
-            emailImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onEmailClicked(clientObject.getEmail(), clientObject);
-                }
-            });
+            emailImage.setOnClickListener(v -> onEmailClicked(clientObject.getEmail(), clientObject));
 
         }
-
-//        drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
-//        drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
-//        moreButton.setImageDrawable(drawable);
 
         ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
         if(clientObject.getIs_locked() == 1) {
@@ -664,9 +638,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView = null;
+        View rowView;
         if(tileObject.has("side")) {
-            if(tileObject.getBoolean("side") == true) {
+            if(tileObject.getBoolean("side")) {
                 rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
             }
             else {
@@ -679,7 +653,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         ConstraintLayout parentLayout = rowView.findViewById(R.id.smallHeaderTileParent);
 
-        Boolean rounded = false;
+        boolean rounded;
         String headerText = tileObject.getString("header");
         String footerText = tileObject.getString("value");
         if(tileObject.has("rounded")) {
@@ -722,9 +696,9 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         // TODO: I am setting this to true because IOS is making assumptions
         rounded = true;
         if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners);
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
             roundedCorners.setColor(Color.parseColor(assignedTileColor));
-            rowView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.shape_rounded_corners));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
             int topBorder = 0;
@@ -831,7 +805,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
         if(returnType == ApiReturnTypes.GET_AGENT_FILTERS) {
-            String tileString = null;
+            String tileString;
             try {
                 tileString = ((Response) returnObject).body().string();
                 JSONObject responseJson = new JSONObject(tileString);
@@ -840,7 +814,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 for(int i = 0; i < filtersArray.length(); i++) {
                     JSONObject filtersObject = (JSONObject) filtersArray.get(i);
                     JSONObject filters = filtersObject.getJSONObject("filters");
-                    String filtersString = filters.toString();
                     agentFilters.add(new FilterObject(filtersObject.getString("filter_name"), filters));
                 }
                 //
@@ -857,7 +830,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 //                    JSONObject currentFilter = filters.getJSONObject(key);
 //                    String garbo = "";
 //                }
-                String garbo = "";
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
