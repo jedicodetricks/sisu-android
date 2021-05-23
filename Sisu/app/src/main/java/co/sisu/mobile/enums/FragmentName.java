@@ -2,7 +2,10 @@ package co.sisu.mobile.enums;
 
 public enum FragmentName {
     DASHBOARD("ScoreboardTileFragment"),
-    CLIENTS("ClientTileFragment");
+    CLIENTS("ClientTileFragment"),
+    RECORD("RecordFragment"),
+    LEADERBOARD("LeaderboardFragment"),
+    MORE("MoreFragment");
 
     public final String label;
 

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
+import co.sisu.mobile.enums.FragmentName;
 
 /**
  * Created by bradygroharing on 5/22/18.
@@ -95,24 +96,21 @@ public class ToolbarManager {
 
     }
 
-    public void manage(Class fragmentClass) {
+    public void manage(String fragmentName) {
         String currentFragmentName = "";
-        if(fragmentClass.getSimpleName().equals("ScoreboardTileFragment") || fragmentClass.getSimpleName().equals("TileTemplateFragment")) {
+        if(fragmentName.equals(FragmentName.DASHBOARD.label)) {
             currentFragmentName = "Scoreboard";
         }
-        else if(fragmentClass.getSimpleName().equals("RecruitingScoreboardFragment")) {
-            currentFragmentName = "Scoreboard";
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientTileFragment")) {
+        else if(fragmentName.equals(FragmentName.CLIENTS.label)) {
             currentFragmentName = "Report";
         }
-        else if(fragmentClass.getSimpleName().equals("RecordFragment")) {
+        else if(fragmentName.equals(FragmentName.RECORD.label)) {
             currentFragmentName = "Record";
         }
-        else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
+        else if(fragmentName.equals(FragmentName.LEADERBOARD.label)) {
             currentFragmentName = "Leaderboard";
         }
-        else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
+        else if(fragmentName.equals(FragmentName.MORE.label)) {
             currentFragmentName = "More";
         }
         resetToolbarImages(currentFragmentName);

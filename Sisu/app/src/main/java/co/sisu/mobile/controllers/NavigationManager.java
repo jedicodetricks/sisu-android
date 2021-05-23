@@ -1,7 +1,5 @@
 package co.sisu.mobile.controllers;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,12 +10,12 @@ import java.util.Stack;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.oldFragments.ClientListFragment;
 
 /**
  * Created by bradygroharing on 5/22/18.
  */
 
+@SuppressWarnings("rawtypes")
 public class NavigationManager {
 
     private ParentActivity parentActivity;
@@ -41,12 +39,10 @@ public class NavigationManager {
             e.printStackTrace();
         }
         fragmentTag = fragmentClass.getSimpleName();
-        // TODO: Action Bar Issue
-//        manageActionBar(fragmentClass, "");
         if(backStack.size() > 0) {
             backStack.pop();
         }
-        toolbarManager.manage(fragmentClass);
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
@@ -61,9 +57,7 @@ public class NavigationManager {
             e.printStackTrace();
         }
         fragmentTag = fragmentClass.getSimpleName();
-        // TODO: Action Bar Issue
-        toolbarManager.manage(fragmentClass);
-//        manageActionBar(fragmentClass, "");
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
@@ -78,111 +72,46 @@ public class NavigationManager {
             e.printStackTrace();
         }
         fragmentTag = fragmentClass.getSimpleName();
-        // TODO: Action Bar Issue
-//        manageActionBar(fragmentClass, "");
         if(backStack.size() > 0) {
             backStack.clear();
         }
-        toolbarManager.manage(fragmentClass);
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-    }
-
-    public void clearStackReplaceFragment(Class fragmentClass, String titleString) {
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        fragmentTag = fragmentClass.getSimpleName();
-        //TODO: Action Bar Issue
-//        manageActionBar(fragmentClass, titleString);
-        if(backStack.size() > 0) {
-            backStack.clear();
-        }
-        toolbarManager.manage(fragmentClass);
-        backStack.add(fragmentClass);
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-    }
-
-    public void navigateToClientList(String tab) {
-        //TODO: Action Bar issue
-        Fragment fragment = null;
-        try {
-            fragment = ClientListFragment.newInstance(tab);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        backStack.add(ClientListFragment.class);
-//        actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
-        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
-        toolbarManager.resetToolbarImages("More");
     }
 
     public void onBackPressed() {
-        if(fragmentTag != null && !fragmentTag.equalsIgnoreCase("ClientNoteFragment")) {
-            //TODO: Action Bar issue
-//            actionBarManager.resetClient();
-        }
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
             if(colorSchemeManager.getAppBackground() != Color.WHITE) {
-                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)
+                new AlertDialog.Builder(parentActivity,R.style.darkDialog)
                         .setIcon(R.drawable.sisu_mark)
                         .setTitle("Closing Sisu")
                         .setMessage("Are you sure you want to exit?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                parentActivity.finish();
-                            }
-
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> parentActivity.finish())
                         .setNegativeButton("No", null)
-                        .setOnKeyListener( new Dialog.OnKeyListener() {
-
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    parentActivity.finish();
-                                    dialog.dismiss();
-                                }
-                                return true;
+                        .setOnKeyListener((dialog, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                parentActivity.finish();
+                                dialog.dismiss();
                             }
+                            return true;
                         })
                         .show();
             } else {
-                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.lightDialog)
+                new AlertDialog.Builder(parentActivity,R.style.lightDialog)
                         .setIcon(R.drawable.sisu_mark)
                         .setTitle("Closing Sisu")
                         .setMessage("Are you sure you want to exit?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                parentActivity.finish();
-                            }
-
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> parentActivity.finish())
                         .setNegativeButton("No", null)
-                        .setOnKeyListener( new Dialog.OnKeyListener() {
-
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    parentActivity.finish();
-                                    dialog.dismiss();
-                                }
-                                return true;
+                        .setOnKeyListener((dialog, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                parentActivity.finish();
+                                dialog.dismiss();
                             }
+                            return true;
                         })
                         .show();
             }

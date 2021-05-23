@@ -1,15 +1,6 @@
 package co.sisu.mobile.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -23,11 +14,8 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
@@ -39,7 +27,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,7 +40,6 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.controllers.NotificationReceiver;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
@@ -437,12 +423,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             if(scopeFinished && tileTemplateFinished && marketStatusFinished) {
                 if(getCurrentScopeFilter() != null) {
                     actionBarManager.setToTitleBar(getCurrentScopeFilter().getName(), true);
-                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
                 }
                 else {
                     actionBarManager.setToTitleBar("", true);
-                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "");
                 }
+                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
                 scopeFinished = false;
                 tileTemplateFinished = false;
                 marketStatusFinished = false;
@@ -619,12 +604,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(marketStatusFinished) {
                     if(getCurrentScopeFilter() != null) {
                         actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
                         actionBarManager.setToFilterBar("");
-                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
                     }
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -654,12 +638,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 if(clientTilesFinished) {
                     if(getCurrentScopeFilter() != null) {
                         actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, getCurrentScopeFilter().getName());
                     }
                     else {
                         actionBarManager.setToFilterBar("");
-                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class, "");
                     }
+                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

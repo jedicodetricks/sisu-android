@@ -850,11 +850,12 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
                 if(parentActivity.getCurrentScopeFilter() != null) {
-                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, parentActivity.getCurrentScopeFilter().getName());
+                    actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
                 }
                 else {
-                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "a" + parentActivity.getAgent().getAgent_id());
+                    actionBarManager.setToTitleBar("a" + parentActivity.getAgent().getAgent_id(), true);
                 }
+                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
