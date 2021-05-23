@@ -39,12 +39,13 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -63,6 +64,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private PendingIntent pendingIntent;
     private List<ParameterObject> settings;
     private boolean settingsFinished = false;
@@ -93,6 +95,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         apiManager = parentActivity.getApiManager();
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         apiManager.getSettings(this, dataController.getAgent().getAgent_id());
         initAdditionalFields();
         initTimeSelector();
@@ -378,7 +381,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 //        AsyncUpdateSettingsJsonObject asyncUpdateSettingsJsonObject = new AsyncUpdateSettingsJsonObject(2, Integer.valueOf(dataController.getAgent().getAgent_id()), settingsObjects);
         apiManager.sendAsyncUpdateSettings(this, dataController.getAgent().getAgent_id(), 2, settingsObjects);
 
-        parentActivity.createNotificationAlarm(currentSelectedHour, currentSelectedMinute, pendingIntent);
+        utils.createNotificationAlarm(currentSelectedHour, currentSelectedMinute, pendingIntent, parentActivity);
     }
 
     private void launchTimePicker() {
@@ -434,16 +437,16 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             colorScheme = colorJson.getTheme();
             if(settingsFinished) {
-                parentActivity.showToast("Your settings have been updated");
+                utils.showToast("Your settings have been updated", parentActivity, colorSchemeManager);
             }
             colorFinished = true;
         }
-        else if(returnType == ApiReturnTypes.UPDATE_SETTINGS) {
+        else if(returnType == ApiReturnType.UPDATE_SETTINGS) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -458,7 +461,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                     if(colorFinished) {
 //                        navigationManager.onBackPressed();
-                        parentActivity.showToast("Your settings have been updated");
+                        utils.showToast("Your settings have been updated", parentActivity, colorSchemeManager);
                     }
                     settingsFinished = true;
                 }
@@ -472,7 +475,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,10 +20,10 @@ public class AsyncPost extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String url;
-    private ApiReturnTypes returnType;
+    private ApiReturnType returnType;
     private String jsonInString;
 
-    public AsyncPost(AsyncServerEventListener cb, String url, ApiReturnTypes returnType, String jsonInString) {
+    public AsyncPost(AsyncServerEventListener cb, String url, ApiReturnType returnType, String jsonInString) {
         callback = cb;
         this.url = url;
         this.returnType = returnType;

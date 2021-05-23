@@ -23,13 +23,15 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientNoteEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncMessageCenterObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.PushModel;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -44,6 +46,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ActionBarManager actionBarManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private ConstraintLayout contentView;
     private ImageView addButton;
     private Gson gson;
@@ -71,6 +75,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         actionBarManager = parentActivity.getActionBarManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         if(parentActivity.getIsNoteFragment()) {
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
@@ -86,7 +92,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     private void fillListViewWithData(List<NotesObject> noteList) {
         if(getContext() != null) {
-            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this, parentActivity.colorSchemeManager);
+            NoteListAdapter adapter = new NoteListAdapter(getContext(), noteList, this, colorSchemeManager);
             mListView.setAdapter(adapter);
 
 //            mListView.setOnItemClickListener(this);
@@ -96,7 +102,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 
     private void fillListViewWithMessageCenterData(List<PushModel> pushModelList) {
         if(getContext() != null) {
-            PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, parentActivity.colorSchemeManager);
+            PushModelListAdapter adapter = new PushModelListAdapter(getContext(), pushModelList, this, colorSchemeManager);
             mListView.setAdapter(adapter);
 //            mListView.setOnItemClickListener(this);
         }
@@ -133,8 +139,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_MESSAGE_CENTER) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_MESSAGE_CENTER) {
             AsyncMessageCenterObject messageCenterObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncMessageCenterObject.class);
             final PushModel[] pushModels = messageCenterObject.getPush_messages();
             parentActivity.runOnUiThread(new Runnable() {
@@ -144,7 +150,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.GET_NOTES) {
+        else if(returnType == ApiReturnType.GET_NOTES) {
             AsyncNotesJsonObject asyncNotesJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncNotesJsonObject.class);
             final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
             parentActivity.runOnUiThread(new Runnable() {
@@ -154,8 +160,8 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.DELETE_NOTE) {
-            parentActivity.showToast("Note has been deleted");
+        else if(returnType == ApiReturnType.DELETE_NOTE) {
+            utils.showToast("Note has been deleted", parentActivity, colorSchemeManager);
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
     }
@@ -166,7 +172,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

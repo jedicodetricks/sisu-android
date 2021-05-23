@@ -53,7 +53,7 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
@@ -61,6 +61,7 @@ import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.oldFragments.TransactionFragment;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 
@@ -79,6 +80,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
     private DateManager dateManager;
+    private Utils utils;
     private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
     private TextView dateDisplay, otherLabel, leftSelector, rightSelector, transactionLabel, activitiesLabel;
@@ -109,6 +111,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         colorSchemeManager = parentActivity.getColorSchemeManager();
         dateManager = parentActivity.getDateManager();
         actionBarManager = parentActivity.getActionBarManager();
+        utils = parentActivity.getUtils();
         actionBarManager.setToSaveBar("Record");
         calendar = Calendar.getInstance();
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
@@ -316,7 +319,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
             rightSelector.setText(displayDate);
         } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
+            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
             e.printStackTrace();
         }
     }
@@ -601,10 +604,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private void saveRecords() {
         if(dataController.getUpdatedRecords().size() > 0) {
             parentActivity.updateRecordedActivities();
-            parentActivity.showToast("Records Saved");
+            utils.showToast("Records Saved", parentActivity, colorSchemeManager);
         }
         else {
-            parentActivity.showToast("There are no changes to save");
+            utils.showToast("There are no changes to save", parentActivity, colorSchemeManager);
         }
     }
 
@@ -637,8 +640,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_ACTIVITIES) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             dataController.setRecordActivities(activitiesObject, parentActivity.isRecruiting());
@@ -651,7 +654,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             });
 //            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
         }
-        else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+        else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
@@ -659,7 +662,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             Date d = calendar.getTime();
             apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         }
-        else if(returnType == ApiReturnTypes.GET_CLIENT_LIST) {
+        else if(returnType == ApiReturnType.GET_CLIENT_LIST) {
             try {
                 String clientString = ((Response) returnObject).body().string();
                 JSONObject clientJson = new JSONObject(clientString);
@@ -675,7 +678,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     public void onEventFailed(Object o, String s) {}
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

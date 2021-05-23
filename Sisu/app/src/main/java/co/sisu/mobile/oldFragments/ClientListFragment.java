@@ -40,7 +40,7 @@ import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncClientJsonObject;
@@ -357,8 +357,8 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_CLIENTS) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject, parentActivity.isRecruiting());
 
@@ -371,8 +371,8 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.CREATE_NOTE) {}
-        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENT_TILES) {
+        else if(returnType == ApiReturnType.CREATE_NOTE) {}
+        else if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 JSONObject clientObject = new JSONObject(tileString);
@@ -390,7 +390,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 
@@ -510,7 +510,7 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
             dataController.setRecordUpdated(contactMetric);
             parentActivity.updateRecordedActivities();
-            parentActivity.showToast("+1 to your contacts");
+//            parentActivity.showToast("+1 to your contacts");
         }
     }
 
@@ -564,15 +564,15 @@ public class ClientListFragment extends Fragment implements android.support.v7.w
             Log.e("TO POSITION", String.valueOf(toPosition));
             Log.e("PIPELINE", String.valueOf(pipelinePosition));
             if(toPosition < pipelinePosition) {
-                parentActivity.showToast("PRIORITY: " + toPosition);
+//                parentActivity.showToast("PRIORITY: " + toPosition);
                 pipelinePosition++;
             }
             else if(toPosition > pipelinePosition) {
-                parentActivity.showToast("PIPELINE: " + toPosition);
+//                parentActivity.showToast("PIPELINE: " + toPosition);
                 pipelinePosition--;
             }
             else if(toPosition == pipelinePosition) {
-                parentActivity.showToast("THIS SHOULD TOGGLE: " + toPosition);
+//                parentActivity.showToast("THIS SHOULD TOGGLE: " + toPosition);
             }
 
         }

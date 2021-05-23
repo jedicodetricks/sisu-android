@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 
@@ -155,11 +155,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.SEND_FIREBASE_TOKEN) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FIREBASE_TOKEN) {
             Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
         }
-        else if(returnType == ApiReturnTypes.UPDATE_FIREBASE) {
+        else if(returnType == ApiReturnType.UPDATE_FIREBASE) {
             Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
         }
     }
@@ -170,7 +170,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

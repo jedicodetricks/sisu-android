@@ -54,7 +54,7 @@ import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
@@ -86,8 +86,8 @@ import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
-import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -100,10 +100,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private NavigationManager navigationManager;
     private DateManager dateManager;
     private ApiManager apiManager;
-    public ColorSchemeManager colorSchemeManager;
-    public ActionBarManager actionBarManager;
-    public ProgressBar parentLoader;
-    public CacheManager cacheManager;
+    private ColorSchemeManager colorSchemeManager;
+    private ActionBarManager actionBarManager;
+    private ProgressBar parentLoader;
+    private CacheManager cacheManager;
+    private Utils utils;
 //    private boolean clientFinished = false;
 //    private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
@@ -121,7 +122,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean shouldDisplayPushNotification = false;
     private AgentModel agent;
     private NotesObject selectedNote;
-//    private LruCache<String, Bitmap> mMemoryCache;
     private boolean imageIsExpanded = false;
     private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
@@ -135,12 +135,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String pushNotificationIsHTML = "";
     private String pushNotificationPushId = "";
     private Fragment f;
-    private Animator mCurrentAnimator;
-    private float startScale;
-    private final Rect startBounds = new Rect();
-    private final Rect finalBounds = new Rect();
-    private final Point globalOffset = new Point();
-    private int mShortAnimationDuration;
     private boolean isAdminMode = false;
 
     private JSONObject tileTemplate;
@@ -159,7 +153,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
     // TODO: I should create an enum with the fragment names so that I only have to change it in one spot in the future if I change a fragment name
-    // TODO: The old Scoreboard fragment might still be getting called. Gotta fix that.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +165,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         cacheManager = new CacheManager();
         apiManager = new ApiManager(this, cacheManager);
         dateManager = new DateManager();
+        utils = new Utils();
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
         pushNotificationIsHTML = getIntent().getStringExtra("has_html");
@@ -364,9 +358,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     noNavigation = false;
                     actionBarManager.setToTitleBar("More", false);
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
-                    break;
-                case R.id.cancelButton:
-                    navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
                     break;
                 case R.id.addView:
                     actionBarManager.setToSaveBar("Add Client");
@@ -567,29 +558,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void showToast(final CharSequence msg) {
-        // TODO: This feels like a util
-        this.runOnUiThread(() -> {
-            Toast toast = Toast.makeText(ParentActivity.this, msg,Toast.LENGTH_SHORT);
-            View view = toast.getView();
-            TextView text = view.findViewById(android.R.id.message);
-            text.setTextColor(Color.WHITE);
-            text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-            view.setBackgroundResource(R.color.colorCorporateOrange);
-            text.setPadding(20, 8, 20, 8);
-            toast.show();
-        });
-    }
-
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(teamSwap) {
             swappingTeamData(returnObject, returnType);
         }
-        else if(returnType == ApiReturnTypes.GET_TILES) {
+        else if(returnType == ApiReturnType.GET_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 tileTemplate =  new JSONObject(tileString);
@@ -599,7 +576,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
             navigateToScoreboard(true);
         }
-        else if(returnType == ApiReturnTypes.GET_TEAM_CLIENT_TILES) {
+        else if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 JSONObject newClientTiles = new JSONObject(tileString);
@@ -654,7 +631,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-        else if(returnType == ApiReturnTypes.GET_MARKET_STATUS) {
+        else if(returnType == ApiReturnType.GET_MARKET_STATUS) {
             try {
                 String tileString = ((Response) returnObject).body().string();
 
@@ -689,10 +666,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITIES) {
+        else if(returnType == ApiReturnType.UPDATE_ACTIVITIES) {
             dataController.clearUpdatedRecords();
         }
-        else if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+        else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsObject.getRecord_activities();
 
@@ -700,16 +677,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             activitySettingsParamFinished = true;
 //            navigateToScoreboard();
         }
-        else if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
+        else if(returnType == ApiReturnType.GET_AGENT_GOALS) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            // It does show up but I don't think I need it to. Will have to check back.
+            // TODO: It does show up but I don't think I need it to. Will have to check back.
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
 //            goalsFinished = true;
 //            navigateToScoreboard();
         }
-        else if(returnType == ApiReturnTypes.GET_SETTINGS) {
+        else if(returnType == ApiReturnType.GET_SETTINGS) {
             try {
                 String settingsString = ((Response) returnObject).body().string();
                 JSONObject settingsJson = new JSONObject(settingsString);
@@ -744,7 +721,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 if(reminderActive == 1) {
-                    createNotificationAlarm(hour, minute, null); //sets the actual alarm with correct times from user settings
+                    utils.createNotificationAlarm(hour, minute, null, this); //sets the actual alarm with correct times from user settings
                 }
                 // TODO: Don't need to check if teamsFinished anymore I think
                 if(teamsFinished) {
@@ -759,7 +736,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-        else if(returnType == ApiReturnTypes.GET_TEAMS) {
+        else if(returnType == ApiReturnType.GET_TEAMS) {
             AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
             dataController.setTeamsObject(ParentActivity.this, teamsObject);
             this.runOnUiThread(() -> {
@@ -770,17 +747,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     dataController.setMessageCenterVisible(true);
                     // TODO: I don't need/want the team params to be a race condition
                     apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
-                    //TODO: Probably don't need to getClients now
-//                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-//                    clientFinished = true;
                     SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
-//                    colorSchemeFinished = true;
-//                    labelsFinished = true;
                 }
                 else {
-                    //TODO: Probably don't need to getClients now
-//                    apiManager.getClients(ParentActivity.this, agent.getAgent_id(), getSelectedTeamMarketId());
-//                    clientFinished = true;
                     dataController.setMessageCenterVisible(false);
                     teamParamFinished = true;
                     dataController.setSlackInfo(null);
@@ -800,7 +769,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
             });
         }
-        else if(returnType == ApiReturnTypes.GET_SCOPE) {
+        else if(returnType == ApiReturnType.GET_SCOPE) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 scopeBarList = new ArrayList<>();
@@ -848,7 +817,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             scopeFinished = true;
             navigateToScoreboard(true);
         }
-        else if(returnType == ApiReturnTypes.GET_TEAM_PARAMS) {
+        else if(returnType == ApiReturnType.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settings = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             if(settings.getStatus_code().equals("-1")) {
                 dataController.setSlackInfo(null);
@@ -860,7 +829,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamParamFinished = true;
 //            navigateToScoreboard();
         }
-        else if(returnType == ApiReturnTypes.GET_FIREBASE_DEVICES) {
+        else if(returnType == ApiReturnType.GET_FIREBASE_DEVICES) {
             AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncFirebaseDeviceJsonObject.class);
             FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
             String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
@@ -880,7 +849,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 myFirebaseMessagingService.refreshToken();
             }
         }
-        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+        else if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
@@ -892,7 +861,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //                navigateToScoreboard();
 
         }
-        else if(returnType == ApiReturnTypes.GET_LABELS) {
+        else if(returnType == ApiReturnType.GET_LABELS) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
@@ -900,7 +869,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            labelsFinished = true;
 //            navigateToScoreboard();
         }
-        else if(returnType == ApiReturnTypes.GET_AGENT) {
+        else if(returnType == ApiReturnType.GET_AGENT) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
             boolean adminTransferring = true;
             AsyncAgentJsonObject agentJsonObject = null;
@@ -924,20 +893,20 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void swappingTeamData(Object returnObject, ApiReturnTypes asyncReturnType) {
-        if(asyncReturnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+    private void swappingTeamData(Object returnObject, ApiReturnType asyncReturnType) {
+        if(asyncReturnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
             AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
             activitySettingsParamFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_AGENT_GOALS) {
+        else if(asyncReturnType == ApiReturnType.GET_AGENT_GOALS) {
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
 //            goalsFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_TEAM_PARAMS) {
+        else if(asyncReturnType == ApiReturnType.GET_TEAM_PARAMS) {
             AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             if(settingsJson.getStatus_code().equals("-1")) {
                 dataController.setSlackInfo(null);
@@ -948,25 +917,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             teamParamFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+        else if(asyncReturnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             setActivityColors();
 //            colorSchemeFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_LABELS) {
+        else if(asyncReturnType == ApiReturnType.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
 //            labelsFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_CLIENTS) {
+        else if(asyncReturnType == ApiReturnType.GET_CLIENTS) {
             AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
             dataController.setClientListObject(clientObject, isRecruiting());
 //            clientFinished = true;
         }
-        else if(asyncReturnType == ApiReturnTypes.GET_TILES) {
+        else if(asyncReturnType == ApiReturnType.GET_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 tileTemplate =  new JSONObject(tileString);
@@ -976,29 +945,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             tileTemplateFinished = true;
         }
         this.runOnUiThread(() -> executeTeamSwap());
-}
-
-    public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent) {
-        // TODO: This feels like a util
-        if(pendingIntent == null) {
-            Intent myIntent = new Intent(this, NotificationReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(this, 1412, myIntent, 0);
-        }
-        Calendar calendar = Calendar.getInstance();
-        long currentTimeInMillis = calendar.getTimeInMillis();
-        int interval = 1000 * 60 * 60 * 24; // One day
-
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MINUTE, currentSelectedMinute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
-
-        if(currentTimeInMillis > calendar.getTimeInMillis()) {
-            calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
-        }
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
     }
 
     @Override
@@ -1007,155 +953,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-    }
-
-    public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp) {
-        // TODO: This feels like a util
-        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
         expanded = findViewById(R.id.expanded_image);
-
-        if(imageIsExpanded) {
-            unzoomImageFromThumbnail();
-
-        }
-        else {
-            imageIsExpanded = true;
-            // If there's an animation in progress, cancel it
-            // immediately and proceed with this one.
-            if (mCurrentAnimator != null) {
-                mCurrentAnimator.cancel();
-            }
-
-            // Load the high-resolution "zoomed-in" image.
-            expanded.setImageBitmap(bmp);
-
-            // Calculate the starting and ending bounds for the zoomed-in image.
-            // This step involves lots of math. Yay, math.
-//            final Rect startBounds = new Rect();
-//            final Rect finalBounds = new Rect();
-//            final Point globalOffset = new Point();
-
-            // The start bounds are the global visible rectangle of the thumbnail,
-            // and the final bounds are the global visible rectangle of the container
-            // view. Also set the container view's offset as the origin for the
-            // bounds, since that's the origin for the positioning animation
-            // properties (X, Y).
-            thumbView.getGlobalVisibleRect(startBounds);
-            convertView.getGlobalVisibleRect(finalBounds, globalOffset);
-            startBounds.offset(-globalOffset.x, -globalOffset.y);
-            finalBounds.offset(-globalOffset.x, -globalOffset.y);
-
-            // Adjust the start bounds to be the same aspect ratio as the final
-            // bounds using the "center crop" technique. This prevents undesirable
-            // stretching during the animation. Also calculate the start scaling
-            // factor (the end scaling factor is always 1.0).
-            if ((float) finalBounds.width() / finalBounds.height()
-                    > (float) startBounds.width() / startBounds.height()) {
-                // Extend start bounds horizontally
-                startScale = (float) startBounds.height() / finalBounds.height();
-                float startWidth = startScale * finalBounds.width();
-                float deltaWidth = (startWidth - startBounds.width()) / 2;
-                startBounds.left -= deltaWidth;
-                startBounds.right += deltaWidth;
-            } else {
-                // Extend start bounds vertically
-                startScale = (float) startBounds.width() / finalBounds.width();
-                float startHeight = startScale * finalBounds.height();
-                float deltaHeight = (startHeight - startBounds.height()) / 2;
-                startBounds.top -= deltaHeight;
-                startBounds.bottom += deltaHeight;
-            }
-
-            // Hide the thumbnail and show the zoomed-in view. When the animation
-            // begins, it will position the zoomed-in view in the place of the
-            // thumbnail.
-            convertView.setAlpha(.5f);
-            expanded.setVisibility(View.VISIBLE);
-
-            // Set the pivot point for SCALE_X and SCALE_Y transformations
-            // to the top-left corner of the zoomed-in view (the default
-            // is the center of the view).
-            expanded.setPivotX(0f);
-            expanded.setPivotY(0f);
-
-            // Construct and run the parallel animation of the four translation and
-            // scale properties (X, Y, SCALE_X, and SCALE_Y).
-            AnimatorSet set = new AnimatorSet();
-            set
-                    .play(ObjectAnimator.ofFloat(expanded, View.X,
-                            startBounds.left, finalBounds.centerX() / 2))
-                    .with(ObjectAnimator.ofFloat(expanded, View.Y,
-                            startBounds.top, finalBounds.centerY() / 2))
-                    .with(ObjectAnimator.ofFloat(expanded, View.SCALE_X,
-                            startScale, 1f))
-                    .with(ObjectAnimator.ofFloat(expanded,
-                            View.SCALE_Y, startScale, 1f));
-            set.setDuration(mShortAnimationDuration);
-            set.setInterpolator(new DecelerateInterpolator());
-            set.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mCurrentAnimator = null;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    mCurrentAnimator = null;
-                }
-            });
-            set.start();
-            mCurrentAnimator = set;
-
-            // Upon clicking the zoomed-in image, it should zoom back down
-            // to the original bounds and show the thumbnail instead of
-            // the expanded image.
-            expanded.setOnClickListener(view -> unzoomImageFromThumbnail());
-        }
-    }
-
-    public void unzoomImageFromThumbnail() {
-        // TODO: This feels like a util
-        imageIsExpanded = false;
-        final float startScaleFinal = startScale;
-        if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
-        }
-
-        // Animate the four positioning/sizing properties in parallel,
-        // back to their original values.
-        AnimatorSet set = new AnimatorSet();
-        set.play(ObjectAnimator
-                .ofFloat(expanded, View.X, startBounds.left))
-                .with(ObjectAnimator
-                        .ofFloat(expanded,
-                                View.Y, startBounds.top))
-                .with(ObjectAnimator
-                        .ofFloat(expanded,
-                                View.SCALE_X, startScaleFinal))
-                .with(ObjectAnimator
-                        .ofFloat(expanded,
-                                View.SCALE_Y, startScaleFinal));
-        set.setDuration(mShortAnimationDuration);
-        set.setInterpolator(new DecelerateInterpolator());
-        final View parentView = findViewById(R.id.linearLayout);
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                parentView.setAlpha(1f);
-                expanded.setVisibility(View.GONE);
-                mCurrentAnimator = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                parentView.setAlpha(1f);
-                expanded.setVisibility(View.GONE);
-                mCurrentAnimator = null;
-            }
-        });
-        set.start();
-        mCurrentAnimator = set;
+        utils.zoomImageFromThumb(null, null, null, this, expanded);
     }
 
     public void resetClientTiles(String clientSearch, int page) {
@@ -1285,6 +1085,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public CacheManager getCacheManager() {
         return cacheManager;
+    }
+
+    public Utils getUtils() {
+        return utils;
     }
 
     public void setColorSchemeManager(ColorSchemeManager colorSchemeManager) {

@@ -58,12 +58,11 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.oldFragments.ClientListFragment;
-import co.sisu.mobile.oldFragments.ScoreboardFragment;
 import co.sisu.mobile.utils.CircularProgressBar;
 import okhttp3.Response;
 
@@ -172,6 +171,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        // TODO: This is throwing a null pointer sometimes apparently.
         actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
         parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
 
@@ -819,7 +819,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                         navigationManager.stackReplaceFragment(ClientListFragment.class);
                         break;
                     case "scoreboard":
-                        navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                        if(parentActivity.getCurrentScopeFilter() != null) {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+                        }
+                        else {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+                        }
                         break;
                     case "record":
                         navigationManager.stackReplaceFragment(RecordFragment.class);
@@ -924,7 +929,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                         navigationManager.stackReplaceFragment(ClientListFragment.class);
                         break;
                     case "scoreboard":
-                        navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                        if(parentActivity.getCurrentScopeFilter() != null) {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+                        }
+                        else {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+                        }
                         break;
                     case "record":
                         navigationManager.stackReplaceFragment(RecordFragment.class);
@@ -1163,7 +1173,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 }
                 break;
             case "scoreboard":
-                navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, parentActivity.getCurrentScopeFilter().getIdValue());
+                }
+                else {
+                    apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType, "a" + parentActivity.getAgent().getAgent_id());
+                }
                 break;
             case "record":
                 navigationManager.stackReplaceFragment(RecordFragment.class);
@@ -1390,8 +1405,8 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_TILES) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_TILES) {
             try {
                 String tileString = ((Response) returnObject).body().string();
                 parentActivity.setTileTemplate(new JSONObject(tileString));
@@ -1414,7 +1429,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

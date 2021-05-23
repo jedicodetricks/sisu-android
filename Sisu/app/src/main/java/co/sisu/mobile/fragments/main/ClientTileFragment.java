@@ -49,8 +49,9 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.models.ClientObject;
@@ -59,7 +60,7 @@ import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.oldFragments.ClientListFragment;
-import co.sisu.mobile.oldFragments.ScoreboardFragment;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -73,6 +74,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
+    private DateManager dateManager;
+    private Utils utils;
     private ProgressBar loader;
     private LayoutInflater inflater;
     private int numOfRows = 1;
@@ -95,9 +98,11 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
+        dateManager = parentActivity.getDateManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         addButton = parentActivity.findViewById(R.id.addView);
         actionBarManager = parentActivity.getActionBarManager();
+        utils = parentActivity.getUtils();
         actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getClientTiles();
@@ -748,7 +753,12 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                         break;
                     case "scoreboard":
                         paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(ScoreboardFragment.class);
+                        if(parentActivity.getCurrentScopeFilter() != null) {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", parentActivity.getCurrentScopeFilter().getIdValue());
+                        }
+                        else {
+                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + parentActivity.getAgent().getAgent_id());
+                        }
                         break;
                     case "record":
                         paginateInfo.setVisibility(View.GONE);
@@ -803,8 +813,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_AGENT_FILTERS) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT_FILTERS) {
             String tileString;
             try {
                 tileString = ((Response) returnObject).body().string();
@@ -835,6 +845,20 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
             }
         }
+        else if(returnType == ApiReturnType.GET_TILES) {
+            try {
+                String tileString = ((Response) returnObject).body().string();
+                parentActivity.setTileTemplate(new JSONObject(tileString));
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, parentActivity.getCurrentScopeFilter().getName());
+                }
+                else {
+                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, "a" + parentActivity.getAgent().getAgent_id());
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -843,8 +867,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_AGENT_FILTERS) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT_FILTERS) {
             Log.e("Error!", "error");
         }
     }
@@ -901,13 +925,13 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     private void addOneToContacts() {
-        // TODO: This feels like a util
+        // TODO: This feels like a util or at least a dataController thing
         Metric contactMetric = dataController.getContactsMetric();
         if(contactMetric != null) {
             contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
             dataController.setRecordUpdated(contactMetric);
             parentActivity.updateRecordedActivities();
-            parentActivity.showToast("+1 to your contacts");
+            utils.showToast("+1 to your contacts", parentActivity, colorSchemeManager);
         }
     }
 

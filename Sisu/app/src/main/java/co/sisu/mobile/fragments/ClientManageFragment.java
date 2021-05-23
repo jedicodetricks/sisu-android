@@ -69,7 +69,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
@@ -78,6 +78,7 @@ import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
@@ -90,6 +91,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
+    private Utils utils;
     private ProgressBar loader;
     private ClientObject currentClient;
     private EditText firstNameText, lastNameText, leadSource, emailText, phoneText, transAmount, paidIncome, gci, noteText, incomePercent, gciPercent, archivedReason;
@@ -135,6 +137,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         navigationManager = parentActivity.getNavigationManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
+        utils = parentActivity.getUtils();
         loader = view.findViewById(R.id.clientLoader);
 
         counter = 1;
@@ -156,7 +159,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             currentClient = parentActivity.getSelectedClient();
             actionBarManager.setToSaveDeleteBar(currentClient.getFirst_name() + " " + currentClient.getLast_name());
             if (parentActivity.getAgent().getLast_name().equalsIgnoreCase("Groharing")) {
-                parentActivity.showToast("Client ID: " + parentActivity.getSelectedClient().getClient_id());
+                utils.showToast("Client ID: " + parentActivity.getSelectedClient().getClient_id(), parentActivity, colorSchemeManager);
             }
             initEditClientForm();
             initEditClientButtons();
@@ -176,7 +179,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             }
 
             if(currentClient.getIs_locked() == 1) {
-                parentActivity.showToast("This client account has been locked by your team administrator.");
+                utils.showToast("This client account has been locked by your team administrator.", parentActivity, colorSchemeManager);
             }
         }
 
@@ -663,7 +666,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                     saveClient();
                 }
                 else {
-                    parentActivity.showToast("Please enter some text in the note field.");
+                    utils.showToast("Please enter some text in the note field.", parentActivity, colorSchemeManager);
                 }
             }
         });
@@ -691,7 +694,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             percent = Float.parseFloat(editPercent.getText().toString());
             convertPercentToDollar(percent / 100f, editDollar, transAmount);
         } else {
-            parentActivity.showToast(getText(R.string.percent_help_text));
+            utils.showToast(getText(R.string.percent_help_text), parentActivity, colorSchemeManager);
 //            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
 //                dollar = Integer.parseInt(editDollar.getText().toString());
 //                convertDollarToPercent(dollar * 100f, editPercent);
@@ -705,7 +708,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             percent = Float.parseFloat(editPercent.getText().toString());
             convertPercentToDollar(percent / 100f, editDollar, gci);
         } else {
-            parentActivity.showToast("GCI and Percent Required");
+            utils.showToast("GCI and Percent Required", parentActivity, colorSchemeManager);
 //            if(!editDollar.getText().toString().isEmpty() && !editPercent.getText().toString().isEmpty()) {
 //                dollar = Integer.parseInt(editDollar.getText().toString());
 //                convertDollarToPercent(dollar * 100f, editPercent);
@@ -1021,32 +1024,32 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         boolean isVerified = true;
 
         if(typeSelected.equals("")) {
-            parentActivity.showToast("Buyer or Seller is required");
+            utils.showToast("Buyer or Seller is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(firstNameText.getText().toString().equals("")) {
-            parentActivity.showToast("First Name is required");
+            utils.showToast("First Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(lastNameText.getText().toString().equals("")) {
-            parentActivity.showToast("Last Name is required");
+            utils.showToast("Last Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(transAmount.getText().toString().equals("")) {
-            parentActivity.showToast("Transaction Amount is required");
+            utils.showToast("Transaction Amount is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(paidIncome.getText().toString().equals("")) {
-            parentActivity.showToast("Paid Income is required");
+            utils.showToast("Paid Income is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(gci.getText().toString().equals("")) {
-            parentActivity.showToast("GCI is required");
+            utils.showToast("GCI is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
             if(counter == 1) {
-                parentActivity.showToast("You may want to add your Settlement Date");
+                utils.showToast("You may want to add your Settlement Date", parentActivity, colorSchemeManager);
                 isVerified = false;
                 counter+=1;
             } else {
@@ -1063,28 +1066,28 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         boolean isVerified = true;
 
         if(typeSelected.equals("")) {
-            parentActivity.showToast("New or Experienced Recruit is required");
+            utils.showToast("New or Experienced Recruit is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(firstNameText.getText().toString().equals("")) {
-            parentActivity.showToast("First Name is required");
+            utils.showToast("First Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(lastNameText.getText().toString().equals("")) {
-            parentActivity.showToast("Last Name is required");
+            utils.showToast("Last Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(transAmount.getText().toString().equals("")) {
-            parentActivity.showToast("Closed Volume is required");
+            utils.showToast("Closed Volume is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(gci.getText().toString().equals("")) {
-            parentActivity.showToast("Recruit Income is required");
+            utils.showToast("Recruit Income is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(!contractDisplay.getText().toString().equals("") && settlementDisplay.getText().toString().equals("")) {
             if(counter == 1) {
-                parentActivity.showToast("You may want to add your Settlement Date");
+                utils.showToast("You may want to add your Settlement Date", parentActivity, colorSchemeManager);
                 isVerified = false;
                 counter+=1;
             } else {
@@ -1130,7 +1133,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 calculateGciPercentage(incomePercent, paidIncome);
                 break;
             case R.id.lock:
-                parentActivity.showToast("This client account has been locked by your team administrator.");
+                utils.showToast("This client account has been locked by your team administrator.", parentActivity, colorSchemeManager);
                 break;
             case R.id.saveButton://notify of success update api
                 if(parentActivity.isAdminMode()) {
@@ -1596,7 +1599,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             d = sdf.parse(displayView.getText().toString());
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
+            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
             e.printStackTrace();
         }
     }
@@ -1637,7 +1640,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             d = formatter.parse(formatDate);
             updatedTime.setTime(d);
         } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
+            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
             e.printStackTrace();
         }
 
@@ -1713,8 +1716,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_CLIENT_SETTINGS) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_CLIENT_SETTINGS) {
             AsyncParameterJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             ParameterObject settings = settingsJson.getParameter();
             if(settings != null) {
@@ -1728,46 +1731,46 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.CREATE_NOTE) {
+        else if(returnType == ApiReturnType.CREATE_NOTE) {
 //            hideKeyboard(getView());
-//            parentActivity.showToast("Added Appointment");
+//            utils.showToast("Added Appointment");
             // TODO: Why do I do this?
 //            updateCurrentClient(!currentClient.getStatus().equals("D"));
 //            saveClient();
         }
-        else if(returnType == ApiReturnTypes.CREATE_APPT_NOTE) {
+        else if(returnType == ApiReturnType.CREATE_APPT_NOTE) {
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
             hideKeyboard(getView());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     clearDisplayDate("addAppointment");
-                    parentActivity.showToast("Added Appointment");
+                    utils.showToast("Added Appointment", parentActivity, colorSchemeManager);
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
+        else if(returnType == ApiReturnType.UPDATE_CLIENT) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     parentActivity.onBackPressed();
 //                    JSONObject clientTiles = parentActivity.getClientTiles();
                     // TODO: I need to put the changes into the correct client tile
-                    parentActivity.showToast("Client updates saved");
+                    utils.showToast("Client updates saved", parentActivity, colorSchemeManager);
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.UPDATE_SETTINGS) {
+        else if(returnType == ApiReturnType.UPDATE_SETTINGS) {
             loader.setVisibility(View.GONE);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     parentActivity.onBackPressed();
-                    parentActivity.showToast("Client has been archived");
+                    utils.showToast("Client has been archived", parentActivity, colorSchemeManager);
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
+        else if(returnType == ApiReturnType.GET_LEAD_SOURCES) {
             AsyncLeadSourcesJsonObject leadSourcesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeadSourcesJsonObject.class);
             leadSources = leadSourcesObject.getLead_sources();
             if(parentActivity.getSelectedClient() != null) {
@@ -1779,7 +1782,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 });
             }
         }
-        else if(returnType == ApiReturnTypes.GET_NOTES) {
+        else if(returnType == ApiReturnType.GET_NOTES) {
             AsyncNotesJsonObject asyncNotesJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncNotesJsonObject.class);
             final NotesObject[] allNotes = asyncNotesJsonObject.getClient_logs();
             parentActivity.runOnUiThread(new Runnable() {
@@ -1789,7 +1792,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.CREATE_CLIENT) {
+        else if(returnType == ApiReturnType.CREATE_CLIENT) {
             String returnString = "";
             try {
                 returnString = ((Response) returnObject).body().string();
@@ -1799,7 +1802,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    parentActivity.showToast("Client Saved");
+                    utils.showToast("Client Saved", parentActivity, colorSchemeManager);
 //                    navigationManager.navigateToClientListAndClearStack(currentStatus);
                     parentActivity.onBackPressed();
                 }
@@ -1811,8 +1814,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     public void onEventFailed(Object o, String s) {}
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_LEAD_SOURCES) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_LEAD_SOURCES) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

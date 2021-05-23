@@ -81,7 +81,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.zoomImageFromThumb(parentView, thumbnail, bmp);
+                parentActivity.getUtils().zoomImageFromThumb(parentView, thumbnail, bmp, parentActivity, parentActivity.findViewById(R.id.expanded_image));
             }
         });
 

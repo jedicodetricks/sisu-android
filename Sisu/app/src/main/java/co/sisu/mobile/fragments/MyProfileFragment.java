@@ -53,13 +53,14 @@ import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
@@ -77,6 +78,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private CacheManager cacheManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
@@ -110,6 +112,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         cacheManager = parentActivity.getCacheManager();
+        utils = parentActivity.getUtils();
         agent = dataController.getAgent();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
@@ -288,15 +291,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private boolean verifyInputs() {
         boolean isVerified = true;
         if(firstName.getText().toString().equals("")) {
-            parentActivity.showToast("First Name is required");
+            utils.showToast("First Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(lastName.getText().toString().equals("")) {
-            parentActivity.showToast("Last Name is required");
+            utils.showToast("Last Name is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         else if(phone.getText().toString().equals("")) {
-            parentActivity.showToast("Phone is required");
+            utils.showToast("Phone is required", parentActivity, colorSchemeManager);
             isVerified = false;
         }
         return isVerified;
@@ -328,10 +331,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else {
             if(!imageChanged) {
-                parentActivity.showToast("You haven't updated anything.");
+                utils.showToast("You haven't updated anything.", parentActivity, colorSchemeManager);
             }
             else {
-                parentActivity.showToast("Saving profile picture...");
+                utils.showToast("Saving profile picture...", parentActivity, colorSchemeManager);
                 Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
                 cacheManager.addBitmapToMemoryCache("testImage", bitmap);
             }
@@ -428,8 +431,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_AGENT) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT) {
             AsyncAgentJsonObject agentJsonObject = null;
             String r = null;
             try {
@@ -448,7 +451,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             agent = dataController.getAgent();
             fillInAgentInfo();
         }
-        else if(returnType == ApiReturnTypes.GET_PROFILE_IMAGE) {
+        else if(returnType == ApiReturnType.GET_PROFILE_IMAGE) {
             final AsyncProfileImageJsonObject profileObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncProfileImageJsonObject.class);
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -457,8 +460,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
                 }
             });
         }
-        else if(returnType == ApiReturnTypes.UPDATE_PROFILE) {
-            parentActivity.showToast("Your profile has been updated");
+        else if(returnType == ApiReturnType.UPDATE_PROFILE) {
+            utils.showToast("Your profile has been updated", parentActivity, colorSchemeManager);
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
     }
@@ -469,7 +472,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
 //        }
 //        else if(asyncReturnType.equals("Update Profile")) {
-//            parentActivity.showToast("Your profile has been updated");
+//            utils.showToast("Your profile has been updated");
 //            parentActivity.stackReplaceFragment(MoreFragment.class);
 //            parentActivity.swapToTitleBar("More");
 //        }
@@ -477,7 +480,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

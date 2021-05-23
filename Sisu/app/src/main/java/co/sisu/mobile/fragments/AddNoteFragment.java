@@ -17,10 +17,12 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/18/18.
@@ -32,6 +34,8 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private EditText noteText;
     private TextView addNoteButton;
     private boolean isUpdate = false;
@@ -53,6 +57,8 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         initForm();
         setColors();
         initUpdateOrAdd();
@@ -62,13 +68,13 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
                     Log.e("NOTE", "WHITE");
                     noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.light_input_text_box));
                 } else {
                     noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.input_text_box));
                 }
-                noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
+                noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
             }
         });
     }
@@ -104,7 +110,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
                     }
                 }
                 else {
-                    parentActivity.showToast("Please enter some text in the note field.");
+                    utils.showToast("Please enter some text in the note field.", parentActivity, colorSchemeManager);
                 }
                 break;
         }
@@ -120,15 +126,15 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.CREATE_NOTE) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.CREATE_NOTE) {
             hideKeyboard(getView());
-            parentActivity.showToast("Added note");
+            utils.showToast("Added note", parentActivity, colorSchemeManager);
             navigationManager.onBackPressed();
         }
-        else if(returnType == ApiReturnTypes.UPDATE_NOTE) {
+        else if(returnType == ApiReturnType.UPDATE_NOTE) {
             hideKeyboard(getView());
-            parentActivity.showToast("Updated note");
+            utils.showToast("Updated note", parentActivity, colorSchemeManager);
             navigationManager.onBackPressed();
         }
     }
@@ -139,7 +145,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

@@ -34,7 +34,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
@@ -481,8 +481,8 @@ public class RecruitingGoalSetupFragment extends Fragment implements CompoundBut
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_AGENT_GOALS) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT_GOALS) {
             AsyncGoalsJsonObject goals = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, parentActivity.isRecruiting());
@@ -491,7 +491,7 @@ public class RecruitingGoalSetupFragment extends Fragment implements CompoundBut
                 setupFieldsWithGoalData();
             }
         }
-        else if(returnType == ApiReturnTypes.GET_AGENT) {
+        else if(returnType == ApiReturnType.GET_AGENT) {
             AsyncAgentJsonObject agentJsonObject = null;
             String r = null;
             try {
@@ -513,17 +513,17 @@ public class RecruitingGoalSetupFragment extends Fragment implements CompoundBut
                 setupFieldsWithGoalData();
             }
         }
-        else if(returnType == ApiReturnTypes.UPDATE_GOALS) {
+        else if(returnType == ApiReturnType.UPDATE_GOALS) {
             if(!agentUpdating) {
                 updatedGoals = new HashMap<>();
-                parentActivity.showToast("Goals have been updated");
+//                parentActivity.showToast("Goals have been updated");
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
             }
         }
-        else if(returnType == ApiReturnTypes.UPDATE_AGENT) {
+        else if(returnType == ApiReturnType.UPDATE_AGENT) {
             agentUpdating = false;
             updatedGoals = new HashMap<>();
-            parentActivity.showToast("Goals have been updated");
+//            parentActivity.showToast("Goals have been updated");
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
         parentActivity.runOnUiThread(new Runnable() {
@@ -540,7 +540,7 @@ public class RecruitingGoalSetupFragment extends Fragment implements CompoundBut
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

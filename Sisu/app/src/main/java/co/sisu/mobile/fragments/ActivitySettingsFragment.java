@@ -35,11 +35,12 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -55,8 +56,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private DataController dataController;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
+    private Utils utils;
     private AsyncActivitySettingsObject[] selectedActivities;
-//    private AsyncActivitySettingsObject[] currentActivitiesSorting;
     private JSONArray currentActivitySettings;
     private List<SelectedActivities> currentActivitySorting;
     private ProgressBar loader;
@@ -87,6 +88,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
+        utils = parentActivity.getUtils();
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
         initializeButtons();
@@ -269,8 +271,8 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_ACTIVITY_SETTINGS) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             try {
                 String activitySettingsString = ((Response) returnObject).body().string();
                 ((Response) returnObject).close();
@@ -288,7 +290,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
                 loader.setVisibility(View.GONE);
             });
         }
-        else if(returnType == ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS) {
+        else if(returnType == ApiReturnType.UPDATE_ACTIVITY_SETTINGS) {
             try {
                 String activitySettingsString = ((Response) returnObject).body().string();
                 ((Response) returnObject).close();
@@ -314,7 +316,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
             }
             else {
-                parentActivity.showToast("Activity updates saved");
+                utils.showToast("Activity updates saved", parentActivity, colorSchemeManager);
                 actionBarManager.setToEditBar("Record Settings");
             }
         }
@@ -324,7 +326,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     public void onEventFailed(Object returnObject, String asyncReturnType) {}
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {}
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {}
 
     @Override
     public void onItemDragStarted(int position) {}

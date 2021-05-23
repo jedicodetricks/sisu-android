@@ -16,10 +16,12 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/18/18.
@@ -31,6 +33,8 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private EditText noteText;
     private TextView sendSlackButton, cancelButton;
 
@@ -50,6 +54,8 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         apiManager = parentActivity.getApiManager();
         initForm();
         initUpdateOrAdd();
@@ -58,12 +64,12 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     private void setColorScheme() {
         //TODO: This shouldn't work like this. Discuss current design with Rick.
-        if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             noteText.setBackgroundResource(R.drawable.light_input_text_box);
         } else {
             noteText.setBackgroundResource(R.drawable.input_text_box);
         }
-        noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
+        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
     }
 
     private void initUpdateOrAdd() {
@@ -95,17 +101,17 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
                 if(!noteText.getText().toString().equals("")) {
                     if(parentActivity.getIsNoteFragment()) {
                         apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
-                        parentActivity.showToast("Sending message to your Slack channel...");
+                        utils.showToast("Sending message to your Slack channel...", parentActivity, colorSchemeManager);
                     }
                     else {
                         apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
-                        parentActivity.showToast("Sending push notification to your team...");
+                        utils.showToast("Sending push notification to your team...", parentActivity, colorSchemeManager);
                     }
                     hideKeyboard(getView());
                     navigationManager.onBackPressed();
                 }
                 else {
-                    parentActivity.showToast("Please enter some text.");
+                    utils.showToast("Please enter some text.", parentActivity, colorSchemeManager);
                 }
                 break;
             case R.id.cancelButton:
@@ -124,25 +130,25 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         // TODO: Move these to the new format
         if(asyncReturnType.equals("Add Notes")) {
             hideKeyboard(getView());
-            parentActivity.showToast("Added note");
+            utils.showToast("Added note", parentActivity, colorSchemeManager);
             navigationManager.onBackPressed();
         }
         else if(asyncReturnType.equals("Update Notes")) {
             hideKeyboard(getView());
-            parentActivity.showToast("Updated note");
+            utils.showToast("Updated note", parentActivity, colorSchemeManager);
             navigationManager.onBackPressed();
         }
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.SEND_FEEDBACK) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FEEDBACK) {
 
         }
-        else if(returnType == ApiReturnTypes.SEND_PUSH_NOTIFICATION) {
+        else if(returnType == ApiReturnType.SEND_PUSH_NOTIFICATION) {
 
         }
-        else if(returnType == ApiReturnTypes.CREATE_NOTE) {
+        else if(returnType == ApiReturnType.CREATE_NOTE) {
 
         }
     }
@@ -153,7 +159,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

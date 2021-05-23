@@ -42,7 +42,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
@@ -52,6 +52,7 @@ import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 import co.sisu.mobile.utils.LeaderboardComparator;
+import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
 /**
@@ -71,6 +72,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
     private CacheManager cacheManager;
+    private Utils utils;
     private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
@@ -102,6 +104,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
         cacheManager = parentActivity.getCacheManager();
+        utils = parentActivity.getUtils();
         actionBarManager.setToTitleBar("Leaderboards", false);
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
@@ -222,7 +225,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
             dateDisplay.setText(sdf.format(updatedTime.getTime()));
         } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
+            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
             e.printStackTrace();
         }
     }
@@ -304,7 +307,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 }
             }
             else {
-                parentActivity.showToast("There is no info to display so far this month");
+                utils.showToast("There is no info to display so far this month", parentActivity, colorSchemeManager);
                 displayListData();
             }
 
@@ -397,20 +400,20 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.GET_LEADERBOARDS){
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_LEADERBOARDS){
             AsyncLeaderboardJsonObject leaderboardJsonObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeaderboardJsonObject.class);
             leaderBoardSections = leaderboardJsonObject.getLeaderboardObject();
 
             prepareListData();
         }
-        else if(returnType == ApiReturnTypes.GET_COLOR_SCHEME) {
+        else if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
             colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
             parentActivity.setActivityColors();
         }
-        else if(returnType == ApiReturnTypes.GET_LABELS) {
+        else if(returnType == ApiReturnType.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
@@ -423,7 +426,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 
@@ -458,7 +461,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         if(year != selectedYear || monthOfYear != selectedMonth || dayOfMonth != selectedDay) {
             if(leaderboardToggle.isChecked() && monthOfYear != selectedMonth) {
                 //TODO: Should this just toggle for them and search it? They obviously want to do that in this situation
-                parentActivity.showToast("You're in year search mode. Swap to month search to change month selection.");
+                utils.showToast("You're in year search mode. Swap to month search to change month selection.", parentActivity, colorSchemeManager);
             }
             else {
                 updateDisplayDate(year, monthOfYear, dayOfMonth);
@@ -466,7 +469,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
         }
         else {
-            parentActivity.showToast("You have selected the same time period");
+            utils.showToast("You have selected the same time period", parentActivity, colorSchemeManager);
         }
     }
 }

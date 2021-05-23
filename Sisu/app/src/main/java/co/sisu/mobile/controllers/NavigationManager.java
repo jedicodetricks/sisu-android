@@ -27,7 +27,7 @@ public class NavigationManager {
     private ColorSchemeManager colorSchemeManager;
 
     public NavigationManager(ParentActivity parentActivity) {
-        this.colorSchemeManager = parentActivity.colorSchemeManager;
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
         this.parentActivity = parentActivity;
         this.toolbarManager = new ToolbarManager(parentActivity);
         backStack = new Stack<>();

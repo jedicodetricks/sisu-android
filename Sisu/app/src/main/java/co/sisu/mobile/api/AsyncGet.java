@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,9 +18,9 @@ public class AsyncGet extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String url;
-    private ApiReturnTypes returnType;
+    private ApiReturnType returnType;
 
-    public AsyncGet (AsyncServerEventListener cb, String url, ApiReturnTypes returnType) {
+    public AsyncGet (AsyncServerEventListener cb, String url, ApiReturnType returnType) {
         callback = cb;
         this.url = url;
         this.returnType = returnType;

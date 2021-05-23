@@ -36,6 +36,7 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.MorePageContainer;
 import co.sisu.mobile.oldFragments.RecruitingGoalSetupFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by Brady Groharing on 2/28/2018.
@@ -49,6 +50,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
+    private Utils utils;
     private String m_Text;
 
     public MoreFragment() {
@@ -73,6 +75,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         dataController = parentActivity.getDataController();
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
+        utils = parentActivity.getUtils();
         actionBarManager.setToTitleBar("More", false);
         initializeListView();
         setColorScheme();
@@ -179,7 +182,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     dataController.setAgent(currentAgent);
                 }
                 else {
-                    parentActivity.showToast("Please enter some text in the note field.");
+                    utils.showToast("Please enter some text in the note field.", parentActivity, colorSchemeManager);
                 }
             }
         });

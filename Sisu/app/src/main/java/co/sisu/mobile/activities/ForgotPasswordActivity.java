@@ -13,7 +13,7 @@ import android.widget.Toast;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncForgotPassword;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -66,7 +66,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
 
     }
 
@@ -76,7 +76,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

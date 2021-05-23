@@ -19,9 +19,10 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -35,6 +36,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private Button submitButton;
 
     @Override
@@ -54,6 +56,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         initUI();
         setColorScheme();
     }
@@ -88,15 +91,15 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private boolean areFieldsValid() {
         if(oldPassword.getText().toString().equals("")) {
-            parentActivity.showToast("You need to enter your old password");
+            utils.showToast("You need to enter your old password", parentActivity, colorSchemeManager);
             return false;
         }
         else if(newPassword.getText().toString().equals("") || confirmPassword.getText().toString().equals("")) {
-            parentActivity.showToast("You need to enter a new password");
+            utils.showToast("You need to enter a new password", parentActivity, colorSchemeManager);
             return false;
         }
         else if(!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-            parentActivity.showToast("New password must match. Please try again.");
+            utils.showToast("New password must match. Please try again.", parentActivity, colorSchemeManager);
             return false;
         }
 
@@ -109,7 +112,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {
-                parentActivity.showToast("Incorrect password");
+                utils.showToast("Incorrect password", parentActivity, colorSchemeManager);
             }
             else {
                 HashMap<String, String> changedFields = new HashMap<>();
@@ -120,9 +123,9 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.UPDATE_PROFILE) {
-            parentActivity.showToast("Password successfully changed");
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.UPDATE_PROFILE) {
+            utils.showToast("Password successfully changed", parentActivity, colorSchemeManager);
             navigationManager.onBackPressed();
         }
     }
@@ -130,12 +133,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Issue with password change. Please try again later.");
+            utils.showToast("Issue with password change. Please try again later.", parentActivity, colorSchemeManager);
         }
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

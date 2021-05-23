@@ -26,7 +26,7 @@ import co.sisu.mobile.api.AsyncLeaderboardImage;
 import co.sisu.mobile.api.AsyncPost;
 import co.sisu.mobile.api.AsyncPut;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
@@ -56,6 +56,11 @@ public class ApiManager {
     Cache cache;
     private Gson gson;
 
+    public ApiManager(Context context) {
+        cache = new Cache(context.getCacheDir(), cacheSize);
+        gson = new Gson();
+    }
+
     public ApiManager(Context context, CacheManager cacheManager) {
         cache = new Cache(context.getCacheDir(), cacheSize);
         gson = new Gson();
@@ -79,7 +84,7 @@ public class ApiManager {
     public void getAgentFilters(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_FILTERS;
+        ApiReturnType returnType = ApiReturnType.GET_AGENT_FILTERS;
         String currentUrl = url + "api/v1/agent/filters/" + agentId +"/" + selectedTeamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -87,7 +92,7 @@ public class ApiManager {
     public void getMarketStatus(AsyncServerEventListener cb, String agentId, int marketId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_MARKET_STATUS;
+        ApiReturnType returnType = ApiReturnType.GET_MARKET_STATUS;
         String currentUrl = url + "api/v1/client/market_status/" + marketId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -95,7 +100,7 @@ public class ApiManager {
     public void getScope(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_SCOPE;
+        ApiReturnType returnType = ApiReturnType.GET_SCOPE;
         String currentUrl = url + "api/v1/agent/scopes/"+ agentId +"/" + selectedTeamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -103,7 +108,7 @@ public class ApiManager {
     public void getClientParams(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_SETTINGS;
+        ApiReturnType returnType = ApiReturnType.GET_CLIENT_SETTINGS;
         String currentUrl = url + "api/v1/parameter/edit-parameter/3/"+ clientId +"/activate_client";
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -111,7 +116,7 @@ public class ApiManager {
     public void getMessageCenterInfo(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_MESSAGE_CENTER;
+        ApiReturnType returnType = ApiReturnType.GET_MESSAGE_CENTER;
         String currentUrl = url + "api/v1/agent/push-message/" + agentId + "/" + selectedTeamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -119,7 +124,7 @@ public class ApiManager {
     public void getAgentGoals(AsyncServerEventListener cb, String agentId, int teamId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT_GOALS;
+        ApiReturnType returnType = ApiReturnType.GET_AGENT_GOALS;
         String currentUrl = url + "api/v2/agent/get-goals/"+ agentId + "/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -127,7 +132,7 @@ public class ApiManager {
     public void getSettings(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_SETTINGS;
+        ApiReturnType returnType = ApiReturnType.GET_SETTINGS;
         String currentUrl = url + "api/v1/parameter/get-parameters/2/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -135,7 +140,7 @@ public class ApiManager {
     public void getTeams(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAMS;
+        ApiReturnType returnType = ApiReturnType.GET_TEAMS;
         String currentUrl = url + "api/v1/agent/get-teams/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -143,7 +148,7 @@ public class ApiManager {
     public void getClients(AsyncServerEventListener cb, String agentId, int marketId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENTS;
+        ApiReturnType returnType = ApiReturnType.GET_CLIENTS;
         String currentUrl = url + "api/v2/agent/get-clients/" + agentId + "/" + marketId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -151,7 +156,7 @@ public class ApiManager {
     public void getActivitySettings(AsyncServerEventListener cb, String agentId, int teamId, int marketId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITY_SETTINGS;
+        ApiReturnType returnType = ApiReturnType.GET_ACTIVITY_SETTINGS;
         String currentUrl = url + "api/v1/team/record-activities/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -159,7 +164,7 @@ public class ApiManager {
     public void getAgent(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_AGENT;
+        ApiReturnType returnType = ApiReturnType.GET_AGENT;
         String currentUrl = url + "api/v1/agent/edit-agent/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -167,7 +172,7 @@ public class ApiManager {
     public void getLeaderboardYear(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
+        ApiReturnType returnType = ApiReturnType.GET_LEADERBOARDS;
         String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -175,7 +180,7 @@ public class ApiManager {
     public void getLeaderboardYearAndMonth(AsyncServerEventListener cb, String agentId, String formattedTeamId, String formattedYear, String formattedMonth) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_LEADERBOARDS;
+        ApiReturnType returnType = ApiReturnType.GET_LEADERBOARDS;
         String currentUrl = url + "api/v1/team/leaderboards/" + formattedTeamId + "/" + formattedYear + "/" + formattedMonth;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -183,7 +188,7 @@ public class ApiManager {
     public void getProfileImage(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_PROFILE_IMAGE;
+        ApiReturnType returnType = ApiReturnType.GET_PROFILE_IMAGE;
         String currentUrl = url + "api/v1/image/3/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -191,7 +196,7 @@ public class ApiManager {
     public void getTeamParams(AsyncServerEventListener cb, String agentId, int teamId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_PARAMS;
+        ApiReturnType returnType = ApiReturnType.GET_TEAM_PARAMS;
         String currentUrl = url + "api/v1/parameter/edit-parameter/1/"+ teamId +"/slack_url";
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -199,7 +204,7 @@ public class ApiManager {
     public void getClientNotes(AsyncServerEventListener cb, String agentId, String clientId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_NOTES;
+        ApiReturnType returnType = ApiReturnType.GET_NOTES;
         String currentUrl = url + "api/v1/client/logs/" + clientId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -207,7 +212,7 @@ public class ApiManager {
     public void getFirebaseDevices(AsyncServerEventListener cb, String agentId) {
         //GET
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_FIREBASE_DEVICES;
+        ApiReturnType returnType = ApiReturnType.GET_FIREBASE_DEVICES;
         String currentUrl = url + "api/v1/agent/device/" + agentId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -218,7 +223,7 @@ public class ApiManager {
             selectedTeamId = 0;
         }
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_COLOR_SCHEME;
+        ApiReturnType returnType = ApiReturnType.GET_COLOR_SCHEME;
         String currentUrl = url + "api/v1/team/theme/" + selectedTeamId + "/" + isLightTheme;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -229,7 +234,7 @@ public class ApiManager {
             teamId = 0;
         }
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_LABELS;
+        ApiReturnType returnType = ApiReturnType.GET_LABELS;
         String currentUrl = url + "api/v1/team/market/" + teamId + "/" + Locale.getDefault().toString();
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -239,7 +244,7 @@ public class ApiManager {
             teamId = 0;
         }
         getJWT(agent_id);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_LEAD_SOURCES;
+        ApiReturnType returnType = ApiReturnType.GET_LEAD_SOURCES;
         String currentUrl = url + "api/v1/team/get-lead-sources/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -249,7 +254,7 @@ public class ApiManager {
             teamId = 0;
         }
         getJWT(agent_id);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_AGENTS;
+        ApiReturnType returnType = ApiReturnType.GET_TEAM_AGENTS;
         String currentUrl = url + "api/v1/team/get-team-agents/" + teamId;
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
@@ -258,7 +263,7 @@ public class ApiManager {
 
     public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter, String clientSearch, int page, String startDate, String endDate) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENT_TILES;
+        ApiReturnType returnType = ApiReturnType.GET_TEAM_CLIENT_TILES;
         String currentUrl = url + "api/v2/team/get-team-clients";
         JsonObject jsonRequest = new JsonObject();
         jsonRequest.addProperty("team_id", teamId);
@@ -299,7 +304,7 @@ public class ApiManager {
 
     public void getTeamClientsPresetFilter(AsyncServerEventListener cb, String agentId, int teamId, JSONObject filters, int page) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TEAM_CLIENT_TILES;
+        ApiReturnType returnType = ApiReturnType.GET_TEAM_CLIENT_TILES;
         String currentUrl = url + "api/v2/team/get-team-clients";
         JsonObject jsonRequest = new JsonObject();
         jsonRequest.addProperty("team_id", teamId);
@@ -354,7 +359,7 @@ public class ApiManager {
 
     public void getClientList(AsyncServerEventListener cb, String agentId, int selectedTeamMarketId, String filterValue) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_CLIENT_LIST;
+        ApiReturnType returnType = ApiReturnType.GET_CLIENT_LIST;
         String currentUrl = url + "api/v1/client/list";
         JsonObject jsonRequest = new JsonObject();
         jsonRequest.addProperty("market_id", selectedTeamMarketId);
@@ -377,7 +382,7 @@ public class ApiManager {
 
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
+        ApiReturnType returnType = ApiReturnType.GET_TILES;
         String currentUrl = url + "api/v1/get-dashboard-tiles";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedStartTime = formatter.format(startDate);
@@ -390,7 +395,7 @@ public class ApiManager {
 
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType, String idValue) {
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_TILES;
+        ApiReturnType returnType = ApiReturnType.GET_TILES;
         String currentUrl = url + "api/v1/get-dashboard-tiles";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedStartTime = formatter.format(startDate);
@@ -404,7 +409,7 @@ public class ApiManager {
     public void sendAsyncActivities (AsyncServerEventListener cb, String agentId, Date startDate, Date endDate, int marketId) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITIES;
+        ApiReturnType returnType = ApiReturnType.GET_ACTIVITIES;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedStartTime = formatter.format(startDate);
         String formattedEndTime = formatter.format(endDate);
@@ -417,7 +422,7 @@ public class ApiManager {
     public void sendAsyncActivities(AsyncServerEventListener cb, String agentId, String formattedStartTime, String formattedEndTime, int marketId) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.GET_ACTIVITIES;
+        ApiReturnType returnType = ApiReturnType.GET_ACTIVITIES;
         String body = "{\"start_date\": \"" + formattedStartTime + "\",\"end_date\": \"" + formattedEndTime + "\",\"include_counts\":1,\"include_activities\":0}";
         String currentUrl = url + "api/v1/agent/activity/" + agentId + "/" + marketId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -426,7 +431,7 @@ public class ApiManager {
     public void sendAsyncAddClient(AsyncServerEventListener cb, String agentId, ClientObject newClient) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.CREATE_CLIENT;
+        ApiReturnType returnType = ApiReturnType.CREATE_CLIENT;
         String body = gson.toJson(newClient);
         body = body.replace("\"is_priority\":\"1\"", "\"is_priority\":true");
         body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
@@ -438,7 +443,7 @@ public class ApiManager {
     public void sendAsyncFeedback(AsyncServerEventListener cb, String agentId, String feedback, String slackUrl) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.SEND_FEEDBACK;
+        ApiReturnType returnType = ApiReturnType.SEND_FEEDBACK;
         String body;
 
         String currentUrl = url + "api/v1/feedback/add-feedback/" + agentId;
@@ -456,7 +461,7 @@ public class ApiManager {
     public void addNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.CREATE_NOTE;
+        ApiReturnType returnType = ApiReturnType.CREATE_NOTE;
         String body = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\"}";
         String currentUrl = url + "api/v1/client/logs/" + clientId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -465,7 +470,7 @@ public class ApiManager {
     public void addAppointmentNote(AsyncServerEventListener cb, String agentId, String clientId, String note, String noteType, String createdTs) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.CREATE_APPT_NOTE;
+        ApiReturnType returnType = ApiReturnType.CREATE_APPT_NOTE;
         String body = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\", \"created_ts\":\"" + createdTs + "\"}";
         String currentUrl = url + "api/v1/client/logs/" + clientId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -474,7 +479,7 @@ public class ApiManager {
     public void sendFirebaseToken(AsyncServerEventListener cb, Context context, AgentModel agent, String token) {
         //POST
         getJWT(agent.getAgent_id());
-        ApiReturnTypes returnType = ApiReturnTypes.SEND_FIREBASE_TOKEN;
+        ApiReturnType returnType = ApiReturnType.SEND_FIREBASE_TOKEN;
         FirebaseDeviceObject firebaseDeviceObject = generateFirebaseObject(agent, token, context);
         String body = gson.toJson(firebaseDeviceObject);
         String currentUrl = url + "api/v1/agent/device/" + agent.getAgent_id();
@@ -484,7 +489,7 @@ public class ApiManager {
     public void sendPushNotification(AsyncServerEventListener cb, String agentId, String teamId, String message) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.SEND_PUSH_NOTIFICATION;
+        ApiReturnType returnType = ApiReturnType.SEND_PUSH_NOTIFICATION;
         String body = "{\"body\":\"" + message + "\", \"title\":\"Message from Team Administrator\"}";
         String currentUrl = url + "api/v1/team/push-message/" + teamId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -493,7 +498,7 @@ public class ApiManager {
     public void sendAsyncUpdateActivitySettings(AsyncServerEventListener cb, String agentId, String updateObject, int teamId, int marketId) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_ACTIVITY_SETTINGS;
+        ApiReturnType returnType = ApiReturnType.UPDATE_ACTIVITY_SETTINGS;
         String body = updateObject;
         String currentUrl = url + "api/v1/team/record-activities/" + teamId;
         new AsyncPost(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -502,7 +507,7 @@ public class ApiManager {
     public void sendAsyncUpdateSettings(AsyncServerEventListener cb, String agentId, int type, List<UpdateSettingsObject> settingsObjects) {
         //POST
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_SETTINGS;
+        ApiReturnType returnType = ApiReturnType.UPDATE_SETTINGS;
         String currentUrl = url + "api/v1/parameter/edit-parameter";
         int agentIdInteger = Integer.valueOf(agentId);
         JsonObject jsonRequest = new JsonObject();
@@ -528,7 +533,7 @@ public class ApiManager {
     public void sendAsyncUpdateActivities(AsyncServerEventListener cb, String agentId, AsyncUpdateActivitiesJsonObject activitiesJsonObject, int marketId) {
         //PUT
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_ACTIVITIES;
+        ApiReturnType returnType = ApiReturnType.UPDATE_ACTIVITIES;
         String body = gson.toJson(activitiesJsonObject);
         String currentUrl = url + "api/v1/agent/activity/" + agentId + "/" + marketId;
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -546,7 +551,7 @@ public class ApiManager {
         body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
         //TODO: Need this state replacement until Rick fixes the api (It's in the add as well)
         body = body.replace("\"state\":null", "\"state\":\"\"");
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_CLIENT;
+        ApiReturnType returnType = ApiReturnType.UPDATE_CLIENT;
         String currentUrl = url + "api/v1/client/edit-client/" + currentClient.getClient_id();
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
@@ -559,7 +564,7 @@ public class ApiManager {
         body = body.replace("\"is_priority\":\"0\"", "\"is_priority\":false");
         //TODO: Need this state replacement until Rick fixes the api (It's in the add as well)
         body = body.replace("\"state\":null", "\"state\":\"\"");
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_CLIENT;
+        ApiReturnType returnType = ApiReturnType.UPDATE_CLIENT;
         String currentUrl = url + "api/v1/client/edit-client/" + currentClient.getClient_id();
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
     }
@@ -568,7 +573,7 @@ public class ApiManager {
         //PUT
         //TODO: I don't know if this needs teamId / I don't think so, can probably remove
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_AGENT;
+        ApiReturnType returnType = ApiReturnType.UPDATE_AGENT;
         String body = "";
         if(!income.equals("") && !reason.equals("")) {
             body = "{\"vision_statement\":\"" + reason + "\", \"desired_income\":\"" + income + "\"}";
@@ -586,7 +591,7 @@ public class ApiManager {
     public void sendAsyncUpdateGoals(AsyncServerEventListener cb, String agentId, int teamId, AsyncUpdateAgentGoalsJsonObject asyncUpdateAgentGoalsJsonObject) {
         //PUT
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_GOALS;
+        ApiReturnType returnType = ApiReturnType.UPDATE_GOALS;
         String body = gson.toJson(asyncUpdateAgentGoalsJsonObject);
         String currentUrl = url + "api/v1/agent/goal/" + agentId + "/" + teamId;
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -595,7 +600,7 @@ public class ApiManager {
     public void sendAsyncUpdateProfileImage(AsyncServerEventListener cb, String agentId, AsyncUpdateProfileImageJsonObject asyncUpdateProfileImageJsonObject) {
         //PUT
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_PROFILE_IMAGE;
+        ApiReturnType returnType = ApiReturnType.UPDATE_PROFILE_IMAGE;
         String body = gson.toJson(asyncUpdateProfileImageJsonObject);
         String currentUrl = url + "api/v1/image";
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -604,7 +609,7 @@ public class ApiManager {
     public void sendAsyncUpdateProfile(AsyncServerEventListener cb, String agentId, HashMap<String, String> changedFields) {
         //PUT
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_PROFILE;
+        ApiReturnType returnType = ApiReturnType.UPDATE_PROFILE;
         String body = "{";
         int counter = 0;
         for ( String key : changedFields.keySet() ) {
@@ -623,7 +628,7 @@ public class ApiManager {
     public void updateNote(AsyncServerEventListener cb, String agentId, String noteId, String note, String noteType) {
         //PUT
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.UPDATE_NOTE;
+        ApiReturnType returnType = ApiReturnType.UPDATE_NOTE;
         String body = "{\"log_type_id\":\"" + noteType + "\", \"note\":\"" + note + "\"}";
         String currentUrl = url + "api/v1/client/logs/" + noteId;
         new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -633,7 +638,7 @@ public class ApiManager {
         //PUT
         getJWT(agent.getAgent_id());
         if(currentDevice != null) {
-            ApiReturnTypes returnType = ApiReturnTypes.UPDATE_FIREBASE;
+            ApiReturnType returnType = ApiReturnType.UPDATE_FIREBASE;
             String body = gson.toJson(currentDevice);
             String currentUrl = url + "api/v1/agent/device/" + agent.getAgent_id();
             new AsyncPut(cb, currentUrl, returnType, body).execute(jwtStr, timestamp, transactionID);
@@ -645,7 +650,7 @@ public class ApiManager {
     public void deleteNote(AsyncServerEventListener cb, String agentId, String noteId) {
         //DELETE
         getJWT(agentId);
-        ApiReturnTypes returnType = ApiReturnTypes.DELETE_NOTE;
+        ApiReturnType returnType = ApiReturnType.DELETE_NOTE;
         String currentUrl = url + "api/v1/client/logs/" + noteId;
         new AsyncDelete(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }

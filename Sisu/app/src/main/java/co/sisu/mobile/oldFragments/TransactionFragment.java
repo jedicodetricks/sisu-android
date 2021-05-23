@@ -43,8 +43,9 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.ClientObject;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -57,6 +58,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private DateManager dateManager;
+    private Utils utils;
     private ProgressBar loader;
     private LayoutInflater inflater;
 
@@ -83,6 +85,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         dateManager = new DateManager();
+        utils = parentActivity.getUtils();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getRecordClientsList();
@@ -439,7 +442,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 }
             }
             else {
-                parentActivity.showToast("That client is currently locked and can't be updated.");
+                utils.showToast("That client is currently locked and can't be updated.", parentActivity, colorSchemeManager);
             }
         } catch (JSONException e) {
             // This means that the boolean is false
@@ -569,7 +572,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             rightSelector.setText(displayDate);
         } catch (ParseException e) {
-            parentActivity.showToast("Error parsing selected date");
+            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
             e.printStackTrace();
         }
     }
@@ -580,8 +583,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.UPDATE_CLIENT) {
             parentActivity.onBackPressed();
         }
     }
@@ -592,9 +595,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.UPDATE_CLIENT) {
-            parentActivity.showToast("There was an error updating the client. Please try again later.");
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.UPDATE_CLIENT) {
+            utils.showToast("There was an error updating the client. Please try again later.", parentActivity, colorSchemeManager);
             parentActivity.onBackPressed();
         }
     }

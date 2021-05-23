@@ -25,8 +25,9 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.enums.ApiReturnTypes;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +39,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private DataController dataController;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private TextView feedbackHelpTextTop, feedbackHelpTextBottom;
     private Button feedbackButton;
     private ImageView sisuPowerLogo, sisuLogo;
@@ -64,6 +66,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
@@ -136,13 +139,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onEventCompleted(Object returnObject, ApiReturnTypes returnType) {
-        if(returnType == ApiReturnTypes.SEND_FEEDBACK) {
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FEEDBACK) {
             feedback.setText("");
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    parentActivity.showToast("Thank you for your feedback");
+                    utils.showToast("Thank you for your feedback", parentActivity, colorSchemeManager);
                 }
             });
         }
@@ -153,13 +156,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                parentActivity.showToast("We had an issue recording your feedback. Please try again later.");
+                utils.showToast("We had an issue recording your feedback. Please try again later.", parentActivity, colorSchemeManager);
             }
         });
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnTypes returnType) {
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

@@ -4,7 +4,7 @@ package co.sisu.mobile.enums;
  * Created by Brady Groharing on 10/15/2018.
  */
 
-public enum ApiReturnTypes {
+public enum ApiReturnType {
     GET_MESSAGE_CENTER,
     GET_CLIENT_SETTINGS,
     GET_AGENT_GOALS,
