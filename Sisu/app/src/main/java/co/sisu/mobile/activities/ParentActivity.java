@@ -73,6 +73,7 @@ import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
@@ -91,6 +92,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private ProgressBar parentLoader;
     private CacheManager cacheManager;
     private Utils utils;
+    private TileCreationHelper tileCreationHelper;
 //    private boolean clientFinished = false;
 //    private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
@@ -108,8 +110,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean shouldDisplayPushNotification = false;
     private AgentModel agent;
     private NotesObject selectedNote;
-    private boolean imageIsExpanded = false;
-    private ImageView expanded;
+//    private boolean imageIsExpanded = false;
+//    private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
     private ConstraintLayout paginateInfo;
@@ -136,6 +138,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private FilterObject selectedFilter;
 
     private PopupMenu teamSelectorPopup;
+    private String dashboardType = "agent";
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
     // TODO: I should create an enum with the fragment names so that I only have to change it in one spot in the future if I change a fragment name
@@ -152,6 +155,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager = new ApiManager(this, cacheManager);
         dateManager = new DateManager();
         utils = new Utils();
+        tileCreationHelper = new TileCreationHelper(this);
+
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
         pushNotificationIsHTML = getIntent().getStringExtra("has_html");
@@ -854,8 +859,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(returnType == ApiReturnType.GET_AGENT) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            boolean adminTransferring = true;
-            AsyncAgentJsonObject agentJsonObject = null;
+//            boolean adminTransferring = true;
+            AsyncAgentJsonObject agentJsonObject;
             String r = null;
             try {
                 r = ((Response) returnObject).body().string();
@@ -869,8 +874,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 agentJsonObject = new AsyncAgentJsonObject(tempAgent);
             }
             noNavigation = true;
-            AgentModel agentModel = agentJsonObject.getAgent();
-            agent = agentModel;
+            agent = agentJsonObject.getAgent();
             dataController.setAgent(agent);
             apiManager.getTeams(this, agent.getAgent_id());
         }
@@ -927,7 +931,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             tileTemplateFinished = true;
         }
-        this.runOnUiThread(() -> executeTeamSwap());
+        this.runOnUiThread(this::executeTeamSwap);
     }
 
     @Override
@@ -937,8 +941,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnType returnType) {
-        expanded = findViewById(R.id.expanded_image);
-        utils.zoomImageFromThumb(null, null, null, this, expanded);
+
     }
 
     public void resetClientTiles(String clientSearch, int page) {
@@ -1017,6 +1020,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     // GETTERS AND SETTERS
     // TODO: Almost every single one of these should be moved to the dataController
+
+
+    public String getDashboardType() {
+        return dashboardType;
+    }
+
+    public void setDashboardType(String dashboardType) {
+        this.dashboardType = dashboardType;
+    }
+
     public NotesObject getSelectedNote() {
         return selectedNote;
     }
@@ -1214,5 +1227,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return dataController.getSelectedTeamObject();
     }
 
+    public TileCreationHelper getTileCreationHelper() {
+        return tileCreationHelper;
+    }
 }
 

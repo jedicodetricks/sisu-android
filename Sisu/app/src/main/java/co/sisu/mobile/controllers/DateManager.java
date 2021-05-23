@@ -493,4 +493,62 @@ public class DateManager {
 
         setFormattedRecordDate();
     }
+
+    public void setSelectedStartTime(int year, int monthOfYear, int dayOfMonth) {
+        monthOfYear = monthOfYear + 1;
+        String formattedMonth = String.valueOf(monthOfYear);
+        String formattedDay = String.valueOf(dayOfMonth);
+
+        if(dayOfMonth < 10) {
+            formattedDay = "0" + dayOfMonth;
+        }
+
+        if(monthOfYear < 10) {
+            formattedMonth = "0" + monthOfYear;
+        }
+        setSelectedStartTime(getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay));
+        setFormattedStartTime(year + "-" + formattedMonth + "-" + formattedDay);
+    }
+
+    public void setSelectedEndTime(int year, int monthOfYear, int dayOfMonth) {
+        monthOfYear = monthOfYear + 1;
+        String formattedMonth = String.valueOf(monthOfYear);
+        String formattedDay = String.valueOf(dayOfMonth);
+
+        if(dayOfMonth < 10) {
+            formattedDay = "0" + dayOfMonth;
+        }
+
+        if(monthOfYear < 10) {
+            formattedMonth = "0" + monthOfYear;
+        }
+        setSelectedEndTime(getDateFromFormattedTime(year + "-" + formattedMonth + "-" + formattedDay));
+        setFormattedStartTime(year + "-" + formattedMonth + "-" + formattedDay);
+    }
+
+    public String getLastMonth() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+        calendar.add(Calendar.MONTH, -1);
+        return sdf.format(calendar.getTime());
+    }
+
+    public String getThisMonth() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+        return sdf.format(calendar.getTime());
+    }
+
+    public String getLastYear() {
+        calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        calendar.add(Calendar.YEAR, -1);
+        return sdf.format(calendar.getTime());
+    }
+
+    public String getThisYear() {
+        calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        return sdf.format(calendar.getTime());
+    }
 }

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "co.sisu.mobile"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 92
         vectorDrawables.useSupportLibrary = true

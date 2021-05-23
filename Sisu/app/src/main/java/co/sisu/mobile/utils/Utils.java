@@ -107,6 +107,19 @@ public class Utils {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
     }
 
+    public int getPercentComplete(double currentNum, double goalNum){
+        if(goalNum == 0) {
+            if(currentNum > 0) {
+                return 100;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        return (int) ((currentNum/goalNum) * 100);
+    }
+
     public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp, Context context, ImageView expanded) {
         mShortAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
