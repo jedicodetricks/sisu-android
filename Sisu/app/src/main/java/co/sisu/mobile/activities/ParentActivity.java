@@ -1127,9 +1127,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return  pushNotificationIsHTML;
     }
 
-    public String getPushNotificationPushId() {
-        return pushNotificationPushId;
-    }
+//    public String getPushNotificationPushId() {
+//        return pushNotificationPushId;
+//    }
 
     public void setShouldDisplayPushNotification(boolean b) {
         shouldDisplayPushNotification = b;

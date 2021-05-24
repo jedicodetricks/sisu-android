@@ -2,12 +2,12 @@ package co.sisu.mobile.fragments.main;
 
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -94,7 +93,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.inflater = inflater;
@@ -102,9 +101,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         this.view = view;
         parentActivity = (ParentActivity) getActivity();
+        assert parentActivity != null;
         navigationManager = parentActivity.getNavigationManager();
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
@@ -130,17 +130,17 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         initTransactionButtons(view);
         initLabels(view);
         setTransactionSectionVisible(view);
-        setColorScheme();
+        setColorScheme(view);
 //        activitiesTable = view.findViewById(R.id.activitiesTable);
 
     }
 
-    private void initLabels(View view) {
+    private void initLabels(@NonNull View view) {
         transactionLabel = view.findViewById(R.id.recordTransactionTitleView);
         activitiesLabel = view.findViewById(R.id.recordTitleView);
     }
 
-    private void initTransactionButtons(View view){
+    private void initTransactionButtons(@NonNull View view){
         addTransactionButton = view.findViewById(R.id.addTransactionButton);
         appointmentSetButton = view.findViewById(R.id.appointmentSetButton);
         appointmentMetButton = view.findViewById(R.id.appointmentMetButton);
@@ -156,13 +156,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         closedButton.setOnClickListener(this);
     }
 
-    private void initDateSelectors(View view) {
+    private void initDateSelectors(@NonNull View view) {
         leftSelector = view.findViewById(R.id.miniDateSelectorDate);
         leftSelector.setOnClickListener(this);
         rightSelector = view.findViewById(R.id.miniDateSelectorDateFormat);
         rightSelector.setOnClickListener(this);
 
-        dateSelectorPopup = new PopupMenu(getContext(), leftSelector);
+        dateSelectorPopup = new PopupMenu(parentActivity, leftSelector);
 
         dateSelectorPopup.setOnMenuItemClickListener(this);
         List<String> timelineArray = initSpinnerArray();
@@ -180,7 +180,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         updateDisplayDate(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
     }
 
-    private void initListView(List<Metric> metricList) {
+    private void initListView(@NonNull List<Metric> metricList) {
         List<DoubleMetric> doubleMetricList = new ArrayList<>();
         for(int i = 0; i < metricList.size(); i++) {
             if(i % 2 == 0) {
@@ -221,8 +221,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
     }
 
-    private void setColorScheme() {
-        RelativeLayout layout = getView().findViewById(R.id.record_list_parent_layout);
+    private void setColorScheme(@NonNull View view) {
+        RelativeLayout layout = view.findViewById(R.id.record_list_parent_layout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
 //        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
@@ -247,37 +247,37 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         rightSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
         rightSelector.setTextColor(colorSchemeManager.getLighterTextColor());
 
-        VectorChildFinder plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, addTransactionButton);
+        VectorChildFinder plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, addTransactionButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         addTransactionButton.invalidate();
 
-        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, appointmentSetButton);
+        plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, appointmentSetButton);
         plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         appointmentSetButton.invalidate();
 
-        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, appointmentMetButton);
+        plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, appointmentMetButton);
         plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         appointmentMetButton.invalidate();
 
-        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, signedButton);
+        plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, signedButton);
         plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         signedButton.invalidate();
 
-        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, underContractButton);
+        plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, underContractButton);
         plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
         underContractButton.invalidate();
 
-        plusVector = new VectorChildFinder(this.getContext(), R.drawable.add_icon, closedButton);
+        plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, closedButton);
         plusPath = plusVector.findPathByName("orange_area");
         plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
         plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
@@ -287,6 +287,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         activitiesLabel.setBackgroundColor(colorSchemeManager.getPrimaryColor());
     }
 
+    @NonNull
     private List<String> initSpinnerArray() {
         List<String> spinnerArray = new ArrayList<>();
         spinnerArray.add("Yesterday");
@@ -324,7 +325,8 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
     }
 
-    private View createActivityRowView(View rowView, DoubleMetric doubleMetric) {
+    @NonNull
+    private View createActivityRowView(@NonNull View rowView, @NonNull DoubleMetric doubleMetric) {
         final Metric leftMetric = doubleMetric.getLeftMetric();
         final Metric rightMetric = doubleMetric.getRightMetric();
 
@@ -365,29 +367,23 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         leftPlusButton.invalidate();
 
 
-        leftMinusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(parentActivity.isTeamSwapFinished()) {
-                    int minusOne = leftMetric.getCurrentNum();
-                    if(minusOne > 0) {
-                        minusOne -= 1;
-                    }
-                    leftRowCounter.setText(String.valueOf(minusOne));
+        leftMinusButton.setOnClickListener(view -> {
+            if(parentActivity.isTeamSwapFinished()) {
+                int minusOne = leftMetric.getCurrentNum();
+                if(minusOne > 0) {
+                    minusOne -= 1;
                 }
-
+                leftRowCounter.setText(String.valueOf(minusOne));
             }
+
         });
 
-        leftPlusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(parentActivity.isTeamSwapFinished()) {
-                    int plusOne = leftMetric.getCurrentNum() + 1;
-                    leftRowCounter.setText(String.valueOf(plusOne));
-                }
-
+        leftPlusButton.setOnClickListener(view -> {
+            if(parentActivity.isTeamSwapFinished()) {
+                int plusOne = leftMetric.getCurrentNum() + 1;
+                leftRowCounter.setText(String.valueOf(plusOne));
             }
+
         });
 
         leftRowCounter.addTextChangedListener(new TextWatcher() {
@@ -400,7 +396,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             @Override
             public void afterTextChanged(Editable editable) {
                 if(!leftRowCounter.getText().toString().equals("")) {
-                    if(Integer.valueOf(leftRowCounter.getText().toString()) != leftMetric.getCurrentNum()) {
+                    if(Integer.parseInt(leftRowCounter.getText().toString()) != leftMetric.getCurrentNum()) {
                         switch(leftMetric.getType()) {
                             case "1TAPT":
                             case "CLSD":
@@ -409,7 +405,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 //                                mRecordEventHandler.onClientDirectorClicked(leftMetric);
                                 break;
                             default:
-                                onNumberChanged(leftMetric, Integer.valueOf(leftRowCounter.getText().toString()));
+                                onNumberChanged(leftMetric, Integer.parseInt(leftRowCounter.getText().toString()));
                                 break;
                         }
                     }
@@ -461,29 +457,23 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             rightPlusButton.invalidate();
 
 
-            rightMinusButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(parentActivity.isTeamSwapFinished()) {
-                        int minusOne = rightMetric.getCurrentNum();
-                        if(minusOne > 0) {
-                            minusOne -= 1;
-                        }
-                        rightRowCounter.setText(String.valueOf(minusOne));
+            rightMinusButton.setOnClickListener(view -> {
+                if(parentActivity.isTeamSwapFinished()) {
+                    int minusOne = rightMetric.getCurrentNum();
+                    if(minusOne > 0) {
+                        minusOne -= 1;
                     }
-
+                    rightRowCounter.setText(String.valueOf(minusOne));
                 }
+
             });
 
-            rightPlusButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(parentActivity.isTeamSwapFinished()) {
-                        int plusOne = rightMetric.getCurrentNum() + 1;
-                        rightRowCounter.setText(String.valueOf(plusOne));
-                    }
-
+            rightPlusButton.setOnClickListener(view -> {
+                if(parentActivity.isTeamSwapFinished()) {
+                    int plusOne = rightMetric.getCurrentNum() + 1;
+                    rightRowCounter.setText(String.valueOf(plusOne));
                 }
+
             });
 
             rightRowCounter.addTextChangedListener(new TextWatcher() {
@@ -496,7 +486,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 @Override
                 public void afterTextChanged(Editable editable) {
                     if(!rightRowCounter.getText().toString().equals("")) {
-                        if(Integer.valueOf(rightRowCounter.getText().toString()) != rightMetric.getCurrentNum()) {
+                        if(Integer.parseInt(rightRowCounter.getText().toString()) != rightMetric.getCurrentNum()) {
                             switch(rightMetric.getType()) {
                                 case "1TAPT":
                                 case "CLSD":
@@ -505,7 +495,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 //                                    mRecordEventHandler.onClientDirectorClicked(rightMetric);
                                     break;
                                 default:
-                                    onNumberChanged(rightMetric, Integer.valueOf(rightRowCounter.getText().toString()));
+                                    onNumberChanged(rightMetric, Integer.parseInt(rightRowCounter.getText().toString()));
                                     break;
                             }
                         }
@@ -524,21 +514,16 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             rightPlusButton.setVisibility(View.GONE);
         }
 
-
-
         return rowView;
     }
 
     private void showDatePickerDialog() {
-        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, day);
-                dateManager.setRecordDateToDate(cal);
-                updateDisplayDate(year, month, day);
-                updateRecordInfo();
-            }
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog, (datePicker, year, month, day) -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, day);
+            dateManager.setRecordDateToDate(cal);
+            updateDisplayDate(year, month, day);
+            updateRecordInfo();
         }, dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -557,7 +542,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         switch (v.getId()) {
             case R.id.miniDateSelectorDateFormat:
                 showDatePickerDialog();
@@ -612,26 +597,21 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void popAdminConfirmDialog() {
+        // TODO: This feels like a util
         String message = "Admin. Do you want to save?";
         android.support.v7.app.AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setMessage(message)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        saveRecords();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dataController.clearUpdatedRecords();
-                    }
+                .setPositiveButton("Save", (dialog, id) -> saveRecords())
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
+                    // User cancelled the dialog
+                    dataController.clearUpdatedRecords();
                 });
         builder.create();
         builder.show();
     }
 
     @Override
-    public void onNumberChanged(Metric metric, int newNum) {
+    public void onNumberChanged(@NonNull Metric metric, int newNum) {
         metric.setCurrentNum(newNum);
         dataController.setRecordUpdated(metric);
     }
@@ -683,7 +663,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 0:
                 //Yesterday

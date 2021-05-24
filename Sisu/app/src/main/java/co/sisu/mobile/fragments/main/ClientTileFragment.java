@@ -3,31 +3,23 @@ package co.sisu.mobile.fragments.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -49,17 +41,14 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
-import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FilterObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
-import co.sisu.mobile.oldFragments.ClientListFragment;
 import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
@@ -75,7 +64,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
-    private DateManager dateManager;
     private Utils utils;
     private TileCreationHelper tileCreationHelper;
     private ProgressBar loader;
@@ -90,17 +78,17 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
     private ImageView addButton;
-    private List<FilterObject> agentFilters = new ArrayList();
+    private List<FilterObject> agentFilters = new ArrayList<>();
     private Boolean filterMenuPrepared = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
+        assert parentActivity != null;
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
-        dateManager = parentActivity.getDateManager();
         tileCreationHelper = parentActivity.getTileCreationHelper();
         loader = parentActivity.findViewById(R.id.parentLoader);
         addButton = parentActivity.findViewById(R.id.addView);
@@ -187,25 +175,26 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
-            for(int i = 0; i < tile_rows.length(); i++) {
-                try {
-                    HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, this, this);
-                    if(horizontalScrollView != null) {
-                        // Add one here to account for the spinner's ID.
-                        horizontalScrollView.setId(numOfRows + 1);
-                        RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+            if (tile_rows != null) {
+                Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
+                for(int i = 0; i < tile_rows.length(); i++) {
+                    try {
+                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, this, this);
+                        if(horizontalScrollView != null) {
+                            // Add one here to account for the spinner's ID.
+                            horizontalScrollView.setId(numOfRows + 1);
+                            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
 
-                        parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
-                        numOfRows++;
+                            parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
+                            numOfRows++;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
-
         }
         loader.setVisibility(View.INVISIBLE);
         return parentLayout;
@@ -241,7 +230,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
         TextView paginationText = paginateInfo.findViewById(R.id.paginateText);
         try {
-            paginationText.setText("Showing: 1 to " + count + " of " + paginateObject.getString("total") + " entities");
+            paginationText.setText(String.format("Showing: 1 to %s of %s entities", count, paginateObject.getString("total")));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -307,7 +296,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     }
 
     private void initFilterPopupMenu() {
-        filterPopup = new PopupMenu(getContext(), saveButtonFilterText);
+        filterPopup = new PopupMenu(parentActivity, saveButtonFilterText);
 
         filterPopup.setOnMenuItemClickListener(item -> {
             parentActivity.setSelectedFilter(agentFilters.get(item.getItemId()));

@@ -2,33 +2,21 @@ package co.sisu.mobile.fragments.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,11 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -56,20 +40,12 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
-import co.sisu.mobile.fragments.ReportFragment;
-import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.ScopeBarModel;
-import co.sisu.mobile.oldFragments.ClientListFragment;
-import co.sisu.mobile.utils.CircularProgressBar;
 import co.sisu.mobile.utils.TileCreationHelper;
-import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
-
-import static android.view.FrameMetrics.ANIMATION_DURATION;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -78,13 +54,11 @@ import static android.view.FrameMetrics.ANIMATION_DURATION;
 public class ScoreboardTileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, DatePickerDialog.OnDateSetListener {
 
     private ParentActivity parentActivity;
-    private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private DateManager dateManager;
     private ActionBarManager actionBarManager;
-    private Utils utils;
     private TileCreationHelper tileCreationHelper;
     private ProgressBar loader;
     private LayoutInflater inflater;
@@ -103,12 +77,11 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
-        dataController = parentActivity.getDataController();
+        assert parentActivity != null;
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         dateManager = parentActivity.getDateManager();
         actionBarManager = parentActivity.getActionBarManager();
-        utils = parentActivity.getUtils();
         tileCreationHelper = parentActivity.getTileCreationHelper();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
@@ -149,22 +122,24 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
-            for(int i = 1; i < tile_rows.length(); i++) {
-                try {
-                    HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, this, null);
-                    if(horizontalScrollView != null) {
-                        // Add one here to account for the spinner's ID.
-                        horizontalScrollView.setId(numOfRows + 1);
-                        RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
+            if (tile_rows != null) {
+                Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
+                for(int i = 1; i < tile_rows.length(); i++) {
+                    try {
+                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, this, null);
+                        if(horizontalScrollView != null) {
+                            // Add one here to account for the spinner's ID.
+                            horizontalScrollView.setId(numOfRows + 1);
+                            RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
 
-                        parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
-                        numOfRows++;
+                            parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
+                            numOfRows++;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -184,7 +159,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             String title = parentActivity.getPushNotificationTitle();
             String body = parentActivity.getPushNotificationBody();
             String is_html = parentActivity.getPushNotificationIsHTML();
-            String pushId = parentActivity.getPushNotificationPushId();
+//            String pushId = parentActivity.getPushNotificationPushId();
             if(is_html != null && is_html.equals("true")) {
                 //TODO: This will have to make an api call with pushId
             }
