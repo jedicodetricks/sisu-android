@@ -152,7 +152,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
             for(int i = 1; i < tile_rows.length(); i++) {
                 try {
-                    HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, inflater, this);
+                    HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, this, null);
                     if(horizontalScrollView != null) {
                         // Add one here to account for the spinner's ID.
                         horizontalScrollView.setId(numOfRows + 1);
@@ -287,39 +287,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         parentActivity.resetDashboardTiles(false);
     }
 
-    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
-        // TODO: This feels like a util
-        // Initialize new color drawables
-        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
-        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
-
-        // Initialize a new array of drawable objects
-        Drawable[] drawables = new Drawable[]{
-                borderColorDrawable,
-                backgroundColorDrawable
-        };
-
-        // Initialize a new layer drawable instance from drawables array
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-
-        // Set padding for background color layer
-        layerDrawable.setLayerInset(
-                1, // Index of the drawable to adjust [background color layer]
-                left, // Number of pixels to add to the left bound [left border]
-                top, // Number of pixels to add to the top bound [top border]
-                right, // Number of pixels to add to the right bound [right border]
-                bottom // Number of pixels to add to the bottom bound [bottom border]
-        );
-
-        // Finally, return the one or more sided bordered background drawable
-        return layerDrawable;
-    }
-
-
     private void toggleDashboardTypeSelector(boolean isAgentClicked) {
         // TODO: I think this is never used. Adding a breakpoint to see.
         boolean toggled = false;
-        LayerDrawable underlineDrawable = getBorders(
+        LayerDrawable underlineDrawable = tileCreationHelper.getBorders(
                 colorSchemeManager.getAppBackground(), // Background color
                 Color.GRAY, // Border color
                 0, // Left border in pixels
@@ -328,7 +299,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 5 // Bottom border in pixels
         );
 
-        LayerDrawable noUnderlineDrawable = getBorders(
+        LayerDrawable noUnderlineDrawable = tileCreationHelper.getBorders(
                 colorSchemeManager.getAppBackground(), // Background color
                 Color.GRAY, // Border color
                 0, // Left border in pixels

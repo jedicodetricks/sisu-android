@@ -37,12 +37,16 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ClientMessagingEvent;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.ReportFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
+import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.oldFragments.ClientListFragment;
 
@@ -54,6 +58,7 @@ public class TileCreationHelper {
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private DateManager dateManager;
+    private ColorSchemeManager colorSchemeManager;
     private Utils utils;
 
     public TileCreationHelper(ParentActivity parentActivity) {
@@ -62,10 +67,11 @@ public class TileCreationHelper {
         this.navigationManager = parentActivity.getNavigationManager();
         this.dateManager = parentActivity.getDateManager();
         this.utils = parentActivity.getUtils();
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
     }
 
     @Nullable
-    public HorizontalScrollView createRowFromJSON(@NonNull JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject, LayoutInflater inflater, AsyncServerEventListener callback) {
+    public HorizontalScrollView createRowFromJSON(@NonNull JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject, int adjustHeightInt, LayoutInflater inflater, AsyncServerEventListener callback, ClientMessagingEvent clientCallback) {
         try {
             JSONArray rowTiles = rowObject.getJSONArray("tiles");
             double height = rowObject.getDouble("rowheight");
@@ -74,7 +80,7 @@ public class TileCreationHelper {
 //            Boolean square = rowObject.getBoolean("square");
             int maxTiles = rowObject.getInt("max_tiles");
 
-            int correctedHeight = (int) height + 300;
+            int correctedHeight = (int) height + adjustHeightInt;
             List<View> rowViews = new ArrayList<>();
 
             for(int i = 0; i < rowTiles.length(); i++) {
@@ -100,7 +106,7 @@ public class TileCreationHelper {
                             side = tileObject.getBoolean("side");
                         }
                         if(side) {
-                            correctedHeight = (int) height + 150;
+                            correctedHeight = (int) height + 175;
                         }
                         v = createSmallHeaderView(container, tileObject, inflater, callback);
                         v.setId(i);
@@ -144,6 +150,12 @@ public class TileCreationHelper {
                         v.setId(i);
                         rowViews.add(v);
                         break;
+                    case "clientList":
+                        correctedHeight = (int) height + 150;
+                        v = createClientView(container, tileObject, inflater, clientCallback);
+                        v.setId(i);
+                        rowViews.add(v);
+                        break;
                     default:
                         Log.e("TYPE", type);
                         break;
@@ -176,11 +188,11 @@ public class TileCreationHelper {
             else {
                 view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
                 LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
-                LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, correctedHeight, 1);
-                textviewparam.setMargins(2, 2, 2, 2);
+                LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, correctedHeight, 1);
+                textViewParams.setMargins(2, 2, 2, 2);
 
                 for(View v: rowViews) {
-                    linearLayout.addView(v, textviewparam);
+                    linearLayout.addView(v, textViewParams);
                 }
                 horizontalScrollView.addView(linearLayout);
             }
@@ -578,7 +590,7 @@ public class TileCreationHelper {
         else if(tileColor instanceof JSONObject) {
             assignedTileColor = "#FFF000";
         }
-
+        // TODO: The ClientTileFragment had to set this to true because IOS was making assumptions. I don't know if I still need to do that.
         if(rounded) {
             // I'm doing this try catch because apparently there is some bad color data coming in sometimes
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
@@ -940,6 +952,167 @@ public class TileCreationHelper {
         return rowView;
     }
 
+    public View createClientView(ViewGroup row, JSONObject tileObject, @NonNull LayoutInflater inflater, ClientMessagingEvent clientCallback) throws JSONException {
+        View rowView;
+        ConstraintLayout paginateInfo = parentActivity.findViewById(R.id.paginateInfo);
+        rowView = inflater.inflate(R.layout.adapter_client_list, row, false);
+
+        String headerText = tileObject.getString("header");
+        String footerText = tileObject.getString("value");
+        String headerColor = tileObject.getString("header_text_color");
+        String footerColor = tileObject.getString("footer_text_color");
+        String headerSize = tileObject.getString("font_header");
+        String footerSize = tileObject.getString("font_footer");
+
+        TextView header = rowView.findViewById(R.id.client_list_title);
+        TextView footer = rowView.findViewById(R.id.client_list_subtitle);
+
+        header.setText(headerText);
+        header.setTextColor(Color.parseColor(headerColor));
+        if(headerText.length() > 15) {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small", parentActivity));
+        }
+        else {
+            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize, parentActivity));
+        }
+
+        footer.setText(footerText);
+        footer.setTextColor(Color.parseColor(footerColor));
+        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize, parentActivity));
+        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+        String tileColor = tileObject.getString("tile_color");
+        boolean rounded = tileObject.getBoolean("rounded");
+
+        String border = "";
+        if(tileObject.has("border")) {
+            border = tileObject.getString("border");
+        }
+
+
+        if(rounded) {
+            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
+            roundedCorners.setColor(Color.parseColor(tileColor));
+            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
+        }
+        else {
+            int topBorder = 0;
+            int leftBorder = 0;
+            int rightBorder = 0;
+            int bottomBorder = 0;
+
+            switch (border) {
+                case "all":
+                    topBorder = 5;
+                    leftBorder = 5;
+                    rightBorder = 5;
+                    bottomBorder = 5;
+                    break;
+                case "top":
+                    topBorder = 5;
+                    break;
+                case "left":
+                    leftBorder = 5;
+                    break;
+                case "right":
+                    rightBorder = 5;
+                    break;
+                case "bottom":
+                    bottomBorder = 5;
+                    break;
+            }
+
+            LayerDrawable borderDrawable = getBorders(
+                    Color.parseColor(tileColor), // Background color
+                    Color.GRAY, // Border color
+                    leftBorder, // Left border in pixels
+                    topBorder, // Top border in pixels
+                    rightBorder, // Right border in pixels
+                    bottomBorder // Bottom border in pixels
+            );
+            rowView.setBackground(borderDrawable);
+        }
+
+        rowView.setOnClickListener(view -> {
+            try {
+                ClientObject selectedClient = new ClientObject(tileObject.getJSONObject("tile_data"));
+                parentActivity.setSelectedClient(selectedClient);
+                paginateInfo.setVisibility(View.GONE);
+                navigationManager.stackReplaceFragment(ClientManageFragment.class);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        ClientObject clientObject = new ClientObject(tileObject.getJSONObject("tile_data"));
+        ImageView textImage = rowView.findViewById(R.id.leftButton);
+        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        textImage.setImageDrawable(drawable);
+
+        ImageView phoneImage = rowView.findViewById(R.id.centerButton);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        phoneImage.setImageDrawable(drawable);
+
+        ImageView emailImage = rowView.findViewById(R.id.rightButton);
+        drawable = parentActivity.getResources().getDrawable(R.drawable.email_icon_active).mutate();
+        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        emailImage.setImageDrawable(drawable);
+
+//
+        if(clientObject.getHome_phone() == null || clientObject.getHome_phone().equals("")) {
+            phoneImage.setVisibility(View.INVISIBLE);
+        }
+        else {
+            phoneImage.setVisibility(View.VISIBLE);
+        }
+
+        if(clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("")) {
+            textImage.setVisibility(View.INVISIBLE);
+        } else {
+            phoneImage.setVisibility(View.VISIBLE);
+            textImage.setVisibility(View.VISIBLE);
+            textImage.setOnClickListener(v -> clientCallback.onTextClicked(clientObject.getMobile_phone(), clientObject));
+            phoneImage.setOnClickListener(v -> clientCallback.onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject));
+
+        }
+
+        if(clientObject.getEmail() == null || clientObject.getEmail().equals("")) {
+            emailImage.setVisibility(View.INVISIBLE);
+        } else {
+            emailImage.setVisibility(View.VISIBLE);
+            emailImage.setOnClickListener(v -> clientCallback.onEmailClicked(clientObject.getEmail(), clientObject));
+
+        }
+
+        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
+        if(clientObject.getIs_locked() == 1) {
+            if(clientObject.getType_id().equalsIgnoreCase("b")) {
+                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            } else {
+                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            }
+        }
+        else {
+            if(clientObject.getType_id().equalsIgnoreCase("b")) {
+                drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                thumbnail.setImageDrawable(drawable);
+            } else {
+                thumbnail.setImageResource(R.drawable.seller_icon_active);
+            }
+        }
+
+
+        return rowView;
+    }
+
     private float getTextViewSizing(@NonNull String size, Context context) {
         float returnSize;
         switch(size) {
@@ -947,6 +1120,7 @@ public class TileCreationHelper {
                 returnSize = context.getResources().getDimension(R.dimen.font_small);
                 break;
             case "medium":
+            case "mediam":
                 returnSize = context.getResources().getDimension(R.dimen.font_large);
                 break;
             case "large":
@@ -998,7 +1172,7 @@ public class TileCreationHelper {
         }
     }
 
-    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
+    public LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
         // Initialize new color drawables
         ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
         ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);

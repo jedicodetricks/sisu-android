@@ -60,6 +60,7 @@ import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.oldFragments.ClientListFragment;
+import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
 import okhttp3.Response;
 
@@ -76,6 +77,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ActionBarManager actionBarManager;
     private DateManager dateManager;
     private Utils utils;
+    private TileCreationHelper tileCreationHelper;
     private ProgressBar loader;
     private LayoutInflater inflater;
     private int numOfRows = 1;
@@ -99,6 +101,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         dateManager = parentActivity.getDateManager();
+        tileCreationHelper = parentActivity.getTileCreationHelper();
         loader = parentActivity.findViewById(R.id.parentLoader);
         addButton = parentActivity.findViewById(R.id.addView);
         actionBarManager = parentActivity.getActionBarManager();
@@ -123,6 +126,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         return createFullView(container, tileTemplate);
     }
 
+    @NonNull
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
         loader.setVisibility(View.VISIBLE);
@@ -131,33 +135,31 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         RelativeLayout parentRelativeLayout;
         View parentLayout = inflater.inflate(R.layout.activity_client_tile_parentlayout, container, false);
         tileScrollView = parentLayout.findViewById(R.id.tileScrollView);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            tileScrollView.getViewTreeObserver()
-                    .addOnScrollChangedListener(() -> {
-                        if (!tileScrollView.canScrollVertically(1)) {
-                            // bottom of scroll view
-                            if(!updatingClients) {
-                                updatingClients = true;
-                                try {
-                                    if(paginateObject.getBoolean("has_next")) {
-                                        //GO GET THE NEXT SET OF CLIENTS
-                                        int currentPage = paginateObject.getInt("page");
-                                        if(parentActivity.getSelectedFilter() == null) {
-                                            parentActivity.resetClientTiles("", currentPage + 1);
-                                        }
-                                        else {
-                                            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
-                                        }
+        tileScrollView.getViewTreeObserver()
+                .addOnScrollChangedListener(() -> {
+                    if (!tileScrollView.canScrollVertically(1)) {
+                        // bottom of scroll view
+                        if(!updatingClients) {
+                            updatingClients = true;
+                            try {
+                                if(paginateObject.getBoolean("has_next")) {
+                                    //GO GET THE NEXT SET OF CLIENTS
+                                    int currentPage = paginateObject.getInt("page");
+                                    if(parentActivity.getSelectedFilter() == null) {
+                                        parentActivity.resetClientTiles("", currentPage + 1);
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    else {
+                                        parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
+                                    }
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
                         }
-                    });
-        }
+
+                    }
+                });
         clientSearch = parentLayout.findViewById(R.id.clientTileSearch);
         clientSearch.setId(1);
         if (tileTemplate != null) {
@@ -165,7 +167,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             paginateInfo = parentActivity.findViewById(R.id.paginateInfo);
             paginateInfo.setVisibility(View.VISIBLE);
             paginateInfo.setBackgroundColor(colorSchemeManager.getAppBackground());
-            LayerDrawable borderDrawable = getBorders(
+            LayerDrawable borderDrawable = tileCreationHelper.getBorders(
                     colorSchemeManager.getAppBackground(), // Background color
                     Color.GRAY, // Border color
                     0, // Left border in pixels
@@ -178,12 +180,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             // Create the parent layout that all the rows will go in
             parentLayout.setBackgroundColor(colorSchemeManager.getAppBackground());
             parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
-//            initContextFilterSelector(parentLayout);
-//            initTimelineSelector(parentLayout);
-//            initDateSelector(parentLayout);
-//            initPopupMenu();
-//            initializeCalendarHandler();
-//            initDashboardTypeSelector(parentLayout);
             //
 
             try {
@@ -194,7 +190,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
             for(int i = 0; i < tile_rows.length(); i++) {
                 try {
-                    HorizontalScrollView horizontalScrollView = createRowFromJSON(tile_rows.getJSONObject(i), container, false);
+                    HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, this, this);
                     if(horizontalScrollView != null) {
                         // Add one here to account for the spinner's ID.
                         horizontalScrollView.setId(numOfRows + 1);
@@ -259,7 +255,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         addButton.bringToFront();
     }
 
-    private void initScopePopupMenu(View view) {
+    private void initScopePopupMenu(@NonNull View view) {
         scopePopup = new PopupMenu(view.getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
@@ -288,7 +284,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void initMarketStatusPopupMenu(View view) {
+    private void initMarketStatusPopupMenu(@NonNull View view) {
         marketStatusPopup = new PopupMenu(view.getContext(), marketStatusFilterText);
 
         marketStatusPopup.setOnMenuItemClickListener(item -> {
@@ -333,454 +329,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     public void teamSwap() {
         parentActivity.resetDashboardTiles(false);
-    }
-
-    @SuppressLint("ResourceType")
-    private HorizontalScrollView createRowFromJSON(JSONObject rowObject, ViewGroup container, Boolean isLeaderboardObject) {
-//        Log.e("ROW OBJECT", String.valueOf(rowObject));
-        try {
-            JSONArray rowTiles = rowObject.getJSONArray("tiles");
-            double height = rowObject.getDouble("rowheight");
-//            Double innerGap = rowObject.getDouble("innerGap");
-            boolean disabled = rowObject.getBoolean("disabled");
-//            Boolean square = rowObject.getBoolean("square");
-            int maxTiles = rowObject.getInt("max_tiles");
-
-            int correctedHeight = (int) height;
-            List<View> rowViews = new ArrayList<>();
-
-            for(int i = 0; i < rowTiles.length(); i++) {
-                JSONObject tileObject = rowTiles.getJSONObject(i);
-                String type = tileObject.getString("type");
-
-                switch (type) {
-                    case "clientList":
-                        correctedHeight = (int) height + 150;
-                        View v = createClientView(container, tileObject);
-                        v.setId(i);
-                        rowViews.add(v);
-                        break;
-                    case "smallHeader":
-                        correctedHeight = (int) height + 225;
-                        v = createSmallHeaderView(container, tileObject);
-                        v.setId(i);
-                        rowViews.add(v);
-                        break;
-                    default:
-                        Log.e("TYPE", type);
-                        break;
-                }
-            }
-
-            HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-
-            View view;
-
-            if(rowViews.size() > maxTiles) {
-                view = inflater.inflate(R.layout.activity_tile_template_test, container, false);
-                RelativeLayout relativeLayout = view.findViewById(R.id.tileRelativeLayout);
-
-
-                // Starting this at 50 so that it doesn't get confused with other IDs.
-                int viewCounter = 50;
-                for(View v: rowViews) {
-                    v.setId(viewCounter);
-                    RelativeLayout.LayoutParams childRelativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, correctedHeight);
-//                    childRelativeParams.setMargins(2, 2, 2, 2);
-                    if(viewCounter > 50) {
-                        childRelativeParams.addRule(RelativeLayout.RIGHT_OF, viewCounter - 1);
-                    }
-                    relativeLayout.addView(v, childRelativeParams);
-                    viewCounter++;
-                }
-                horizontalScrollView.addView(relativeLayout);
-            }
-            else {
-                view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-                LinearLayout linearLayout = view.findViewById(R.id.tileLinearLayout);
-                LinearLayout.LayoutParams textviewparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, correctedHeight, 1);
-                textviewparam.setMargins(2, 2, 2, 2);
-
-                for(View v: rowViews) {
-                    linearLayout.addView(v, textviewparam);
-                }
-                horizontalScrollView.addView(linearLayout);
-            }
-
-//            view.setLayoutParams(relativeParams);
-
-            return horizontalScrollView;
-
-        } catch (JSONException e) {
-            // That means this is probably a spacer
-            try {
-                double height = rowObject.getDouble("rowheight");
-
-                HorizontalScrollView horizontalScrollView = (HorizontalScrollView) inflater.inflate(R.layout.activity_tile_template_test_scrollview, container, false);
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) height);
-                View view = inflater.inflate(R.layout.activity_tile_template_linear_test, container, false);
-                view.setLayoutParams(relativeParams);
-                horizontalScrollView.addView(view);
-                return horizontalScrollView;
-            } catch (JSONException e1) {
-                // If we get here, we've really screwed it up.
-                e1.printStackTrace();
-            }
-
-        }
-
-        return null;
-    }
-
-    private float getTextViewSizing(String size) {
-        float returnSize;
-        switch(size) {
-            case "small":
-                returnSize = getResources().getDimension(R.dimen.font_small);
-                break;
-            case "medium":
-            case "mediam": //I don't know if Rick is still sending this typo down
-                returnSize = getResources().getDimension(R.dimen.font_large);
-                break;
-            case "large":
-                returnSize = getResources().getDimension(R.dimen.font_larger);
-                break;
-            default:
-                returnSize = getResources().getDimension(R.dimen.font_mega);
-                Log.e("TEXTVIEW SIZE", "Error setting TextView Size: " + size);
-                break;
-        }
-
-        return returnSize;
-    }
-
-    protected LayerDrawable getBorders(int bgColor, int borderColor, int left, int top, int right, int bottom){
-        // Initialize new color drawables
-        ColorDrawable borderColorDrawable = new ColorDrawable(borderColor);
-        ColorDrawable backgroundColorDrawable = new ColorDrawable(bgColor);
-
-        // Initialize a new array of drawable objects
-        Drawable[] drawables = new Drawable[]{
-                borderColorDrawable,
-                backgroundColorDrawable
-        };
-
-        // Initialize a new layer drawable instance from drawables array
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-
-        // Set padding for background color layer
-        layerDrawable.setLayerInset(
-                1, // Index of the drawable to adjust [background color layer]
-                left, // Number of pixels to add to the left bound [left border]
-                top, // Number of pixels to add to the top bound [top border]
-                right, // Number of pixels to add to the right bound [right border]
-                bottom // Number of pixels to add to the bottom bound [bottom border]
-        );
-
-        // Finally, return the one or more sided bordered background drawable
-        return layerDrawable;
-    }
-
-    private View createClientView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView;
-
-        rowView = inflater.inflate(R.layout.adapter_client_list, row, false);
-
-        String headerText = tileObject.getString("header");
-        String footerText = tileObject.getString("value");
-        String headerColor = tileObject.getString("header_text_color");
-        String footerColor = tileObject.getString("footer_text_color");
-        String headerSize = tileObject.getString("font_header");
-        String footerSize = tileObject.getString("font_footer");
-
-        TextView header = rowView.findViewById(R.id.client_list_title);
-        TextView footer = rowView.findViewById(R.id.client_list_subtitle);
-
-        header.setText(headerText);
-        header.setTextColor(Color.parseColor(headerColor));
-        if(headerText.length() > 15) {
-            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing("small"));
-        }
-        else {
-            header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
-        }
-
-        footer.setText(footerText);
-        footer.setTextColor(Color.parseColor(footerColor));
-        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
-        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-        String tileColor = tileObject.getString("tile_color");
-        boolean rounded = tileObject.getBoolean("rounded");
-
-        String border = "";
-        if(tileObject.has("border")) {
-            border = tileObject.getString("border");
-        }
-
-
-        if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(Color.parseColor(tileColor));
-            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
-        }
-        else {
-            int topBorder = 0;
-            int leftBorder = 0;
-            int rightBorder = 0;
-            int bottomBorder = 0;
-
-            switch (border) {
-                case "all":
-                    topBorder = 5;
-                    leftBorder = 5;
-                    rightBorder = 5;
-                    bottomBorder = 5;
-                    break;
-                case "top":
-                    topBorder = 5;
-                    break;
-                case "left":
-                    leftBorder = 5;
-                    break;
-                case "right":
-                    rightBorder = 5;
-                    break;
-                case "bottom":
-                    bottomBorder = 5;
-                    break;
-            }
-
-            LayerDrawable borderDrawable = getBorders(
-                    Color.parseColor(tileColor), // Background color
-                    Color.GRAY, // Border color
-                    leftBorder, // Left border in pixels
-                    topBorder, // Top border in pixels
-                    rightBorder, // Right border in pixels
-                    bottomBorder // Bottom border in pixels
-            );
-            rowView.setBackground(borderDrawable);
-        }
-
-        rowView.setOnClickListener(view -> {
-            try {
-                ClientObject selectedClient = new ClientObject(tileObject.getJSONObject("tile_data"));
-                parentActivity.setSelectedClient(selectedClient);
-                paginateInfo.setVisibility(View.GONE);
-                navigationManager.stackReplaceFragment(ClientManageFragment.class);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        });
-
-        ClientObject clientObject = new ClientObject(tileObject.getJSONObject("tile_data"));
-        ImageView textImage = rowView.findViewById(R.id.leftButton);
-        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-        textImage.setImageDrawable(drawable);
-
-        ImageView phoneImage = rowView.findViewById(R.id.centerButton);
-        drawable = parentActivity.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-        phoneImage.setImageDrawable(drawable);
-
-        ImageView emailImage = rowView.findViewById(R.id.rightButton);
-        drawable = parentActivity.getResources().getDrawable(R.drawable.email_icon_active).mutate();
-        drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-        emailImage.setImageDrawable(drawable);
-
-//
-        if(clientObject.getHome_phone() == null || clientObject.getHome_phone().equals("")) {
-            phoneImage.setVisibility(View.INVISIBLE);
-        }
-        else {
-            phoneImage.setVisibility(View.VISIBLE);
-        }
-
-        if(clientObject.getMobile_phone() == null || clientObject.getMobile_phone().equals("")) {
-            textImage.setVisibility(View.INVISIBLE);
-        } else {
-            phoneImage.setVisibility(View.VISIBLE);
-            textImage.setVisibility(View.VISIBLE);
-            textImage.setOnClickListener(v -> onTextClicked(clientObject.getMobile_phone(), clientObject));
-            phoneImage.setOnClickListener(v -> onPhoneClicked(clientObject.getMobile_phone() != null ? clientObject.getMobile_phone() : clientObject.getHome_phone(), clientObject));
-
-        }
-
-        if(clientObject.getEmail() == null || clientObject.getEmail().equals("")) {
-            emailImage.setVisibility(View.INVISIBLE);
-        } else {
-            emailImage.setVisibility(View.VISIBLE);
-            emailImage.setOnClickListener(v -> onEmailClicked(clientObject.getEmail(), clientObject));
-
-        }
-
-        ImageView thumbnail = rowView.findViewById(R.id.client_list_thumbnail);
-        if(clientObject.getIs_locked() == 1) {
-            if(clientObject.getType_id().equalsIgnoreCase("b")) {
-                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
-                thumbnail.setImageDrawable(drawable);
-            } else {
-                drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
-                thumbnail.setImageDrawable(drawable);
-            }
-        }
-        else {
-            if(clientObject.getType_id().equalsIgnoreCase("b")) {
-                drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
-                thumbnail.setImageDrawable(drawable);
-            } else {
-                thumbnail.setImageResource(R.drawable.seller_icon_active);
-            }
-        }
-
-
-        return rowView;
-    }
-
-    private View createSmallHeaderView(ViewGroup row, JSONObject tileObject) throws JSONException {
-        View rowView;
-        if(tileObject.has("side")) {
-            if(tileObject.getBoolean("side")) {
-                rowView = inflater.inflate(R.layout.tile_smallheader_side_layout, row, false);
-            }
-            else {
-                rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
-            }
-        }
-        else {
-            rowView = inflater.inflate(R.layout.tile_smallheader_layout, row, false);
-        }
-
-        ConstraintLayout parentLayout = rowView.findViewById(R.id.smallHeaderTileParent);
-
-        boolean rounded;
-        String headerText = tileObject.getString("header");
-        String footerText = tileObject.getString("value");
-        if(tileObject.has("rounded")) {
-            try {
-                rounded = tileObject.getBoolean("rounded");
-            } catch (Exception e) {
-                // If we throw this it means he passed us null for rounded... probably
-            }
-        }
-        String headerColor = tileObject.getString("header_text_color");
-        String footerColor = tileObject.getString("footer_text_color");
-        String headerSize = tileObject.getString("font_header");
-        String footerSize = tileObject.getString("font_footer");
-        String border = "";
-        if(tileObject.has("border")) {
-            border = tileObject.getString("border");
-        }
-
-        Object tileColor = tileObject.get("tile_color");
-
-        TextView header = rowView.findViewById(R.id.smallHeaderTileHeader);
-        TextView footer = rowView.findViewById(R.id.smallHeaderTileFooter);
-        header.setText(headerText);
-        header.setTextColor(Color.parseColor(headerColor));
-        header.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(headerSize));
-
-        footer.setText(footerText);
-        footer.setTextColor(Color.parseColor(footerColor));
-        footer.setTextSize(TypedValue.COMPLEX_UNIT_PX, getTextViewSizing(footerSize));
-        header.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
-        String assignedTileColor = "#FFFFFF";
-        if(tileColor instanceof String) {
-            assignedTileColor = (String) tileColor;
-        }
-        else if(tileColor instanceof JSONObject) {
-            assignedTileColor = "#FFF000";
-        }
-
-        // TODO: I am setting this to true because IOS is making assumptions
-        rounded = true;
-        if(rounded) {
-            GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(Color.parseColor(assignedTileColor));
-            rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
-        }
-        else {
-            int topBorder = 0;
-            int leftBorder = 0;
-            int rightBorder = 0;
-            int bottomBorder = 0;
-
-            switch (border) {
-                case "all":
-                    topBorder = 5;
-                    leftBorder = 5;
-                    rightBorder = 5;
-                    bottomBorder = 5;
-                    break;
-                case "top":
-                    topBorder = 5;
-                    break;
-                case "left":
-                    leftBorder = 5;
-                    break;
-                case "right":
-                    rightBorder = 5;
-                    break;
-                case "bottom":
-                    bottomBorder = 5;
-                    break;
-            }
-
-            LayerDrawable borderDrawable = getBorders(
-                    Color.parseColor(assignedTileColor), // Background color
-                    Color.GRAY, // Border color
-                    leftBorder, // Left border in pixels
-                    topBorder, // Top border in pixels
-                    rightBorder, // Right border in pixels
-                    bottomBorder // Bottom border in pixels
-            );
-            rowView.setBackground(borderDrawable);
-        }
-
-        if(tileObject.has("tap")) {
-            final String clickDestination = tileObject.getString("tap");
-            parentLayout.setOnClickListener(view -> {
-                switch (clickDestination) {
-                    case "clients":
-                        paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(ClientListFragment.class);
-                        break;
-                    case "scoreboard":
-                        paginateInfo.setVisibility(View.GONE);
-                        if(parentActivity.getCurrentScopeFilter() != null) {
-                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", parentActivity.getCurrentScopeFilter().getIdValue());
-                        }
-                        else {
-                            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + parentActivity.getAgent().getAgent_id());
-                        }
-                        break;
-                    case "record":
-                        paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(RecordFragment.class);
-                        break;
-                    case "report":
-                        paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(ReportFragment.class);
-                        break;
-                    case "leaderboard":
-                        paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(LeaderboardFragment.class);
-                        break;
-                    case "more":
-                        paginateInfo.setVisibility(View.GONE);
-                        navigationManager.stackReplaceFragment(MoreFragment.class);
-                        break;
-                }
-            });
-        }
-
-        return rowView;
     }
 
     @Override
