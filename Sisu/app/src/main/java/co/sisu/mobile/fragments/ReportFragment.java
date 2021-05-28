@@ -66,7 +66,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     public void teamSwap() {
 //        loader.setVisibility(View.VISIBLE);
-//        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
+//        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, dataController.getCurrentSelectedTeamMarketId());
 //        setColorScheme();
     }
 
@@ -271,7 +271,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 //
 //                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
 //                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime(), parentActivity.getSelectedTeamMarketId());
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime(), dataController.getCurrentSelectedTeamMarketId());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

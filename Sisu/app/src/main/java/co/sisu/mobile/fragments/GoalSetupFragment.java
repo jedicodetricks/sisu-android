@@ -107,7 +107,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.getAgentGoals(this, agent.getAgent_id(), parentActivity.getSelectedTeamId());
+        apiManager.getAgentGoals(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
         apiManager.getAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
@@ -481,10 +481,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), new AsyncUpdateAgentGoalsJsonObject(array));
+                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), new AsyncUpdateAgentGoalsJsonObject(array));
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), income, reason);
+                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), income, reason);
                 }
                 break;
         }

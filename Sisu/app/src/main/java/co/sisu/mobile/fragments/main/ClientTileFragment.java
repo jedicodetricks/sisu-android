@@ -333,7 +333,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 agentFilters = new ArrayList<>();
                 filterMenuPrepared = false;
                 // TODO: We should probably do this is another spot.
-                apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+                apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
                 while(!filterMenuPrepared) {
                     // Just wait here for the async to finish
                 }

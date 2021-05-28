@@ -155,7 +155,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             loader.setVisibility(View.GONE);
             initAddClientButtons();
             initAddClientForm();
-            apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+            apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
         }
         else {
             // This is the flow to edit a client
@@ -172,7 +172,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 apiManager.getClientParams(this, dataController.getAgent().getAgent_id(), currentClient.getClient_id());
             }
             else {
-                apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+                apiManager.getLeadSources(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
                 loader.setVisibility(View.GONE);
             }
 
@@ -870,8 +870,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         currentClient.setType_id(typeSelected);
         currentClient.setNote(noteText.getText().toString().equals("") ? null : noteText.getText().toString());
         currentClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
-        currentClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
-        currentClient.setTeam_id(parentActivity.getSelectedTeamId());
+        currentClient.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
+        currentClient.setTeam_id(dataController.getCurrentSelectedTeamId());
         if(!appointmentDisplay.getText().toString().equals("")) {
             currentClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
         }
@@ -1412,8 +1412,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         newClient.setClosed_dt(null);
         newClient.setType_id(typeSelected);
         newClient.setIs_priority(prioritySwitch.isChecked() ? 1 : 0);
-        newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
-        newClient.setTeam_id(parentActivity.getSelectedTeamId());
+        newClient.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
+        newClient.setTeam_id(dataController.getCurrentSelectedTeamId());
 
         if(!appointmentDisplay.getText().equals("")) {
             newClient.setAppt_dt(getFormattedDate(appointmentDisplay.getText().toString()));
@@ -1431,7 +1431,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             newClient.setClosed_dt(getFormattedDate(settlementDisplay.getText().toString()));
         }
 
-        newClient.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
+        newClient.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
 
         for ( Object key : leadSources.keySet() ) {
             System.out.println(leadSource.getText().toString());

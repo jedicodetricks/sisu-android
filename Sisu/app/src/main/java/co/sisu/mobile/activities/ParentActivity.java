@@ -49,9 +49,7 @@ import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
-import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
@@ -275,15 +273,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     scopeFinished = true;
                     marketStatusFinished = true;
                     if(isRecruiting()) {
-                        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+                        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                     }
                     else {
                         parentLoader.setVisibility(View.VISIBLE);
                         if(currentScopeFilter != null) {
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                         }
                         else {
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                         }
 
                     }
@@ -304,21 +302,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                     if(currentMarketStatusFilter != null) {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
                     else {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
-                    apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    apiManager.getMarketStatus(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
                     break;
                 case R.id.recordView:
                     noNavigation = false;
@@ -360,18 +358,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, getSelectedTeamMarketId());
+        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, dataController.getCurrentSelectedTeamMarketId());
     }
 
     private void sendTeamSwapApiCalls(TeamObject team) {
         teamSwap = true;
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), getSelectedTeamMarketId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getCurrentSelectedTeamMarketId());
         String dashboardType = "agent";
         if(!isAgentDashboard) {
             dashboardType = "team";
         }
-        apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
+        apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
     }
 
     private void executeTeamSwap() {
@@ -507,7 +505,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         clientTiles.put("tile_rows", currentClientTiles);
                         clientTiles.put("pagination", pagination);
                         clientTiles.put("count", currentClientTiles.length());
-                        Log.e("TYPE", "ee");
                     }
                     else {
                         //overwrite tiles
@@ -613,9 +610,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     // TODO: Don't need to check if teamsFinished anymore I think
                     if(teamsFinished) {
                         //TODO: Probably don't need either of these
-//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getColorSchemeId());
 //                    colorSchemeFinished = true;
-                        apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                        apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
                     }
 //                navigateToScoreboard();
                 } catch (JSONException e) {
@@ -637,8 +634,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                         dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
                         dataController.setMessageCenterVisible(true);
                         // TODO: I don't need/want the team params to be a race condition
-                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
-                        SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
+                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeam().getId());
+                        SaveSharedPreference.setTeam(ParentActivity.this, dataController.getCurrentSelectedTeam().getId() + "");
                     }
                     else {
                         dataController.setMessageCenterVisible(false);
@@ -647,13 +644,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     teamsFinished = true;
                     scopeFinished = false;
-                    apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                    apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    apiManager.getScope(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+                    apiManager.getMarketStatus(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
                     apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
                     //TODO: Could probably get activity settings later (record or activitySettings page). 5/28/21 - I think activitySettings page.
-                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
-                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
+                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                 });
             }
             else if(returnType == ApiReturnType.GET_SCOPE) {
@@ -836,25 +833,25 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(currentMarketStatusFilter != null) {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
         else {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, getSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
     }
 
     public void resetClientTilesPresetFilter(JSONObject filters, int page) {
         parentLoader.setVisibility(View.VISIBLE);
-        apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), getSelectedTeamId(), filters, page);
+        apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), filters, page);
     }
 
     public void resetDashboardTiles(boolean scopeSelected) {
@@ -873,15 +870,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         else {
             scopeFinished = false;
             marketStatusFinished = false;
-            apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-            apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+            apiManager.getScope(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+            apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
         }
 
         if(currentScopeFilter != null) {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
         }
         else {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
         }
     }
 
@@ -924,14 +921,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public ClientObject getSelectedClient() {
         return dataController.getSelectedClient();
 //        return navigationManager.getSelectedClient();
-    }
-
-    public int getSelectedTeamId() {
-        return dataController.getSelectedTeamObject().getId();
-    }
-
-    public int getSelectedTeamMarketId() {
-        return dataController.getSelectedTeamObject().getMarket_id();
     }
 
     public NavigationManager getNavigationManager() {
@@ -1015,7 +1004,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public boolean isRecruiting() {
-        return getSelectedTeamMarketId() == 2;
+        return dataController.getCurrentSelectedTeamMarketId() == 2;
     }
 
     public boolean isAdminMode() {
@@ -1070,9 +1059,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
 
-    public DateManager getDateManager() {
-        return dateManager;
-    }
 
     public JSONObject getRecordClientsList() {
         return recordClientsList;
@@ -1098,12 +1084,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.selectedFilter = selectedFilter;
     }
 
-    public TeamObject getCurrentTeam() {
-        return dataController.getSelectedTeamObject();
-    }
-
     public TileCreationHelper getTileCreationHelper() {
         return tileCreationHelper;
     }
+
+    public DateManager getDateManager() {
+        return dateManager;
+    }
+
 }
 

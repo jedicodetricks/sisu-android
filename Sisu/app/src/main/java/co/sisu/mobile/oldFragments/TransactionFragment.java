@@ -414,8 +414,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         try {
             if(!currentlySelectedClient.getBoolean("is_locked")) {
                 ClientObject clientToSave = new ClientObject();
-                clientToSave.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
-                clientToSave.setTeam_id(parentActivity.getSelectedTeamId());
+                clientToSave.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
+                clientToSave.setTeam_id(dataController.getCurrentSelectedTeamId());
 
                 if(currentlySelectedClient.has("appt_set_dt")) {
                     clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());
@@ -447,8 +447,8 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         } catch (JSONException e) {
             // This means that the boolean is false
             ClientObject clientToSave = new ClientObject();
-            clientToSave.setMarket_id(String.valueOf(parentActivity.getSelectedTeamMarketId()));
-            clientToSave.setTeam_id(parentActivity.getSelectedTeamId());
+            clientToSave.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
+            clientToSave.setTeam_id(dataController.getCurrentSelectedTeamId());
 
             if(currentlySelectedClient.has("appt_set_dt")) {
                 clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());

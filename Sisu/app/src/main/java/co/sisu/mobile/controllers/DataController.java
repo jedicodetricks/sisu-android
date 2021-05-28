@@ -878,8 +878,16 @@ public class DataController {
         this.selectedClient = selectedClient;
     }
 
-    public TeamObject getSelectedTeamObject() {
+    public TeamObject getCurrentSelectedTeam() {
         return selectedTeamObject;
+    }
+
+    public int getCurrentSelectedTeamId() {
+        return selectedTeamObject.getId();
+    }
+
+    public int getCurrentSelectedTeamMarketId() {
+        return selectedTeamObject.getMarket_id();
     }
 
     public void setSelectedTeamObject(TeamObject selectedTeamObject) {

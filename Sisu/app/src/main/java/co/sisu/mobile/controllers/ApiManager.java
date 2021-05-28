@@ -249,16 +249,6 @@ public class ApiManager {
         new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
     }
 
-    public void getTeamAgents(AsyncServerEventListener cb, String agent_id, int teamId) {
-        if(teamId == -1) {
-            teamId = 0;
-        }
-        getJWT(agent_id);
-        ApiReturnType returnType = ApiReturnType.GET_TEAM_AGENTS;
-        String currentUrl = url + "api/v1/team/get-team-agents/" + teamId;
-        new AsyncGet(cb, currentUrl, returnType).execute(jwtStr, timestamp, transactionID);
-    }
-
     //START OF POST CALLS
 
     public void getTeamClients(AsyncServerEventListener cb, String agentId, int teamId, String contextFilter, String marketStatusFilter, String clientSearch, int page, String startDate, String endDate) {

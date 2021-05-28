@@ -104,7 +104,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
                         utils.showToast("Sending message to your Slack channel...", parentActivity, colorSchemeManager);
                     }
                     else {
-                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
+                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(dataController.getCurrentSelectedTeamId()), noteText.getText().toString());
                         utils.showToast("Sending push notification to your team...", parentActivity, colorSchemeManager);
                     }
                     hideKeyboard(getView());

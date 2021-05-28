@@ -113,10 +113,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         utils = parentActivity.getUtils();
         actionBarManager.setToSaveBar("Record");
         calendar = Calendar.getInstance();
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
 
 //        Date d = calendar.getTime();
-//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
+//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, dataController.getCurrentSelectedTeamMarketId());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -208,7 +208,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void setTransactionSectionVisible(View view) {
-        if(parentActivity.getSelectedTeamMarketId() != 0) {
+        if(dataController.getCurrentSelectedTeamMarketId() != 0) {
             RelativeLayout transactionSection = view.findViewById(R.id.recordTransactionSection);
             transactionSection.setVisibility(View.GONE);
         }
@@ -536,7 +536,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         cal.set(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
         dateManager.setRecordDateToDate(cal);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), dataController.getCurrentSelectedTeamMarketId());
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -561,23 +561,23 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 navigationManager.stackReplaceFragment(ClientManageFragment.class);
                 break;
             case R.id.appointmentSetButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "appt_set_dt");
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "appt_set_dt");
                 parentActivity.setRecordClientListType("'Appointment Set'");
                 break;
             case R.id.appointmentMetButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "appt_dt");
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "appt_dt");
                 parentActivity.setRecordClientListType("'Appointment Met'");
                 break;
             case R.id.signedButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "signed_dt");
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "signed_dt");
                 parentActivity.setRecordClientListType("'Signed'");
                 break;
             case R.id.underContractButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "uc_dt");
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "uc_dt");
                 parentActivity.setRecordClientListType("'Under Contract'");
                 break;
             case R.id.closedButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamMarketId(), "closed_dt");
+                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "closed_dt");
                 parentActivity.setRecordClientListType("'Closed'");
                 break;
             default:
@@ -631,7 +631,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 initListView(metricList);
 //                    initTableView(metricList);
             });
-//            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+//            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
         }
         else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
@@ -643,7 +643,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 e.printStackTrace();
             }
             Date d = calendar.getTime();
-            apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
+            apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, dataController.getCurrentSelectedTeamMarketId());
         }
         else if(returnType == ApiReturnType.GET_CLIENT_LIST) {
             try {
@@ -683,7 +683,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         rightSelector.setText(dateManager.getFormattedRecordDate());
         loader.setVisibility(View.VISIBLE);
 
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), dataController.getCurrentSelectedTeamMarketId());
 
         return false;
     }

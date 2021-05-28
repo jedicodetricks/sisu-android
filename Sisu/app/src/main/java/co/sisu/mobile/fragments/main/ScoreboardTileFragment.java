@@ -2,11 +2,8 @@ package co.sisu.mobile.fragments.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
@@ -40,6 +37,7 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
+import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
@@ -60,12 +58,11 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     private DateManager dateManager;
     private ActionBarManager actionBarManager;
     private TileCreationHelper tileCreationHelper;
+    private DataController dataController;
     private ProgressBar loader;
     private LayoutInflater inflater;
     private int numOfRows = 1;
-    private boolean isAgentDashboard;
 
-    private ConstraintLayout leftLayout, rightLayout;
     private TextView dateSelectorBeginDateText, dateSelectorEndDateText, dateSelectorDateText, scopeSelectorText;
     private PopupMenu popup;
     private boolean beginDateSelected = false;
@@ -78,14 +75,14 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         assert parentActivity != null;
-        navigationManager = parentActivity.getNavigationManager();
-        apiManager = parentActivity.getApiManager();
-        dateManager = parentActivity.getDateManager();
-        actionBarManager = parentActivity.getActionBarManager();
-        tileCreationHelper = parentActivity.getTileCreationHelper();
+        this.navigationManager = parentActivity.getNavigationManager();
+        this.apiManager = parentActivity.getApiManager();
+        this.dateManager = parentActivity.getDateManager();
+        this.actionBarManager = parentActivity.getActionBarManager();
+        this.tileCreationHelper = parentActivity.getTileCreationHelper();
+        this.dataController = parentActivity.getDataController();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
-        this.isAgentDashboard = parentActivity.isAgentDashboard();
         JSONObject tileTemplate = parentActivity.getTileTemplate();
 
         return createFullView(container, tileTemplate);
@@ -150,8 +147,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        // TODO: This is throwing a null pointer sometimes apparently.
-        actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
+        }
+        else {
+            actionBarManager.setToTitleBar("", true);
+        }
         parentActivity.findViewById(R.id.addView).setVisibility(View.VISIBLE);
 
         if(parentActivity.shouldDisplayPushNotification()) {
@@ -195,9 +196,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-
             scopePopup.getMenu().add(1, counter, counter, s);
-
             counter++;
         }
     }
@@ -211,9 +210,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         for(String timePeriod : timelineArray) {
             SpannableString s = new SpannableString(timePeriod);
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
-
             popup.getMenu().add(1, counter, counter, s);
-
             counter++;
         }
     }
@@ -262,65 +259,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         parentActivity.resetDashboardTiles(false);
     }
 
-    private void toggleDashboardTypeSelector(boolean isAgentClicked) {
-        // TODO: I think this is never used. Adding a breakpoint to see.
-        boolean toggled = false;
-        LayerDrawable underlineDrawable = tileCreationHelper.getBorders(
-                colorSchemeManager.getAppBackground(), // Background color
-                Color.GRAY, // Border color
-                0, // Left border in pixels
-                0, // Top border in pixels
-                0, // Right border in pixels
-                5 // Bottom border in pixels
-        );
-
-        LayerDrawable noUnderlineDrawable = tileCreationHelper.getBorders(
-                colorSchemeManager.getAppBackground(), // Background color
-                Color.GRAY, // Border color
-                0, // Left border in pixels
-                0, // Top border in pixels
-                0, // Right border in pixels
-                0 // Bottom border in pixels
-        );
-
-        // TODO: These two layouts could cause an issue. They're null. Does it never go into this block?
-        if(isAgentDashboard && !isAgentClicked) {
-            leftLayout.setBackground(noUnderlineDrawable);
-            rightLayout.setBackground(underlineDrawable);
-            toggled = true;
-        }
-        else if(!isAgentDashboard && isAgentClicked){
-            rightLayout.setBackground(noUnderlineDrawable);
-            leftLayout.setBackground(underlineDrawable);
-            toggled = true;
-        }
-
-        if(toggled) {
-            isAgentDashboard = !isAgentDashboard;
-            parentActivity.setAgentDashboard(isAgentDashboard);
-            parentActivity.setDashboardType("agent");
-            if(!isAgentClicked) {
-                parentActivity.setDashboardType("team");
-            }
-            loader.setVisibility(View.VISIBLE);
-            if(parentActivity.getCurrentScopeFilter() != null) {
-                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
-            }
-            else {
-                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
-            }
-        }
-    }
-
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         switch (v.getId()) {
-            case R.id.dashboardTypeTileLeftLayout:
-                toggleDashboardTypeSelector(true);
-                break;
-            case R.id.dashboardTypeTileRightLayout:
-                toggleDashboardTypeSelector(false);
-                break;
             case R.id.dateSelectorDate:
                 popup.show();
                 break;
@@ -349,13 +290,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                         .minDate(1990, 0, 1)
                         .build()
                         .show();
-                System.out.println("STOP");
                 break;
             case R.id.scopeSelector:
                 scopePopup.show();
-//                parentActivity.getNavigationManager().toggleTeamDrawer();
-//                loader.setVisibility(View.VISIBLE);
-//                apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), selectedStartTime, selectedEndTime, dashboardType);
                 break;
             default:
                 break;
@@ -367,6 +304,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.GET_TILES) {
@@ -380,7 +318,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                     actionBarManager.setToTitleBar("a" + parentActivity.getAgent().getAgent_id(), true);
                 }
                 navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
-//                loader.setVisibility(View.INVISIBLE);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -398,7 +335,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 0:
                 //Yesterday
@@ -440,10 +377,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
         }
 
         return false;
@@ -465,10 +402,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(),"a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(),"a" + parentActivity.getAgent().getAgent_id());
         }
     }
 }

@@ -95,7 +95,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeListView();
         initializeFields();
         setColorScheme();
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
     }
 
     private void initializeFields() {
@@ -243,7 +243,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         updateActivitiesModels.toArray(array);
 
         activitiesJsonObject.setActivities(array);
-        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitySorting), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
+        apiManager.sendAsyncUpdateActivitySettings(this, dataController.getAgent().getAgent_id(), createUpdateObject(currentActivitySorting), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
     }
 
 

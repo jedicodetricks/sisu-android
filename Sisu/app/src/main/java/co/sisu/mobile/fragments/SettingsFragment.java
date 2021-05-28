@@ -291,7 +291,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         if(isChecked) {
             lightsOn = "1";
         }
-        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), lightsOn);
+        apiManager.getColorScheme(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), lightsOn);
         SaveSharedPreference.setLights(parentActivity, lightsOn);
     }
 

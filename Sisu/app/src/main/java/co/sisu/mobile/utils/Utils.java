@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -72,14 +73,12 @@ public class Utils {
     }
 
     public void showToast(final CharSequence msg, ParentActivity parentActivity, ColorSchemeManager colorSchemeManager) {
-        // TODO: Choose better colors from the ColorSchemeManager
         parentActivity.runOnUiThread(() -> {
             Toast toast = Toast.makeText(parentActivity, msg,Toast.LENGTH_SHORT);
             View view = toast.getView();
             TextView text = view.findViewById(android.R.id.message);
-            text.setTextColor(Color.WHITE);
-            text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-            view.setBackgroundResource(R.color.colorCorporateOrange);
+            text.setTextColor(colorSchemeManager.getLighterTextColor());
+            view.getBackground().setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
             text.setPadding(20, 8, 20, 8);
             toast.show();
         });

@@ -231,7 +231,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void getLeaderboard(int year, int month) {
-        if(parentActivity.getSelectedTeamId() == 0) {
+        if(dataController.getCurrentSelectedTeamId() == 0) {
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -246,7 +246,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
             String formattedYear = String.valueOf(year);
             String formattedMonth =  "";
-            String formattedTeamId = String.valueOf(parentActivity.getSelectedTeamId());
+            String formattedTeamId = String.valueOf(dataController.getCurrentSelectedTeamId());
             if(month != 0) {
                 formattedMonth = String.valueOf(month);
             }
@@ -268,7 +268,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 listAdapter = null;
                 expListView.setAdapter(listAdapter);
                 getLeaderboard(selectedYear, selectedMonth + 1);
-                SaveSharedPreference.setTeam(parentActivity, parentActivity.getSelectedTeamId() + "");
+                SaveSharedPreference.setTeam(parentActivity, dataController.getCurrentSelectedTeamId() + "");
             }
         });
 

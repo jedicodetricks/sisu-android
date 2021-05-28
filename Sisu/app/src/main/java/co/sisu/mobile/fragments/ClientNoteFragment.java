@@ -81,7 +81,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
         else {
-            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId());
+            apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
         }
         initAddButton();
     }
@@ -118,7 +118,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
 //                edit.setVisibility(View.GONE);
             }
             else {
-                if(parentActivity.getCurrentTeam().getRole() != null && parentActivity.getCurrentTeam().getRole().equals("ADMIN")) {
+                if(dataController.getCurrentSelectedTeam().getRole() != null && dataController.getCurrentSelectedTeam().getRole().equals("ADMIN")) {
                     addButton.setVisibility(View.VISIBLE);
                     addButton.setOnClickListener(this);
 //                    TextView edit = parentActivity.findViewById(R.id.editClientListButton);

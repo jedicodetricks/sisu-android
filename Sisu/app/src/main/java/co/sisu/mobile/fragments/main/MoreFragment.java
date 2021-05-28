@@ -91,7 +91,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setDivider(null);
         mListView.setDividerHeight(15);
 
-        final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer(parentActivity.getCurrentTeam().getRole().equals("ADMIN"));
+        final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer(dataController.getCurrentSelectedTeam().getRole().equals("ADMIN"));
 
         MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList, colorSchemeManager);
         mListView.setAdapter(adapter);
