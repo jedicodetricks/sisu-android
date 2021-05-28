@@ -61,6 +61,7 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     public ActionBarManager(ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
         this.dataController = parentActivity.getDataController();
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
         initActionBar();
     }
 
@@ -87,8 +88,8 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
         List<TeamObject> teamsList = dataController.getTeamsObject();
         if(teamsList.size() > 0) {
             teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(teamsList.get(0).getColor());
-            teamBlock.setBackgroundColor(teamsList.get(0).getColor());
+            teamLetter.setBackgroundColor(colorSchemeManager.getPrimaryColor());
+            teamBlock.setBackgroundColor(colorSchemeManager.getPrimaryColor());
         }
         //
     }

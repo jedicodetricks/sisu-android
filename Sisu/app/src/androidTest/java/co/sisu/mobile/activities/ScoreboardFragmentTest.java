@@ -1,7 +1,6 @@
 package co.sisu.mobile.activities;
 
 
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;
@@ -22,12 +21,10 @@ import org.junit.runner.RunWith;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.DataController;
-import co.sisu.mobile.oldFragments.ClientListFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -67,7 +64,7 @@ public class ScoreboardFragmentTest {
     String signed = "";
     String listings = "";
 
-    Instrumentation.ActivityMonitor clientMonitor = getInstrumentation().addMonitor(ClientListFragment.class.getName(), null, false);
+//    Instrumentation.ActivityMonitor clientMonitor = getInstrumentation().addMonitor(ClientListFragment.class.getName(), null, false);
 
     @Test
     public void signInTest() {
@@ -84,14 +81,14 @@ public class ScoreboardFragmentTest {
         intent.putExtra("Agent", currentAgent);
         mActivityTestRule.launchActivity(intent);
 
-        try {
-            mActivityTestRule.getActivity()
-                    .getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, ScoreboardFragment.class.newInstance(), "test").commit();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mActivityTestRule.getActivity()
+//                    .getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, ScoreboardFragment.class.newInstance(), "test").commit();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
         //TODO: I need to change this to a more reliable "wait for data to load"
         sleep(8000);
 

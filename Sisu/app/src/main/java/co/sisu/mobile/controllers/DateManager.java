@@ -4,9 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateManager {
-    //TODO: Move all the date related stuff into this class
     private int selectedStartYear = 0;
     private int selectedStartMonth = 0;
     private int selectedStartDay = 0;
@@ -22,7 +22,6 @@ public class DateManager {
     private int recordMonth = 0;
     private int recordDay = 0;
     private String formattedRecordDate;
-
 
     private Calendar calendar = Calendar.getInstance();
 
@@ -528,27 +527,27 @@ public class DateManager {
 
     public String getLastMonth() {
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM", Locale.US);
         calendar.add(Calendar.MONTH, -1);
         return sdf.format(calendar.getTime());
     }
 
     public String getThisMonth() {
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM", Locale.US);
         return sdf.format(calendar.getTime());
     }
 
     public String getLastYear() {
         calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.US);
         calendar.add(Calendar.YEAR, -1);
         return sdf.format(calendar.getTime());
     }
 
     public String getThisYear() {
         calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.US);
         return sdf.format(calendar.getTime());
     }
 }

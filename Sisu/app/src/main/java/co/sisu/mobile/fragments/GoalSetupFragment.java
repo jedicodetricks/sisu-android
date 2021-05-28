@@ -212,78 +212,75 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         dateSwap = true;
         currentGoalsObject = agent.getAgentGoalsObject();
 
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                    activityTitle.setText(R.string.monthlyTitle);
-                    String formattedIncome = "";
-                    if(income.equals("")) {
-                        if(agent.getDesired_income() != null) {
-                            formattedIncome = agent.getDesired_income().replace(".0", "");
-                        }
+        parentActivity.runOnUiThread(() -> {
+                activityTitle.setText(R.string.monthlyTitle);
+                String formattedIncome = "";
+                if(income.equals("")) {
+                    if(agent.getDesired_income() != null) {
+                        formattedIncome = agent.getDesired_income().replace(".0", "");
                     }
-                    else {
-                        formattedIncome = income;
-                    }
-                    String toDisplay = "";
-                    if(!formattedIncome.equals("")) {
-                        toDisplay = String.valueOf(formattedIncome);
-                    }
-                    desiredIncome.setText(String.valueOf(toDisplay));
-//                }
-
-                if(reason.equals("")) {
-                    trackingReasons.setText(agent.getVision_statement());
                 }
                 else {
-                    trackingReasons.setText(reason);
+                    formattedIncome = income;
+                }
+                String toDisplay = "";
+                if(!formattedIncome.equals("")) {
+                    toDisplay = String.valueOf(formattedIncome);
+                }
+                desiredIncome.setText(String.valueOf(toDisplay));
+//                }
+
+            if(reason.equals("")) {
+                trackingReasons.setText(agent.getVision_statement());
+            }
+            else {
+                trackingReasons.setText(reason);
+            }
+
+            for(AgentGoalsObject go : currentGoalsObject) {
+                if(go != null) {
+                    String value = go.getValue();
+
+                    switch (go.getGoal_id()) {
+                        case "CONTA":
+                            contacts.setText(value);
+                            break;
+                        case "SCLSD":
+                            sClosed.setText(value);
+                            break;
+                        case "SUNDC":
+                            sContract.setText(value);
+                            break;
+                        case "SAPPT":
+                            sAppointments.setText(value);
+                            break;
+                        case "SSGND":
+                            sSigned.setText(value);
+                            break;
+                        case "BSGND":
+                            bSigned.setText(value);
+                            break;
+                        case "BAPPT":
+                            bAppointments.setText(value);
+                            break;
+                        case "BUNDC":
+                            bContract.setText(value);
+                            break;
+                        case "BCLSD":
+                            bClosed.setText(value);
+                            break;
+                        case "CLSDV":
+                            closedVolumeGoal.setText(value);
+                            break;
+                        case "UNCTV":
+                            underContractVolumeGoal.setText(value);
+                            break;
+                    }
+                }
+                dateSwap = false;
+
                 }
 
-                for(AgentGoalsObject go : currentGoalsObject) {
-                    if(go != null) {
-                        String value = go.getValue();
-
-                        switch (go.getGoal_id()) {
-                            case "CONTA":
-                                contacts.setText(value);
-                                break;
-                            case "SCLSD":
-                                sClosed.setText(value);
-                                break;
-                            case "SUNDC":
-                                sContract.setText(value);
-                                break;
-                            case "SAPPT":
-                                sAppointments.setText(value);
-                                break;
-                            case "SSGND":
-                                sSigned.setText(value);
-                                break;
-                            case "BSGND":
-                                bSigned.setText(value);
-                                break;
-                            case "BAPPT":
-                                bAppointments.setText(value);
-                                break;
-                            case "BUNDC":
-                                bContract.setText(value);
-                                break;
-                            case "BCLSD":
-                                bClosed.setText(value);
-                                break;
-                            case "CLSDV":
-                                closedVolumeGoal.setText(value);
-                                break;
-                            case "UNCTV":
-                                underContractVolumeGoal.setText(value);
-                                break;
-                        }
-                    }
-                    dateSwap = false;
-
-                    }
-
-            }
         });
 
     }

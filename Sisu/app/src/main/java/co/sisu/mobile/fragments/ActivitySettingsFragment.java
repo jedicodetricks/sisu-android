@@ -36,7 +36,7 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
+import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.SelectedActivities;
 import co.sisu.mobile.models.UpdateActivitiesModel;
@@ -57,7 +57,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
     private Utils utils;
-    private AsyncActivitySettingsObject[] selectedActivities;
+    private ActivitySettingsObject[] selectedActivities;
     private JSONArray currentActivitySettings;
     private List<SelectedActivities> currentActivitySorting;
     private ProgressBar loader;

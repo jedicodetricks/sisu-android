@@ -48,7 +48,6 @@ import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
-import co.sisu.mobile.oldFragments.ClientListFragment;
 
 import static android.view.FrameMetrics.ANIMATION_DURATION;
 
@@ -388,7 +387,8 @@ public class TileCreationHelper {
             parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
-                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        // TODO: IMPORTANT! This needs to navigate to the correct page
+//                        navigationManager.stackReplaceFragment(ClientListFragment.class);
                         break;
                     case "scoreboard":
                         if(parentActivity.getCurrentScopeFilter() != null) {
@@ -646,7 +646,8 @@ public class TileCreationHelper {
             parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
-                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        // TODO: IMPORTANT! This needs to navigate to the correct page
+//                        navigationManager.stackReplaceFragment(ClientListFragment.class);
                         break;
                     case "scoreboard":
                         if(parentActivity.getCurrentScopeFilter() != null) {

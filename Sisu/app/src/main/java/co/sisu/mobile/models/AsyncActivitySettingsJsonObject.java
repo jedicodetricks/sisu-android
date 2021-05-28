@@ -6,7 +6,7 @@ package co.sisu.mobile.models;
 
 public class AsyncActivitySettingsJsonObject {
 
-    AsyncActivitySettingsObject[] record_activities;
+    ActivitySettingsObject[] record_activities;
     String server_time;
     String status;
     String status_code;
@@ -36,11 +36,11 @@ public class AsyncActivitySettingsJsonObject {
         this.status_code = status_code;
     }
 
-    public AsyncActivitySettingsObject[] getRecord_activities() {
+    public ActivitySettingsObject[] getRecord_activities() {
         return record_activities;
     }
 
-    public void setRecord_activities(AsyncActivitySettingsObject[] record_activities) {
+    public void setRecord_activities(ActivitySettingsObject[] record_activities) {
         this.record_activities = record_activities;
     }
 

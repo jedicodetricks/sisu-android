@@ -49,17 +49,8 @@ import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
-import co.sisu.mobile.models.AsyncAgentJsonObject;
-import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
-import co.sisu.mobile.models.AsyncClientJsonObject;
-import co.sisu.mobile.models.AsyncFirebaseDeviceJsonObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
-import co.sisu.mobile.models.AsyncParameterJsonObject;
-import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
-import co.sisu.mobile.models.AsyncTeamsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FilterObject;
@@ -69,7 +60,6 @@ import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.ScopeBarModel;
-import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.models.TeamObject;
 import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
@@ -658,12 +648,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.clearUpdatedRecords();
         }
         else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
-            AsyncActivitySettingsJsonObject settingsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-            AsyncActivitySettingsObject[] settings = settingsObject.getRecord_activities();
-
-            dataController.setActivitiesSelected(settings);
-            activitySettingsParamFinished = true;
-//            navigateToScoreboard();
+            // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
+            try {
+                String returnString = ((Response) returnObject).body().string();
+                JSONObject settingsObject = new JSONObject(returnString);
+                dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
+                activitySettingsParamFinished = true;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
         }
         else if(returnType == ApiReturnType.GET_AGENT_GOALS) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
@@ -725,8 +718,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         }
         else if(returnType == ApiReturnType.GET_TEAMS) {
-            AsyncTeamsJsonObject teamsObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamsJsonObject.class);
-            dataController.setTeamsObject(ParentActivity.this, teamsObject);
+            String returnString;
+            try {
+                returnString = ((Response) returnObject).body().string();
+                JSONObject teamsObject = new JSONObject(returnString);
+                dataController.setTeamsObject(teamsObject.getJSONArray("teams"));
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
             this.runOnUiThread(() -> {
                 actionBarManager.initTeamBar();
                 initTeamSelectorPopup();
@@ -745,15 +744,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 teamsFinished = true;
                 scopeFinished = false;
                 apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-
                 apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
-
-                //TODO: I don't think I need goals anymore, that's passed in with the tiles I think Update: 8/30/20 I no longer think that's true but I can probably get it later now.
-                apiManager.getAgentGoals(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                //TODO: Could probably get activity settings later (record or settings page). Or maybe never as of 12/22/20
+                //TODO: Could probably get activity settings later (record or settings page). 5/28/21 - I think settings page.
                 apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
-//                apiManager.getTeamAgents(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
                 apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
             });
         }
@@ -806,48 +800,48 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             navigateToScoreboard(true);
         }
         else if(returnType == ApiReturnType.GET_TEAM_PARAMS) {
-            AsyncParameterJsonObject settings = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
-            if(settings.getStatus_code().equals("-1")) {
-                dataController.setSlackInfo(null);
+            String returnString;
+            try {
+                returnString = ((Response) returnObject).body().string();
+                JSONObject teamParamsObject = new JSONObject(returnString);
+                if(teamParamsObject.getString("status_code").equals("-1")) {
+                    dataController.setSlackInfo(null);
+                }
+                else {
+                    ParameterObject params = new ParameterObject(teamParamsObject.getJSONObject("parameter"));
+                    dataController.setSlackInfo(params.getValue());
+                }
+                teamParamFinished = true;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
-            else {
-                ParameterObject params = settings.getParameter();
-                dataController.setSlackInfo(params.getValue());
-            }
-            teamParamFinished = true;
-//            navigateToScoreboard();
         }
         else if(returnType == ApiReturnType.GET_FIREBASE_DEVICES) {
-            AsyncFirebaseDeviceJsonObject asyncFirebaseDeviceJsonObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncFirebaseDeviceJsonObject.class);
-            FirebaseDeviceObject[] devices = asyncFirebaseDeviceJsonObject.getDevices();
-            String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
+            String returnString;
+            try {
+                returnString = ((Response) returnObject).body().string();
+                JSONObject firebaseObject = new JSONObject(returnString);
+                JSONArray devices = firebaseObject.getJSONArray("devices");
+                String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
 
-            for(FirebaseDeviceObject fdo : devices) {
-                if(fdo.getDevice_id() != null && fdo.getDevice_id().equals(firebaseDeviceId)) {
-                    Log.e("Current Device", fdo.getDevice_id());
-                    currentDevice = fdo;
+                for(int i = 0; i < devices.length(); i++) {
+                    FirebaseDeviceObject currentDevice = new FirebaseDeviceObject(devices.getJSONObject(i));
+                    if(currentDevice.getDevice_id() != null && currentDevice.getDevice_id().equals(firebaseDeviceId)) {
+                        Log.e("Current Device", currentDevice.getDevice_id());
+                        this.currentDevice = currentDevice;
+                    }
                 }
-            }
-            MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+                MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
-            if(firebaseDeviceId.equals("")) {
-                myFirebaseMessagingService.initFirebase();
+                if(firebaseDeviceId.equals("")) {
+                    myFirebaseMessagingService.initFirebase();
+                }
+                else {
+                    myFirebaseMessagingService.refreshToken();
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
-            else {
-                myFirebaseMessagingService.refreshToken();
-            }
-        }
-        else if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
-            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
-            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            setActivityColors();
-//                navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
-//                colorSchemeFinished = true;
-            SaveSharedPreference.setLogo(this, colorSchemeManager.getLogo() == null ? "" : colorSchemeManager.getLogo());
-//                navigateToScoreboard();
-
         }
         else if(returnType == ApiReturnType.GET_LABELS) {
             // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
@@ -857,70 +851,50 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            labelsFinished = true;
 //            navigateToScoreboard();
         }
-        else if(returnType == ApiReturnType.GET_AGENT) {
-            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-//            boolean adminTransferring = true;
-            AsyncAgentJsonObject agentJsonObject;
-            String r = null;
-            try {
-                r = ((Response) returnObject).body().string();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                agentJsonObject = gson.fromJson(r, AsyncAgentJsonObject.class);
-            } catch(Exception e) {
-                AsyncAgentJsonStringSuperUserObject tempAgent = gson.fromJson(r, AsyncAgentJsonStringSuperUserObject.class);
-                agentJsonObject = new AsyncAgentJsonObject(tempAgent);
-            }
-            noNavigation = true;
-            agent = agentJsonObject.getAgent();
-            dataController.setAgent(agent);
-            apiManager.getTeams(this, agent.getAgent_id());
-        }
     }
 
     private void swappingTeamData(Object returnObject, ApiReturnType asyncReturnType) {
         if(asyncReturnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
-            AsyncActivitySettingsJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
-            dataController.setActivitiesSelected(settings);
-            activitySettingsParamFinished = true;
+            // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
+            try {
+                String returnString = ((Response) returnObject).body().string();
+                JSONObject settingsObject = new JSONObject(returnString);
+                dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
+                activitySettingsParamFinished = true;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
         }
         else if(asyncReturnType == ApiReturnType.GET_AGENT_GOALS) {
+            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
+            // TODO: It does show up but I don't think I need it to. Will have to check back.
             AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
             dataController.setAgentGoals(agentGoalsObject, isRecruiting());
 //            goalsFinished = true;
         }
         else if(asyncReturnType == ApiReturnType.GET_TEAM_PARAMS) {
-            AsyncParameterJsonObject settingsJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
-            if(settingsJson.getStatus_code().equals("-1")) {
-                dataController.setSlackInfo(null);
+            String returnString;
+            try {
+                returnString = ((Response) returnObject).body().string();
+                JSONObject teamParamsObject = new JSONObject(returnString);
+                if(teamParamsObject.getString("status_code").equals("-1")) {
+                    dataController.setSlackInfo(null);
+                }
+                else {
+                    ParameterObject params = new ParameterObject(teamParamsObject.getJSONObject("parameter"));
+                    dataController.setSlackInfo(params.getValue());
+                }
+                teamParamFinished = true;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
-            else {
-                ParameterObject params = settingsJson.getParameter();
-                dataController.setSlackInfo(params.getValue());
-            }
-            teamParamFinished = true;
-        }
-        else if(asyncReturnType == ApiReturnType.GET_COLOR_SCHEME) {
-            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
-            TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
-            setActivityColors();
-//            colorSchemeFinished = true;
         }
         else if(asyncReturnType == ApiReturnType.GET_LABELS) {
             AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
             HashMap<String, String> labels = labelObject.getMarket();
             dataController.setLabels(labels);
 //            labelsFinished = true;
-        }
-        else if(asyncReturnType == ApiReturnType.GET_CLIENTS) {
-            AsyncClientJsonObject clientObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncClientJsonObject.class);
-            dataController.setClientListObject(clientObject, isRecruiting());
-//            clientFinished = true;
         }
         else if(asyncReturnType == ApiReturnType.GET_TILES) {
             try {

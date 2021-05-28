@@ -54,9 +54,9 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
+import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.oldFragments.TransactionFragment;
@@ -84,7 +84,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private ProgressBar loader;
     private TextView dateDisplay, otherLabel, leftSelector, rightSelector, transactionLabel, activitiesLabel;
     private ImageView addTransactionButton, appointmentSetButton, appointmentMetButton, signedButton, underContractButton, closedButton;
-    private AsyncActivitySettingsObject[] allActivities;
+    private ActivitySettingsObject[] allActivities;
     private TableLayout activitiesTable;
     private LayoutInflater inflater;
     private PopupMenu dateSelectorPopup;
@@ -636,7 +636,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
         else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-            AsyncActivitySettingsObject[] settings = settingsJson.getRecord_activities();
+            ActivitySettingsObject[] settings = settingsJson.getRecord_activities();
             dataController.setActivitiesSelected(settings);
 
             Date d = calendar.getTime();

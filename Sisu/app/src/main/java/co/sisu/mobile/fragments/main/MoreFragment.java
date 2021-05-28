@@ -34,7 +34,6 @@ import co.sisu.mobile.fragments.SettingsFragment;
 import co.sisu.mobile.fragments.SlackMessageFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.MorePageContainer;
-import co.sisu.mobile.oldFragments.RecruitingGoalSetupFragment;
 import co.sisu.mobile.system.SaveSharedPreference;
 import co.sisu.mobile.utils.Utils;
 
@@ -92,7 +91,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         mListView.setDivider(null);
         mListView.setDividerHeight(15);
 
-        final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer(parentActivity.isRecruiting(), parentActivity.getCurrentTeam().getRole().equals("ADMIN"));
+        final List<MorePageContainer> morePageContainerList = dataController.getMorePageContainer(parentActivity.getCurrentTeam().getRole().equals("ADMIN"));
 
         MoreListAdapter adapter = new MoreListAdapter(getContext(), morePageContainerList, colorSchemeManager);
         mListView.setAdapter(adapter);
@@ -106,23 +105,12 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         MorePageContainer value = (MorePageContainer) parent.getItemAtPosition(position);
         if(parentActivity.isTeamSwapFinished()) {
             switch(value.getTitle()) {
-//                case "Teams":
-//                    break;
-//                case "Clients":
-//                case "Recruits":
-//                    navigationManager.stackReplaceFragment(ClientListFragment.class);
-//                    break;
                 case "My Profile":
                     navigationManager.stackReplaceFragment(MyProfileFragment.class);
                     actionBarManager.setToSaveBar("My Profile");
                     break;
                 case "Goal Setup":
-                    if(parentActivity.isRecruiting()) {
-                        navigationManager.stackReplaceFragment(RecruitingGoalSetupFragment.class);
-                    }
-                    else {
-                        navigationManager.stackReplaceFragment(GoalSetupFragment.class);
-                    }
+                    navigationManager.stackReplaceFragment(GoalSetupFragment.class);
                     actionBarManager.setToSaveBar("Goal Setup");
                     break;
                 case "Activity Settings":

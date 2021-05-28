@@ -19,7 +19,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
+import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -33,9 +33,9 @@ public class ReportListAdapter extends BaseAdapter {
     private ArrayList<Metric> mDataSource;
     private String timeline;
     private ColorSchemeManager colorSchemeManager;
-    private AsyncActivitySettingsObject firstOtherActivity;
+    private ActivitySettingsObject firstOtherActivity;
 
-    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity) {
+    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager, ActivitySettingsObject firstOtherActivity) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
