@@ -97,7 +97,6 @@ public class ScoreboardFragmentTest {
         AgentGoalsObject[] goals = dataController.getAgent().getAgentGoalsObject();
         setupGoals(goals);
 
-
         onView(withId(R.id.contactsGoalNumber)).check(matches(withText(contacts)));
         onView(withId(R.id.appointmentsGoalNumber)).check(matches(withText(String.valueOf(appt))));
         onView(withId(R.id.bbsignedGoalNumber)).check(matches(withText(signed)));
@@ -111,8 +110,8 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -123,7 +122,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -134,7 +133,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -145,7 +144,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -156,7 +155,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
         sleep(2000);
@@ -167,7 +166,7 @@ public class ScoreboardFragmentTest {
 
         sleep(1000);
 
-        onView(withId(R.id.total)).check(matches(isDisplayed()));
+//        onView(withId(R.id.total)).check(matches(isDisplayed()));
 
         pressBack();
 
@@ -205,8 +204,7 @@ public class ScoreboardFragmentTest {
         }
     }
 
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
+    private static Matcher<View> childAtPosition(final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
             @Override

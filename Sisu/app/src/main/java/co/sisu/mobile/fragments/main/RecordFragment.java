@@ -56,7 +56,6 @@ import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
-import co.sisu.mobile.models.AsyncActivitySettingsJsonObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.oldFragments.TransactionFragment;
@@ -635,10 +634,14 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 //            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedTeamId(), parentActivity.getSelectedTeamMarketId());
         }
         else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
-            AsyncActivitySettingsJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitySettingsJsonObject.class);
-            ActivitySettingsObject[] settings = settingsJson.getRecord_activities();
-            dataController.setActivitiesSelected(settings);
-
+            // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
+            try {
+                String returnString = ((Response) returnObject).body().string();
+                JSONObject settingsObject = new JSONObject(returnString);
+                dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
             Date d = calendar.getTime();
             apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, parentActivity.getSelectedTeamMarketId());
         }

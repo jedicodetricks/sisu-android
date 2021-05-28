@@ -363,20 +363,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                     JSONObject filters = filtersObject.getJSONObject("filters");
                     agentFilters.add(new FilterObject(filtersObject.getString("filter_name"), filters));
                 }
-                //
 
                 initFilterPopupMenu();
-//                JSONObject filtersObject = (JSONObject) filtersArray.get(0);
-//
-//                JSONObject filters = filtersObject.getJSONObject("filters");
-//                Iterator<String> keys = filters.keys();
-//
-//                while(keys.hasNext()) {
-//                    String key = keys.next();
-//                    // do something with jsonObject here
-//                    JSONObject currentFilter = filters.getJSONObject(key);
-//                    String garbo = "";
-//                }
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

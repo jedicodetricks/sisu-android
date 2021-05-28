@@ -21,7 +21,8 @@ public class ActivitySettingsObject {
             this.display_order = currentActivitySetting.getInt("display_order");
             this.name = currentActivitySetting.getString("name");
             this.team_id = currentActivitySetting.getInt("team_id");
-            this.user_input_restricted = currentActivitySetting.getBoolean("user_input_restricted");
+            // TODO: Apparently sometimes this is a JSONObject, not always a boolean. Commenting for now.
+//            this.user_input_restricted = currentActivitySetting.getBoolean("user_input_restricted");
             this.value = currentActivitySetting.getBoolean("value");
         } catch (JSONException e) {
             e.printStackTrace();

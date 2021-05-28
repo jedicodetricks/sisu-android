@@ -45,6 +45,9 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -54,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +74,6 @@ import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
-import co.sisu.mobile.models.AsyncLeadSourcesJsonObject;
 import co.sisu.mobile.models.AsyncNotesJsonObject;
 import co.sisu.mobile.models.AsyncParameterJsonObject;
 import co.sisu.mobile.models.AsyncUpdateSettingsJsonObject;
@@ -1718,17 +1721,15 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.GET_CLIENT_SETTINGS) {
+            // TODO: Do I still need this??
             AsyncParameterJsonObject settingsJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncParameterJsonObject.class);
             ParameterObject settings = settingsJson.getParameter();
             if(settings != null) {
                 currentClient.setActivate_client(settings.getValue());
             }
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initializeClient();
-                    loader.setVisibility(View.GONE);
-                }
+            parentActivity.runOnUiThread(() -> {
+                initializeClient();
+                loader.setVisibility(View.GONE);
             });
         }
         else if(returnType == ApiReturnType.CREATE_NOTE) {
@@ -1750,36 +1751,38 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             });
         }
         else if(returnType == ApiReturnType.UPDATE_CLIENT) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    parentActivity.onBackPressed();
+            parentActivity.runOnUiThread(() -> {
+                parentActivity.onBackPressed();
 //                    JSONObject clientTiles = parentActivity.getClientTiles();
-                    // TODO: I need to put the changes into the correct client tile
-                    utils.showToast("Client updates saved", parentActivity, colorSchemeManager);
-                }
+                // TODO: I need to put the changes into the correct client tile
+                utils.showToast("Client updates saved", parentActivity, colorSchemeManager);
             });
         }
         else if(returnType == ApiReturnType.UPDATE_SETTINGS) {
             loader.setVisibility(View.GONE);
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    parentActivity.onBackPressed();
-                    utils.showToast("Client has been archived", parentActivity, colorSchemeManager);
-                }
+            parentActivity.runOnUiThread(() -> {
+                parentActivity.onBackPressed();
+                utils.showToast("Client has been archived", parentActivity, colorSchemeManager);
             });
         }
         else if(returnType == ApiReturnType.GET_LEAD_SOURCES) {
-            AsyncLeadSourcesJsonObject leadSourcesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncLeadSourcesJsonObject.class);
-            leadSources = leadSourcesObject.getLead_sources();
-            if(parentActivity.getSelectedClient() != null) {
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initializeClient();
-                    }
-                });
+            String returnString = "";
+            try {
+                returnString = ((Response) returnObject).body().string();
+                JSONObject leadSourcesObject = new JSONObject(returnString);
+                JSONObject allLeadSources = leadSourcesObject.getJSONObject("lead_sources");
+                leadSources = new LinkedHashMap();
+                Iterator<String> keys = allLeadSources.keys();
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    String value = allLeadSources.getString(key);
+                    leadSources.put(key, value);
+                }
+                if(parentActivity.getSelectedClient() != null) {
+                    parentActivity.runOnUiThread(this::initializeClient);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
         }
         else if(returnType == ApiReturnType.GET_NOTES) {
@@ -1799,13 +1802,10 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    utils.showToast("Client Saved", parentActivity, colorSchemeManager);
+            parentActivity.runOnUiThread(() -> {
+                utils.showToast("Client Saved", parentActivity, colorSchemeManager);
 //                    navigationManager.navigateToClientListAndClearStack(currentStatus);
-                    parentActivity.onBackPressed();
-                }
+                parentActivity.onBackPressed();
             });
         }
     }
@@ -1816,12 +1816,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onEventFailed(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.GET_LEAD_SOURCES) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initializeClient();
-                }
-            });
+            parentActivity.runOnUiThread(this::initializeClient);
         }
     }
 

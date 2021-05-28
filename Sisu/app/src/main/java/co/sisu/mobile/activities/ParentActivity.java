@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -83,14 +85,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private CacheManager cacheManager;
     private Utils utils;
     private TileCreationHelper tileCreationHelper;
-//    private boolean clientFinished = false;
-//    private boolean goalsFinished = false;
     private boolean teamParamFinished = false;
     private boolean activitySettingsParamFinished = false;
-//    private boolean settingsFinished = false;
-//    private boolean colorSchemeFinished = false;
     private boolean teamsFinished = false;
-//    private boolean labelsFinished = false;
     private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
     private boolean clientTilesFinished = false;
@@ -100,8 +97,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean shouldDisplayPushNotification = false;
     private AgentModel agent;
     private NotesObject selectedNote;
-//    private boolean imageIsExpanded = false;
-//    private ImageView expanded;
     private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
     private ConstraintLayout paginateInfo;
@@ -131,7 +126,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String dashboardType = "agent";
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
-    // TODO: I should create an enum with the fragment names so that I only have to change it in one spot in the future if I change a fragment name
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,13 +198,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
             //change parentLoader here, if needed
             parentLoader = findViewById(R.id.parentLoader);
+            // TODO: this could probably use the colorSchemeManager
             if(colorSchemeManager.getAppBackground() == Color.WHITE) {
                 Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark));
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark, null));
                 parentLoader.getIndeterminateDrawable().setBounds(bounds);
             } else {
                 Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress));
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress, null));
                 parentLoader.getIndeterminateDrawable().setBounds(bounds);
             }
         });
@@ -413,7 +408,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void navigateToScoreboard(boolean b) {
+    private void navigateToScoreboard() {
         this.runOnUiThread(() -> {
             if(scopeFinished && tileTemplateFinished && marketStatusFinished) {
                 if(getCurrentScopeFilter() != null) {
@@ -431,97 +426,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         });
-//        clientFinished = false;
-//        goalsFinished = false;
-//        settingsFinished = false;
         teamParamFinished = false;
-//        colorSchemeFinished = false;
-//        labelsFinished = false;
         noNavigation = false;
         activitySettingsParamFinished = false;
         teamsFinished = false;
     }
-
-//    private void navigateToScoreboard() {
-        // TODO: I think this is deprecated and we don't need it anymore. Commenting to see
-//        if(teamsFinished && clientFinished && goalsFinished && settingsFinished && teamParamFinished && colorSchemeFinished && labelsFinished && activitySettingsParamFinished && noNavigation && !adminTransferring && tileTemplateFinished && scopeFinished && marketStatusFinished) {
-//            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName()));
-//            clientFinished = false;
-//            goalsFinished = false;
-//            settingsFinished = false;
-//            teamParamFinished = false;
-//            colorSchemeFinished = false;
-//            labelsFinished = false;
-//            noNavigation = true;
-//            activitySettingsParamFinished = false;
-//            tileTemplateFinished = false;
-//            teamsFinished = false;
-//        }
-//        else {
-//            if(adminTransferring) {
-//                if(clientFinished && goalsFinished && activitySettingsParamFinished && settingsFinished && teamParamFinished && noNavigation && tileTemplateFinished) {
-//                    clientFinished = false;
-//                    goalsFinished = false;
-//                    settingsFinished = false;
-//                    teamParamFinished = false;
-//                    colorSchemeFinished = false;
-//                    labelsFinished = false;
-//                    noNavigation = true;
-//                    activitySettingsParamFinished = false;
-//                    tileTemplateFinished = false;
-//
-//                    switch (navigationManager.getCurrentFragment()) {
-//                        case "Scoreboard":
-//                            noNavigation = false;
-//                            adminTransferring = false;
-//                            System.out.println(navigationManager.getCurrentFragment());
-//                            this.runOnUiThread(() -> {
-//                                if(tileDebug) {
-//                                    navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class, getCurrentScopeFilter().getName());
-//                                }
-//                                else {
-//                                    if(isRecruiting()) {
-//                                        navigationManager.clearStackReplaceFragment(RecruitingScoreboardFragment.class);
-//                                    }
-//                                    else {
-//                                        navigationManager.clearStackReplaceFragment(ScoreboardFragment.class);
-//                                    }
-//                                }
-//                            });
-//                            break;
-//                        case "Report":
-//                            noNavigation = false;
-//                            adminTransferring = false;
-//                            System.out.println(navigationManager.getCurrentFragment());
-//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(ReportFragment.class));
-//                            break;
-//                        case "Record":
-//                            noNavigation = false;
-//                            adminTransferring = false;
-//                            System.out.println(navigationManager.getCurrentFragment());
-//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(RecordFragment.class));
-//                            break;
-//                        case "Leaderboard":
-//                            noNavigation = false;
-//                            adminTransferring = false;
-//                            System.out.println(navigationManager.getCurrentFragment());
-//                            this.runOnUiThread(() -> navigationManager.clearStackReplaceFragment(LeaderboardFragment.class));
-//                            break;
-//                        case "More":
-//                            noNavigation = false;
-//                            adminTransferring = false;
-//                            System.out.println(navigationManager.getCurrentFragment());
-//                            this.runOnUiThread(() -> {
-//                                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//                                parentLoader.setVisibility(View.INVISIBLE);
-//                            });
-//                            break;
-//                    }
-//                    System.out.println(navigationManager.getCurrentFragment());
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public void onBackPressed() {
@@ -541,318 +450,319 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {}
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(teamSwap) {
             swappingTeamData(returnObject, returnType);
         }
-        else if(returnType == ApiReturnType.GET_TILES) {
+        else {
+            String returnString = null;
             try {
-                String tileString = ((Response) returnObject).body().string();
-                tileTemplate =  new JSONObject(tileString);
-            } catch (IOException | JSONException e) {
+                returnString = ((Response) returnObject).body().string();
+                if(returnString == null) {
+                    // TODO: Should probably throw a custom error here.
+                    throw new IOException("ReturnString broken for returnType: " + returnType.name());
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            tileTemplateFinished = true;
-            navigateToScoreboard(true);
-        }
-        else if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
-            try {
-                String tileString = ((Response) returnObject).body().string();
-                JSONObject newClientTiles = new JSONObject(tileString);
-                JSONObject pagination = newClientTiles.getJSONObject("pagination");
+            if(returnType == ApiReturnType.GET_TILES) {
+                try {
+                    tileTemplate =  new JSONObject(returnString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                tileTemplateFinished = true;
+                navigateToScoreboard();
+            }
+            else if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
+                try {
+                    JSONObject newClientTiles = new JSONObject(returnString);
+                    JSONObject pagination = newClientTiles.getJSONObject("pagination");
 
-                if(pagination.getInt("page") > 1) {
-                    //append tiles
-                    JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
-                    JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
+                    if(pagination.getInt("page") > 1) {
+                        //append tiles
+                        JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
+                        JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
 
-                    for(int i = 0; i < clientTilesToAppend.length(); i++) {
-                        JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
-                        JSONArray currentTiles = tileObject.getJSONArray("tiles");
-                        JSONObject tile = currentTiles.getJSONObject(0);
-                        if(tile.has("type")) {
-                            String type = tile.getString("type");
-                            switch (type) {
-                                case "clientList":
-                                    currentClientTiles.put(tileObject);
-                                    break;
-                                case "smallHeader":
-                                    break;
-                                default:
-                                    Log.e("TYPE", type);
-                                    break;
+                        for(int i = 0; i < clientTilesToAppend.length(); i++) {
+                            JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
+                            JSONArray currentTiles = tileObject.getJSONArray("tiles");
+                            JSONObject tile = currentTiles.getJSONObject(0);
+                            if(tile.has("type")) {
+                                String type = tile.getString("type");
+                                switch (type) {
+                                    case "clientList":
+                                        currentClientTiles.put(tileObject);
+                                        break;
+                                    case "smallHeader":
+                                        break;
+                                    default:
+                                        Log.e("TYPE", type);
+                                        break;
+                                }
                             }
                         }
-                    }
-                    clientTiles.put("tile_rows", currentClientTiles);
-                    clientTiles.put("pagination", pagination);
-                    clientTiles.put("count", currentClientTiles.length());
-                    Log.e("TYPE", "ee");
-                }
-                else {
-                    //overwrite tiles
-                    clientTiles = newClientTiles;
-                }
-
-                clientTilesFinished = true;
-                if(marketStatusFinished) {
-                    if(getCurrentScopeFilter() != null) {
-                        actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
+                        clientTiles.put("tile_rows", currentClientTiles);
+                        clientTiles.put("pagination", pagination);
+                        clientTiles.put("count", currentClientTiles.length());
+                        Log.e("TYPE", "ee");
                     }
                     else {
-                        actionBarManager.setToFilterBar("");
+                        //overwrite tiles
+                        clientTiles = newClientTiles;
                     }
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-                }
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
 
-        }
-        else if(returnType == ApiReturnType.GET_MARKET_STATUS) {
-            try {
-                String tileString = ((Response) returnObject).body().string();
-
-                JSONObject marketStatusObject = new JSONObject(tileString);
-                try {
-                    JSONArray marketStatuses = marketStatusObject.getJSONArray("client_status");
-                    for(int k = 0; k < marketStatuses.length(); k++) {
-                        JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
-                        MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
-                        marketStatusBar.add(currentModel);
-                        if(currentModel.getKey().equalsIgnoreCase("")) {
-                            currentMarketStatusFilter = currentModel;
+                    clientTilesFinished = true;
+                    if(marketStatusFinished) {
+                        if(getCurrentScopeFilter() != null) {
+                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
                         }
+                        else {
+                            actionBarManager.setToFilterBar("");
+                        }
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                marketStatusFinished = true;
-                navigateToScoreboard(false);
-                if(clientTilesFinished) {
-                    if(getCurrentScopeFilter() != null) {
-                        actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-                    }
-                    else {
-                        actionBarManager.setToFilterBar("");
-                    }
-                    navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-                }
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
 
-        }
-        else if(returnType == ApiReturnType.UPDATE_ACTIVITIES) {
-            dataController.clearUpdatedRecords();
-        }
-        else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
-            // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
-            try {
-                String returnString = ((Response) returnObject).body().string();
-                JSONObject settingsObject = new JSONObject(returnString);
-                dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
-                activitySettingsParamFinished = true;
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
             }
-        }
-        else if(returnType == ApiReturnType.GET_AGENT_GOALS) {
-            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            // TODO: It does show up but I don't think I need it to. Will have to check back.
-            AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
-            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject, isRecruiting());
-//            goalsFinished = true;
-//            navigateToScoreboard();
-        }
-        else if(returnType == ApiReturnType.GET_SETTINGS) {
-            try {
-                String settingsString = ((Response) returnObject).body().string();
-                JSONObject settingsJson = new JSONObject(settingsString);
-                JSONArray settings = settingsJson.getJSONArray("parameters");
-                dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
-                List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
-//                settingsFinished = true;
-                int hour = 0;
-                int minute = 0;
-                int reminderActive = 0;
-                for (ParameterObject s : newSettings) {
-                    Log.e(s.getName(), s.getValue());
-                    switch (s.getName()) {
-                        case "daily_reminder_time":
-                            String[] values = s.getValue().split(":");
-                            try{
-                                hour = Integer.parseInt(values[0]);
-                                minute = Integer.parseInt(values[1]);
-                            } catch(NumberFormatException nfe) {
-                                hour = 17;
-                                minute = 0;
+            else if(returnType == ApiReturnType.GET_MARKET_STATUS) {
+                try {
+                    JSONObject marketStatusObject = new JSONObject(returnString);
+                    try {
+                        JSONArray marketStatuses = marketStatusObject.getJSONArray("client_status");
+                        for(int k = 0; k < marketStatuses.length(); k++) {
+                            JSONObject currentMarketStatus = (JSONObject) marketStatuses.get(k);
+                            MarketStatusModel currentModel = new MarketStatusModel(currentMarketStatus.getString("key"), currentMarketStatus.getString("label"), currentMarketStatus.getBoolean("select"));
+                            marketStatusBar.add(currentModel);
+                            if(currentModel.getKey().equalsIgnoreCase("")) {
+                                currentMarketStatusFilter = currentModel;
                             }
-                            break;
-                        case "daily_reminder":
-                            try{
-                                reminderActive = Integer.parseInt(s.getValue());
-
-                            } catch(NumberFormatException nfe) {
-                                reminderActive = 1;
-                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }
-
-                if(reminderActive == 1) {
-                    utils.createNotificationAlarm(hour, minute, null, this); //sets the actual alarm with correct times from user settings
-                }
-                // TODO: Don't need to check if teamsFinished anymore I think
-                if(teamsFinished) {
-                    //TODO: Probably don't need either of these
-//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
-//                    colorSchemeFinished = true;
-                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                }
-//                navigateToScoreboard();
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        else if(returnType == ApiReturnType.GET_TEAMS) {
-            String returnString;
-            try {
-                returnString = ((Response) returnObject).body().string();
-                JSONObject teamsObject = new JSONObject(returnString);
-                dataController.setTeamsObject(teamsObject.getJSONArray("teams"));
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            this.runOnUiThread(() -> {
-                actionBarManager.initTeamBar();
-                initTeamSelectorPopup();
-                if(dataController.getTeamsObject().size() > 0) {
-                    dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
-                    dataController.setMessageCenterVisible(true);
-                    // TODO: I don't need/want the team params to be a race condition
-                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
-                    SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
-                }
-                else {
-                    dataController.setMessageCenterVisible(false);
-                    teamParamFinished = true;
-                    dataController.setSlackInfo(null);
-                }
-                teamsFinished = true;
-                scopeFinished = false;
-                apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
-                apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
-                apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                //TODO: Could probably get activity settings later (record or settings page). 5/28/21 - I think settings page.
-                apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
-                apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-            });
-        }
-        else if(returnType == ApiReturnType.GET_SCOPE) {
-            try {
-                String tileString = ((Response) returnObject).body().string();
-                scopeBarList = new ArrayList<>();
-                JSONObject scopes = new JSONObject(tileString);
-                JSONObject allScopes = scopes.getJSONObject("scopes");
-
-                if(allScopes.has("team")) {
-                    JSONObject scopeTeam = allScopes.getJSONObject("team");
-                    scopeBarList.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
-                }
-                if(allScopes.has("groups")) {
-                    JSONArray scopeGroups = allScopes.getJSONArray("groups");
-                    scopeBarList.add(new ScopeBarModel("-- Groups --", "Groups"));
-
-                    for(int i = 0; i < scopeGroups.length(); i++) {
-                        JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
-                        scopeBarList.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
-                    }
-                }
-                if(allScopes.has("agents")) {
-                    JSONArray scopeAgents = allScopes.getJSONArray("agents");
-                    scopeBarList.add(new ScopeBarModel("-- Agents --", "Groups"));
-
-                    for(int i = 0; i < scopeAgents.length(); i++) {
-                        JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
-                        if(currentAgent.getString("agent_id").equalsIgnoreCase(getAgent().getAgent_id())) {
-                            ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
-                            scopeBarList.add(0, agentScope);
-                            if(currentScopeFilter == null) {
-                                currentScopeFilter = agentScope;
-                            }
-                            actionBarManager.setTitle(currentScopeFilter.getName());
-                            break;
+                    marketStatusFinished = true;
+                    navigateToScoreboard();
+                    if(clientTilesFinished) {
+                        if(getCurrentScopeFilter() != null) {
+                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
                         }
                         else {
-                            scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                            actionBarManager.setToFilterBar("");
+                        }
+                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else if(returnType == ApiReturnType.UPDATE_ACTIVITIES) {
+                dataController.clearUpdatedRecords();
+            }
+            else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
+                // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
+                try {
+                    JSONObject settingsObject = new JSONObject(returnString);
+                    dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
+                    activitySettingsParamFinished = true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(returnType == ApiReturnType.GET_SETTINGS) {
+                try {
+                    JSONObject settingsJson = new JSONObject(returnString);
+                    JSONArray settings = settingsJson.getJSONArray("parameters");
+                    dataController.setSettings(settings); //sets settings, and fills with default alarm notification if empty/not set yet
+                    List<ParameterObject> newSettings = dataController.getSettings(); //this is the new settings object list including any defaults generated
+//                settingsFinished = true;
+                    int hour = 0;
+                    int minute = 0;
+                    int reminderActive = 0;
+                    for (ParameterObject s : newSettings) {
+                        Log.e(s.getName(), s.getValue());
+                        switch (s.getName()) {
+                            case "daily_reminder_time":
+                                String[] values = s.getValue().split(":");
+                                try{
+                                    hour = Integer.parseInt(values[0]);
+                                    minute = Integer.parseInt(values[1]);
+                                } catch(NumberFormatException nfe) {
+                                    hour = 17;
+                                    minute = 0;
+                                }
+                                break;
+                            case "daily_reminder":
+                                try{
+                                    reminderActive = Integer.parseInt(s.getValue());
+
+                                } catch(NumberFormatException nfe) {
+                                    reminderActive = 1;
+                                }
                         }
                     }
-                }
 
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-
-            scopeFinished = true;
-            navigateToScoreboard(true);
-        }
-        else if(returnType == ApiReturnType.GET_TEAM_PARAMS) {
-            String returnString;
-            try {
-                returnString = ((Response) returnObject).body().string();
-                JSONObject teamParamsObject = new JSONObject(returnString);
-                if(teamParamsObject.getString("status_code").equals("-1")) {
-                    dataController.setSlackInfo(null);
-                }
-                else {
-                    ParameterObject params = new ParameterObject(teamParamsObject.getJSONObject("parameter"));
-                    dataController.setSlackInfo(params.getValue());
-                }
-                teamParamFinished = true;
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(returnType == ApiReturnType.GET_FIREBASE_DEVICES) {
-            String returnString;
-            try {
-                returnString = ((Response) returnObject).body().string();
-                JSONObject firebaseObject = new JSONObject(returnString);
-                JSONArray devices = firebaseObject.getJSONArray("devices");
-                String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
-
-                for(int i = 0; i < devices.length(); i++) {
-                    FirebaseDeviceObject currentDevice = new FirebaseDeviceObject(devices.getJSONObject(i));
-                    if(currentDevice.getDevice_id() != null && currentDevice.getDevice_id().equals(firebaseDeviceId)) {
-                        Log.e("Current Device", currentDevice.getDevice_id());
-                        this.currentDevice = currentDevice;
+                    if(reminderActive == 1) {
+                        utils.createNotificationAlarm(hour, minute, null, this); //sets the actual alarm with correct times from user settings
                     }
+                    // TODO: Don't need to check if teamsFinished anymore I think
+                    if(teamsFinished) {
+                        //TODO: Probably don't need either of these
+//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), dataController.getColorSchemeId());
+//                    colorSchemeFinished = true;
+                        apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    }
+//                navigateToScoreboard();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
-                if(firebaseDeviceId.equals("")) {
-                    myFirebaseMessagingService.initFirebase();
-                }
-                else {
-                    myFirebaseMessagingService.refreshToken();
-                }
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
             }
-        }
-        else if(returnType == ApiReturnType.GET_LABELS) {
-            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
-            HashMap<String, String> labels = labelObject.getMarket();
-            dataController.setLabels(labels);
-//            labelsFinished = true;
-//            navigateToScoreboard();
+            else if(returnType == ApiReturnType.GET_TEAMS) {
+                try {
+                    JSONObject teamsObject = new JSONObject(returnString);
+                    dataController.setTeamsObject(teamsObject.getJSONArray("teams"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                this.runOnUiThread(() -> {
+                    actionBarManager.initTeamBar();
+                    initTeamSelectorPopup();
+                    if(dataController.getTeamsObject().size() > 0) {
+                        dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
+                        dataController.setMessageCenterVisible(true);
+                        // TODO: I don't need/want the team params to be a race condition
+                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getSelectedTeamObject().getId());
+                        SaveSharedPreference.setTeam(ParentActivity.this, dataController.getSelectedTeamObject().getId() + "");
+                    }
+                    else {
+                        dataController.setMessageCenterVisible(false);
+                        teamParamFinished = true;
+                        dataController.setSlackInfo(null);
+                    }
+                    teamsFinished = true;
+                    scopeFinished = false;
+                    apiManager.getScope(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    apiManager.getMarketStatus(this, agent.getAgent_id(), getSelectedTeamMarketId());
+                    apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId());
+                    //TODO: Could probably get activity settings later (record or activitySettings page). 5/28/21 - I think activitySettings page.
+                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), getSelectedTeamId(), getSelectedTeamMarketId());
+                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), getSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+                });
+            }
+            else if(returnType == ApiReturnType.GET_SCOPE) {
+                try {
+                    scopeBarList = new ArrayList<>();
+                    JSONObject scopes = new JSONObject(returnString);
+                    JSONObject allScopes = scopes.getJSONObject("scopes");
+
+                    if(allScopes.has("team")) {
+                        JSONObject scopeTeam = allScopes.getJSONObject("team");
+                        scopeBarList.add(new ScopeBarModel(scopeTeam.getString("display_name"), "t" + scopeTeam.getString("team_id")));
+                    }
+                    if(allScopes.has("groups")) {
+                        JSONArray scopeGroups = allScopes.getJSONArray("groups");
+                        scopeBarList.add(new ScopeBarModel("-- Groups --", "Groups"));
+
+                        for(int i = 0; i < scopeGroups.length(); i++) {
+                            JSONObject currentGroup = (JSONObject) scopeGroups.get(i);
+                            scopeBarList.add(new ScopeBarModel(currentGroup.getString("display_name"), "g" + currentGroup.getString("group_id")));
+                        }
+                    }
+                    if(allScopes.has("agents")) {
+                        JSONArray scopeAgents = allScopes.getJSONArray("agents");
+                        scopeBarList.add(new ScopeBarModel("-- Agents --", "Groups"));
+
+                        for(int i = 0; i < scopeAgents.length(); i++) {
+                            JSONObject currentAgent = (JSONObject) scopeAgents.get(i);
+                            if(currentAgent.getString("agent_id").equalsIgnoreCase(getAgent().getAgent_id())) {
+                                ScopeBarModel agentScope = new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id"));
+                                scopeBarList.add(0, agentScope);
+                                if(currentScopeFilter == null) {
+                                    currentScopeFilter = agentScope;
+                                }
+                                actionBarManager.setTitle(currentScopeFilter.getName());
+                                break;
+                            }
+                            else {
+                                scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                scopeFinished = true;
+                navigateToScoreboard();
+            }
+            else if(returnType == ApiReturnType.GET_TEAM_PARAMS) {
+                try {
+                    JSONObject teamParamsObject = new JSONObject(returnString);
+                    if(teamParamsObject.getString("status_code").equals("-1")) {
+                        dataController.setSlackInfo(null);
+                    }
+                    else {
+                        ParameterObject params = new ParameterObject(teamParamsObject.getJSONObject("parameter"));
+                        dataController.setSlackInfo(params.getValue());
+                    }
+                    teamParamFinished = true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(returnType == ApiReturnType.GET_FIREBASE_DEVICES) {
+                try {
+                    JSONObject firebaseObject = new JSONObject(returnString);
+                    JSONArray devices = firebaseObject.getJSONArray("devices");
+                    String firebaseDeviceId = SaveSharedPreference.getFirebaseDeviceId(this);
+
+                    for(int i = 0; i < devices.length(); i++) {
+                        FirebaseDeviceObject currentDevice = new FirebaseDeviceObject(devices.getJSONObject(i));
+                        if(currentDevice.getDevice_id() != null && currentDevice.getDevice_id().equals(firebaseDeviceId)) {
+                            Log.e("Current Device", currentDevice.getDevice_id());
+                            this.currentDevice = currentDevice;
+                        }
+                    }
+                    MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
+
+                    if(firebaseDeviceId.equals("")) {
+                        myFirebaseMessagingService.initFirebase();
+                    }
+                    else {
+                        myFirebaseMessagingService.refreshToken();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(returnType == ApiReturnType.GET_LABELS) {
+                try {
+                    JSONObject labelsObject = new JSONObject(returnString);
+                    JSONObject marketLabels = labelsObject.getJSONObject("market");
+                    HashMap<String, String> labels = new LinkedHashMap<>();
+                    Iterator<String> keys = marketLabels.keys();
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        String value = marketLabels.getString(key);
+                        labels.put(key, value);
+                    }
+                    dataController.setLabels(labels);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void swappingTeamData(Object returnObject, ApiReturnType asyncReturnType) {
         if(asyncReturnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
@@ -864,14 +774,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-        }
-        else if(asyncReturnType == ApiReturnType.GET_AGENT_GOALS) {
-            // TODO: I think this is deprecated. Leaving a breakpoint to see if it ever shows up
-            // TODO: It does show up but I don't think I need it to. Will have to check back.
-            AsyncGoalsJsonObject goals = gson.fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
-            AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject, isRecruiting());
-//            goalsFinished = true;
         }
         else if(asyncReturnType == ApiReturnType.GET_TEAM_PARAMS) {
             String returnString;
@@ -989,7 +891,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initTeamSelectorPopup();
         setActivityColors();
         navigationManager.updateColorSchemeManager(colorSchemeManager);
-//        navigationManager.getActionBarManager().updateColorSchemeManager(colorSchemeManager);
     }
 
     // GETTERS AND SETTERS
