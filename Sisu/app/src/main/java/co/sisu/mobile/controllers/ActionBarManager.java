@@ -1,14 +1,9 @@
 package co.sisu.mobile.controllers;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -17,7 +12,6 @@ import android.widget.TextView;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -25,9 +19,7 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.models.AgentModelStringSuperUser;
 import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.models.TeamObject;
-import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
  * Created by bradygroharing on 5/25/18.

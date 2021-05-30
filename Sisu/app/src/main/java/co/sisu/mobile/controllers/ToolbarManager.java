@@ -1,10 +1,8 @@
 package co.sisu.mobile.controllers;
 
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import co.sisu.mobile.R;

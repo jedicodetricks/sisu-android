@@ -1,6 +1,5 @@
 package co.sisu.mobile.controllers;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

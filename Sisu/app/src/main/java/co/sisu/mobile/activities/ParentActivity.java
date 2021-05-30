@@ -1,9 +1,9 @@
 package co.sisu.mobile.activities;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -179,37 +179,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         actionBarManager = new ActionBarManager(this);
     }
 
-    public void setActivityColors() {
-        this.runOnUiThread(() -> {
-            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
-            if(isAdminMode) {
-                toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.sisuYellow));
-            }
-            else {
-                toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
-            }
-
-            VectorChildFinder plusVector = new VectorChildFinder(this, R.drawable.add_icon, addClientButton);
-            VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
-            plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
-            plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
-            addClientButton.invalidate();
-
-            //change parentLoader here, if needed
-            parentLoader = findViewById(R.id.parentLoader);
-            // TODO: this could probably use the colorSchemeManager
-            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark, null));
-                parentLoader.getIndeterminateDrawable().setBounds(bounds);
-            } else {
-                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
-                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress, null));
-                parentLoader.getIndeterminateDrawable().setBounds(bounds);
-            }
-        });
-    }
-
     private void initButtons(){
         ImageView scoreBoardButton = findViewById(R.id.scoreboardView);
         scoreBoardButton.setOnClickListener(this);
@@ -250,6 +219,37 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             teamSelectorPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
+    }
+
+    public void setActivityColors() {
+        this.runOnUiThread(() -> {
+            layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+            if(isAdminMode) {
+                toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.sisuYellow));
+            }
+            else {
+                toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
+            }
+
+            VectorChildFinder plusVector = new VectorChildFinder(this, R.drawable.add_icon, addClientButton);
+            VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+            plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+            plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+            addClientButton.invalidate();
+
+            //change parentLoader here, if needed
+            parentLoader = findViewById(R.id.parentLoader);
+            // TODO: this could probably use the colorSchemeManager
+            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
+                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark, null));
+                parentLoader.getIndeterminateDrawable().setBounds(bounds);
+            } else {
+                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
+                parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress, null));
+                parentLoader.getIndeterminateDrawable().setBounds(bounds);
+            }
+        });
     }
 
     @Override
@@ -362,7 +362,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, dataController.getCurrentSelectedTeamMarketId());
     }
 
-    private void sendTeamSwapApiCalls(TeamObject team) {
+    private void sendTeamSwapApiCalls(@NonNull TeamObject team) {
         teamSwap = true;
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getCurrentSelectedTeamMarketId());
@@ -826,7 +826,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onEventFailed(Object returnObject, ApiReturnType returnType) {
-
+        Log.e("FAILURE", returnType.name());
     }
 
     public void resetClientTiles(String clientSearch, int page) {
@@ -903,37 +903,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     // GETTERS AND SETTERS
-    // TODO: Almost every single one of these should be moved to the dataController
-
-
-    public String getDashboardType() {
-        return dashboardType;
-    }
-
-    public void setDashboardType(String dashboardType) {
-        this.dashboardType = dashboardType;
-    }
-
-    public NotesObject getSelectedNote() {
-        return selectedNote;
-    }
-
-    public void setSelectedNote(NotesObject selectedNote) {
-        this.selectedNote = selectedNote;
-    }
-
-    public void setSelectedClient(ClientObject client) {
-//        if(client.getIs_locked() == null) {
-//            client.setIs_locked("0");
-//        }
-        dataController.setSelectedClient(client);
-//        navigationManager.setSelectedClient(client);
-    }
-
-    public ClientObject getSelectedClient() {
-        return dataController.getSelectedClient();
-//        return navigationManager.getSelectedClient();
-    }
 
     public NavigationManager getNavigationManager() {
         return navigationManager;
@@ -963,8 +932,43 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return utils;
     }
 
-    public void setColorSchemeManager(ColorSchemeManager colorSchemeManager) {
-        this.colorSchemeManager = colorSchemeManager;
+    public TileCreationHelper getTileCreationHelper() {
+        return tileCreationHelper;
+    }
+
+    public DateManager getDateManager() {
+        return dateManager;
+    }
+
+    // TODO: Almost every single one of these should be moved to the dataController
+
+    public String getDashboardType() {
+        return dashboardType;
+    }
+
+    public void setDashboardType(String dashboardType) {
+        this.dashboardType = dashboardType;
+    }
+
+    public NotesObject getSelectedNote() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NotesObject selectedNote) {
+        this.selectedNote = selectedNote;
+    }
+
+    public void setSelectedClient(ClientObject client) {
+//        if(client.getIs_locked() == null) {
+//            client.setIs_locked("0");
+//        }
+        dataController.setSelectedClient(client);
+//        navigationManager.setSelectedClient(client);
+    }
+
+    public ClientObject getSelectedClient() {
+        return dataController.getSelectedClient();
+//        return navigationManager.getSelectedClient();
     }
 
     public String localizeLabel(String toCheck) {
@@ -1094,14 +1098,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setSelectedFilter(FilterObject selectedFilter) {
         this.selectedFilter = selectedFilter;
-    }
-
-    public TileCreationHelper getTileCreationHelper() {
-        return tileCreationHelper;
-    }
-
-    public DateManager getDateManager() {
-        return dateManager;
     }
 
 }
