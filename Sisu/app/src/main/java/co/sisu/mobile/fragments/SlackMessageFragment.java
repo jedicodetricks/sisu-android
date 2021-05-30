@@ -69,7 +69,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         } else {
             noteText.setBackgroundResource(R.drawable.input_text_box);
         }
-        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
+        noteText.setTextColor(colorSchemeManager.getDarkerText());
     }
 
     private void initUpdateOrAdd() {

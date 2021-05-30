@@ -29,7 +29,7 @@ public class DropdownAdapter extends ArrayAdapter<String>{
         View v = super.getView(position, convertView, parent);
 
         ((TextView) v).setTextSize(16);
-        ((TextView) v).setTextColor(colorSchemeManager.getDarkerTextColor());
+        ((TextView) v).setTextColor(colorSchemeManager.getDarkerText());
 
         return v;
     }
@@ -38,7 +38,7 @@ public class DropdownAdapter extends ArrayAdapter<String>{
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View v = super.getDropDownView(position, convertView, parent);
 
-        ((TextView) v).setTextColor(colorSchemeManager.getDarkerTextColor());
+        ((TextView) v).setTextColor(colorSchemeManager.getDarkerText());
 
 //        ((TextView) v).setTypeface(fontStyle);
         ((TextView) v).setGravity(Gravity.CENTER);

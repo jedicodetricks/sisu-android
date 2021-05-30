@@ -94,7 +94,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private void setColorScheme() {
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        spinner.getBackground().setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        spinner.getBackground().setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -362,19 +362,19 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         if(getContext() != null) {
             if(pastTimeline) {
                 if(metric.getPercentComplete(dateManager.getTimeline()) < 100) {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.sisuBlue));
                 }
                 else {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.sisuOrange));
                 }
             }
             else {
                 if (metric.getPercentComplete(dateManager.getTimeline()) < positionPercent) {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuBlue));
                 } else if (metric.getPercentComplete(dateManager.getTimeline()) > 99) {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuOrange));
                 } else {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuYellow));
                 }
             }
         }

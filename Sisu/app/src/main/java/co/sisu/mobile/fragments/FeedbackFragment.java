@@ -86,15 +86,15 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         ConstraintLayout layout = getView().findViewById(R.id.feedbackFragmentParentLayout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerTextColor());
-        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerText());
+        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerText());
 
         feedbackButton.setTextColor(colorSchemeManager.getButtonText());
         feedbackButton.setBackgroundResource(R.drawable.rounded_button);
         GradientDrawable drawable = (GradientDrawable) feedbackButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedback.setTextColor(colorSchemeManager.getDarkerText());
         if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(sisuLogo);
             SaveSharedPreference.setLogo(parentActivity, colorSchemeManager.getLogo());

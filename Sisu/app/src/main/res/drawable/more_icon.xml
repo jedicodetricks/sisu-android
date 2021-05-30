@@ -4,24 +4,24 @@
         android:viewportWidth="39.81"
         android:viewportHeight="30.13">
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M2.49,21.59h2L6.7,25.14l2.2,-3.55h2V30H9.05V24.51L6.69,28.09H6.64L4.3,24.54V30H2.49Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M12.78,25.81h0a4.34,4.34 0,0 1,4.34 -4.34h0.13a4.31,4.31 0,0 1,4.45 4.15v0.17h0a4.34,4.34 0,0 1,-4.34 4.34h-0.13A4.31,4.31 0,0 1,12.78 26ZM19.78,25.81h0a2.55,2.55 0,0 0,-2.46 -2.64h-0.08a2.5,2.5 0,0 0,-2.52 2.5v0.12h0a2.55,2.55 0,0 0,2.46 2.64h0.08a2.51,2.51 0,0 0,2.51 -2.51v-0.11Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M23.59,21.59h3.84a3.33,3.33 0,0 1,2.44 0.85,2.64 2.64,0 0,1 0.72,1.92h0a2.61,2.61 0,0 1,-1.8 2.6l2.05,3L28.68,29.96L26.89,27.3L25.43,27.3L25.43,30L23.59,30ZM27.31,25.67c0.9,0 1.41,-0.48 1.41,-1.19h0c0,-0.79 -0.55,-1.2 -1.45,-1.2L25.43,23.28v2.41Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M32.5,21.59h6.34v1.65h-4.5v1.7h4v1.64h-4v1.76H38.9V30H32.5Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M4.8,9.6A4.8,4.8 0,1 1,9.6 4.8,4.8 4.8,0 0,1 4.8,9.6ZM4.8,1.5A3.3,3.3 0,1 0,8.1 4.8,3.3 3.3,0 0,0 4.8,1.5Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M19.9,9.6a4.8,4.8 0,1 1,4.8 -4.8A4.8,4.8 0,0 1,19.9 9.6ZM19.9,1.5a3.3,3.3 0,1 0,3.3 3.3A3.3,3.3 0,0 0,19.9 1.5Z"/>
     <path
-        android:fillColor="@color/colorCorporateGrey"
+        android:fillColor="@color/sisuCorporateGrey"
         android:pathData="M35,9.6a4.8,4.8 0,1 1,4.8 -4.8A4.8,4.8 0,0 1,35 9.6ZM35,1.5a3.3,3.3 0,1 0,3.3 3.3A3.3,3.3 0,0 0,35 1.5Z"/>
 </vector>

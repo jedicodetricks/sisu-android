@@ -479,7 +479,7 @@ public class TileCreationHelper {
 //                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
 
             } catch (IllegalArgumentException e) {
-                progress.getProgressDrawable().setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_IN);
+                progress.getProgressDrawable().setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuOrange), PorterDuff.Mode.SRC_IN);
             }
         }
 
@@ -601,7 +601,7 @@ public class TileCreationHelper {
                 roundedCorners.setColor(Color.parseColor(assignedTileColor));
                 rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
             } catch (Exception e) {
-                roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+                roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.sisuOrange));
                 rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
             }
 
@@ -698,7 +698,7 @@ public class TileCreationHelper {
         CircularProgressBar progress = rowView.findViewById(R.id.progressTileProgressBar);
         CircularProgressBar progressMark = rowView.findViewById(R.id.progressTileProgressMark);
         progressMark.setStartAngle((int) pacer);
-        progressMark.setColor(ContextCompat.getColor(parentActivity, R.color.colorWhite));
+        progressMark.setColor(ContextCompat.getColor(parentActivity, R.color.sisuWhite));
         progressMark.setProgressBarWidth(parentActivity.getResources().getDimension(R.dimen.circularBarWidth));
         progressMark.setProgressWithAnimation(1, 0);
 
@@ -717,19 +717,19 @@ public class TileCreationHelper {
         try {
             progress.setColor(Color.parseColor(progressColor));
         } catch(IllegalArgumentException e) {
-            progress.setColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
+            progress.setColor(ContextCompat.getColor(parentActivity, R.color.sisuOrange));
         }
         progress.setProgressBarWidth(parentActivity.getResources().getDimension(R.dimen.circularBarWidth));
         progress.setBackgroundProgressBarWidth(parentActivity.getResources().getDimension(R.dimen.circularBarWidth));
         double percentCompleted = utils.getPercentComplete(currentProgress, maxProgress);
         progress.setProgressWithAnimation((float) percentCompleted, ANIMATION_DURATION);
         progress.setProgress((float) percentCompleted);
-        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.colorLightGrey)));
+        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.sisuLightGrey)));
         rowView.setClipToOutline(true);
 
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(parentActivity, R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.colorAlmostBlack));
+            roundedCorners.setColor(ContextCompat.getColor(parentActivity, R.color.sisuAlmostBlack));
             rowView.setBackground(ContextCompat.getDrawable(parentActivity, R.drawable.shape_rounded_corners));
         }
         else {
@@ -827,7 +827,7 @@ public class TileCreationHelper {
 
         if(rounded) {
             GradientDrawable roundedCorners = (GradientDrawable) ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners);
-            roundedCorners.setColor(ContextCompat.getColor(row.getContext(), R.color.colorAlmostBlack));
+            roundedCorners.setColor(ContextCompat.getColor(row.getContext(), R.color.sisuAlmostBlack));
             rowView.setBackground(ContextCompat.getDrawable(row.getContext(), R.drawable.shape_rounded_corners));
         }
         else {
@@ -882,9 +882,9 @@ public class TileCreationHelper {
             onPace.setColorFilter(Color.parseColor(tileObject.getString("progress_ontrack")), PorterDuff.Mode.SRC_ATOP);
             onGoal.setColorFilter(Color.parseColor(tileObject.getString("progress_complete")), PorterDuff.Mode.SRC_ATOP);
         } catch(IllegalArgumentException e) {
-            noPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
-            onPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
-            onGoal.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
+            noPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
+            onPace.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuOrange), PorterDuff.Mode.SRC_ATOP);
+            onGoal.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuWhite), PorterDuff.Mode.SRC_ATOP);
         }
 
         return rowView;
@@ -1051,18 +1051,21 @@ public class TileCreationHelper {
 
         ClientObject clientObject = new ClientObject(tileObject.getJSONObject("tile_data"));
         ImageView textImage = rowView.findViewById(R.id.leftButton);
-        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
+        Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.text_message_icon_active, null).mutate();
         drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+//        drawable.setColorFilter(ContextCompat.getColor(rowView.getContext(), colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
         textImage.setImageDrawable(drawable);
 
         ImageView phoneImage = rowView.findViewById(R.id.centerButton);
-        drawable = parentActivity.getResources().getDrawable(R.drawable.phone_icon_active).mutate();
+        drawable = parentActivity.getResources().getDrawable(R.drawable.phone_icon_active, null).mutate();
         drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+//        drawable.setColorFilter(ContextCompat.getColor(rowView.getContext(), colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
         phoneImage.setImageDrawable(drawable);
 
         ImageView emailImage = rowView.findViewById(R.id.rightButton);
-        drawable = parentActivity.getResources().getDrawable(R.drawable.email_icon_active).mutate();
+        drawable = parentActivity.getResources().getDrawable(R.drawable.email_icon_active, null).mutate();
         drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+//        drawable.setColorFilter(ContextCompat.getColor(rowView.getContext(), colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
         emailImage.setImageDrawable(drawable);
 
 //
@@ -1095,18 +1098,18 @@ public class TileCreationHelper {
         if(clientObject.getIs_locked() == 1) {
             if(clientObject.getType_id().equalsIgnoreCase("b")) {
                 drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             } else {
                 drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuOrange), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             }
         }
         else {
             if(clientObject.getType_id().equalsIgnoreCase("b")) {
                 drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
-                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
                 thumbnail.setImageDrawable(drawable);
             } else {
                 thumbnail.setImageResource(R.drawable.seller_icon_active);

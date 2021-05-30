@@ -100,8 +100,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         upperRelativeLayout.setId(1);
         if (tileTemplate != null) {
             try {
-                colorSchemeManager = new ColorSchemeManager(tileTemplate.getJSONObject("theme"));
-                parentActivity.setColorSchemeManager(colorSchemeManager);
+                colorSchemeManager = new ColorSchemeManager(tileTemplate.getJSONObject("theme"), parentActivity);
                 parentActivity.updateColorScheme(colorSchemeManager);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -195,7 +194,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         int counter = 0;
         for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             scopePopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
@@ -209,7 +208,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         int counter = 0;
         for(String timePeriod : timelineArray) {
             SpannableString s = new SpannableString(timePeriod);
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             popup.getMenu().add(1, counter, counter, s);
             counter++;
         }
@@ -218,21 +217,21 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     private void initDateSelector(@NonNull View view) {
         dateSelectorDateText = view.findViewById(R.id.dateSelectorDate);
         dateSelectorDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterText());
 
         dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
         dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
         dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterText());
 
         dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
         dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
         dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterTextColor());
+        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterText());
 
         scopeSelectorText = view.findViewById(R.id.scopeSelector);
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterText());
 
         dateSelectorDateText.setOnClickListener(this);
         dateSelectorBeginDateText.setOnClickListener(this);

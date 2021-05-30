@@ -166,8 +166,8 @@ public class ClientListAdapter extends BaseAdapter {
     }
 
     private void setColorScheme(View rowView, ClientObject clientObject) {
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
-        subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
+        subtitleTextView.setTextColor(colorSchemeManager.getDarkerText());
 
         Drawable drawable = rowView.getResources().getDrawable(R.drawable.text_message_icon_active).mutate();
         drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);

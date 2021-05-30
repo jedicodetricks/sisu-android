@@ -1,5 +1,6 @@
 package co.sisu.mobile.activities;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -50,7 +51,6 @@ import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.AgentModel;
-import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FilterObject;
@@ -124,6 +124,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String dashboardType = "agent";
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
+    // TODO: There is a bug when you are in the message center and press the plus button, then press back.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +132,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         gson = new Gson();
         dataController = new DataController();
-        colorSchemeManager = new ColorSchemeManager();
+        colorSchemeManager = new ColorSchemeManager(this);
         navigationManager = new NavigationManager(this);
         cacheManager = new CacheManager();
         apiManager = new ApiManager(this, cacheManager);
@@ -182,7 +183,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.runOnUiThread(() -> {
             layout.setBackgroundColor(colorSchemeManager.getAppBackground());
             if(isAdminMode) {
-                toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.colorYellow));
+                toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.sisuYellow));
             }
             else {
                 toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
@@ -245,7 +246,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         int counter = 0;
         for(TeamObject teamObject : dataController.getTeamsObject()) {
             SpannableString s = new SpannableString(teamObject.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getNormalTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getNormalText()), 0, s.length(), 0);
             teamSelectorPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
@@ -790,10 +791,21 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if(asyncReturnType == ApiReturnType.GET_LABELS) {
-            AsyncLabelsJsonObject labelObject = gson.fromJson(((Response) returnObject).body().charStream(), AsyncLabelsJsonObject.class);
-            HashMap<String, String> labels = labelObject.getMarket();
-            dataController.setLabels(labels);
-//            labelsFinished = true;
+            try {
+                String returnString = ((Response) returnObject).body().string();
+                JSONObject labelsObject = new JSONObject(returnString);
+                JSONObject marketLabels = labelsObject.getJSONObject("market");
+                HashMap<String, String> labels = new LinkedHashMap<>();
+                Iterator<String> keys = marketLabels.keys();
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    String value = marketLabels.getString(key);
+                    labels.put(key, value);
+                }
+                dataController.setLabels(labels);
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
         }
         else if(asyncReturnType == ApiReturnType.GET_TILES) {
             try {

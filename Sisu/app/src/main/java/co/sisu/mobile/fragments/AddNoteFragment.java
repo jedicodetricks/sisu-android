@@ -74,7 +74,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
                 } else {
                     noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.input_text_box));
                 }
-                noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
+                noteText.setTextColor(colorSchemeManager.getDarkerText());
             }
         });
     }

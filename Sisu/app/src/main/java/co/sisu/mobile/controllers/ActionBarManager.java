@@ -1,7 +1,9 @@
 package co.sisu.mobile.controllers;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -144,8 +148,9 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             teamLetter.setVisibility(View.INVISIBLE);
             teamBlock.setVisibility(View.INVISIBLE);
             actionImage.setVisibility(View.VISIBLE);
-            // TODO: Manage the colorscheme
-            actionImage.setImageResource(R.drawable.drag_drop);
+            Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.drag_drop, null).mutate();
+            drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+            actionImage.setImageDrawable(drawable);
         });
     }
 
@@ -157,8 +162,11 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             teamLetter.setVisibility(View.INVISIBLE);
             teamBlock.setVisibility(View.INVISIBLE);
             actionImage.setVisibility(View.VISIBLE);
-            // TODO: Find the normal looking plus button
-            actionImage.setImageResource(R.drawable.add_icon);
+            VectorChildFinder plusVector = new VectorChildFinder(parentActivity, R.drawable.add_icon, actionImage);
+            VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
+            plusPath.setFillColor(colorSchemeManager.getPrimaryColor());
+            plusPath.setStrokeColor(colorSchemeManager.getPrimaryColor());
+            actionImage.invalidate();
         });
     }
 
@@ -171,8 +179,9 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
             teamLetter.setVisibility(View.INVISIBLE);
             teamBlock.setVisibility(View.INVISIBLE);
             actionImage.setVisibility(View.VISIBLE);
-            // TODO: Manage the colorscheme
-            actionImage.setImageResource(R.drawable.trash_icon);
+            Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.trash_icon, null).mutate();
+            drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
+            actionImage.setImageDrawable(drawable);
         });
     }
 

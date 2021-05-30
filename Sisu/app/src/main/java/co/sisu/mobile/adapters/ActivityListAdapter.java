@@ -81,7 +81,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     }
 
     private void setColorScheme() {
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
 //        activitySwitch.setHighlightColor(colorSchemeManager.getSegmentSelected());
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},

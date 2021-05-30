@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiManager = new ApiManager(this);
-        colorSchemeManager = new ColorSchemeManager();
+        colorSchemeManager = new ColorSchemeManager(null);
         setContentView(R.layout.activity_main);
         loader = findViewById(R.id.signInLoader);
         initializeButtons();
@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                emailAddressEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
-                passwordEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
-                forgotPassword.setTextColor(colorSchemeManager.getDarkerTextColor());
-                legal.setTextColor(colorSchemeManager.getDarkerTextColor());
+                emailAddressEntry.setTextColor(colorSchemeManager.getDarkerText());
+                passwordEntry.setTextColor(colorSchemeManager.getDarkerText());
+                forgotPassword.setTextColor(colorSchemeManager.getDarkerText());
+                legal.setTextColor(colorSchemeManager.getDarkerText());
 
-                setInputTextLayoutColor(emailSignInLayout, colorSchemeManager.getIconActive());
-                setInputTextLayoutColor(passwordSignInLayout, colorSchemeManager.getIconActive());
+                setInputTextLayoutColor(emailSignInLayout, colorSchemeManager.getIconSelected());
+                setInputTextLayoutColor(passwordSignInLayout, colorSchemeManager.getIconSelected());
 
                 signInButton.setHighlightColor(colorSchemeManager.getButtonSelected());
                 signInButton.setBackgroundResource(R.drawable.rounded_button);
@@ -246,8 +246,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 View view = toast.getView();
                 TextView text = (TextView) view.findViewById(android.R.id.message);
                 text.setTextColor(Color.WHITE);
-                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-                view.setBackgroundResource(R.color.colorCorporateOrange);
+                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.sisuOrange));
+                view.setBackgroundResource(R.color.sisuOrange);
                 text.setPadding(20, 8, 20, 8);
                 toast.show();
             }
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
+            colorSchemeManager.setColorScheme(colorScheme, null);
             setColors();
         }
     }

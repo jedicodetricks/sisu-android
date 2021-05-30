@@ -152,10 +152,10 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
     private void setColorScheme() {
         leftSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        leftSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        leftSelector.setTextColor(colorSchemeManager.getLighterText());
 
         rightSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        rightSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        rightSelector.setTextColor(colorSchemeManager.getLighterText());
     }
 
     @SuppressLint("ResourceType")
@@ -211,18 +211,18 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 if(clientObject.getBoolean("is_locked")) {
                     if(clientObject.getString("type_id").equalsIgnoreCase("b")) {
                         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
                         thumbnail.setImageDrawable(drawable);
                     } else {
                         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.lock_icon).mutate();
-                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange), PorterDuff.Mode.SRC_ATOP);
+                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuOrange), PorterDuff.Mode.SRC_ATOP);
                         thumbnail.setImageDrawable(drawable);
                     }
                 }
                 else {
                     if(clientObject.getString("type_id").equalsIgnoreCase("b")) {
                         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
-                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
                         thumbnail.setImageDrawable(drawable);
                     } else {
                         thumbnail.setImageResource(R.drawable.seller_icon_active);
@@ -232,7 +232,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 try {
                     if(clientObject.getString("type_id").equalsIgnoreCase("b")) {
                         Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.seller_icon_active).mutate();
-                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.colorYellow), PorterDuff.Mode.SRC_ATOP);
+                        drawable.setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuYellow), PorterDuff.Mode.SRC_ATOP);
                         thumbnail.setImageDrawable(drawable);
                     } else {
                         thumbnail.setImageResource(R.drawable.seller_icon_active);
@@ -254,7 +254,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         if(currentlySelectedRow != null) {
             currentlySelectedRow.setBackgroundColor(colorSchemeManager.getAppBackground());
             TextView oldHeader = currentlySelectedRow.findViewById(R.id.client_list_title);
-            oldHeader.setTextColor(colorSchemeManager.getLighterTextColor());
+            oldHeader.setTextColor(colorSchemeManager.getLighterText());
         }
         newSelectedRow.setBackgroundColor(colorSchemeManager.getMenuSelected());
         TextView newHeader = newSelectedRow.findViewById(R.id.client_list_title);

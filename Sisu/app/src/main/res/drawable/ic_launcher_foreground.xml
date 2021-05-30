@@ -8,22 +8,22 @@
         <group android:translateX="18.450178"
                 android:translateY="17.538095">
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M18.26,9.16h6.67v16.23h-6.67z"/>
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M18.26,0h6.67v6.67h-6.67z"/>
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M0,0h6.67v16.23h-6.67z"/>
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M0,18.73h6.67v6.67h-6.67z"/>
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M9.06,0h6.67v11.06h-6.67z"/>
             <path
-                android:fillColor="@color/colorCorporateOrange"
+                android:fillColor="@color/sisuOrange"
                 android:pathData="M9.06,13.56h6.67v11.84h-6.67z"/>
         </group>
     </group>

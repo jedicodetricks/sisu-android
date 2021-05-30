@@ -77,18 +77,18 @@ public class ReportListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.report_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get subtitle element
         TextView subtitleTextView = rowView.findViewById(R.id.report_list_subtitle);
-        subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subtitleTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get percentage text element
         TextView percentageTextView = rowView.findViewById(R.id.report_percentage_text);
-        percentageTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        percentageTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.report_list_thumbnail);
 
         ProgressBar progressBar = rowView.findViewById(R.id.progressBar);
-        progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(rowView.getResources().getColor(R.color.colorCorporateGrey)));
+        progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(rowView.getResources().getColor(R.color.sisuCorporateGrey)));
 
         titleTextView.setText(metric.getTitle());
         if(metric.getCurrentNum() < 0) {
@@ -146,7 +146,7 @@ public class ReportListAdapter extends BaseAdapter {
             }
         }
         Drawable drawable = rowView.getResources().getDrawable(metric.getThumbnailId()).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
         thumbnailImageView.setImageDrawable(drawable);
 
         return rowView;

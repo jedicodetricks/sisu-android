@@ -57,7 +57,7 @@ public class AppointmentListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.appointment_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
         final NotesObject noteObject = (NotesObject) getItem(position);
 
         Date d;

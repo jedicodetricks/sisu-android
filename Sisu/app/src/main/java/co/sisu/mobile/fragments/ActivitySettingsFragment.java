@@ -106,7 +106,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         ConstraintLayout layout = getView().findViewById(R.id.activitySettingsParentLayout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        title.setTextColor(colorSchemeManager.getDarkerTextColor());
+        title.setTextColor(colorSchemeManager.getDarkerText());
     }
 
     private void initializeButtons() {

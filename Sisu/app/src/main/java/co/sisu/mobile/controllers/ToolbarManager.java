@@ -1,7 +1,10 @@
 package co.sisu.mobile.controllers;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import co.sisu.mobile.R;
@@ -22,7 +25,7 @@ public class ToolbarManager {
         this.colorSchemeManager = parentActivity.getColorSchemeManager();
     }
 
-    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+    public void updateColorSchemeManager(final ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
         resetToolbarImages(currentActivity);
     }
@@ -32,7 +35,7 @@ public class ToolbarManager {
             currentActivity = inputActivity;
 
             ImageView scoreBoardButton = parentActivity.findViewById(R.id.scoreboardView);
-            Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon).mutate();
+            Drawable drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon, null).mutate();
             drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             scoreBoardButton.setImageDrawable(drawable);
 
@@ -42,50 +45,59 @@ public class ToolbarManager {
 //                reportButton.setImageDrawable(drawable);
 
             ImageView clientButton = parentActivity.findViewById(R.id.reportView);
-            drawable = parentActivity.getResources().getDrawable(R.drawable.trans_disabled).mutate();
+            drawable = parentActivity.getResources().getDrawable(R.drawable.trans_disabled, null).mutate();
+//            drawable.setColorFilter(ContextCompat.getColor(context, colorSchemeManager.getIconIdle()), PorterDuff.Mode.SRC_ATOP);
             drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             clientButton.setImageDrawable(drawable);
 
             ImageView recordButton = parentActivity.findViewById(R.id.recordView);
-            drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon).mutate();
+            drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon, null).mutate();
+//            drawable.setColorFilter(ContextCompat.getColor(context, colorSchemeManager.getIconIdle()), PorterDuff.Mode.SRC_ATOP);
             drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             recordButton.setImageDrawable(drawable);
 
             ImageView leaderBoardButton = parentActivity.findViewById(R.id.leaderBoardView);
-            drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon).mutate();
+            drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon, null).mutate();
+//            drawable.setColorFilter(ContextCompat.getColor(context, colorSchemeManager.getIconIdle()), PorterDuff.Mode.SRC_ATOP);
             drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             leaderBoardButton.setImageDrawable(drawable);
 
             ImageView moreButton = parentActivity.findViewById(R.id.moreView);
-            drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon).mutate();
+            drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon, null).mutate();
+//            drawable.setColorFilter(ContextCompat.getColor(context, colorSchemeManager.getIconIdle()), PorterDuff.Mode.SRC_ATOP);
             drawable.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
             moreButton.setImageDrawable(drawable);
 
             switch (inputActivity) {
                 case "Scoreboard":
-                    drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active).mutate();
+                    drawable = parentActivity.getResources().getDrawable(R.drawable.home_icon_active, null).mutate();
+//                    drawable.setColorFilter(ContextCompat.getColor(context, colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
                     drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     scoreBoardButton.setImageDrawable(drawable);
                     break;
                 case "Report":
-                    drawable = parentActivity.getResources().getDrawable(R.drawable.trans_tab).mutate();
+                    drawable = parentActivity.getResources().getDrawable(R.drawable.trans_tab, null).mutate();
+//                    drawable.setColorFilter(ContextCompat.getColor(parentActivity, colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
                     drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     clientButton.setImageDrawable(drawable);
                     break;
                 case "Record":
-                    drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active).mutate();
+                    drawable = parentActivity.getResources().getDrawable(R.drawable.record_icon_active, null).mutate();
+//                    drawable.setColorFilter(ContextCompat.getColor(parentActivity, colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
                     drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     recordButton.setImageDrawable(drawable);
                     break;
                 case "Leaderboard":
-                    drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active).mutate();
+                    drawable = parentActivity.getResources().getDrawable(R.drawable.leaderboard_icon_active, null).mutate();
+//                    drawable.setColorFilter(ContextCompat.getColor(parentActivity, colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
                     drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     leaderBoardButton.setImageDrawable(drawable);
                     break;
                 case "More":
                 case "Add Client Note":
                 case "Feedback":
-                    drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active).mutate();
+                    drawable = parentActivity.getResources().getDrawable(R.drawable.more_icon_active, null).mutate();
+//                    drawable.setColorFilter(ContextCompat.getColor(parentActivity, colorSchemeManager.getPrimaryColor()), PorterDuff.Mode.SRC_ATOP);
                     drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
                     moreButton.setImageDrawable(drawable);
                     break;
@@ -96,7 +108,7 @@ public class ToolbarManager {
 
     }
 
-    public void manage(String fragmentName) {
+    public void manage(@NonNull String fragmentName) {
         String currentFragmentName = "";
         if(fragmentName.equals(FragmentName.DASHBOARD.label)) {
             currentFragmentName = "Scoreboard";

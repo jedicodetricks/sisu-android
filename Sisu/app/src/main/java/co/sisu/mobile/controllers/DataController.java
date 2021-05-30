@@ -137,7 +137,7 @@ public class DataController {
 //                counters[i].setName(counters[i].getCoalesce());
 //            }
 
-            Metric metric = new Metric((activitiesCounterModel.getName()), activitiesCounterModel.getActivity_type(), Double.valueOf(activitiesCounterModel.getCount()).intValue(), activitiesCounterModel.getGoalNum(), 0, R.color.colorCorporateOrange, activitiesCounterModel.getWeight());
+            Metric metric = new Metric((activitiesCounterModel.getName()), activitiesCounterModel.getActivity_type(), Double.valueOf(activitiesCounterModel.getCount()).intValue(), activitiesCounterModel.getGoalNum(), 0, R.color.sisuOrange, activitiesCounterModel.getWeight());
             setMetricThumbnail(metric);
             switch (activitiesCounterModel.getActivity_type()) {
 //                case "CONTA":
@@ -258,7 +258,7 @@ public class DataController {
 //            }
 
 
-            Metric metric = new Metric((counter.getName()), counter.getActivity_type(), Double.valueOf(counter.getCount()).intValue(), counter.getGoalNum(), 0, R.color.colorCorporateOrange, counter.getWeight());
+            Metric metric = new Metric((counter.getName()), counter.getActivity_type(), Double.valueOf(counter.getCount()).intValue(), counter.getGoalNum(), 0, R.color.sisuOrange, counter.getWeight());
             setMetricThumbnail(metric);
 //            if(!isRecruiting) {
 //                switch(counters[i].getActivity_type()) {

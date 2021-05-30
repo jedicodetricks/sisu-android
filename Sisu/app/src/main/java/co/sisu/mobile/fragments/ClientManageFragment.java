@@ -390,13 +390,13 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     }
 
     private void setEditClientColorScheme() {
-        archivedReason.setTextColor(colorSchemeManager.getDarkerTextColor());
+        archivedReason.setTextColor(colorSchemeManager.getDarkerText());
         Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
         imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
         // TODO: Archive button doesn't exist here (I may have fixed this and just need to double check)
         archiveButton.setImageDrawable(imageDraw);
 
-        setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerTextColor());
+        setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerText());
 
         noteButton.setTextColor(colorSchemeManager.getButtonText());
         noteButton.setBackgroundResource(R.drawable.rounded_button);
@@ -435,31 +435,31 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     }
 
     private void setCommonColorScheme() {
-        firstNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lastNameText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        emailText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        phoneText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        transAmount.setTextColor(colorSchemeManager.getDarkerTextColor());
-        paidIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gci.setTextColor(colorSchemeManager.getDarkerTextColor());
-        noteText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gciPercent.setTextColor(colorSchemeManager.getDarkerTextColor());
-        incomePercent.setTextColor(colorSchemeManager.getDarkerTextColor());
-        leadSource.setTextColor(colorSchemeManager.getDarkerTextColor());
+        firstNameText.setTextColor(colorSchemeManager.getDarkerText());
+        lastNameText.setTextColor(colorSchemeManager.getDarkerText());
+        emailText.setTextColor(colorSchemeManager.getDarkerText());
+        phoneText.setTextColor(colorSchemeManager.getDarkerText());
+        transAmount.setTextColor(colorSchemeManager.getDarkerText());
+        paidIncome.setTextColor(colorSchemeManager.getDarkerText());
+        gci.setTextColor(colorSchemeManager.getDarkerText());
+        noteText.setTextColor(colorSchemeManager.getDarkerText());
+        gciPercent.setTextColor(colorSchemeManager.getDarkerText());
+        incomePercent.setTextColor(colorSchemeManager.getDarkerText());
+        leadSource.setTextColor(colorSchemeManager.getDarkerText());
 
-        signedDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        contractDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
-        addAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerTextColor());
+        signedDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
+        contractDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
+        settlementDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
+        appointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
+        setAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
+        addAppointmentDisplay.setHintTextColor(colorSchemeManager.getDarkerText());
 
-        signedDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        contractDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        appointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        addAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
+        signedDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        contractDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        settlementDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        appointmentDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        setAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        addAppointmentDisplay.setTextColor(colorSchemeManager.getDarkerText());
 
         pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
         pipelineStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
@@ -472,21 +472,21 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         archivedStatus.setTextColor(colorSchemeManager.getButtonText());
         archivedStatus.setBackgroundColor(colorSchemeManager.getButtonBackground());
 
-        appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        addAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        signedDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        underContractDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        settlementDateTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        appointmentDateTitle.setTextColor(colorSchemeManager.getDarkerText());
+        setAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerText());
+        addAppointmentDateTitle.setTextColor(colorSchemeManager.getDarkerText());
+        signedDateTitle.setTextColor(colorSchemeManager.getDarkerText());
+        underContractDateTitle.setTextColor(colorSchemeManager.getDarkerText());
+        settlementDateTitle.setTextColor(colorSchemeManager.getDarkerText());
 
-        dollarSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
-        dollarSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
-        percentSign1.setTextColor(colorSchemeManager.getDarkerTextColor());
-        percentSign2.setTextColor(colorSchemeManager.getDarkerTextColor());
+        dollarSign1.setTextColor(colorSchemeManager.getDarkerText());
+        dollarSign2.setTextColor(colorSchemeManager.getDarkerText());
+        percentSign1.setTextColor(colorSchemeManager.getDarkerText());
+        percentSign2.setTextColor(colorSchemeManager.getDarkerText());
 
-        commissionEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
-        gciEquals.setTextColor(colorSchemeManager.getDarkerTextColor());
-        statusLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
+        commissionEquals.setTextColor(colorSchemeManager.getDarkerText());
+        gciEquals.setTextColor(colorSchemeManager.getDarkerText());
+        statusLabel.setTextColor(colorSchemeManager.getDarkerText());
 
         pipelineStatus.setTextColor(colorSchemeManager.getButtonText());
         signedStatus.setTextColor(colorSchemeManager.getButtonText());
@@ -494,17 +494,17 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         closedStatus.setTextColor(colorSchemeManager.getButtonText());
         archivedStatus.setTextColor(colorSchemeManager.getButtonText());
 
-        setInputTextLayoutHintColor(firstNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(lastNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(emailLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(phoneLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(transAmountLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(paidIncomeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(gciLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(noteLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(gciPercentLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(commissionInputLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutHintColor(leadSourceInputLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutHintColor(firstNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(lastNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(emailLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(phoneLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(transAmountLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(paidIncomeLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(gciLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(noteLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(gciPercentLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(commissionInputLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutHintColor(leadSourceInputLayout, colorSchemeManager.getIconSelected());
 
         signedClear.setTextColor(colorSchemeManager.getButtonText());
         signedClear.setBackgroundResource(R.drawable.rounded_button);
@@ -546,8 +546,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         drawable = (GradientDrawable) calculateIncomePercent.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        priorityText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        priorityText.setTextColor(colorSchemeManager.getDarkerText());
+        otherAppointmentsTitle.setTextColor(colorSchemeManager.getDarkerText());
 
         buyer.setTextColor(colorSchemeManager.getButtonText());
         buyer.setBackgroundResource(R.drawable.rounded_button);
@@ -1001,8 +1001,8 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     }
 
     private void changeStatusColor(TextView status) {
-        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.colorCorporateOrange));
-        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.colorLightGrey));
+        status.setTextColor(ContextCompat.getColor(parentActivity, R.color.sisuOrange));
+        status.setBackgroundColor(ContextCompat.getColor(parentActivity, R.color.sisuLightGrey));
     }
 
     @Override

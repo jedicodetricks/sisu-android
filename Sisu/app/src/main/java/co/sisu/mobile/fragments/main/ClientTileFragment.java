@@ -212,19 +212,19 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         }
         scopeSelectorText.setOnClickListener(this);
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        scopeSelectorText.setTextColor(colorSchemeManager.getLighterTextColor());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterText());
 
         marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
         marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
         marketStatusFilterText.setOnClickListener(this);
         marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        marketStatusFilterText.setTextColor(colorSchemeManager.getLighterTextColor());
+        marketStatusFilterText.setTextColor(colorSchemeManager.getLighterText());
 
         clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
         android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        search.setTextColor(colorSchemeManager.getLighterTextColor());
+        search.setTextColor(colorSchemeManager.getLighterText());
         search.setHighlightColor(colorSchemeManager.getAppBackground());
-        search.setHintTextColor(colorSchemeManager.getLighterTextColor());
+        search.setHintTextColor(colorSchemeManager.getLighterText());
 
         clientSearch.setOnQueryTextListener(this);
 
@@ -265,7 +265,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         int counter = 0;
         for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
 
             scopePopup.getMenu().add(1, counter, counter, s);
 
@@ -289,7 +289,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         int counter = 0;
         for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
             SpannableString s = new SpannableString(marketStatusModel.getLabel());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             marketStatusPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }
@@ -308,7 +308,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         int counter = 0;
         for(FilterObject currentFilter : agentFilters) {
             SpannableString s = new SpannableString(currentFilter.getFilterName());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             filterPopup.getMenu().add(1, counter, counter, s);
             counter++;
         }

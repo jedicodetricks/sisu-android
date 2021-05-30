@@ -58,9 +58,9 @@ public class MoreListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.more_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
         TextView subTitleTextView = rowView.findViewById(R.id.more_list_subtitle);
-        subTitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subTitleTextView.setTextColor(colorSchemeManager.getDarkerText());
 
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);

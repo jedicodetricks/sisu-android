@@ -168,7 +168,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         int counter = 0;
         for(String timePeriod : timelineArray) {
             SpannableString s = new SpannableString(timePeriod);
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterTextColor()), 0, s.length(), 0);
+            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
 
             dateSelectorPopup.getMenu().add(1, counter, counter, s);
 
@@ -227,7 +227,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 //        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
 
 //        Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
-//        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+//        drawable.setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
 //        calendarLauncher.setImageDrawable(drawable);
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
@@ -241,10 +241,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         }
 
         leftSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        leftSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        leftSelector.setTextColor(colorSchemeManager.getLighterText());
 
         rightSelector.setBackgroundColor(colorSchemeManager.getButtonBackground());
-        rightSelector.setTextColor(colorSchemeManager.getLighterTextColor());
+        rightSelector.setTextColor(colorSchemeManager.getLighterText());
 
         VectorChildFinder plusVector = new VectorChildFinder(view.getContext(), R.drawable.add_icon, addTransactionButton);
         VectorDrawableCompat.VFullPath plusPath = plusVector.findPathByName("orange_area");
@@ -330,7 +330,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         final Metric rightMetric = doubleMetric.getRightMetric();
 
         TextView leftTitleView = rowView.findViewById(R.id.leftRecordTitle);
-        leftTitleView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        leftTitleView.setTextColor(colorSchemeManager.getDarkerText());
         leftTitleView.setText(leftMetric.getTitle());
         if(leftMetric.getTitle().length() >= smallerTitleSize) {
             leftTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, parentActivity.getResources().getDimension(R.dimen.font_smaller));
@@ -413,13 +413,13 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         });
 
         leftRowCounter.setText(String.valueOf(leftMetric.getCurrentNum()));
-        leftRowCounter.setTextColor(colorSchemeManager.getDarkerTextColor());
+        leftRowCounter.setTextColor(colorSchemeManager.getDarkerText());
 
 
         //EVERYTHING FOR THE RIGHT SIDE
 
         TextView rightTitleView = rowView.findViewById(R.id.rightRecordTitle);
-        rightTitleView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        rightTitleView.setTextColor(colorSchemeManager.getDarkerText());
         final EditText rightRowCounter = rowView.findViewById(R.id.rightRowCounter);
         ImageView rightMinusButton = rowView.findViewById(R.id.rightMinusButton);
         ImageView rightPlusButton = rowView.findViewById(R.id.rightPlusButton);
@@ -503,7 +503,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             });
 
             rightRowCounter.setText(String.valueOf(rightMetric.getCurrentNum()));
-            rightRowCounter.setTextColor(colorSchemeManager.getDarkerTextColor());
+            rightRowCounter.setTextColor(colorSchemeManager.getDarkerText());
         }
         else {
             //Make all the elements GONE

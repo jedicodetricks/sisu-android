@@ -143,22 +143,22 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         ConstraintLayout layout = getView().findViewById(R.id.profileParentLayout);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        username.setTextColor(colorSchemeManager.getDarkerTextColor());
+        username.setTextColor(colorSchemeManager.getDarkerText());
 
-        firstName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lastName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        phone.setTextColor(colorSchemeManager.getDarkerTextColor());
+        firstName.setTextColor(colorSchemeManager.getDarkerText());
+        lastName.setTextColor(colorSchemeManager.getDarkerText());
+        phone.setTextColor(colorSchemeManager.getDarkerText());
 
-        ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconActive());
+        ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconSelected());
         username.setBackgroundTintList(colorStateList);
         firstName.setBackgroundTintList(colorStateList);
         lastName.setBackgroundTintList(colorStateList);
         phone.setBackgroundTintList(colorStateList);
 
-        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconSelected());
 
         passwordButton.setTextColor(colorSchemeManager.getButtonText());
         passwordButton.setBackgroundResource(R.drawable.rounded_button);

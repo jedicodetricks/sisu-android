@@ -4,18 +4,18 @@
     android:viewportWidth="33.3"
     android:viewportHeight="35.58">
     <path
-        android:fillColor="@color/colorCorporateOrange"
+        android:fillColor="@color/sisuOrange"
         android:pathData="M14.35,11.16C22.28,11.16 29,8.57 29,5.58S22.28,0 14.35,0 0,2.6 0,5.58 6.43,11.16 14.35,11.16Z"/>
     <path
-        android:fillColor="@color/colorCorporateOrange"
+        android:fillColor="@color/sisuOrange"
         android:pathData="M14.5,22.14c8,0 14.39,-2.19 14.39,-4.9V9.77c0,1.5 -6.55,3.74 -14.39,3.74S0.1,11.27 0.1,9.77v7.47c0,2.71 6.45,4.9 14.4,4.9Z"/>
     <path
-        android:fillColor="@color/colorCorporateOrange"
+        android:fillColor="@color/sisuOrange"
         android:pathData="M22.32,29.02h10.97v2.14h-10.97z"/>
     <path
-        android:fillColor="@color/colorCorporateOrange"
+        android:fillColor="@color/sisuOrange"
         android:pathData="M0,21.08v7.3C0,31 6.48,33.17 14.43,33.17a40.89,40.89 0,0 0,5.48 -0.36V26.69h4.55V23.48a39,39 0,0 1,-10 1.26C6.58,24.73 0,22.55 0,21.08Z"/>
     <path
-        android:fillColor="@color/colorCorporateOrange"
+        android:fillColor="@color/sisuOrange"
         android:pathData="M26.79,24.56h2.14v11.02h-2.14z"/>
 </vector>

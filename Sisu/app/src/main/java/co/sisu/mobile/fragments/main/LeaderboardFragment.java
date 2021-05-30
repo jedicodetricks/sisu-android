@@ -77,7 +77,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
-    private int[] teamColors = {R.color.colorCorporateGrey, R.color.colorAlmostBlack};
+    private int[] teamColors = {R.color.sisuCorporateGrey, R.color.sisuAlmostBlack};
     private int colorCounter = 0;
     private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
     private int agentCounter = 0;
@@ -128,9 +128,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         ConstraintLayout layout = getView().findViewById(R.id.leaderboard_parent);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        dateDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        monthToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        yearToggle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        dateDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        monthToggle.setTextColor(colorSchemeManager.getDarkerText());
+        yearToggle.setTextColor(colorSchemeManager.getDarkerText());
 
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
@@ -151,7 +151,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
 
         Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
         calendarLauncher.setImageDrawable(drawable);
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -410,7 +410,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         else if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             TeamColorSchemeObject[] colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+            colorSchemeManager.setColorScheme(colorScheme, parentActivity);
             parentActivity.setActivityColors();
         }
         else if(returnType == ApiReturnType.GET_LABELS) {

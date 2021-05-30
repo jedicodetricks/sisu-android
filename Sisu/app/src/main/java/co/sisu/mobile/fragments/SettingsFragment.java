@@ -113,13 +113,13 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         ConstraintLayout layout = getView().findViewById(R.id.settingsFragment);
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        reminderTimeTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        displayTime.setTextColor(colorSchemeManager.getDarkerTextColor());
-        version.setTextColor(colorSchemeManager.getDarkerTextColor());
-        timeZoneDisplay.setTextColor(colorSchemeManager.getDarkerTextColor());
-        reminderLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lightsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
-        timeZoneTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
+        reminderTimeTitle.setTextColor(colorSchemeManager.getDarkerText());
+        displayTime.setTextColor(colorSchemeManager.getDarkerText());
+        version.setTextColor(colorSchemeManager.getDarkerText());
+        timeZoneDisplay.setTextColor(colorSchemeManager.getDarkerText());
+        reminderLabel.setTextColor(colorSchemeManager.getDarkerText());
+        lightsLabel.setTextColor(colorSchemeManager.getDarkerText());
+        timeZoneTitle.setTextColor(colorSchemeManager.getDarkerText());
         if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
             //Picasso.with(parentActivity).load(Uri.parse("https://s3-us-west-2.amazonaws.com/sisu-shared-storage/team_logo/Better_Homes_and_Gardens_Real_Estate_Logo.jpg")).into(settingsLogo);
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(settingsLogo);
@@ -452,7 +452,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 public void run() {
                     dataController.setSettings(settings);
                     if(colorScheme != null) {
-                        colorSchemeManager.setColorScheme(colorScheme, dataController.getColorSchemeId());
+                        colorSchemeManager.setColorScheme(colorScheme, parentActivity);
                         parentActivity.setActivityColors();
                         setColorScheme();
                     }
