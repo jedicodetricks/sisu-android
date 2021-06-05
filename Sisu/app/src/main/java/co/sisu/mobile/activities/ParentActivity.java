@@ -610,9 +610,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     // TODO: Don't need to check if teamsFinished anymore I think
                     if(teamsFinished) {
-                        //TODO: Probably don't need either of these
-//                    apiManager.getColorScheme(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getColorSchemeId());
-//                    colorSchemeFinished = true;
                         apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
                     }
 //                navigateToScoreboard();
@@ -686,7 +683,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                                     currentScopeFilter = agentScope;
                                 }
                                 actionBarManager.setTitle(currentScopeFilter.getName());
-                                break;
+                                continue;
                             }
                             else {
                                 scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));

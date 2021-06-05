@@ -393,7 +393,6 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         archivedReason.setTextColor(colorSchemeManager.getDarkerText());
         Drawable imageDraw = getResources().getDrawable(R.drawable.trash_icon).mutate();
         imageDraw.setColorFilter(colorSchemeManager.getIconIdle(), PorterDuff.Mode.SRC_ATOP);
-        // TODO: Archive button doesn't exist here (I may have fixed this and just need to double check)
         archiveButton.setImageDrawable(imageDraw);
 
         setInputTextLayoutColor(archivedLayout, colorSchemeManager.getDarkerText());
@@ -1754,7 +1753,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             parentActivity.runOnUiThread(() -> {
                 parentActivity.onBackPressed();
 //                    JSONObject clientTiles = parentActivity.getClientTiles();
-                // TODO: I need to put the changes into the correct client tile
+                // TODO: I need to put the changes into the correct client tile so it'll show up without calling the api again
                 utils.showToast("Client updates saved", parentActivity, colorSchemeManager);
             });
         }

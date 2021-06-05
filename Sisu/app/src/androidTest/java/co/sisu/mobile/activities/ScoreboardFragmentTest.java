@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
@@ -81,14 +82,14 @@ public class ScoreboardFragmentTest {
         intent.putExtra("Agent", currentAgent);
         mActivityTestRule.launchActivity(intent);
 
-//        try {
-//            mActivityTestRule.getActivity()
-//                    .getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, ScoreboardFragment.class.newInstance(), "test").commit();
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            mActivityTestRule.getActivity()
+                    .getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, ScoreboardTileFragment.class.newInstance(), "test").commit();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         //TODO: I need to change this to a more reliable "wait for data to load"
         sleep(8000);
 
