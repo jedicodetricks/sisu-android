@@ -7,10 +7,10 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -598,7 +598,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private void popAdminConfirmDialog() {
         // TODO: This feels like a util
         String message = "Admin. Do you want to save?";
-        android.support.v7.app.AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
         builder.setMessage(message)
                 .setPositiveButton("Save", (dialog, id) -> saveRecords())
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {

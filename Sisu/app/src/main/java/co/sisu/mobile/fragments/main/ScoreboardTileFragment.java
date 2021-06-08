@@ -3,9 +3,9 @@ package co.sisu.mobile.fragments.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.PopupMenu;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.tsongkha.spinnerdatepicker.DatePicker;
 import com.tsongkha.spinnerdatepicker.DatePickerDialog;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
@@ -146,6 +147,8 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
+
         if(parentActivity.getCurrentScopeFilter() != null) {
             actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
         }

@@ -5,7 +5,7 @@
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:id="@+id/note_list_switch_layout">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -23,6 +23,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 </RelativeLayout>

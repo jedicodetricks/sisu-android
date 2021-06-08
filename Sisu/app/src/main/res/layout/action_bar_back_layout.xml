@@ -6,7 +6,7 @@
     >
 
     <TableRow>
-        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/action_bar_parent"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="50dp"
@@ -56,7 +56,7 @@
                 app:layout_constraintStart_toStartOf="@id/action_bar_home"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@id/actionBarTitle"

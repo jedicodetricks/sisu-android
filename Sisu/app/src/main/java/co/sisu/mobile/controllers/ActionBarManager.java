@@ -2,8 +2,8 @@ package co.sisu.mobile.controllers;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;

@@ -3,14 +3,14 @@ package co.sisu.mobile.activities;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -166,6 +167,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dateManager.initTimelineDate();
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
         apiManager.getTeams(this, agent.getAgent_id());
+        FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
     }
 
     private void initParentFields() {
@@ -335,9 +337,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
                     break;
                 case R.id.addView:
-                    actionBarManager.setToSaveBar("Add Client");
-                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
-                    break;
+                    throw new RuntimeException("Test Crash"); // Force a crash
+//                    actionBarManager.setToSaveBar("Add Client");
+//                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
+//                    break;
                 default:
                     break;
             }

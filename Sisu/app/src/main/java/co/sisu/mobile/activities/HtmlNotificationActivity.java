@@ -1,7 +1,7 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Base64;
 import android.webkit.WebView;
 

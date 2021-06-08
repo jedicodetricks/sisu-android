@@ -2,17 +2,20 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.*;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.enums.ApiReturnType;
@@ -31,6 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     private FirebaseDeviceObject currentDevice;
 
     public MyFirebaseMessagingService() {
+        // This exists for the AndroidManifest.xml. It was mad at me.
     }
 
     public MyFirebaseMessagingService(ApiManager apiManager, AgentModel agent, Context context, FirebaseDeviceObject currentDevice) {
@@ -41,24 +45,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     public void initFirebase() {
-        Log.e("Firebase", FirebaseInstanceId.getInstance().getInstanceId().toString());
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.w("Firebase", "getInstanceId failed", task.getException());
-                    return;
-                }
+        Log.e("Firebase", FirebaseMessaging.getInstance().getToken().toString());
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("Firebase", "getInstanceId failed", task.getException());
+                        return;
+                    }
 
-                // Get new Instance ID token
-                String token = task.getResult().getToken();
+                    // Get new Instance ID token
+                    String token = task.getResult();
 
-                // Log and toast
-                apiManager.sendFirebaseToken(MyFirebaseMessagingService.this, context, agent, token);
-                Log.e("Firebase TOKEN", token);
-            }
-        });
-
+                    // Log and toast
+                    apiManager.sendFirebaseToken(MyFirebaseMessagingService.this, context, agent, token);
+                    Log.e("Firebase TOKEN", token);
+                });
     }
 
     @Override
@@ -109,25 +110,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     public void refreshToken() {
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.w("Firebase", "getInstanceId failed", task.getException());
-                    return;
-                }
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("Firebase", "getInstanceId failed", task.getException());
+                        return;
+                    }
 
-                // Get new Instance ID token
-                String token = task.getResult().getToken();
+                    // Get new Instance ID token
+                    String token = task.getResult();
 
-                // Log and toast
+                    // Log and toast
 //                if(currentDevice != null) {
                     apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
                     Log.e("Firebase TOKEN REFRESH", token);
 //                }
 
-            }
-        });
+                });
     }
 
 

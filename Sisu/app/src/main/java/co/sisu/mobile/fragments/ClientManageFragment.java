@@ -18,12 +18,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -1323,7 +1323,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             case R.id.leadSource:
             case R.id.leadSourceInputLayout:
                 // setup the alert builder
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(parentActivity);
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(parentActivity);
                 builder.setTitle("Choose a lead source");
 
                 // add a list
@@ -1344,7 +1344,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 }
 
                 // create and show the alert dialog
-                android.support.v7.app.AlertDialog dialog = builder.create();
+                androidx.appcompat.app.AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
             default:
@@ -1354,7 +1354,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
     private void popAdminConfirmDialog() {
         String message = "Admin. Do you want to save?";
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(parentActivity);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(parentActivity);
         builder.setMessage(message)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

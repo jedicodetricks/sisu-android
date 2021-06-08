@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"/>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/record_list_child_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,5 +103,5 @@
                     </RelativeLayout>
 
         </ScrollView>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

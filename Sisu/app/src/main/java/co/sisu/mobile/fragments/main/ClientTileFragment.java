@@ -6,11 +6,11 @@ import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -71,7 +71,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private int numOfRows = 1;
     private TextView scopeSelectorText, marketStatusFilterText, saveButtonFilterText;
     private PopupMenu scopePopup, marketStatusPopup, filterPopup;
-    private android.support.v7.widget.SearchView clientSearch;
+    private androidx.appcompat.widget.SearchView clientSearch;
     private ConstraintLayout paginateInfo;
     private JSONObject paginateObject;
     private String count;
@@ -221,7 +221,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         marketStatusFilterText.setTextColor(colorSchemeManager.getLighterText());
 
         clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
-        android.support.v7.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        androidx.appcompat.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(androidx.appcompat.R.id.search_src_text);
         search.setTextColor(colorSchemeManager.getLighterText());
         search.setHighlightColor(colorSchemeManager.getAppBackground());
         search.setHintTextColor(colorSchemeManager.getLighterText());
