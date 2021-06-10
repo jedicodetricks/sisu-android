@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.woxthebox.draglistview.DragListView;
 
 import org.json.JSONArray;
@@ -96,6 +97,15 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
         initializeFields();
         setColorScheme();
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ActivitySettingsFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initializeFields() {

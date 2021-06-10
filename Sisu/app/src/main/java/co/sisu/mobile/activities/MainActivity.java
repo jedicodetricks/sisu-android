@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiManager = new ApiManager(this);
-        colorSchemeManager = new ColorSchemeManager(null);
+        colorSchemeManager = new ColorSchemeManager(this);
         setContentView(R.layout.activity_main);
         loader = findViewById(R.id.signInLoader);
         initializeButtons();
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public String getDeviceDensity(Context context){
+    public String getDeviceDensity(@NonNull Context context){
         String deviceDensity = "";
         switch (context.getResources().getDisplayMetrics().densityDpi) {
             case DisplayMetrics.DENSITY_LOW:
@@ -297,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
             AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, null);
+            colorSchemeManager.setColorScheme(colorScheme, this);
             setColors();
         }
     }

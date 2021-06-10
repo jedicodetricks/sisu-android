@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import co.sisu.mobile.R;
@@ -80,6 +81,15 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         });
         initFields();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "FeedbackFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

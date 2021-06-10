@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -130,6 +131,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         setLabels();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "MyProfileFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setLabels() {

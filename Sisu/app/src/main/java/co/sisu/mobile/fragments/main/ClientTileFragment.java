@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -242,6 +244,15 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         initScopePopupMenu(view);
         initMarketStatusPopupMenu(view);
         addButton.bringToFront();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ClientTileFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        parentActivity.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initScopePopupMenu(@NonNull View view) {

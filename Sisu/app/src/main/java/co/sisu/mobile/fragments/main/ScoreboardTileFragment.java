@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.tsongkha.spinnerdatepicker.DatePicker;
 import com.tsongkha.spinnerdatepicker.DatePickerDialog;
@@ -173,6 +174,21 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             }
         }
         initScopePopupMenu(view);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("On Pause", "on pause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "DashboardTileFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        parentActivity.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initScopePopupMenu(@NonNull View view) {

@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -111,6 +113,15 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         apiManager.getAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "GoalSetupFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setLabels() {

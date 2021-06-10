@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import java.text.ParseException;
@@ -116,6 +117,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "LeaderboardFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initFields() {

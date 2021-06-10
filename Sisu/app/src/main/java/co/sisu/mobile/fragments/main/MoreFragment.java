@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -78,6 +80,15 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
         actionBarManager.setToTitleBar("More", false);
         initializeListView();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "MoreFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

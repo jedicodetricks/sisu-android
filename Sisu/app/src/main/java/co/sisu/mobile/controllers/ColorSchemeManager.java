@@ -1,5 +1,6 @@
 package co.sisu.mobile.controllers;
 
+import android.app.Activity;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -53,8 +54,8 @@ public class ColorSchemeManager {
     private String logoImage;
     private int segmentLine;
 
-    public ColorSchemeManager(ParentActivity parentActivity) {
-        createDefaultColorObject(parentActivity);
+    public ColorSchemeManager(Activity activity) {
+        createDefaultColorObject(activity);
     }
 
     public ColorSchemeManager(@NonNull JSONObject theme, ParentActivity parentActivity) throws JSONException {
@@ -178,10 +179,10 @@ public class ColorSchemeManager {
     }
 
 
-    public void setColorScheme(@NonNull TeamColorSchemeObject[] colorScheme, ParentActivity parentActivity) {
+    public void setColorScheme(@NonNull TeamColorSchemeObject[] colorScheme, Activity activity) {
         // TODO: This is called by the MainActivity. We should probably just store the default colors somewhere so it doesn't have to do that.
-        if(parentActivity != null) {
-            setDefaults(parentActivity);
+        if(activity != null) {
+            setDefaults(activity);
         }
         icon = null;
         for(TeamColorSchemeObject colorSchemeObject : colorScheme) {
@@ -281,45 +282,45 @@ public class ColorSchemeManager {
         }
     }
 
-    private void setDefaults(ParentActivity parentActivity) {
-        appBackground = ContextCompat.getColor(parentActivity, R.color.sisuAlmostBlack);
-        primaryColor = ContextCompat.getColor(parentActivity, R.color.sisuOrange);
-        lightLine = ContextCompat.getColor(parentActivity, R.color.sisuLightLineGrey);
-        progressBackground = ContextCompat.getColor(parentActivity, R.color.sisuProgressDark);
-        progressOffTrack = ContextCompat.getColor(parentActivity, R.color.sisuBlue);
-        progressOnTrack = ContextCompat.getColor(parentActivity, R.color.sisuYellow);
-        progressComplete = ContextCompat.getColor(parentActivity, R.color.sisuOrange);
-        buttonBackground = ContextCompat.getColor(parentActivity, R.color.sisuAlmostBlack);
-        buttonSelected = ContextCompat.getColor(parentActivity, R.color.sisuAlmostBlack);
-        buttonText = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        buttonBorder = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        topbarBackground = ContextCompat.getColor(parentActivity, R.color.sisuAlmostBlack);
-        topbarText = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        bottombarBackground = ContextCompat.getColor(parentActivity, R.color.sisuDarkest);
-        normalText = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        lighterText = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        darkerText = ContextCompat.getColor(parentActivity, R.color.sisuWhite);
-        menuBackground = ContextCompat.getColor(parentActivity, R.color.sisuDarkest);
-        menuText = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        menuSelected = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        menuSelectedText = ContextCompat.getColor(parentActivity, R.color.sisuOrange);
-        menuIcon = ContextCompat.getColor(parentActivity, R.color.sisuOrange);
-        segmentSelected = ContextCompat.getColor(parentActivity, R.color.sisuWhite);
-        segmentBackground = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        line = ContextCompat.getColor(parentActivity, R.color.sisuLineGrey);
-        spinnerBackground = ContextCompat.getColor(parentActivity, R.color.sisuDarkest);
-        spinnerText = ContextCompat.getColor(parentActivity, R.color.sisuWhite);
-        iconIdle = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        iconSelected = ContextCompat.getColor(parentActivity, R.color.sisuLightGrey);
-        roundedButton = ContextCompat.getColor(parentActivity, R.color.sisuOrange);
+    private void setDefaults(Activity activity) {
+        appBackground = ContextCompat.getColor(activity, R.color.sisuAlmostBlack);
+        primaryColor = ContextCompat.getColor(activity, R.color.sisuOrange);
+        lightLine = ContextCompat.getColor(activity, R.color.sisuLightLineGrey);
+        progressBackground = ContextCompat.getColor(activity, R.color.sisuProgressDark);
+        progressOffTrack = ContextCompat.getColor(activity, R.color.sisuBlue);
+        progressOnTrack = ContextCompat.getColor(activity, R.color.sisuYellow);
+        progressComplete = ContextCompat.getColor(activity, R.color.sisuOrange);
+        buttonBackground = ContextCompat.getColor(activity, R.color.sisuAlmostBlack);
+        buttonSelected = ContextCompat.getColor(activity, R.color.sisuAlmostBlack);
+        buttonText = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        buttonBorder = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        topbarBackground = ContextCompat.getColor(activity, R.color.sisuAlmostBlack);
+        topbarText = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        bottombarBackground = ContextCompat.getColor(activity, R.color.sisuDarkest);
+        normalText = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        lighterText = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        darkerText = ContextCompat.getColor(activity, R.color.sisuWhite);
+        menuBackground = ContextCompat.getColor(activity, R.color.sisuDarkest);
+        menuText = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        menuSelected = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        menuSelectedText = ContextCompat.getColor(activity, R.color.sisuOrange);
+        menuIcon = ContextCompat.getColor(activity, R.color.sisuOrange);
+        segmentSelected = ContextCompat.getColor(activity, R.color.sisuWhite);
+        segmentBackground = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        line = ContextCompat.getColor(activity, R.color.sisuLineGrey);
+        spinnerBackground = ContextCompat.getColor(activity, R.color.sisuDarkest);
+        spinnerText = ContextCompat.getColor(activity, R.color.sisuWhite);
+        iconIdle = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        iconSelected = ContextCompat.getColor(activity, R.color.sisuLightGrey);
+        roundedButton = ContextCompat.getColor(activity, R.color.sisuOrange);
         logoUrl = "https://s3-us-west-2.amazonaws.com/sisu-shared-storage/generic/sisu-logo.png";
         logoImage = "sisu-logo-lg";
         icon = "sisu-logo-lg";
     }
 
-    private void createDefaultColorObject(ParentActivity parentActivity) {
+    private void createDefaultColorObject(Activity activity) {
         defaultColorObject = new JSONObject();
-        setDefaults(parentActivity);
+        setDefaults(activity);
         try {
             defaultColorObject.put("app_background", appBackground);
             defaultColorObject.put("primary_color", primaryColor);

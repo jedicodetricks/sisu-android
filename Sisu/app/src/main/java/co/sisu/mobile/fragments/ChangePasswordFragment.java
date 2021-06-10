@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.HashMap;
 
 import co.sisu.mobile.R;
@@ -59,6 +61,15 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         utils = parentActivity.getUtils();
         initUI();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ChangePasswordFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

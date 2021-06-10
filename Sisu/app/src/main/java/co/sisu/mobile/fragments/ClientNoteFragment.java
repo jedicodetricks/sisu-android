@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -84,6 +85,15 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             apiManager.getMessageCenterInfo(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
         }
         initAddButton();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ClientNoteFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initListView() {

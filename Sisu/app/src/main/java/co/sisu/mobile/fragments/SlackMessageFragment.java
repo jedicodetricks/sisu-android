@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
@@ -60,6 +62,15 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         initForm();
         initUpdateOrAdd();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "SlackMessageFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

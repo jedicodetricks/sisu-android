@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 
@@ -34,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import co.sisu.mobile.BuildConfig;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
@@ -123,6 +125,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     private PopupMenu teamSelectorPopup;
     private String dashboardType = "agent";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
     // TODO: There is a bug when you are in the message center and press the plus button, then press back.
@@ -140,6 +143,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dateManager = new DateManager();
         utils = new Utils();
         tileCreationHelper = new TileCreationHelper(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         pushNotificationTitle = getIntent().getStringExtra("title");
         pushNotificationBody = getIntent().getStringExtra("body");
@@ -153,11 +157,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
-        //TODO: Don't release with this uncommented, you fucktard.
-        //MOCKING AN AGENT
+        if (BuildConfig.DEBUG) {
+            //TODO: Don't release with this uncommented, you fucktard.
+            //MOCKING AN AGENT
 //        agent.setAgent_id("49201"); // This is a good agent for color checking
 //        dataController.setAgent(agent);
-        //
+            //
+        }
 
         initParentFields();
         initButtons();
@@ -167,7 +173,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dateManager.initTimelineDate();
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
         apiManager.getTeams(this, agent.getAgent_id());
+
         FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
+        FirebaseCrashlytics.getInstance().setUserId(agent.getAgent_id());
     }
 
     private void initParentFields() {
@@ -940,6 +948,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public DateManager getDateManager() {
         return dateManager;
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return mFirebaseAnalytics;
     }
 
     // TODO: Almost every single one of these should be moved to the dataController

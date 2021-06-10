@@ -23,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -107,6 +108,15 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         }
 
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "SettingsFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

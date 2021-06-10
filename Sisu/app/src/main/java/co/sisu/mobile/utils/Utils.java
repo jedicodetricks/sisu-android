@@ -14,6 +14,8 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import android.view.View;
@@ -71,15 +73,17 @@ public class Utils {
     }
 
     public void showToast(final CharSequence msg, ParentActivity parentActivity, ColorSchemeManager colorSchemeManager) {
-        parentActivity.runOnUiThread(() -> {
-            Toast toast = Toast.makeText(parentActivity, msg,Toast.LENGTH_SHORT);
-            View view = toast.getView();
-            TextView text = view.findViewById(android.R.id.message);
-            text.setTextColor(colorSchemeManager.getLighterText());
-            view.getBackground().setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
-            text.setPadding(20, 8, 20, 8);
-            toast.show();
-        });
+        if(parentActivity != null) {
+            parentActivity.runOnUiThread(() -> {
+                Toast toast = Toast.makeText(parentActivity, msg,Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                TextView text = view.findViewById(android.R.id.message);
+                text.setTextColor(colorSchemeManager.getLighterText());
+                view.getBackground().setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
+                text.setPadding(20, 8, 20, 8);
+                toast.show();
+            });
+        }
     }
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent, Context context) {

@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,6 +92,15 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         initializeTimelineSelector();
         spinner.setSelection(dateManager.getTimelineSelection());
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ReportFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {

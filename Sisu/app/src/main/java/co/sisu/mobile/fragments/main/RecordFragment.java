@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +68,6 @@ import okhttp3.Response;
  * A simple {@link Fragment} subclass.
  */
 public class RecordFragment extends Fragment implements View.OnClickListener, RecordEventHandler, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener {
-
 
     private ListView mListView;
     private List<Metric> metricList;
@@ -132,6 +132,15 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         setColorScheme(view);
 //        activitiesTable = view.findViewById(R.id.activitiesTable);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "RecordFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void initLabels(@NonNull View view) {

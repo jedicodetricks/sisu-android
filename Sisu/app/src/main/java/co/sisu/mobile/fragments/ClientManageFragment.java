@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -188,6 +190,15 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
 
         setupCommonLabels();
         setCommonColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ClientManageFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setupEditClientLabels() {
