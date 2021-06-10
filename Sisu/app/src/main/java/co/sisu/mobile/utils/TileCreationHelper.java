@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -14,8 +15,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.appcompat.content.res.AppCompatResources;
+
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -476,7 +481,7 @@ public class TileCreationHelper {
             progress.setProgress((int) completedPercent);
             try {
                 progress.setProgressTintList(ColorStateList.valueOf(Color.parseColor(progressColor)));
-//                progress.getProgressDrawable().setColorFilter(Color.parseColor(progressColor), PorterDuff.Mode.SRC_IN);
+                progress.setProgressBackgroundTintList(ColorStateList.valueOf(colorSchemeManager.getProgressBackground()));
 
             } catch (IllegalArgumentException e) {
                 progress.getProgressDrawable().setColorFilter(ContextCompat.getColor(parentActivity, R.color.sisuOrange), PorterDuff.Mode.SRC_IN);
@@ -716,6 +721,7 @@ public class TileCreationHelper {
         goalProgressText.setText((int) maxProgress + "");
         try {
             progress.setColor(Color.parseColor(progressColor));
+            progress.setBackgroundColor(colorSchemeManager.getProgressBackground());
         } catch(IllegalArgumentException e) {
             progress.setColor(ContextCompat.getColor(parentActivity, R.color.sisuOrange));
         }
@@ -724,7 +730,7 @@ public class TileCreationHelper {
         double percentCompleted = utils.getPercentComplete(currentProgress, maxProgress);
         progress.setProgressWithAnimation((float) percentCompleted, ANIMATION_DURATION);
         progress.setProgress((float) percentCompleted);
-        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.sisuLightGrey)));
+//        rowView.setBackgroundColor((ContextCompat.getColor(rowView.getContext(), R.color.sisuLightGrey)));
         rowView.setClipToOutline(true);
 
         if(rounded) {
@@ -1204,5 +1210,9 @@ public class TileCreationHelper {
 
         // Finally, return the one or more sided bordered background drawable
         return layerDrawable;
+    }
+
+    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
+        this.colorSchemeManager = colorSchemeManager;
     }
 }

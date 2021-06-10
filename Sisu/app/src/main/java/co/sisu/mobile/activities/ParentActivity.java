@@ -230,7 +230,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 toolbar.setBackgroundColor(ContextCompat.getColor(ParentActivity.this, R.color.sisuYellow));
             }
             else {
-                toolbar.setBackgroundColor(colorSchemeManager.getMenuBackground());
+                toolbar.setBackgroundColor(colorSchemeManager.getBottombarBackground());
             }
 
             VectorChildFinder plusVector = new VectorChildFinder(this, R.drawable.add_icon, addClientButton);
@@ -337,14 +337,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
                     break;
                 case R.id.addView:
-                    throw new RuntimeException("Test Crash"); // Force a crash
-//                    actionBarManager.setToSaveBar("Add Client");
-//                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
-//                    break;
+                    actionBarManager.setToSaveBar("Add Client");
+                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
+                    break;
                 default:
                     break;
             }
-
         }
     }
 
@@ -634,6 +632,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     if(dataController.getTeamsObject().size() > 0) {
                         dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
                         dataController.setMessageCenterVisible(true);
+                        FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
                         // TODO: I don't need/want the team params to be a race condition
                         apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeam().getId());
                         SaveSharedPreference.setTeam(ParentActivity.this, dataController.getCurrentSelectedTeam().getId() + "");
@@ -729,9 +728,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                             this.currentDevice = currentDevice;
                         }
                     }
+
                     MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService(apiManager, dataController.getAgent(), this.getApplicationContext(), currentDevice);
 
-                    if(firebaseDeviceId.equals("")) {
+                    if(firebaseDeviceId.equals("") || this.currentDevice == null) {
                         myFirebaseMessagingService.initFirebase();
                     }
                     else {
@@ -900,6 +900,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         initTeamSelectorPopup();
         setActivityColors();
         navigationManager.updateColorSchemeManager(colorSchemeManager);
+        actionBarManager.updateColorSchemeManager(colorSchemeManager);
+        tileCreationHelper.updateColorScheme(colorSchemeManager);
     }
 
     // GETTERS AND SETTERS

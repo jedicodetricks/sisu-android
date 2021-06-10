@@ -1,13 +1,19 @@
 package co.sisu.mobile.controllers;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
@@ -52,9 +58,10 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
     private TextView teamLetter;
     private View teamBlock;
     private ImageView actionImage;
+    private View fullActionBar;
     //
 
-    public ActionBarManager(ParentActivity parentActivity) {
+    public ActionBarManager(@NonNull ParentActivity parentActivity) {
         this.parentActivity = parentActivity;
         this.dataController = parentActivity.getDataController();
         this.colorSchemeManager = parentActivity.getColorSchemeManager();
@@ -78,16 +85,41 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
 
         actionImage = parentActivity.findViewById(R.id.actionBarActionImage);
         actionImage.setOnClickListener(parentActivity);
+
+        fullActionBar = parentActivity.findViewById(R.id.customActionBar);
     }
 
     public void initTeamBar() {
-        List<TeamObject> teamsList = dataController.getTeamsObject();
-        if(teamsList.size() > 0) {
-            teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
-            teamLetter.setBackgroundColor(colorSchemeManager.getPrimaryColor());
-            teamBlock.setBackgroundColor(colorSchemeManager.getPrimaryColor());
-        }
-        //
+        parentActivity.runOnUiThread(() -> {
+            List<TeamObject> teamsList = dataController.getTeamsObject();
+            if(teamsList.size() > 0) {
+                teamLetter.setVisibility(View.VISIBLE);
+                teamBlock.setVisibility(View.VISIBLE);
+                teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
+                teamLetter.setBackgroundDrawable(null);
+                teamBlock.setBackgroundColor(colorSchemeManager.getPrimaryColor());
+            }
+            actionBarTitle.setTextColor(colorSchemeManager.getTopbarText());
+            actionBarActionText.setTextColor(colorSchemeManager.getTopbarText());
+            fullActionBar.setBackgroundColor(colorSchemeManager.getBottombarBackground());
+        });
+
+    }
+
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
+        parentActivity.runOnUiThread(() -> {
+            List<TeamObject> teamsList = dataController.getTeamsObject();
+            if(teamsList.size() > 0) {
+                teamLetter.setVisibility(View.VISIBLE);
+                teamBlock.setVisibility(View.VISIBLE);
+                teamLetter.setText(teamsList.get(0).getTeamLetter().toUpperCase());
+                teamLetter.setBackgroundDrawable(null);
+                teamBlock.setBackgroundColor(colorSchemeManager.getPrimaryColor());
+            }
+            actionBarTitle.setTextColor(colorSchemeManager.getTopbarText());
+            actionBarActionText.setTextColor(colorSchemeManager.getTopbarText());
+            fullActionBar.setBackgroundColor(colorSchemeManager.getTopbarBackground());
+        });
     }
 
     public void setToTitleBar(final String titleString, boolean showTeamSelectButton) {

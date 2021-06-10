@@ -147,8 +147,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
-
         if(parentActivity.getCurrentScopeFilter() != null) {
             actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
         }
