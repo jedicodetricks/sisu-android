@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.PopupMenu;
 import android.text.SpannableString;
@@ -121,7 +122,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 e.printStackTrace();
             }
             if (tile_rows != null) {
-                Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
                 for(int i = 1; i < tile_rows.length(); i++) {
                     try {
                         HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, this, null);
@@ -134,7 +134,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                             parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
                             numOfRows++;
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -179,16 +178,59 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("On Pause", "on pause");
+        Log.e("On Pause", "On Pause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.e("On Resume", "On Resume");
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "DashboardTileFragment");
         bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
         parentActivity.getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e("On Start", "On Start");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("On Stop", "On Stop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("On Destroy", "On Destroy");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e("On Create", "On Create");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("On Destroy View", "On Destroy View");
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("On Save Instance State", "On Save Instance State");
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.e("On Restore Instance State", "On Restore Instance State");
     }
 
     private void initScopePopupMenu(@NonNull View view) {

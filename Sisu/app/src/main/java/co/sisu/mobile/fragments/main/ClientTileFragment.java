@@ -83,6 +83,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private List<FilterObject> agentFilters = new ArrayList<>();
     private Boolean filterMenuPrepared = false;
 
+
+    // TODO: There is a default paging library. Might be useful for this fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -178,7 +180,6 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
             }
             if (tile_rows != null) {
-                Log.e("NUM OF TILE ROWS", String.valueOf(tile_rows.length()));
                 for(int i = 0; i < tile_rows.length(); i++) {
                     try {
                         HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, this, this);

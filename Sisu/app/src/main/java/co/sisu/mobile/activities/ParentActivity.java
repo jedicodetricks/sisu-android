@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -46,6 +48,9 @@ import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.viewModels.ClientTilesViewModel;
+import co.sisu.mobile.viewModels.DashboardTilesViewModel;
+import co.sisu.mobile.viewModels.TestViewModel;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
@@ -126,6 +131,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private PopupMenu teamSelectorPopup;
     private String dashboardType = "agent";
     private FirebaseAnalytics mFirebaseAnalytics;
+    private TestViewModel testViewModel;
+    private DashboardTilesViewModel dashboardTilesViewModel;
+    private ClientTilesViewModel clientTilesViewModel;
 
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
     // TODO: There is a bug when you are in the message center and press the plus button, then press back.
@@ -176,6 +184,37 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
         FirebaseCrashlytics.getInstance().setUserId(agent.getAgent_id());
+
+        testViewModel = new ViewModelProvider(this).get(TestViewModel.class);
+        testViewModel.getSelected().observe(this, users -> {
+            // update UI
+            Log.e("UPDATE?", "UPDATE!");
+        });
+
+        dashboardTilesViewModel = new ViewModelProvider(this).get(DashboardTilesViewModel.class);
+        dashboardTilesViewModel.getDashboardTiles().observe(this, dashboardTiles -> {
+//            Log.e("Dashboard Tiles", String.valueOf(dashboardTiles.length()));
+            tileTemplate = dashboardTiles;
+            tileTemplateFinished = true;
+            navigateToScoreboard();
+        });
+
+        clientTilesViewModel = new ViewModelProvider(this).get(ClientTilesViewModel.class);
+        clientTilesViewModel.getClientTiles().observe(this, newClientTiles -> {
+//            Log.e("Client Tiles", String.valueOf(newClientTiles.length()));
+            clientTiles = newClientTiles;
+
+            clientTilesFinished = true;
+            if(marketStatusFinished) {
+                if(getCurrentScopeFilter() != null) {
+                    actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
+                }
+                else {
+                    actionBarManager.setToFilterBar("");
+                }
+                navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+            }
+        });
     }
 
     private void initParentFields() {
@@ -284,15 +323,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     scopeFinished = true;
                     marketStatusFinished = true;
                     if(isRecruiting()) {
-                        apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+                        apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                     }
                     else {
                         parentLoader.setVisibility(View.VISIBLE);
                         if(currentScopeFilter != null) {
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+                            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                         }
                         else {
-                            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+                            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                         }
 
                     }
@@ -313,18 +352,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
                     if(currentMarketStatusFilter != null) {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), currentMarketStatusFilter.getKey() != null ? currentMarketStatusFilter.getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
                     else {
                         if(currentScopeFilter != null) {
-                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                         else {
-                            apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(),"", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
                         }
                     }
                     apiManager.getMarketStatus(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
@@ -345,8 +384,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
                     break;
                 case R.id.addView:
-                    actionBarManager.setToSaveBar("Add Client");
-                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
+                    if (BuildConfig.DEBUG) {
+                        testViewModel.select("hello");
+                    }
+                    else {
+                        actionBarManager.setToSaveBar("Add Client");
+                        navigationManager.stackReplaceFragment(ClientManageFragment.class);
+                    }
+
                     break;
                 default:
                     break;
@@ -379,7 +424,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if(!isAgentDashboard) {
             dashboardType = "team";
         }
-        apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
+        apiManager.getTileSetup(dashboardTilesViewModel, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), dashboardType);
     }
 
     private void executeTeamSwap() {
@@ -432,7 +477,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 teamSwap = false;
                 noNavigation = false;
             }
-
         });
         teamParamFinished = false;
         noNavigation = false;
@@ -475,68 +519,70 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(returnType == ApiReturnType.GET_TILES) {
-                try {
-                    tileTemplate =  new JSONObject(returnString);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                tileTemplateFinished = true;
-                navigateToScoreboard();
-            }
-            else if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
-                try {
-                    JSONObject newClientTiles = new JSONObject(returnString);
-                    JSONObject pagination = newClientTiles.getJSONObject("pagination");
-
-                    if(pagination.getInt("page") > 1) {
-                        //append tiles
-                        JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
-                        JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
-
-                        for(int i = 0; i < clientTilesToAppend.length(); i++) {
-                            JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
-                            JSONArray currentTiles = tileObject.getJSONArray("tiles");
-                            JSONObject tile = currentTiles.getJSONObject(0);
-                            if(tile.has("type")) {
-                                String type = tile.getString("type");
-                                switch (type) {
-                                    case "clientList":
-                                        currentClientTiles.put(tileObject);
-                                        break;
-                                    case "smallHeader":
-                                        break;
-                                    default:
-                                        Log.e("TYPE", type);
-                                        break;
-                                }
-                            }
-                        }
-                        clientTiles.put("tile_rows", currentClientTiles);
-                        clientTiles.put("pagination", pagination);
-                        clientTiles.put("count", currentClientTiles.length());
-                    }
-                    else {
-                        //overwrite tiles
-                        clientTiles = newClientTiles;
-                    }
-
-                    clientTilesFinished = true;
-                    if(marketStatusFinished) {
-                        if(getCurrentScopeFilter() != null) {
-                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-                        }
-                        else {
-                            actionBarManager.setToFilterBar("");
-                        }
-                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            else if(returnType == ApiReturnType.GET_MARKET_STATUS) {
+//            if(returnType == ApiReturnType.GET_TILES) {
+//                try {
+//                    tileTemplate =  new JSONObject(returnString);
+//                    this.runOnUiThread(() -> {
+//                        dashboardTilesViewModel.setDashboardTiles(tileTemplate);
+//                    });
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                tileTemplateFinished = true;
+//                navigateToScoreboard();
+//            }
+//            if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
+//                try {
+//                    JSONObject newClientTiles = new JSONObject(returnString);
+//                    JSONObject pagination = newClientTiles.getJSONObject("pagination");
+//
+//                    if(pagination.getInt("page") > 1) {
+//                        //append tiles
+//                        JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
+//                        JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
+//
+//                        for(int i = 0; i < clientTilesToAppend.length(); i++) {
+//                            JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
+//                            JSONArray currentTiles = tileObject.getJSONArray("tiles");
+//                            JSONObject tile = currentTiles.getJSONObject(0);
+//                            if(tile.has("type")) {
+//                                String type = tile.getString("type");
+//                                switch (type) {
+//                                    case "clientList":
+//                                        currentClientTiles.put(tileObject);
+//                                        break;
+//                                    case "smallHeader":
+//                                        break;
+//                                    default:
+//                                        Log.e("TYPE", type);
+//                                        break;
+//                                }
+//                            }
+//                        }
+//                        clientTiles.put("tile_rows", currentClientTiles);
+//                        clientTiles.put("pagination", pagination);
+//                        clientTiles.put("count", currentClientTiles.length());
+//                    }
+//                    else {
+//                        //overwrite tiles
+//                        clientTiles = newClientTiles;
+//                    }
+//
+//                    clientTilesFinished = true;
+//                    if(marketStatusFinished) {
+//                        if(getCurrentScopeFilter() != null) {
+//                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
+//                        }
+//                        else {
+//                            actionBarManager.setToFilterBar("");
+//                        }
+//                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            if(returnType == ApiReturnType.GET_MARKET_STATUS) {
                 try {
                     JSONObject marketStatusObject = new JSONObject(returnString);
                     try {
@@ -566,7 +612,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
             else if(returnType == ApiReturnType.UPDATE_ACTIVITIES) {
                 dataController.clearUpdatedRecords();
@@ -658,7 +703,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
                     //TODO: Could probably get activity settings later (record or activitySettings page). 5/28/21 - I think activitySettings page.
                     apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
-                    apiManager.getTileSetup(ParentActivity.this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+                    apiManager.getTileSetup(dashboardTilesViewModel, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                 });
             }
             else if(returnType == ApiReturnType.GET_SCOPE) {
@@ -853,18 +898,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         if(currentMarketStatusFilter != null) {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), selectedContextId, currentMarketStatusFilter.getKey(), clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
         else {
             if(currentScopeFilter != null) {
-                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), currentScopeFilter.getIdValue(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
             else {
-                apiManager.getTeamClients(this, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, dataController.getCurrentSelectedTeamId(), "a" + getAgent().getAgent_id(), "", clientSearch, page, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
             }
         }
     }
@@ -895,10 +940,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if(currentScopeFilter != null) {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
+            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
         }
         else {
-            apiManager.getTileSetup(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
+            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
         }
     }
 
