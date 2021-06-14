@@ -452,7 +452,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             AsyncTeamColorSchemeObject colorJson = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
             colorScheme = colorJson.getTheme();
             if(settingsFinished) {
-                utils.showToast("Your settings have been updated", parentActivity, colorSchemeManager);
+                utils.showToast("Your settings have been updated", parentActivity);
             }
             colorFinished = true;
         }
@@ -471,7 +471,7 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                     }
                     if(colorFinished) {
 //                        navigationManager.onBackPressed();
-                        utils.showToast("Your settings have been updated", parentActivity, colorSchemeManager);
+                        utils.showToast("Your settings have been updated", parentActivity);
                     }
                     settingsFinished = true;
                 }

@@ -171,7 +171,7 @@ public class ClientNoteFragment extends Fragment implements AsyncServerEventList
             });
         }
         else if(returnType == ApiReturnType.DELETE_NOTE) {
-            utils.showToast("Note has been deleted", parentActivity, colorSchemeManager);
+            utils.showToast("Note has been deleted", parentActivity);
             apiManager.getClientNotes(this, dataController.getAgent().getAgent_id(), parentActivity.getSelectedClient().getClient_id());
         }
     }

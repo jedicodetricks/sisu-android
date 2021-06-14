@@ -6,13 +6,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 
 import androidx.annotation.NonNull;
@@ -21,7 +19,6 @@ import androidx.core.app.NotificationManagerCompat;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -29,7 +26,6 @@ import java.util.Calendar;
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.activities.SplashScreenActivity;
-import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.NotificationReceiver;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -40,7 +36,6 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class Utils {
 
-    public static NotificationManager mManager;
     private Animator mCurrentAnimator;
     private float startScale;
     private final Rect startBounds = new Rect();
@@ -49,7 +44,6 @@ public class Utils {
     private int mShortAnimationDuration;
     private boolean imageIsExpanded = false;
 
-    @SuppressWarnings("static-access")
     public static void generateNotification(Context context, String title, String text) {
 
         Intent intent = new Intent(context, SplashScreenActivity.class);
@@ -72,18 +66,17 @@ public class Utils {
         notificationManager.notify(666, mBuilder.build());
     }
 
-    public void showToast(final CharSequence msg, ParentActivity parentActivity, ColorSchemeManager colorSchemeManager) {
-        if(parentActivity != null) {
-            parentActivity.runOnUiThread(() -> {
-                Toast toast = Toast.makeText(parentActivity, msg,Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                TextView text = view.findViewById(android.R.id.message);
-                text.setTextColor(colorSchemeManager.getLighterText());
-                view.getBackground().setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
-                text.setPadding(20, 8, 20, 8);
-                toast.show();
-            });
-        }
+    public void showToast(final CharSequence msg, @NonNull ParentActivity parentActivity) {
+        parentActivity.runOnUiThread(() -> {
+            Toast toast = Toast.makeText(parentActivity, msg,Toast.LENGTH_SHORT);
+            // All of this was deprecated as of SDK 30. Maybe swap to snack bar
+//                View view = toast.getView();
+//                TextView text = view.findViewById(android.R.id.message);
+//                text.setTextColor(colorSchemeManager.getLighterText());
+//                view.getBackground().setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
+//                text.setPadding(20, 8, 20, 8);
+            toast.show();
+        });
     }
 
     public void createNotificationAlarm(int currentSelectedHour, int currentSelectedMinute, PendingIntent pendingIntent, Context context) {
@@ -121,7 +114,7 @@ public class Utils {
         return (int) ((currentNum/goalNum) * 100);
     }
 
-    public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp, Context context, ImageView expanded) {
+    public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp, @NonNull Context context, ImageView expanded) {
         mShortAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         if(imageIsExpanded) {
@@ -192,9 +185,9 @@ public class Utils {
             AnimatorSet set = new AnimatorSet();
             set
                     .play(ObjectAnimator.ofFloat(expanded, View.X,
-                            startBounds.left, finalBounds.centerX() / 2))
+                            startBounds.left, (float) (finalBounds.centerX() / 2)))
                     .with(ObjectAnimator.ofFloat(expanded, View.Y,
-                            startBounds.top, finalBounds.centerY() / 2))
+                            startBounds.top, (float) (finalBounds.centerY() / 2)))
                     .with(ObjectAnimator.ofFloat(expanded, View.SCALE_X,
                             startScale, 1f))
                     .with(ObjectAnimator.ofFloat(expanded,

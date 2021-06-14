@@ -224,7 +224,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         marketStatusFilterText.setTextColor(colorSchemeManager.getLighterText());
 
         clientSearch.setBackgroundColor(colorSchemeManager.getAppBackground());
-        androidx.appcompat.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(androidx.appcompat.R.id.search_src_text);
+        androidx.appcompat.widget.SearchView.SearchAutoComplete search = clientSearch.findViewById(R.id.search_src_text);
         search.setTextColor(colorSchemeManager.getLighterText());
         search.setHighlightColor(colorSchemeManager.getAppBackground());
         search.setHintTextColor(colorSchemeManager.getLighterText());
@@ -469,7 +469,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
             dataController.setRecordUpdated(contactMetric);
             parentActivity.updateRecordedActivities();
-            utils.showToast("+1 to your contacts", parentActivity, colorSchemeManager);
+            utils.showToast("+1 to your contacts", parentActivity);
         }
     }
 

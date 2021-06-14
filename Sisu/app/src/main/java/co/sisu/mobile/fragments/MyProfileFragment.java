@@ -301,15 +301,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private boolean verifyInputs() {
         boolean isVerified = true;
         if(firstName.getText().toString().equals("")) {
-            utils.showToast("First Name is required", parentActivity, colorSchemeManager);
+            utils.showToast("First Name is required", parentActivity);
             isVerified = false;
         }
         else if(lastName.getText().toString().equals("")) {
-            utils.showToast("Last Name is required", parentActivity, colorSchemeManager);
+            utils.showToast("Last Name is required", parentActivity);
             isVerified = false;
         }
         else if(phone.getText().toString().equals("")) {
-            utils.showToast("Phone is required", parentActivity, colorSchemeManager);
+            utils.showToast("Phone is required", parentActivity);
             isVerified = false;
         }
         return isVerified;
@@ -341,10 +341,10 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else {
             if(!imageChanged) {
-                utils.showToast("You haven't updated anything.", parentActivity, colorSchemeManager);
+                utils.showToast("You haven't updated anything.", parentActivity);
             }
             else {
-                utils.showToast("Saving profile picture...", parentActivity, colorSchemeManager);
+                utils.showToast("Saving profile picture...", parentActivity);
                 Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
                 cacheManager.addBitmapToMemoryCache("testImage", bitmap);
             }
@@ -471,7 +471,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
             });
         }
         else if(returnType == ApiReturnType.UPDATE_PROFILE) {
-            utils.showToast("Your profile has been updated", parentActivity, colorSchemeManager);
+            utils.showToast("Your profile has been updated", parentActivity);
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
     }

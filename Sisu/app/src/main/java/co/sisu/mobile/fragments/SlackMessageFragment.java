@@ -112,17 +112,17 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
                 if(!noteText.getText().toString().equals("")) {
                     if(parentActivity.getIsNoteFragment()) {
                         apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
-                        utils.showToast("Sending message to your Slack channel...", parentActivity, colorSchemeManager);
+                        utils.showToast("Sending message to your Slack channel...", parentActivity);
                     }
                     else {
                         apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(dataController.getCurrentSelectedTeamId()), noteText.getText().toString());
-                        utils.showToast("Sending push notification to your team...", parentActivity, colorSchemeManager);
+                        utils.showToast("Sending push notification to your team...", parentActivity);
                     }
                     hideKeyboard(getView());
                     navigationManager.onBackPressed();
                 }
                 else {
-                    utils.showToast("Please enter some text.", parentActivity, colorSchemeManager);
+                    utils.showToast("Please enter some text.", parentActivity);
                 }
                 break;
             case R.id.cancelButton:
@@ -141,12 +141,12 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         // TODO: Move these to the new format
         if(asyncReturnType.equals("Add Notes")) {
             hideKeyboard(getView());
-            utils.showToast("Added note", parentActivity, colorSchemeManager);
+            utils.showToast("Added note", parentActivity);
             navigationManager.onBackPressed();
         }
         else if(asyncReturnType.equals("Update Notes")) {
             hideKeyboard(getView());
-            utils.showToast("Updated note", parentActivity, colorSchemeManager);
+            utils.showToast("Updated note", parentActivity);
             navigationManager.onBackPressed();
         }
     }

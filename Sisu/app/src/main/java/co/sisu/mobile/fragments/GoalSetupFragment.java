@@ -541,14 +541,14 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         else if(returnType == ApiReturnType.UPDATE_GOALS) {
             if(!agentUpdating) {
                 updatedGoals = new HashMap<>();
-                utils.showToast("Goals have been updated", parentActivity, colorSchemeManager);
+                utils.showToast("Goals have been updated", parentActivity);
                 navigationManager.clearStackReplaceFragment(MoreFragment.class);
             }
         }
         else if(returnType == ApiReturnType.UPDATE_AGENT) {
             agentUpdating = false;
             updatedGoals = new HashMap<>();
-            utils.showToast("Goals have been updated", parentActivity, colorSchemeManager);
+            utils.showToast("Goals have been updated", parentActivity);
             navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
         parentActivity.runOnUiThread(new Runnable() {

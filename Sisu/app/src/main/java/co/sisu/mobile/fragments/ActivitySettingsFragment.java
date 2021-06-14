@@ -326,7 +326,7 @@ public class ActivitySettingsFragment extends Fragment implements AdapterView.On
 
             }
             else {
-                utils.showToast("Activity updates saved", parentActivity, colorSchemeManager);
+                utils.showToast("Activity updates saved", parentActivity);
                 actionBarManager.setToEditBar("Record Settings");
             }
         }

@@ -328,7 +328,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
             rightSelector.setText(displayDate);
         } catch (ParseException e) {
-            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
+            utils.showToast("Error parsing selected date", parentActivity);
             e.printStackTrace();
         }
     }
@@ -597,10 +597,10 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private void saveRecords() {
         if(dataController.getUpdatedRecords().size() > 0) {
             parentActivity.updateRecordedActivities();
-            utils.showToast("Records Saved", parentActivity, colorSchemeManager);
+            utils.showToast("Records Saved", parentActivity);
         }
         else {
-            utils.showToast("There are no changes to save", parentActivity, colorSchemeManager);
+            utils.showToast("There are no changes to save", parentActivity);
         }
     }
 
