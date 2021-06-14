@@ -181,7 +181,7 @@ public class MoreFragment extends Fragment implements AdapterView.OnItemClickLis
                     dataController.setAgent(currentAgent);
                 }
                 else {
-                    utils.showToast("Please enter some text in the note field.", parentActivity, colorSchemeManager);
+                    utils.showToast("Please enter some text in the note field.", parentActivity);
                 }
             }
         });

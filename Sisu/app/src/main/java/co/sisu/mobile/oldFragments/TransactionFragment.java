@@ -442,7 +442,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
                 }
             }
             else {
-                utils.showToast("That client is currently locked and can't be updated.", parentActivity, colorSchemeManager);
+                utils.showToast("That client is currently locked and can't be updated.", parentActivity);
             }
         } catch (JSONException e) {
             // This means that the boolean is false
@@ -572,7 +572,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             rightSelector.setText(displayDate);
         } catch (ParseException e) {
-            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
+            utils.showToast("Error parsing selected date", parentActivity);
             e.printStackTrace();
         }
     }
@@ -597,7 +597,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     @Override
     public void onEventFailed(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.UPDATE_CLIENT) {
-            utils.showToast("There was an error updating the client. Please try again later.", parentActivity, colorSchemeManager);
+            utils.showToast("There was an error updating the client. Please try again later.", parentActivity);
             parentActivity.onBackPressed();
         }
     }

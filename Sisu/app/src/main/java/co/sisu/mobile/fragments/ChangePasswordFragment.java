@@ -102,15 +102,15 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private boolean areFieldsValid() {
         if(oldPassword.getText().toString().equals("")) {
-            utils.showToast("You need to enter your old password", parentActivity, colorSchemeManager);
+            utils.showToast("You need to enter your old password", parentActivity);
             return false;
         }
         else if(newPassword.getText().toString().equals("") || confirmPassword.getText().toString().equals("")) {
-            utils.showToast("You need to enter a new password", parentActivity, colorSchemeManager);
+            utils.showToast("You need to enter a new password", parentActivity);
             return false;
         }
         else if(!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-            utils.showToast("New password must match. Please try again.", parentActivity, colorSchemeManager);
+            utils.showToast("New password must match. Please try again.", parentActivity);
             return false;
         }
 
@@ -123,7 +123,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {
-                utils.showToast("Incorrect password", parentActivity, colorSchemeManager);
+                utils.showToast("Incorrect password", parentActivity);
             }
             else {
                 HashMap<String, String> changedFields = new HashMap<>();
@@ -136,7 +136,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.UPDATE_PROFILE) {
-            utils.showToast("Password successfully changed", parentActivity, colorSchemeManager);
+            utils.showToast("Password successfully changed", parentActivity);
             navigationManager.onBackPressed();
         }
     }
@@ -144,7 +144,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Update Profile")) {
-            utils.showToast("Issue with password change. Please try again later.", parentActivity, colorSchemeManager);
+            utils.showToast("Issue with password change. Please try again later.", parentActivity);
         }
     }
 

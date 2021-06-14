@@ -235,7 +235,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
             dateDisplay.setText(sdf.format(updatedTime.getTime()));
         } catch (ParseException e) {
-            utils.showToast("Error parsing selected date", parentActivity, colorSchemeManager);
+            utils.showToast("Error parsing selected date", parentActivity);
             e.printStackTrace();
         }
     }
@@ -317,7 +317,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 }
             }
             else {
-                utils.showToast("There is no info to display so far this month", parentActivity, colorSchemeManager);
+                utils.showToast("There is no info to display so far this month", parentActivity);
                 displayListData();
             }
 
@@ -471,7 +471,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         if(year != selectedYear || monthOfYear != selectedMonth || dayOfMonth != selectedDay) {
             if(leaderboardToggle.isChecked() && monthOfYear != selectedMonth) {
                 //TODO: Should this just toggle for them and search it? They obviously want to do that in this situation
-                utils.showToast("You're in year search mode. Swap to month search to change month selection.", parentActivity, colorSchemeManager);
+                utils.showToast("You're in year search mode. Swap to month search to change month selection.", parentActivity);
             }
             else {
                 updateDisplayDate(year, monthOfYear, dayOfMonth);
@@ -479,7 +479,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             }
         }
         else {
-            utils.showToast("You have selected the same time period", parentActivity, colorSchemeManager);
+            utils.showToast("You have selected the same time period", parentActivity);
         }
     }
 }

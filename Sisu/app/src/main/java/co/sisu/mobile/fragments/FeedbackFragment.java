@@ -155,7 +155,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    utils.showToast("Thank you for your feedback", parentActivity, colorSchemeManager);
+                    utils.showToast("Thank you for your feedback", parentActivity);
                 }
             });
         }
@@ -166,7 +166,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                utils.showToast("We had an issue recording your feedback. Please try again later.", parentActivity, colorSchemeManager);
+                utils.showToast("We had an issue recording your feedback. Please try again later.", parentActivity);
             }
         });
     }

@@ -121,7 +121,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
                     }
                 }
                 else {
-                    utils.showToast("Please enter some text in the note field.", parentActivity, colorSchemeManager);
+                    utils.showToast("Please enter some text in the note field.", parentActivity);
                 }
                 break;
         }
@@ -140,12 +140,12 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
         if(returnType == ApiReturnType.CREATE_NOTE) {
             hideKeyboard(getView());
-            utils.showToast("Added note", parentActivity, colorSchemeManager);
+            utils.showToast("Added note", parentActivity);
             navigationManager.onBackPressed();
         }
         else if(returnType == ApiReturnType.UPDATE_NOTE) {
             hideKeyboard(getView());
-            utils.showToast("Updated note", parentActivity, colorSchemeManager);
+            utils.showToast("Updated note", parentActivity);
             navigationManager.onBackPressed();
         }
     }

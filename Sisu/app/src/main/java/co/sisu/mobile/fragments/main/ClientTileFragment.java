@@ -468,7 +468,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             contactMetric.setCurrentNum(contactMetric.getCurrentNum() + 1);
             dataController.setRecordUpdated(contactMetric);
             parentActivity.updateRecordedActivities();
-            utils.showToast("+1 to your contacts", parentActivity, colorSchemeManager);
+            utils.showToast("+1 to your contacts", parentActivity);
         }
     }
 
