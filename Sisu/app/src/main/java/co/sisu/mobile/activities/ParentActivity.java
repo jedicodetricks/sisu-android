@@ -120,6 +120,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private JSONObject clientTiles;
     private JSONObject recordClientsList;
     private String recordClientListType;
+    // TODO: I think this should be getting set somehow. It's always true. Either that or kill it.
     private boolean isAgentDashboard = true;
     private List<ScopeBarModel> scopeBarList = new ArrayList<>();
     private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
@@ -131,7 +132,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private PopupMenu teamSelectorPopup;
     private String dashboardType = "agent";
     private FirebaseAnalytics mFirebaseAnalytics;
-    private TestViewModel testViewModel;
     private DashboardTilesViewModel dashboardTilesViewModel;
     private ClientTilesViewModel clientTilesViewModel;
 
@@ -184,13 +184,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
         FirebaseCrashlytics.getInstance().setUserId(agent.getAgent_id());
+        initListeners();
+    }
 
-        testViewModel = new ViewModelProvider(this).get(TestViewModel.class);
-        testViewModel.getSelected().observe(this, users -> {
-            // update UI
-            Log.e("UPDATE?", "UPDATE!");
-        });
-
+    private void initListeners() {
         dashboardTilesViewModel = new ViewModelProvider(this).get(DashboardTilesViewModel.class);
         dashboardTilesViewModel.getDashboardTiles().observe(this, dashboardTiles -> {
 //            Log.e("Dashboard Tiles", String.valueOf(dashboardTiles.length()));
@@ -289,15 +286,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             //change parentLoader here, if needed
             parentLoader = findViewById(R.id.parentLoader);
             // TODO: this could probably use the colorSchemeManager
+            Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
             if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
                 parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_dark, null));
-                parentLoader.getIndeterminateDrawable().setBounds(bounds);
             } else {
-                Rect bounds = parentLoader.getIndeterminateDrawable().getBounds();
                 parentLoader.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress, null));
-                parentLoader.getIndeterminateDrawable().setBounds(bounds);
             }
+            parentLoader.getIndeterminateDrawable().setBounds(bounds);
         });
     }
 
@@ -384,14 +379,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     navigationManager.clearStackReplaceFragment(MoreFragment.class);
                     break;
                 case R.id.addView:
-                    if (BuildConfig.DEBUG) {
-                        testViewModel.select("hello");
-                    }
-                    else {
-                        actionBarManager.setToSaveBar("Add Client");
-                        navigationManager.stackReplaceFragment(ClientManageFragment.class);
-                    }
-
+                    actionBarManager.setToSaveBar("Add Client");
+                    navigationManager.stackReplaceFragment(ClientManageFragment.class);
                     break;
                 default:
                     break;
@@ -519,69 +508,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            if(returnType == ApiReturnType.GET_TILES) {
-//                try {
-//                    tileTemplate =  new JSONObject(returnString);
-//                    this.runOnUiThread(() -> {
-//                        dashboardTilesViewModel.setDashboardTiles(tileTemplate);
-//                    });
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                tileTemplateFinished = true;
-//                navigateToScoreboard();
-//            }
-//            if(returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
-//                try {
-//                    JSONObject newClientTiles = new JSONObject(returnString);
-//                    JSONObject pagination = newClientTiles.getJSONObject("pagination");
-//
-//                    if(pagination.getInt("page") > 1) {
-//                        //append tiles
-//                        JSONArray currentClientTiles = clientTiles.getJSONArray("tile_rows");
-//                        JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
-//
-//                        for(int i = 0; i < clientTilesToAppend.length(); i++) {
-//                            JSONObject tileObject = clientTilesToAppend.getJSONObject(i);
-//                            JSONArray currentTiles = tileObject.getJSONArray("tiles");
-//                            JSONObject tile = currentTiles.getJSONObject(0);
-//                            if(tile.has("type")) {
-//                                String type = tile.getString("type");
-//                                switch (type) {
-//                                    case "clientList":
-//                                        currentClientTiles.put(tileObject);
-//                                        break;
-//                                    case "smallHeader":
-//                                        break;
-//                                    default:
-//                                        Log.e("TYPE", type);
-//                                        break;
-//                                }
-//                            }
-//                        }
-//                        clientTiles.put("tile_rows", currentClientTiles);
-//                        clientTiles.put("pagination", pagination);
-//                        clientTiles.put("count", currentClientTiles.length());
-//                    }
-//                    else {
-//                        //overwrite tiles
-//                        clientTiles = newClientTiles;
-//                    }
-//
-//                    clientTilesFinished = true;
-//                    if(marketStatusFinished) {
-//                        if(getCurrentScopeFilter() != null) {
-//                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-//                        }
-//                        else {
-//                            actionBarManager.setToFilterBar("");
-//                        }
-//                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
             if(returnType == ApiReturnType.GET_MARKET_STATUS) {
                 try {
                     JSONObject marketStatusObject = new JSONObject(returnString);
@@ -738,7 +664,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                                     currentScopeFilter = agentScope;
                                 }
                                 actionBarManager.setTitle(currentScopeFilter.getName());
-                                continue;
                             }
                             else {
                                 scopeBarList.add(new ScopeBarModel(currentAgent.getString("display_name"), "a" + currentAgent.getString("agent_id")));
@@ -878,7 +803,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+    public void onEventFailed(Object returnObject, @NonNull ApiReturnType returnType) {
         Log.e("FAILURE", returnType.name());
     }
 
@@ -1104,14 +1029,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
     public void setTileTemplate(JSONObject tileTemplate) {
         this.tileTemplate = tileTemplate;
-    }
-
-    public boolean isAgentDashboard() {
-        return isAgentDashboard;
-    }
-
-    public void setAgentDashboard(boolean agentDashboard) {
-        isAgentDashboard = agentDashboard;
     }
 
     public List<ScopeBarModel> getScopeBarList() {
