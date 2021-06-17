@@ -89,9 +89,8 @@ public class ActionBarManager implements View.OnClickListener, AdapterView.OnIte
         fullActionBar = parentActivity.findViewById(R.id.customActionBar);
     }
 
-    public void initTeamBar() {
+    public void initTeamBar(List<TeamObject> teamsList) {
         parentActivity.runOnUiThread(() -> {
-            List<TeamObject> teamsList = dataController.getTeamsObject();
             if(teamsList.size() > 0) {
                 teamLetter.setVisibility(View.VISIBLE);
                 teamBlock.setVisibility(View.VISIBLE);

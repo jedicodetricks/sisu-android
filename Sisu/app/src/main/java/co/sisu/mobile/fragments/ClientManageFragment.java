@@ -1149,13 +1149,19 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
                 utils.showToast("This client account has been locked by your team administrator.", parentActivity);
                 break;
             case R.id.saveButton://notify of success update api
+                // TODO: This needs to handle create vs update
                 if(parentActivity.isAdminMode()) {
                     popAdminConfirmDialog();
                 }
                 else {
                     if(verifyInputFields()) {
-                        updateCurrentClient(false);
-                        saveClient();
+                        if(dataController.getSelectedClient() == null) {
+                            saveNewClient();
+                        }
+                        else {
+                            updateCurrentClient(false);
+                            saveClient();
+                        }
                     }
                 }
                 break;
@@ -1495,9 +1501,14 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         if(cancelButton != null) {
             cancelButton.setOnClickListener(this);
         }
-        saveButton = parentActivity.findViewById(R.id.addClientSaveButton);
+        saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
+        }
+        else {
+            Bundle params = new Bundle();
+            params.putString("ClientSaveNull", "AddClient");
+            parentActivity.getFirebaseAnalytics().logEvent("ClientSaveNull", params);
         }
     }
 
@@ -1515,6 +1526,11 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         saveButton = parentActivity.findViewById(R.id.saveButton);
         if(saveButton != null) {
             saveButton.setOnClickListener(this);
+        }
+        else {
+            Bundle params = new Bundle();
+            params.putString("ClientSaveNull", "EditClient");
+            parentActivity.getFirebaseAnalytics().logEvent("ClientSaveNull", params);
         }
     }
 
@@ -1815,6 +1831,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             parentActivity.runOnUiThread(() -> {
                 utils.showToast("Client Saved", parentActivity);
 //                    navigationManager.navigateToClientListAndClearStack(currentStatus);
+                loader.setVisibility(View.VISIBLE);
                 parentActivity.onBackPressed();
             });
         }

@@ -49,8 +49,7 @@ import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.MyFirebaseMessagingService;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.viewModels.ClientTilesViewModel;
-import co.sisu.mobile.viewModels.DashboardTilesViewModel;
-import co.sisu.mobile.viewModels.TestViewModel;
+import co.sisu.mobile.viewModels.DashboardViewModel;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
@@ -73,6 +72,7 @@ import co.sisu.mobile.models.UpdateActivitiesModel;
 import co.sisu.mobile.system.SaveSharedPreference;
 import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.TeamsViewModel;
 import okhttp3.Response;
 
 /**
@@ -91,6 +91,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private CacheManager cacheManager;
     private Utils utils;
     private TileCreationHelper tileCreationHelper;
+
     private boolean teamParamFinished = false;
     private boolean activitySettingsParamFinished = false;
     private boolean teamsFinished = false;
@@ -132,11 +133,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private PopupMenu teamSelectorPopup;
     private String dashboardType = "agent";
     private FirebaseAnalytics mFirebaseAnalytics;
-    private DashboardTilesViewModel dashboardTilesViewModel;
+    private DashboardViewModel dashboardTilesViewModel;
     private ClientTilesViewModel clientTilesViewModel;
+    private TeamsViewModel teamsViewModel;
 
-    // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone.
+    // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone. 6/16/21 - I think it is.
     // TODO: There is a bug when you are in the message center and press the plus button, then press back.
+    // TODO: I can get rid of the MainActivity and just come straight here with a new Fragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,29 +171,29 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         if (BuildConfig.DEBUG) {
             //TODO: Don't release with this uncommented, you fucktard.
             //MOCKING AN AGENT
-//        agent.setAgent_id("49201"); // This is a good agent for color checking
-//        dataController.setAgent(agent);
+//            agent.setAgent_id("49201"); // This is a good agent for color checking
+//            agent.setAgent_id("31296");
+//            dataController.setAgent(agent);
             //
         }
 
         initParentFields();
         initButtons();
         initActionBar();
+        initListeners();
 
         noNavigation = true;
-        dateManager.initTimelineDate();
         apiManager.getFirebaseDevices(this, agent.getAgent_id());
-        apiManager.getTeams(this, agent.getAgent_id());
+        apiManager.getTeams(teamsViewModel, agent.getAgent_id());
 
         FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
         FirebaseCrashlytics.getInstance().setUserId(agent.getAgent_id());
-        initListeners();
     }
 
+    // region implements all initializers
     private void initListeners() {
-        dashboardTilesViewModel = new ViewModelProvider(this).get(DashboardTilesViewModel.class);
+        dashboardTilesViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         dashboardTilesViewModel.getDashboardTiles().observe(this, dashboardTiles -> {
-//            Log.e("Dashboard Tiles", String.valueOf(dashboardTiles.length()));
             tileTemplate = dashboardTiles;
             tileTemplateFinished = true;
             navigateToScoreboard();
@@ -198,7 +201,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 
         clientTilesViewModel = new ViewModelProvider(this).get(ClientTilesViewModel.class);
         clientTilesViewModel.getClientTiles().observe(this, newClientTiles -> {
-//            Log.e("Client Tiles", String.valueOf(newClientTiles.length()));
             clientTiles = newClientTiles;
 
             clientTilesFinished = true;
@@ -211,6 +213,38 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
             }
+        });
+
+        teamsViewModel = new ViewModelProvider(this).get(TeamsViewModel.class);
+        teamsViewModel.getTeamsObject().observe(this, allTeams -> {
+            // TODO: Gotta kill that function eventually
+            dataController.setTeamsObject(allTeams);
+
+            this.runOnUiThread(() -> {
+                actionBarManager.initTeamBar(allTeams);
+                initTeamSelectorPopup();
+                if(allTeams.size() > 0) {
+                    dataController.setSelectedTeamObject(allTeams.get(0));
+                    dataController.setMessageCenterVisible(true);
+                    FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
+                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeam().getId());
+                    SaveSharedPreference.setTeam(ParentActivity.this, dataController.getCurrentSelectedTeam().getId() + "");
+                }
+                else {
+                    dataController.setMessageCenterVisible(false);
+                    teamParamFinished = true;
+                    dataController.setSlackInfo(null);
+                }
+                teamsFinished = true;
+                scopeFinished = false;
+            });
+            apiManager.getScope(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+            apiManager.getMarketStatus(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
+            apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
+            apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+            //TODO: Could probably get activity settings later (record or activitySettings page). 5/28/21 - I think activitySettings page.
+//            apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
+            apiManager.getTileSetup(dashboardTilesViewModel, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
         });
     }
 
@@ -267,6 +301,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    // endregion implements all initializers
+
     public void setActivityColors() {
         this.runOnUiThread(() -> {
             layout.setBackgroundColor(colorSchemeManager.getAppBackground());
@@ -317,18 +353,12 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     addClientButton.setVisibility(View.VISIBLE);
                     scopeFinished = true;
                     marketStatusFinished = true;
-                    if(isRecruiting()) {
+                    parentLoader.setVisibility(View.VISIBLE);
+                    if(currentScopeFilter != null) {
                         apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
                     }
                     else {
-                        parentLoader.setVisibility(View.VISIBLE);
-                        if(currentScopeFilter != null) {
-                            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
-                        }
-                        else {
-                            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-                        }
-
+                        apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
                     }
                     break;
                 case R.id.reportView:
@@ -408,7 +438,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private void sendTeamSwapApiCalls(@NonNull TeamObject team) {
         teamSwap = true;
         apiManager.getTeamParams(this, dataController.getAgent().getAgent_id(), team.getId());
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getCurrentSelectedTeamMarketId());
+//        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), team.getId(), dataController.getCurrentSelectedTeamMarketId());
         String dashboardType = "agent";
         if(!isAgentDashboard) {
             dashboardType = "team";
@@ -542,16 +572,16 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             else if(returnType == ApiReturnType.UPDATE_ACTIVITIES) {
                 dataController.clearUpdatedRecords();
             }
-            else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
-                // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
-                try {
-                    JSONObject settingsObject = new JSONObject(returnString);
-                    dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
-                    activitySettingsParamFinished = true;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+//            else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
+//                // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment. Commenting to see.
+//                try {
+//                    JSONObject settingsObject = new JSONObject(returnString);
+//                    dataController.setActivitiesSelected(settingsObject.getJSONArray("record_activities"));
+//                    activitySettingsParamFinished = true;
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
             else if(returnType == ApiReturnType.GET_SETTINGS) {
                 try {
                     JSONObject settingsJson = new JSONObject(returnString);
@@ -588,7 +618,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     if(reminderActive == 1) {
                         utils.createNotificationAlarm(hour, minute, null, this); //sets the actual alarm with correct times from user settings
                     }
-                    // TODO: Don't need to check if teamsFinished anymore I think
+                    // TODO: Don't need to check if teamsFinished anymore I think because it goes first.
                     if(teamsFinished) {
                         apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
                     }
@@ -597,40 +627,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();
                 }
 
-            }
-            else if(returnType == ApiReturnType.GET_TEAMS) {
-                try {
-                    JSONObject teamsObject = new JSONObject(returnString);
-                    dataController.setTeamsObject(teamsObject.getJSONArray("teams"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                this.runOnUiThread(() -> {
-                    actionBarManager.initTeamBar();
-                    initTeamSelectorPopup();
-                    if(dataController.getTeamsObject().size() > 0) {
-                        dataController.setSelectedTeamObject(dataController.getTeamsObject().get(0));
-                        dataController.setMessageCenterVisible(true);
-                        FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
-                        // TODO: I don't need/want the team params to be a race condition
-                        apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeam().getId());
-                        SaveSharedPreference.setTeam(ParentActivity.this, dataController.getCurrentSelectedTeam().getId() + "");
-                    }
-                    else {
-                        dataController.setMessageCenterVisible(false);
-                        teamParamFinished = true;
-                        dataController.setSlackInfo(null);
-                    }
-                    teamsFinished = true;
-                    scopeFinished = false;
-                    apiManager.getScope(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
-                    apiManager.getMarketStatus(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
-                    apiManager.getSettings(ParentActivity.this, agent.getAgent_id());
-                    apiManager.getLabels(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
-                    //TODO: Could probably get activity settings later (record or activitySettings page). 5/28/21 - I think activitySettings page.
-                    apiManager.getActivitySettings(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
-                    apiManager.getTileSetup(dashboardTilesViewModel, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-                });
             }
             else if(returnType == ApiReturnType.GET_SCOPE) {
                 try {

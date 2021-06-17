@@ -245,12 +245,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 Toast toast = Toast.makeText(MainActivity.this, msg,Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                TextView text = (TextView) view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.sisuOrange));
-                view.setBackgroundResource(R.color.sisuOrange);
-                text.setPadding(20, 8, 20, 8);
+//                View view = toast.getView();
+//                TextView text = (TextView) view.findViewById(android.R.id.message);
+//                text.setTextColor(Color.WHITE);
+//                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.sisuOrange));
+//                view.setBackgroundResource(R.color.sisuOrange);
+//                text.setPadding(20, 8, 20, 8);
                 toast.show();
             }
         });

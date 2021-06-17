@@ -342,22 +342,28 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
     }
 
     private String formatTimeTo24H(String displayTime) {
-        String[] timeSplit = displayTime.split(" ");
+        // TODO: This should probably be in DateManager
         String militaryTime = "";
-        if(timeSplit != null) {
-            if(timeSplit[1].equals("AM")) {
-                militaryTime = timeSplit[0];
+        if(displayTime != null && !displayTime.equals("")) {
+            String[] timeSplit = displayTime.split(" ");
+            if(timeSplit != null) {
+                if(timeSplit[1].equals("AM")) {
+                    militaryTime = timeSplit[0];
+                }
+                else if(timeSplit[1].equals("PM")) {
+                    String[] milTimeSplit = timeSplit[0].split(":");
+                    int hour = Integer.parseInt(milTimeSplit[0]) + 12;
+                    militaryTime = hour + ":" + milTimeSplit[1];
+                }
             }
-            else if(timeSplit[1].equals("PM")) {
-                String[] milTimeSplit = timeSplit[0].split(":");
-                int hour = Integer.parseInt(milTimeSplit[0]) + 12;
-                militaryTime = String.valueOf(hour) + ":" + milTimeSplit[1];
+            else {
+                militaryTime = "09:00";
             }
         }
         else {
             militaryTime = "09:00";
+            utils.showToast("Sorry, there was an issue setting your time and we've set it to 9am. Please try again.", parentActivity);
         }
-
 
         return militaryTime;
     }
@@ -372,11 +378,8 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
                 timePeriod = "PM";
                 hour -= 12;
             }
-
-
-            standardTime = String.valueOf(hour) + ":" + milTimeSplit[1] + " " + timePeriod;
+            standardTime = hour + ":" + milTimeSplit[1] + " " + timePeriod;
         }
-
 
         return standardTime;
     }
@@ -426,22 +429,6 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
         mTimePicker.show();
     }
 
-//    private void createNotificationAlarm() {
-//        Calendar calendar = Calendar.getInstance();
-//        int interval = 1000 * 60 * 60 * 24; // One day
-//
-//        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.set(Calendar.MINUTE, currentSelectedMinute);
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.HOUR_OF_DAY, currentSelectedHour);
-//
-//        Log.e("CALENDAR SET", calendar.getTime().toString());
-//        Log.e("CALENDAR CURRENT TIME", Calendar.getInstance().getTime().toString());
-//
-//        AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
-//    }
-
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
     }
@@ -457,24 +444,21 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
             colorFinished = true;
         }
         else if(returnType == ApiReturnType.UPDATE_SETTINGS) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    dataController.setSettings(settings);
-                    if(colorScheme != null) {
-                        colorSchemeManager.setColorScheme(colorScheme, parentActivity);
-                        parentActivity.setActivityColors();
-                        setColorScheme();
-                    }
-                    else {
-                        colorFinished = true;
-                    }
-                    if(colorFinished) {
-//                        navigationManager.onBackPressed();
-                        utils.showToast("Your settings have been updated", parentActivity);
-                    }
-                    settingsFinished = true;
+            parentActivity.runOnUiThread(() -> {
+                dataController.setSettings(settings);
+                if(colorScheme != null) {
+                    colorSchemeManager.setColorScheme(colorScheme, parentActivity);
+                    parentActivity.setActivityColors();
+                    setColorScheme();
                 }
+                else {
+                    colorFinished = true;
+                }
+                if(colorFinished) {
+//                        navigationManager.onBackPressed();
+                    utils.showToast("Your settings have been updated", parentActivity);
+                }
+                settingsFinished = true;
             });
         }
     }

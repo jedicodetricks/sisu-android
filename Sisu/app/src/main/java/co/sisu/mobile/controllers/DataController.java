@@ -100,16 +100,18 @@ public class DataController {
         return morePage;
     }
 
-    public void setTeamsObject(@NonNull JSONArray teamsArray) {
-        teamsObject = new ArrayList<>();
-        for(int i = 0; i < teamsArray.length(); i++) {
-            try {
-                JSONObject currentTeam = teamsArray.getJSONObject(i);
-                teamsObject.add(new TeamObject(currentTeam));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+    public void setTeamsObject(@NonNull List<TeamObject> teamsObject) {
+        this.teamsObject = new ArrayList<>();
+        this.teamsObject = teamsObject;
+
+//        for(int i = 0; i < teamsArray.length(); i++) {
+//            try {
+//                JSONObject currentTeam = teamsArray.getJSONObject(i);
+//                teamsObject.add(new TeamObject(currentTeam));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public List<TeamObject> getTeamsObject() {
