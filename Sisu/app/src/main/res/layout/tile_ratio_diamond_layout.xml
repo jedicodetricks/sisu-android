@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/tileRatioDiamond"
+        android:layout_width="197dp"
+        android:layout_height="179dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/shape_diamond"/>
+
+    <TextView
+        android:id="@+id/tileRatioText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/tileRatioDiamond"
+        app:layout_constraintEnd_toEndOf="@+id/tileRatioDiamond"
+        app:layout_constraintStart_toStartOf="@+id/tileRatioDiamond"
+        app:layout_constraintTop_toTopOf="@+id/tileRatioDiamond" />
+
+    <View
+        android:id="@+id/tileCenterLine"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tileRatioLeftText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tileCenterLine" />
+
+    <TextView
+        android:id="@+id/tileRatioRightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tileCenterLine" />
+
+
+    <!--<View-->
+        <!--android:id="@+id/tileVerticalLine"-->
+        <!--android:layout_width="1dp"-->
+        <!--android:layout_height="300dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@android:color/black"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/tileCenterLine"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/tileCenterLine"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

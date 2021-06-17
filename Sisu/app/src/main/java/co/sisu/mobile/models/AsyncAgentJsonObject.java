@@ -10,6 +10,10 @@ public class AsyncAgentJsonObject {
     String status;
     String status_code;
 
+    public AsyncAgentJsonObject(AsyncAgentJsonStringSuperUserObject stringSuperUserObject) {
+        this.agent = new AgentModel(stringSuperUserObject.getAgent());
+    }
+
     public AgentModel getAgent() {
         return agent;
     }

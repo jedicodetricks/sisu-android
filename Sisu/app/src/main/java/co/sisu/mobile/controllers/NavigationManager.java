@@ -1,49 +1,34 @@
 package co.sisu.mobile.controllers;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AlertDialog;
 import android.view.KeyEvent;
 
-import java.util.List;
 import java.util.Stack;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
-import co.sisu.mobile.fragments.ClientListFragment;
-import co.sisu.mobile.models.ClientObject;
-import co.sisu.mobile.models.TeamObject;
 
 /**
  * Created by bradygroharing on 5/22/18.
  */
 
+@SuppressWarnings("rawtypes")
 public class NavigationManager {
 
     private ParentActivity parentActivity;
     private ToolbarManager toolbarManager;
-    private ActionBarManager actionBarManager;
     private String fragmentTag;
     private Stack<Class> backStack;
     private ColorSchemeManager colorSchemeManager;
-    private static final boolean ENABLE_DRAWER = true;
-    private static final boolean DISABLE_DRAWER = false;
 
     public NavigationManager(ParentActivity parentActivity) {
-        this.colorSchemeManager = parentActivity.colorSchemeManager;
+        this.colorSchemeManager = parentActivity.getColorSchemeManager();
         this.parentActivity = parentActivity;
         this.toolbarManager = new ToolbarManager(parentActivity);
-        this.actionBarManager = new ActionBarManager(parentActivity);
-        this.actionBarManager.initializeActionBar(fragmentTag);
         backStack = new Stack<>();
-    }
-
-    public ActionBarManager getActionBarManager() {
-        return actionBarManager;
     }
 
     public void replaceFragment(Class fragmentClass) {
@@ -53,108 +38,15 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        manageActionBar(fragmentClass);
+        fragmentTag = fragmentClass.getSimpleName();
         if(backStack.size() > 0) {
             backStack.pop();
         }
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
-    }
-
-    private void manageActionBar(Class fragmentClass) {
-        if(fragmentClass.getSimpleName().equals("AddClientFragment") || fragmentClass.getSimpleName().equals("SlackMessageFragment")) {
-            if(fragmentClass.getSimpleName().equals("AddClientFragment")) {
-                actionBarManager.swapToAddClientBar(null, DISABLE_DRAWER);
-            }
-            else {
-                if(parentActivity.getIsNoteFragment()) {
-                    actionBarManager.swapToAddClientBar("Send Slack Message", DISABLE_DRAWER);
-                }
-                else {
-                    actionBarManager.swapToAddClientBar("Send Push Notification", DISABLE_DRAWER);
-                }
-            }
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientListFragment") || fragmentClass.getSimpleName().equals("ClientNoteFragment")) {
-            if(fragmentClass.getSimpleName().equals("ClientListFragment")) {
-                actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
-            }
-            else {
-                actionBarManager.swapToClientListBar("Client Notes", DISABLE_DRAWER);
-            }
-        }
-        else if(fragmentClass.getSimpleName().equals("FeedbackFragment") || fragmentClass.getSimpleName().equals("MoreFragment") ||
-                fragmentClass.getSimpleName().equals("ScoreboardFragment") || fragmentClass.getSimpleName().equals("ReportFragment") ||
-                fragmentClass.getSimpleName().equals("LeaderboardFragment") || fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
-            sortTitleBar(fragmentClass);
-        }
-        else if(fragmentClass.getSimpleName().equals("ClientEditFragment")) {
-            actionBarManager.swapToEditClientBar(DISABLE_DRAWER);
-        }
-        else {
-            sortSaveActionBar(fragmentClass);
-        }
-
-    }
-
-    private void sortSaveActionBar(Class fragmentClass) {
-        if(fragmentClass.getSimpleName().equals("RecordFragment")) {
-            fragmentTag = "Record";
-            actionBarManager.swapToSaveAction("Record", ENABLE_DRAWER);
-            toolbarManager.resetToolbarImages(fragmentTag);
-        }
-        else if(fragmentClass.getSimpleName().equals("MyProfileFragment")) {
-            fragmentTag = "MyProfile";
-            actionBarManager.swapToSaveAction("My Profile", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("GoalSetupFragment")) {
-            fragmentTag = "GoalSetup";
-            actionBarManager.swapToSaveAction("Goal Setup", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("ActivitySettingsFragment")) {
-            fragmentTag = "ActivitySettings";
-            actionBarManager.swapToSaveEditAction("Record Settings", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("SettingsFragment")) {
-            fragmentTag = "Settings";
-            actionBarManager.swapToSaveAction("Settings", DISABLE_DRAWER);
-        }
-        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
-            fragmentTag = "Add Client Note";
-            actionBarManager.swapToSaveAction("Add Client Note", DISABLE_DRAWER);
-        }
-    }
-
-    private void sortTitleBar(Class fragmentClass) {
-        boolean isDrawerEnabled = ENABLE_DRAWER;
-        if(fragmentClass.getSimpleName().equals("FeedbackFragment")) {
-            fragmentTag = "Feedback";
-            isDrawerEnabled = DISABLE_DRAWER;
-        }
-        else if(fragmentClass.getSimpleName().equals("MoreFragment")) {
-            fragmentTag = "More";
-        }
-        else if(fragmentClass.getSimpleName().equals("ScoreboardFragment")) {
-            fragmentTag = "Scoreboard";
-        }
-        else if(fragmentClass.getSimpleName().equals("ReportFragment")) {
-            fragmentTag = "Report";
-        }
-        else if(fragmentClass.getSimpleName().equals("LeaderboardFragment")) {
-            fragmentTag = "Leaderboard";
-        }
-        else if(fragmentClass.getSimpleName().equals("ChangePasswordFragment")) {
-            fragmentTag = "Change Password";
-            isDrawerEnabled = DISABLE_DRAWER;
-        }
-//        else if(fragmentClass.getSimpleName().equals("AddNoteFragment")) {
-//            fragmentTag = "Add Client Note";
-//        }
-        actionBarManager.swapToTitleBar(fragmentTag, isDrawerEnabled);
-        toolbarManager.resetToolbarImages(fragmentTag);
     }
 
     public void stackReplaceFragment(Class fragmentClass) {
@@ -164,7 +56,8 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        manageActionBar(fragmentClass);
+        fragmentTag = fragmentClass.getSimpleName();
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment and adding it to the stack
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
@@ -178,160 +71,61 @@ public class NavigationManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        manageActionBar(fragmentClass);
+        fragmentTag = fragmentClass.getSimpleName();
         if(backStack.size() > 0) {
             backStack.clear();
         }
+        toolbarManager.manage(fragmentClass.getSimpleName());
         backStack.add(fragmentClass);
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commitAllowingStateLoss();
     }
 
-    public void navigateToClientList(String tab) {
-        Fragment fragment = null;
-        try {
-            fragment = ClientListFragment.newInstance(tab);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        backStack.add(ClientListFragment.class);
-        actionBarManager.swapToClientListBar(null, DISABLE_DRAWER);
-        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
-        toolbarManager.resetToolbarImages("More");
-    }
-
-    public void navigateToClientListAndClearStack(String tab) {
-        Fragment fragment = null;
-        try {
-            fragment = ClientListFragment.newInstance(tab);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(backStack.size() > 0) {
-            backStack.clear();
-        }
-        backStack.add(ClientListFragment.class);
-        // Insert the fragment by replacing any existing fragment
-        actionBarManager.swapToClientListBar(tab, DISABLE_DRAWER);
-        FragmentManager fragmentManager = parentActivity.getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.your_placeholder, fragment, fragmentTag).commit();
-        toolbarManager.resetToolbarImages("More");
-    }
-
     public void onBackPressed() {
         if(backStack.size() < 2 /*&& backPressed < 1*/) { //needs if statement checking if on root fragment, app is always on root activity.. need fragment management
-            if(colorSchemeManager.getAppBackground() == Color.WHITE) {
-                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.darkDialog)
+            if(colorSchemeManager.getAppBackground() != Color.WHITE) {
+                new AlertDialog.Builder(parentActivity,R.style.darkDialog)
                         .setIcon(R.drawable.sisu_mark)
                         .setTitle("Closing Sisu")
                         .setMessage("Are you sure you want to exit?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                parentActivity.finish();
-                            }
-
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> parentActivity.finish())
                         .setNegativeButton("No", null)
-                        .setOnKeyListener( new Dialog.OnKeyListener() {
-
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    parentActivity.finish();
-                                    dialog.dismiss();
-                                }
-                                return true;
+                        .setOnKeyListener((dialog, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                parentActivity.finish();
+                                dialog.dismiss();
                             }
+                            return true;
                         })
                         .show();
             } else {
-                AlertDialog dialog = new AlertDialog.Builder(parentActivity,R.style.lightDialog)
+                new AlertDialog.Builder(parentActivity,R.style.lightDialog)
                         .setIcon(R.drawable.sisu_mark)
                         .setTitle("Closing Sisu")
                         .setMessage("Are you sure you want to exit?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                parentActivity.finish();
-                            }
-
-                        })
+                        .setPositiveButton("Yes", (dialog, which) -> parentActivity.finish())
                         .setNegativeButton("No", null)
-                        .setOnKeyListener( new Dialog.OnKeyListener() {
-
-                            @Override
-                            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                    parentActivity.finish();
-                                    dialog.dismiss();
-                                }
-                                return true;
+                        .setOnKeyListener((dialog, keyCode, event) -> {
+                            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                parentActivity.finish();
+                                dialog.dismiss();
                             }
+                            return true;
                         })
                         .show();
             }
         } else {
             backStack.pop();
-//            Log.e("BACK STACK", String.valueOf(backStack.size()));
-//            Log.e("BACK STACK FRAG", String.valueOf(backStack.get(backStack.size() - 1)));
             replaceFragment(backStack.get(backStack.size() - 1));
         }
     }
 
-    //Actionbar Management
-
-    public void initializeTeamBar(List<TeamObject> teamsObject) {
-        actionBarManager.initializeTeamBar(teamsObject);
+    public String getCurrentFragment() {
+        return fragmentTag;
     }
 
-    public void updateTeam(TeamObject team) {
-        actionBarManager.updateTeam(team);
-    }
-
-    public void toggleDrawer() {
-        actionBarManager.toggleDrawer();
-    }
-
-    public void closeDrawer() {
-        actionBarManager.closeDrawer();
-    }
-
-    public void setSelectedClient(ClientObject selectedClient) {
-        actionBarManager.setSelectedClient(selectedClient);
-    }
-
-    public ClientObject getSelectedClient() {
-        return actionBarManager.getSelectedClient();
-    }
-
-    public int getSelectedTeamId() {
-        return actionBarManager.getSelectedTeamId();
-    }
-
-    public TeamObject getCurrentTeam() {
-        return actionBarManager.getCurrentTeam();
-    }
-
-    public int getMarketId() {
-        return actionBarManager.getMarketId();
-    }
-
-    public void updateSelectedTeam(int position) {
-        actionBarManager.updateSelectedTeam(position);
-    }
-
-    public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
-        this.colorSchemeManager = colorSchemeManager;
-        actionBarManager.updateColorSchemeManager(colorSchemeManager);
+    public void updateColorSchemeManager(ColorSchemeManager colorSchemeManager) {
         toolbarManager.updateColorSchemeManager(colorSchemeManager);
     }
 }

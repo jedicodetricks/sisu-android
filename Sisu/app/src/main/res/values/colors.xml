@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- grey scale -->
-    <color name="colorDarkGrey">#303030</color>
-    <color name="colorAlmostBlack">#404041</color>
-    <color name="colorCorporateGrey">#555559</color>
-    <color name="colorLabelText">#777777</color>
-    <color name="colorClay">#9d948a</color>
-    <color name="colorLightGrey">#b2b3b3</color>
-    <color name="colorWhite">#ffffff</color>
-
-    <!-- basic colors -->
-    <color name="colorCrimson">#79222e</color>
-    <color name="colorCorporateOrange">#ff5000</color>
-    <color name="colorYellow">#f9a21a</color>
-    <color name="colorMoonBlue">#0098ce</color>
-    <color name="colorDarkBlue">#193056</color>
+    <color name="sisuOrange">#FF5000</color>
+    <color name="sisuAlmostBlack">#404041</color>
+    <color name="sisuCorporateGrey">#555559</color>
+    <color name="sisuLightGrey">#B2B3B3</color>
+    <color name="sisuYellow">#F9A21A</color>
+    <color name="sisuWhite">#FFFFFF</color>
+    <color name="sisuBlue">#0098CE</color>
+    <color name="sisuDarkest">#202020</color>
+    <color name="sisuProgressDark">#606060</color>
+    <color name="sisuProgressLight">#A3A3A3</color>
+    <color name="sisuLineGrey">#525252</color>
+    <color name="sisuLightLineGrey">#323232</color>
+    <color name="sisuAppBackground">#1B1E20</color>
 
     <color name="transparent">#00000000</color>
 </resources>

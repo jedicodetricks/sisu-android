@@ -3,8 +3,8 @@ package co.sisu.mobile.fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +13,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/18/18.
@@ -31,6 +36,8 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private EditText noteText;
     private TextView addNoteButton;
     private boolean isUpdate = false;
@@ -52,22 +59,33 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         initForm();
         setColors();
         initUpdateOrAdd();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "AddNoteFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColors() {
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+                if(colorSchemeManager.getAppBackground() == Color.WHITE) {
                     Log.e("NOTE", "WHITE");
                     noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.light_input_text_box));
                 } else {
                     noteText.setBackground(parentActivity.getResources().getDrawable(R.drawable.input_text_box));
                 }
-                noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
+                noteText.setTextColor(colorSchemeManager.getDarkerText());
             }
         });
     }
@@ -103,7 +121,7 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
                     }
                 }
                 else {
-                    parentActivity.showToast("Please enter some text in the note field.");
+                    utils.showToast("Please enter some text in the note field.", parentActivity);
                 }
                 break;
         }
@@ -116,20 +134,29 @@ public class AddNoteFragment extends Fragment implements View.OnClickListener, A
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Add Notes")) {
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.CREATE_NOTE) {
             hideKeyboard(getView());
-            parentActivity.showToast("Added note");
+            utils.showToast("Added note", parentActivity);
             navigationManager.onBackPressed();
         }
-        else if(asyncReturnType.equals("Update Notes")) {
+        else if(returnType == ApiReturnType.UPDATE_NOTE) {
             hideKeyboard(getView());
-            parentActivity.showToast("Updated note");
+            utils.showToast("Updated note", parentActivity);
             navigationManager.onBackPressed();
         }
     }
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,10 +15,9 @@ import android.widget.Toast;
 import co.sisu.mobile.R;
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
-import co.sisu.mobile.api.AsyncServerPing;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
-import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 
 /**
@@ -34,14 +33,8 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         loaded = false;
-//        pingServer();
         login();
-    }
-
-    private void pingServer() {
-        new AsyncServerPing(this).execute();
     }
 
     private void login() {
@@ -58,24 +51,9 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-//        if(asyncReturnType.equals("Server Ping")) {
-//            if(SaveSharedPreference.getUserName(SplashScreenActivity.this).length() == 0) {
-//                intent = new Intent(this, MainActivity.class);
-//                launchActivity();
-//            }
-//            else {
-//                String userName = SaveSharedPreference.getUserName(SplashScreenActivity.this);
-//                String userPassword = SaveSharedPreference.getUserPassword(SplashScreenActivity.this);
-//                new AsyncAuthenticator(this, userName, userPassword).execute();
-//            }
-//        }
-        if(asyncReturnType.equals("JWT")) {
-            JWTObject jwt = (JWTObject) returnObject;
-            SaveSharedPreference.setJWT(this, jwt.getJwt());
-            SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
-            SaveSharedPreference.setTransId(this, jwt.getTransId());
-        }
-        else if(asyncReturnType.equals("Authenticator")) {
+        // TODO: Move these to the new format
+        if(asyncReturnType.equals("Authenticator")) {
+            //TODO: This is being used. Transition it.
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {
                 showToast("Incorrect username or password");
@@ -93,7 +71,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                     body =  bundle.getString("body");
                 }
 
-
                 intent = new Intent(this, ParentActivity.class);
                 Bundle extras = new Bundle();
                 extras.putParcelable("Agent", agent);
@@ -103,6 +80,10 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
                 launchActivity();
             }
         }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
 
     }
 
@@ -132,27 +113,16 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Server Ping")) {
-            if(!pingRetry) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                pingRetry = true;
-                pingServer();
-            }
-            else {
-                intent = new Intent(this, MainActivity.class);
-                intent.putExtra("Network", false);
-                launchActivity();
-            }
-        }
-        else if(asyncReturnType.equals("Authenticator")) {
+        if(asyncReturnType.equals("Authenticator")) {
             intent = new Intent(this, MainActivity.class);
             intent.putExtra("Network", false);
             launchActivity();
         }
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+
     }
 
     public void showToast(final CharSequence msg){
@@ -160,12 +130,12 @@ public class SplashScreenActivity extends AppCompatActivity implements AsyncServ
             @Override
             public void run() {
                 Toast toast = Toast.makeText(SplashScreenActivity.this, msg,Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                TextView text = (TextView) view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-                view.setBackgroundResource(R.color.colorCorporateOrange);
-                text.setPadding(20, 8, 20, 8);
+//                View view = toast.getView();
+//                TextView text = (TextView) view.findViewById(android.R.id.message);
+//                text.setTextColor(Color.WHITE);
+//                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.sisuOrange));
+//                view.setBackgroundResource(R.color.sisuOrange);
+//                text.setPadding(20, 8, 20, 8);
                 toast.show();
             }
         });

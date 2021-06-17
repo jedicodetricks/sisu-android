@@ -1,14 +1,16 @@
 package co.sisu.mobile.fragments;
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
 
@@ -19,8 +21,10 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -34,6 +38,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private Button submitButton;
 
     @Override
@@ -53,8 +58,18 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         initUI();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ChangePasswordFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {
@@ -87,15 +102,15 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private boolean areFieldsValid() {
         if(oldPassword.getText().toString().equals("")) {
-            parentActivity.showToast("You need to enter your old password");
+            utils.showToast("You need to enter your old password", parentActivity);
             return false;
         }
         else if(newPassword.getText().toString().equals("") || confirmPassword.getText().toString().equals("")) {
-            parentActivity.showToast("You need to enter a new password");
+            utils.showToast("You need to enter a new password", parentActivity);
             return false;
         }
         else if(!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-            parentActivity.showToast("New password must match. Please try again.");
+            utils.showToast("New password must match. Please try again.", parentActivity);
             return false;
         }
 
@@ -104,10 +119,11 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Authenticator")) {
             AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
             if(agentObject.getStatus_code().equals("-1")) {
-                parentActivity.showToast("Incorrect password");
+                utils.showToast("Incorrect password", parentActivity);
             }
             else {
                 HashMap<String, String> changedFields = new HashMap<>();
@@ -115,8 +131,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 apiManager.sendAsyncUpdateProfile(this, dataController.getAgent().getAgent_id(), changedFields);
             }
         }
-        else if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Password successfully changed");
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.UPDATE_PROFILE) {
+            utils.showToast("Password successfully changed", parentActivity);
             navigationManager.onBackPressed();
         }
     }
@@ -124,7 +144,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Issue with password change. Please try again later.");
+            utils.showToast("Issue with password change. Please try again later.", parentActivity);
         }
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+
     }
 }

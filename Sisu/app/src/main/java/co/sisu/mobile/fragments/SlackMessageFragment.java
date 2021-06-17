@@ -3,8 +3,8 @@ package co.sisu.mobile.fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +12,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.NotesObject;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * Created by bradygroharing on 7/18/18.
@@ -30,6 +35,8 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
+    private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private EditText noteText;
     private TextView sendSlackButton, cancelButton;
 
@@ -49,20 +56,31 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
         parentActivity = (ParentActivity) getActivity();
         dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
+        colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         apiManager = parentActivity.getApiManager();
         initForm();
         initUpdateOrAdd();
         setColorScheme();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "SlackMessageFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
     private void setColorScheme() {
         //TODO: This shouldn't work like this. Discuss current design with Rick.
-        if(parentActivity.colorSchemeManager.getAppBackground() == Color.WHITE) {
+        if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             noteText.setBackgroundResource(R.drawable.light_input_text_box);
         } else {
             noteText.setBackgroundResource(R.drawable.input_text_box);
         }
-        noteText.setTextColor(parentActivity.colorSchemeManager.getDarkerTextColor());
+        noteText.setTextColor(colorSchemeManager.getDarkerText());
     }
 
     private void initUpdateOrAdd() {
@@ -74,7 +92,7 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     private void initForm() {
         noteText = getView().findViewById(R.id.addNoteEditText);
-        sendSlackButton = parentActivity.findViewById(R.id.addClientSaveButton);
+        sendSlackButton = parentActivity.findViewById(R.id.saveButton);
         if(sendSlackButton != null) {
             if(!parentActivity.getIsNoteFragment()) {
                 sendSlackButton.setText("Send");
@@ -90,22 +108,21 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.addClientSaveButton:
+            case R.id.saveButton:
                 if(!noteText.getText().toString().equals("")) {
                     if(parentActivity.getIsNoteFragment()) {
                         apiManager.sendAsyncFeedback(this, dataController.getAgent().getAgent_id(), noteText.getText().toString(), dataController.getSlackInfo());
-                        parentActivity.showToast("Sending message to your Slack channel...");
+                        utils.showToast("Sending message to your Slack channel...", parentActivity);
                     }
                     else {
-                        //TODO: This will be where we put the apimanager to send the push
-                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(parentActivity.getCurrentTeam().getId()), noteText.getText().toString());
-                        parentActivity.showToast("Sending push notification to your team...");
+                        apiManager.sendPushNotification(this, dataController.getAgent().getAgent_id(), String.valueOf(dataController.getCurrentSelectedTeamId()), noteText.getText().toString());
+                        utils.showToast("Sending push notification to your team...", parentActivity);
                     }
                     hideKeyboard(getView());
                     navigationManager.onBackPressed();
                 }
                 else {
-                    parentActivity.showToast("Please enter some text.");
+                    utils.showToast("Please enter some text.", parentActivity);
                 }
                 break;
             case R.id.cancelButton:
@@ -121,20 +138,39 @@ public class SlackMessageFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
+        // TODO: Move these to the new format
         if(asyncReturnType.equals("Add Notes")) {
             hideKeyboard(getView());
-            parentActivity.showToast("Added note");
+            utils.showToast("Added note", parentActivity);
             navigationManager.onBackPressed();
         }
         else if(asyncReturnType.equals("Update Notes")) {
             hideKeyboard(getView());
-            parentActivity.showToast("Updated note");
+            utils.showToast("Updated note", parentActivity);
             navigationManager.onBackPressed();
         }
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FEEDBACK) {
+
+        }
+        else if(returnType == ApiReturnType.SEND_PUSH_NOTIFICATION) {
+
+        }
+        else if(returnType == ApiReturnType.CREATE_NOTE) {
+
+        }
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

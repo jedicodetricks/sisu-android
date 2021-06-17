@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scoreboard_fragment_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="0dp">
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/contactsProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@id/contactsProgressMark"
+        app:layout_constraintTop_toTopOf="@id/guideline8" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/contactsProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="8dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="50"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:clickable="true"/>
+
+
+    <TextView
+        android:id="@+id/contactsCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/contacts_current_num"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toTopOf="@id/contactsProgress" />
+
+    <TextView
+        android:id="@+id/contactsGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/contacts_goal_num"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/contactsProgress"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/contactsCurrentNumber" />
+
+    <TextView
+        android:id="@+id/contactsProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/contacts_hint"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@+id/contactsProgressMark" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/bbSignedProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/bbSignedProgressMark"
+        app:layout_constraintTop_toTopOf="@+id/guideline9" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/bbSignedProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="8dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/bbsignedCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/bb_signed_current_num"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgress"
+        app:layout_constraintTop_toTopOf="@id/bbSignedProgress" />
+
+    <TextView
+        android:id="@+id/bbsignedGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/bb_signed_goal_num"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/bbSignedProgressMark"
+        app:layout_constraintEnd_toEndOf="@id/bbSignedProgress"
+        app:layout_constraintStart_toStartOf="@id/bbSignedProgress"
+        app:layout_constraintTop_toBottomOf="@id/bbsignedCurrentNumber" />
+
+    <TextView
+        android:id="@+id/bbSignedProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/buyers_signed"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="@+id/bbSignedProgressMark"
+        app:layout_constraintStart_toStartOf="@+id/bbSignedProgressMark"
+        app:layout_constraintTop_toBottomOf="@+id/bbSignedProgressMark" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/underContractProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="8dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/underContractCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/under_contract_current_num"
+        android:textSize="@dimen/font_mega"
+        app:layout_constraintEnd_toEndOf="@id/underContractProgressMark"
+        app:layout_constraintStart_toStartOf="@id/underContractProgressMark"
+        app:layout_constraintTop_toTopOf="@id/underContractProgressMark" />
+
+    <TextView
+        android:id="@+id/underContactGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/under_contract_goal_num"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toTopOf="@+id/underContractProgressText"
+        app:layout_constraintEnd_toEndOf="@id/underContractProgress"
+        app:layout_constraintStart_toStartOf="@id/underContractProgress"
+        app:layout_constraintTop_toBottomOf="@id/underContractCurrentNumber" />
+
+    <TextView
+        android:id="@+id/underContractProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/under_contract"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@+id/underContractProgressMark"
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toStartOf="@+id/underContractProgressMark"
+        app:layout_constraintTop_toBottomOf="@+id/underContractProgressMark" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/appointmentsProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/appointmentsProgressMark"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/appointmentsProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="30dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/appointmentsCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/appointments_current_num"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toTopOf="@id/appointmentsProgress" />
+
+    <TextView
+        android:id="@+id/appointmentsGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/appointments_goal_num"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/appointmentsProgressMark"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@id/appointmentsCurrentNumber" />
+
+    <TextView
+        android:id="@+id/appointmentsProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/first_time_appts"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@+id/appointmentsProgressMark" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/listingsTakenProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/listingsTakenProgressMark"
+        app:layout_constraintStart_toStartOf="@+id/listingsTakenProgressMark"
+        app:layout_constraintTop_toTopOf="@+id/guideline9" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/listingsTakenProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="30dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/listingsTakenCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:text="@string/listings_taken_current_num"
+        android:textSize="@dimen/font_larger"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toTopOf="@id/listingsTakenProgress" />
+
+    <TextView
+        android:id="@+id/listingsTakenGoalNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/listings_taken_goal_num"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toTopOf="@+id/listingsTakenProgressText"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toBottomOf="@id/listingsTakenCurrentNumber" />
+
+    <TextView
+        android:id="@+id/listingsTakenProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/listings_taken"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="@id/listingsTakenProgress"
+        app:layout_constraintStart_toStartOf="@id/listingsTakenProgress"
+        app:layout_constraintTop_toBottomOf="@+id/listingsTakenProgressMark" />
+
+    <co.sisu.mobile.utils.CircularProgressBar
+        android:id="@+id/closedProgressMark"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="30dp"
+        android:background="#00000000"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:cpb_background_progressbar_color="#00000000"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline12"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/closedCurrentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/closed_current_num"
+        android:textSize="@dimen/font_mega"
+        app:layout_constraintEnd_toEndOf="@id/closedProgressMark"
+        app:layout_constraintStart_toStartOf="@id/closedProgressMark"
+        app:layout_constraintTop_toTopOf="@id/closedProgressMark" />
+
+    <TextView
+        android:id="@+id/closedProgressText"
+        style="@style/ProgressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/closed"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/closedProgressMark"
+        app:layout_constraintStart_toStartOf="@id/closedProgressMark"
+        app:layout_constraintTop_toBottomOf="@+id/closedProgressMark" />
+
+    <Spinner
+        android:id="@+id/timelineSelector"
+        style="@style/SpinnerDropdownItemStyle"
+        android:layout_width="330dp"
+        android:layout_height="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline13"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/addView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline12"
+        app:layout_constraintTop_toBottomOf="@+id/closedProgressText"
+        app:srcCompat="@drawable/add_icon" />
+
+
+    <TextView
+        android:id="@+id/pendingVolumeLabel"
+        style="@style/ScoreboardLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pending_volume"
+        app:layout_constraintEnd_toEndOf="@id/contactsProgress"
+        app:layout_constraintStart_toStartOf="@id/contactsProgress"
+        app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
+
+    <TextView
+        android:id="@+id/closedVolumeLabel"
+        style="@style/ScoreboardLabelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/closed_volume"
+        app:layout_constraintEnd_toEndOf="@id/appointmentsProgress"
+        app:layout_constraintStart_toStartOf="@id/appointmentsProgress"
+        app:layout_constraintTop_toBottomOf="@id/timelineSelector" />
+
+    <TextView
+        android:id="@+id/underContractAmount"
+        style="@style/ScoreboardAmountStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/under_contract_amount"
+        app:layout_constraintEnd_toEndOf="@id/pendingVolumeLabel"
+        app:layout_constraintStart_toStartOf="@id/pendingVolumeLabel"
+        app:layout_constraintTop_toBottomOf="@id/pendingVolumeLabel" />
+
+    <TextView
+        android:id="@+id/closedAmount"
+        style="@style/ScoreboardAmountStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/closed_amount"
+        app:layout_constraintEnd_toEndOf="@id/closedVolumeLabel"
+        app:layout_constraintStart_toStartOf="@id/closedVolumeLabel"
+        app:layout_constraintTop_toBottomOf="@id/closedVolumeLabel" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.18905473" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4278607" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6666667" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.14841849" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

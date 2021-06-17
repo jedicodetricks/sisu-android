@@ -62,10 +62,10 @@ public class NoteListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.note_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
 
         TextView subTitleTextView = rowView.findViewById(R.id.note_list_subtitle);
-        subTitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subTitleTextView.setTextColor(colorSchemeManager.getDarkerText());
 
         ImageView deleteNoteButton = rowView.findViewById(R.id.deleteNoteIcon);
         deleteNoteButton.setColorFilter(colorSchemeManager.getButtonBorder());
@@ -125,6 +125,8 @@ public class NoteListAdapter extends BaseAdapter {
                 return "Note";
             case "EMAIL":
                 return "Email";
+            case "APPTS":
+                return "Appointment";
             default:
                 return "Log";
         }

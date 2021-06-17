@@ -1,5 +1,8 @@
 package co.sisu.mobile.models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by bradygroharing on 7/31/18.
  */
@@ -16,6 +19,44 @@ public class FirebaseDeviceObject {
         this.device_id = device_id;
         this.device_name = device_name;
         this.fcm_id = fcm_id;
+    }
+
+    public FirebaseDeviceObject(JSONObject currentDevice) {
+        try {
+            if(currentDevice.has("device_type")) {
+                this.device_type = currentDevice.getString("device_type");
+            }
+            else {
+                this.device_type = null;
+            }
+            if(currentDevice.has("device_id")) {
+                this.device_id = currentDevice.getString("device_id");
+
+            }
+            else {
+                this.device_id = null;
+
+            }
+            if(currentDevice.has("device_name")) {
+                this.device_name = currentDevice.getString("device_name");
+
+            }
+            else {
+                this.device_name = null;
+
+            }
+            if(currentDevice.has("fcm_id")) {
+                this.fcm_id = currentDevice.getString("fcm_id");
+
+            }
+            else {
+                this.fcm_id = null;
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String getDevice_type() {

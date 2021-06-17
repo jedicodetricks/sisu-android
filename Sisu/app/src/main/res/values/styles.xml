@@ -7,25 +7,23 @@
     </style>
 
     <style name="lightDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/colorCorporateOrange</item>
-        <item name="android:textColorPrimary">@color/colorCorporateGrey</item>
-        <item name="android:colorForeground">@color/colorAlmostBlack</item>
+        <item name="colorAccent">@color/sisuOrange</item>
+        <item name="android:textColorPrimary">@color/sisuCorporateGrey</item>
+        <item name="android:colorForeground">@color/sisuAlmostBlack</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@color/colorWhite</item>
+        <item name="android:statusBarColor">@color/sisuWhite</item>
         <item name="android:textColorSecondaryInverse">@android:color/black</item>
-        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
     </style>
 
     <style name="darkDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/colorCorporateOrange</item>
-        <item name="android:textColorPrimary">@color/colorWhite</item>
-        <item name="android:colorForeground">@color/colorAlmostBlack</item>
-        <item name="android:colorBackground">@color/colorAlmostBlack</item>
-        <item name="android:navigationBarColor">@color/colorCorporateGrey</item>
-        <item name="android:statusBarColor">@color/colorWhite</item>
-        <item name="android:textColorSecondaryInverse">@color/colorCorporateGrey</item>
-        <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
+        <item name="colorAccent">@color/sisuOrange</item>
+        <item name="android:textColorPrimary">@color/sisuWhite</item>
+        <item name="android:colorForeground">@color/sisuAlmostBlack</item>
+        <item name="android:colorBackground">@color/sisuAlmostBlack</item>
+        <item name="android:navigationBarColor">@color/sisuCorporateGrey</item>
+        <item name="android:statusBarColor">@color/sisuWhite</item>
+        <item name="android:textColorSecondaryInverse">@color/sisuCorporateGrey</item>
     </style>
 
     <style name="MainTheme" parent="Theme.AppCompat.NoActionBar">
@@ -36,8 +34,8 @@
         <item name="android:popupBackground">@color/transparent</item>
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
-        <item name="android:colorForeground">@color/colorWhite</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:colorForeground">@color/sisuWhite</item>
+        <item name="android:statusBarColor">@color/sisuAlmostBlack</item>
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
         <item name="android:textSelectHandle">@drawable/transparent</item>
@@ -51,8 +49,8 @@
         <item name="android:popupBackground">@color/transparent</item>
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
-        <item name="android:colorForeground">@color/colorWhite</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:colorForeground">@color/sisuWhite</item>
+        <item name="android:statusBarColor">@color/sisuAlmostBlack</item>
 
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
@@ -63,19 +61,19 @@
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="android:background">@color/colorWhite</item>
-        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="android:background">@color/sisuWhite</item>
+        <item name="colorPrimary">@color/sisuWhite</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
 
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
         <!--<item name="colorAccent">@color/colorCorporateOrange</item>-->
-        <item name="android:textColorPrimary">@color/colorCorporateGrey</item>
-        <item name="android:colorForeground">@color/colorAlmostBlack</item>
+        <item name="android:textColorPrimary">@color/sisuCorporateGrey</item>
+        <item name="android:colorForeground">@color/sisuAlmostBlack</item>
         <item name="android:colorBackground">@android:color/white</item>
         <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@color/colorWhite</item>
+        <item name="android:statusBarColor">@color/sisuWhite</item>
         <item name="android:textColorSecondaryInverse">@android:color/black</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
 
@@ -84,17 +82,17 @@
         <item name="android:textSelectHandle">@drawable/transparent</item>
     </style>
 
-    <style name="ParentTheme" parent="Theme.AppCompat">
+    <style name="ParentTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/sisuAlmostBlack</item>
         <item name="android:popupBackground">@color/transparent</item>
-        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>
+<!--        <item name="android:actionBarStyle">@color/colorAlmostBlack</item>-->
 
         <!--<item name="colorAccent">@color/colorMoonBlue</item>-->
-        <item name="android:colorForeground">@color/colorAlmostBlack</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
+        <item name="android:colorForeground">@color/sisuAlmostBlack</item>
+        <item name="android:statusBarColor">@color/sisuAlmostBlack</item>
 
         <item name="android:textSelectHandleLeft">@drawable/transparent</item>
         <item name="android:textSelectHandleRight">@drawable/transparent</item>
@@ -105,121 +103,121 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">#00000000</item>
-        <item name="colorPrimary">@color/colorAlmostBlack</item>
+        <item name="colorPrimary">@color/sisuAlmostBlack</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
 
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <item name="colorAccent">@color/sisuOrange</item>
     </style>
 
     <style name="TimelineText">
         <item name="android:fontFamily">@font/roboto_thin</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
     </style>
 
     <style name="ProgressText">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
     <style name="EditTextLabelStyle">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/font_large</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
     </style>
 
     <style name="ClientLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="ClientAmountText">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
     <style name="DividerStyle">
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/colorCorporateGrey</item>
+        <item name="android:background">@color/sisuCorporateGrey</item>
         <item name="android:layout_margin">8dp</item>
     </style>
 
     <style name="EditTextTheme" parent="Theme.AppCompat">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
-        <item name="colorControlNormal">@color/colorCorporateGrey</item>
-        <item name="colorAccent">@color/colorCorporateGrey</item>
-        <item name="colorControlActivated">@color/colorLightGrey</item>
-        <item name="colorControlHighlight">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
+        <item name="colorControlNormal">@color/sisuCorporateGrey</item>
+        <item name="colorAccent">@color/sisuCorporateGrey</item>
+        <item name="colorControlActivated">@color/sisuLightGrey</item>
+        <item name="colorControlHighlight">@color/sisuLightGrey</item>
     </style>
 
     <style name="RequiredTextTheme" parent="ThemeOverlay.AppCompat">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="colorControlNormal">@color/colorLightGrey</item>
-        <item name="colorControlActivated">@color/colorLightGrey</item>
-        <item name="android:textColorHint">@color/colorCorporateOrange</item>
+        <item name="colorControlNormal">@color/sisuLightGrey</item>
+        <item name="colorControlActivated">@color/sisuLightGrey</item>
+        <item name="android:textColorHint">@color/sisuOrange</item>
     </style>
 
     <style name="LeaderboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/sisuWhite</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="LeaderboardPosition">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_largest</item>
     </style>
 
     <style name="LeaderboardItemsText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="RecordLabelText">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="ScoreboardAmountStyle">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_larger</item>
     </style>
 
     <style name="ScoreboardLabelText">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLabelText</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:textSize">@dimen/font_large</item>
     </style>
 
     <style name="SpinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
     </style>
 
     <style name="SpinnerDropdownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">@dimen/font_normal</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
         <item name="android:overlapAnchor">false</item>
         <item name="android:fillViewport">true</item>
     </style>
@@ -230,8 +228,8 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:width">330dp</item>
         <item name="android:height">96dp</item>
-        <item name="android:statusBarColor">@color/colorAlmostBlack</item>
-        <item name="android:colorPrimary">@color/colorAlmostBlack</item>
+        <item name="android:statusBarColor">@color/sisuAlmostBlack</item>
+        <item name="android:colorPrimary">@color/sisuAlmostBlack</item>
     </style>
 
     <style name="TabLayout" parent="Base.Widget.AppCompat.ActionBar.TabView">
@@ -252,24 +250,31 @@
     <style name="StatusStyle" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textSize">@dimen/font_smaller</item>
         <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:background">@color/colorCorporateGrey</item>
+        <item name="android:background">@color/sisuCorporateGrey</item>
+    </style>
+
+    <style name="DateSelectorStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textColor">@color/sisuOrange</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:background">@color/sisuCorporateGrey</item>
     </style>
 
     <style name="ToolBar">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/colorAlmostBlack</item>
+        <item name="android:textColor">@color/sisuAlmostBlack</item>
     </style>
 
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/colorClay</item>
+        <item name="colorPrimary">@color/sisuAlmostBlack</item>
 
         <!-- colorPrimaryDark is used for the status bar -->
 
         <!-- colorAccent is used as the default value for colorControlActivated,
              which is used to tint widgets -->
-        <item name="colorAccent">@color/colorCorporateOrange</item>
+        <item name="colorAccent">@color/sisuOrange</item>
 
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight, and colorSwitchThumbNormal. -->
@@ -277,14 +282,14 @@
     </style>
 
     <style name="CalendarStyle" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/sisuLightGrey</item>
     </style>
 
     <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:color">@color/colorWhite</item>
+        <item name="android:color">@color/sisuWhite</item>
         <item name="android:background">#00000000</item>
         <item name="android:backgroundTint">#00000000</item>
-        <item name="android:colorAccent">@color/colorWhite</item>
+        <item name="android:colorAccent">@color/sisuWhite</item>
     </style>
 
 </resources>

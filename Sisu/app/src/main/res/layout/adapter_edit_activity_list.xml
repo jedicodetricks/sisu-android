@@ -5,7 +5,7 @@
 
     <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerVertical="true" android:id="@+id/activity_list_switch_layout">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -49,12 +49,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/drag_drop" />
 
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5596107" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 </RelativeLayout>

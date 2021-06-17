@@ -2,7 +2,7 @@ package co.sisu.mobile.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +81,7 @@ public class LeaderboardListExpandableAdapter extends BaseExpandableListAdapter 
         thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.zoomImageFromThumb(parentView, thumbnail, bmp);
+                parentActivity.getUtils().zoomImageFromThumb(parentView, thumbnail, bmp, parentActivity, parentActivity.findViewById(R.id.expanded_image));
             }
         });
 

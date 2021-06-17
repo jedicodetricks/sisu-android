@@ -25,15 +25,20 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898593831854-l1hl5og962rue7ues89o2hqhp1p2fgdg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "898593831854-e2tos5kdehfrfg7bc0alnjjb2rttk289.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sisuapp"
+              }
+            }
+          ]
         }
       }
     }

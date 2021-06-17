@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -37,7 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailSignInLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInput"
             style="@style/EditTextLabelStyle"
             android:layout_width="match_parent"
@@ -57,18 +57,17 @@
             android:layout_marginEnd="2dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="30dp"
-            android:backgroundTint="@color/colorCorporateOrange"
+            android:backgroundTint="@color/sisuOrange"
             android:ems="10"
             android:hint="Email Address"
-            android:maxLength="35"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sisuPowerLogo"/>
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordSignInLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInput"
             style="@style/EditTextLabelStyle"
             android:layout_width="match_parent"
@@ -87,7 +86,7 @@
             android:layout_marginEnd="2dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/colorCorporateOrange"
+            android:backgroundTint="@color/sisuOrange"
             android:ems="10"
             android:hint="Password"
             android:inputType="text"
@@ -97,7 +96,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout"/>
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <Button
@@ -152,4 +151,4 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

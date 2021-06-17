@@ -17,6 +17,28 @@ public class AgentModel implements Parcelable, Cloneable{
     String profile;
     String vision_statement;
     AgentGoalsObject[] agentGoalsObject;
+    boolean is_superuser;
+
+    public AgentModel(AgentModelStringSuperUser agent) {
+        this.agent_id = agent.agent_id;
+        this.desired_income = agent.desired_income;
+        this.email = agent.email;
+        this.first_name = agent.first_name;
+        this.last_name = agent.last_name;
+        this.mobile_phone = agent.mobile_phone;
+        this.profile = agent.profile;
+        this.vision_statement = agent.vision_statement;
+        this.agentGoalsObject = agent.agentGoalsObject;
+        this.is_superuser = Integer.parseInt(agent.is_superuser) != 0;
+    }
+
+    public boolean getIs_superuser() {
+        return is_superuser;
+    }
+
+    public void setIs_superuser(boolean is_superuser) {
+        this.is_superuser = is_superuser;
+    }
 
     public AgentGoalsObject[] getAgentGoalsObject() {
         return agentGoalsObject;
@@ -34,18 +56,6 @@ public class AgentModel implements Parcelable, Cloneable{
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(agent_id);
-        dest.writeString(desired_income);
-        dest.writeString(email);
-        dest.writeString(first_name);
-        dest.writeString(last_name);
-        dest.writeString(mobile_phone);
-        dest.writeString(profile);
-        dest.writeString(vision_statement);
     }
 
     public void setAgent_id(String agent_id) {
@@ -108,12 +118,25 @@ public class AgentModel implements Parcelable, Cloneable{
         this.vision_statement = vision_statement;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(agent_id);
+        dest.writeString(desired_income);
+        dest.writeString(email);
+        dest.writeString(first_name);
+        dest.writeString(last_name);
+        dest.writeString(mobile_phone);
+        dest.writeString(profile);
+        dest.writeString(vision_statement);
+        dest.writeByte((byte) (is_superuser ? 1 : 0));
+    }
+
     /**
      * Retrieving AgentModel data from Parcel object
      * This constructor is invoked by the method createFromParcel(Parcel source) of
      * the object CREATOR
      **/
-    private AgentModel(Parcel in){
+    public AgentModel(Parcel in){
         this.agent_id = in.readString();
         this.desired_income = in.readString();
         this.email = in.readString();
@@ -122,6 +145,7 @@ public class AgentModel implements Parcelable, Cloneable{
         this.mobile_phone = in.readString();
         this.profile = in.readString();
         this.vision_statement = in.readString();
+        this.is_superuser = in.readByte() != 0;
     }
 
     public static final Parcelable.Creator<AgentModel> CREATOR = new Parcelable.Creator<AgentModel>() {

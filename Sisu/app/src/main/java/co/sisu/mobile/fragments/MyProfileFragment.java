@@ -15,11 +15,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.telephony.PhoneNumberUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -34,11 +34,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -48,13 +50,19 @@ import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
+import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnType;
+import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncProfileImageJsonObject;
 import co.sisu.mobile.models.AsyncUpdateProfileImageJsonObject;
+import co.sisu.mobile.utils.Utils;
+import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -71,6 +79,8 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
+    private CacheManager cacheManager;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 1;
     private AgentModel agent;
     private boolean imageChanged;
@@ -102,15 +112,17 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        cacheManager = parentActivity.getCacheManager();
+        utils = parentActivity.getUtils();
         agent = dataController.getAgent();
         imageLoader = view.findViewById(R.id.imageLoader);
         initButtons();
         initFields();
-        apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        apiManager.getAgent(this, agent.getAgent_id());
 
-        Bitmap profilePic = parentActivity.getBitmapFromMemCache("testImage");
+        Bitmap profilePic = cacheManager.getBitmapFromMemCache("testImage");
         if(profilePic == null) {
-            apiManager.sendAsyncProfileImage(this, dataController.getAgent().getAgent_id());
+            apiManager.getProfileImage(this, dataController.getAgent().getAgent_id());
         }
         else {
             imageLoader.setVisibility(View.GONE);
@@ -121,6 +133,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         setColorScheme();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "MyProfileFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
     private void setLabels() {
         usernameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.username_email_hint)));
         firstNameLayout.setHint(parentActivity.localizeLabel(getResources().getString(R.string.first_name_hint_non_req)));
@@ -129,22 +150,25 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
 
     private void setColorScheme() {
-        username.setTextColor(colorSchemeManager.getDarkerTextColor());
+        ConstraintLayout layout = getView().findViewById(R.id.profileParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        firstName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        lastName.setTextColor(colorSchemeManager.getDarkerTextColor());
-        phone.setTextColor(colorSchemeManager.getDarkerTextColor());
+        username.setTextColor(colorSchemeManager.getDarkerText());
 
-        ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconActive());
+        firstName.setTextColor(colorSchemeManager.getDarkerText());
+        lastName.setTextColor(colorSchemeManager.getDarkerText());
+        phone.setTextColor(colorSchemeManager.getDarkerText());
+
+        ColorStateList colorStateList = ColorStateList.valueOf(colorSchemeManager.getIconSelected());
         username.setBackgroundTintList(colorStateList);
         firstName.setBackgroundTintList(colorStateList);
         lastName.setBackgroundTintList(colorStateList);
         phone.setBackgroundTintList(colorStateList);
 
-        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconActive());
+        setInputTextLayoutColor(usernameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(firstNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(lastNameLayout, colorSchemeManager.getIconSelected());
+        setInputTextLayoutColor(phoneLayout, colorSchemeManager.getIconSelected());
 
         passwordButton.setTextColor(colorSchemeManager.getButtonText());
         passwordButton.setBackgroundResource(R.drawable.rounded_button);
@@ -277,15 +301,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     private boolean verifyInputs() {
         boolean isVerified = true;
         if(firstName.getText().toString().equals("")) {
-            parentActivity.showToast("First Name is required");
+            utils.showToast("First Name is required", parentActivity);
             isVerified = false;
         }
         else if(lastName.getText().toString().equals("")) {
-            parentActivity.showToast("Last Name is required");
+            utils.showToast("Last Name is required", parentActivity);
             isVerified = false;
         }
         else if(phone.getText().toString().equals("")) {
-            parentActivity.showToast("Phone is required");
+            utils.showToast("Phone is required", parentActivity);
             isVerified = false;
         }
         return isVerified;
@@ -317,12 +341,12 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         }
         else {
             if(!imageChanged) {
-                parentActivity.showToast("You haven't updated anything.");
+                utils.showToast("You haven't updated anything.", parentActivity);
             }
             else {
-                parentActivity.showToast("Saving profile picture...");
+                utils.showToast("Saving profile picture...", parentActivity);
                 Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
-                parentActivity.addBitmapToMemoryCache("testImage", bitmap);
+                cacheManager.addBitmapToMemoryCache("testImage", bitmap);
             }
         }
     }
@@ -403,7 +427,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
         if(data != null) {
             byte[] decodeValue = Base64.decode(data, Base64.DEFAULT);
             Bitmap bmp=BitmapFactory.decodeByteArray(decodeValue,0,decodeValue.length);
-            parentActivity.addBitmapToMemoryCache("testImage", bmp);
+            cacheManager.addBitmapToMemoryCache("testImage", bmp);
             imageLoader.setVisibility(View.GONE);
             profileImage.setVisibility(View.VISIBLE);
             profileImage.setImageBitmap(bmp);
@@ -414,30 +438,42 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
     }
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Profile Image")) {
-            Log.e("GOT THE PIC", "WOOT");
-            final AsyncProfileImageJsonObject profileObject = (AsyncProfileImageJsonObject) returnObject;
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+    }
 
-                    decodeBase64Image(profileObject.getData());
-                }
-            });
-        }
-        else if(asyncReturnType.equals("Update Profile")) {
-            parentActivity.showToast("Your profile has been updated");
-            navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//            navigationManager.swapToTitleBar("More");
-        }
-        else if(asyncReturnType.equals("Get Agent")) {
-            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT) {
+            AsyncAgentJsonObject agentJsonObject = null;
+            String r = null;
+            try {
+                r = ((Response) returnObject).body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                agentJsonObject = parentActivity.getGson().fromJson(r, AsyncAgentJsonObject.class);
+            } catch(Exception e) {
+                AsyncAgentJsonStringSuperUserObject tempAgent = parentActivity.getGson().fromJson(r, AsyncAgentJsonStringSuperUserObject.class);
+                agentJsonObject = new AsyncAgentJsonObject(tempAgent);
+            }
             AgentModel agentModel = agentJsonObject.getAgent();
             dataController.setAgent(agentModel);
             agent = dataController.getAgent();
             fillInAgentInfo();
         }
-
+        else if(returnType == ApiReturnType.GET_PROFILE_IMAGE) {
+            final AsyncProfileImageJsonObject profileObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncProfileImageJsonObject.class);
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    decodeBase64Image(profileObject.getData());
+                }
+            });
+        }
+        else if(returnType == ApiReturnType.UPDATE_PROFILE) {
+            utils.showToast("Your profile has been updated", parentActivity);
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
+        }
     }
 
     @Override
@@ -446,10 +482,15 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener,
 //            new AsyncProfileImage(this, parentActivity.getAgentInfo().getAgent_id()).execute();
 //        }
 //        else if(asyncReturnType.equals("Update Profile")) {
-//            parentActivity.showToast("Your profile has been updated");
+//            utils.showToast("Your profile has been updated");
 //            parentActivity.stackReplaceFragment(MoreFragment.class);
 //            parentActivity.swapToTitleBar("More");
 //        }
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

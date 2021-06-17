@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dateSelectorDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:text="Date"
+            style="@style/DateSelectorStyle"/>
+        <TextView
+            android:id="@+id/dateSelectorBeginDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:text="2019-01-01"
+            style="@style/DateSelectorStyle"/>
+        <TextView
+            android:id="@+id/dateSelectorEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:text="2019-12-31"
+            style="@style/DateSelectorStyle"/>
+        <TextView
+            android:id="@+id/scopeSelector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:text="Scope"
+            style="@style/DateSelectorStyle"/>
+    </RadioGroup>
+
+</RelativeLayout>

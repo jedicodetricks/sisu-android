@@ -6,8 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import co.sisu.mobile.R;
@@ -25,7 +26,9 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.system.SaveSharedPreference;
+import co.sisu.mobile.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +40,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private DataController dataController;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private TextView feedbackHelpTextTop, feedbackHelpTextBottom;
     private Button feedbackButton;
     private ImageView sisuPowerLogo, sisuLogo;
@@ -63,6 +67,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        utils = parentActivity.getUtils();
         feedbackButton = view.findViewById(R.id.submitFeedbackButton);
         feedbackButton.setOnClickListener(this);
         feedback = view.findViewById(R.id.feedbackEditText);
@@ -78,16 +83,28 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         setColorScheme();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "FeedbackFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+    }
+
     private void setColorScheme() {
-        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerTextColor());
-        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerTextColor());
+        ConstraintLayout layout = getView().findViewById(R.id.feedbackFragmentParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
+
+        feedbackHelpTextTop.setTextColor(colorSchemeManager.getDarkerText());
+        feedbackHelpTextBottom.setTextColor(colorSchemeManager.getDarkerText());
 
         feedbackButton.setTextColor(colorSchemeManager.getButtonText());
         feedbackButton.setBackgroundResource(R.drawable.rounded_button);
         GradientDrawable drawable = (GradientDrawable) feedbackButton.getBackground();
         drawable.setColor(colorSchemeManager.getButtonBackground());
 
-        feedback.setTextColor(colorSchemeManager.getDarkerTextColor());
+        feedback.setTextColor(colorSchemeManager.getDarkerText());
         if(colorSchemeManager.getLogo() != null && !colorSchemeManager.getLogo().equals("sisu-logo-lg")) {
             Picasso.with(parentActivity).load(Uri.parse(colorSchemeManager.getLogo())).into(sisuLogo);
             SaveSharedPreference.setLogo(parentActivity, colorSchemeManager.getLogo());
@@ -128,13 +145,20 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        feedback.setText("");
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                parentActivity.showToast("Thank you for your feedback");
-            }
-        });
+
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FEEDBACK) {
+            feedback.setText("");
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    utils.showToast("Thank you for your feedback", parentActivity);
+                }
+            });
+        }
     }
 
     @Override
@@ -142,8 +166,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         parentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                parentActivity.showToast("We had an issue recording your feedback. Please try again later.");
+                utils.showToast("We had an issue recording your feedback. Please try again later.", parentActivity);
             }
         });
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+
     }
 }

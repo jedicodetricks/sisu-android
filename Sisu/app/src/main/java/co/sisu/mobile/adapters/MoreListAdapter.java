@@ -58,14 +58,15 @@ public class MoreListAdapter extends BaseAdapter {
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.more_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
         TextView subTitleTextView = rowView.findViewById(R.id.more_list_subtitle);
-        subTitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subTitleTextView.setTextColor(colorSchemeManager.getDarkerText());
 
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.more_list_thumbnail);
 
         MorePageContainer morePageContainer = (MorePageContainer) getItem(position);
+
         if(morePageContainer.getSubTitle().equals("")) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rowView.findViewById(R.id.more_list_title).getLayoutParams();
             layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
@@ -76,7 +77,7 @@ public class MoreListAdapter extends BaseAdapter {
         subTitleTextView.setText(morePageContainer.getSubTitle());
         if(!morePageContainer.getTitle().equals("Slack")) {
             Drawable drawable = rowView.getResources().getDrawable(morePageContainer.getThumbnailId()).mutate();
-            drawable.setColorFilter(colorSchemeManager.getMenuIcon(), PorterDuff.Mode.SRC_ATOP);
+            drawable.setColorFilter(colorSchemeManager.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             thumbnailImageView.setImageDrawable(drawable);
         }
         else {

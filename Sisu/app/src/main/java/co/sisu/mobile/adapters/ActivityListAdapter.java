@@ -2,8 +2,8 @@ package co.sisu.mobile.adapters;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
+import co.sisu.mobile.fragments.ActivitySettingsFragment;
 import co.sisu.mobile.models.SelectedActivities;
 
 public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, ActivityListAdapter.ViewHolder> {
@@ -30,13 +31,15 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     private int mGrabHandleId;
     private boolean mDragOnLongPress;
     private boolean isEditMode;
+    private ActivitySettingsFragment activitySettingsFragment;
 
-    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ColorSchemeManager colorSchemeManager, boolean isEditMode) {
+    public ActivityListAdapter(ArrayList<Pair<Long, Object>> list, int layoutId, int grabHandleId, boolean dragOnLongPress, ColorSchemeManager colorSchemeManager, boolean isEditMode, ActivitySettingsFragment activitySettingsFragment) {
         mLayoutId = layoutId;
         mGrabHandleId = grabHandleId;
         mDragOnLongPress = dragOnLongPress;
         this.colorSchemeManager = colorSchemeManager;
         this.isEditMode = isEditMode;
+        this.activitySettingsFragment = activitySettingsFragment;
         setItemList(list);
     }
 
@@ -66,6 +69,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.e("CHANGED", String.valueOf(isChecked));
                 selectedActivity.setValue(isChecked);
+                activitySettingsFragment.onCheckChanged();
             }
         });
 
@@ -77,7 +81,7 @@ public class ActivityListAdapter extends DragItemAdapter<Pair<Long, Object>, Act
     }
 
     private void setColorScheme() {
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
 //        activitySwitch.setHighlightColor(colorSchemeManager.getSegmentSelected());
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},

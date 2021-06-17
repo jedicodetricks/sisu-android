@@ -19,7 +19,7 @@ import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.models.AsyncActivitySettingsObject;
+import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.Metric;
 
 /**
@@ -33,9 +33,9 @@ public class ReportListAdapter extends BaseAdapter {
     private ArrayList<Metric> mDataSource;
     private String timeline;
     private ColorSchemeManager colorSchemeManager;
-    private AsyncActivitySettingsObject firstOtherActivity;
+    private ActivitySettingsObject firstOtherActivity;
 
-    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager, AsyncActivitySettingsObject firstOtherActivity) {
+    public ReportListAdapter(Context context, List<Metric> items, String timeline, ColorSchemeManager colorSchemeManager, ActivitySettingsObject firstOtherActivity) {
         mContext = context;
         mDataSource = (ArrayList<Metric>) items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -65,30 +65,30 @@ public class ReportListAdapter extends BaseAdapter {
         View rowView = null;
         Metric metric = (Metric) getItem(position);
 
-        if(metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type())) {
-            rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
-            TextView otherText = rowView.findViewById(R.id.otherText);
-            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
-        }
-        else {
-            rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
-        }
+//        if(metric != null && metric.getType() != null && metric.getType().equalsIgnoreCase(firstOtherActivity.getActivity_type())) {
+//            rowView = mInflater.inflate(R.layout.adapter_report_list_other_hack, parent, false);
+//            TextView otherText = rowView.findViewById(R.id.otherText);
+//            otherText.setTextColor(colorSchemeManager.getDarkerTextColor());
+//        }
+//        else {
+        rowView = mInflater.inflate(R.layout.adapter_report_list, parent, false);
+//        }
 
 
         // Get title element
         TextView titleTextView = rowView.findViewById(R.id.report_list_title);
-        titleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        titleTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get subtitle element
         TextView subtitleTextView = rowView.findViewById(R.id.report_list_subtitle);
-        subtitleTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        subtitleTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get percentage text element
         TextView percentageTextView = rowView.findViewById(R.id.report_percentage_text);
-        percentageTextView.setTextColor(colorSchemeManager.getDarkerTextColor());
+        percentageTextView.setTextColor(colorSchemeManager.getDarkerText());
         // Get thumbnail element
         ImageView thumbnailImageView = rowView.findViewById(R.id.report_list_thumbnail);
 
         ProgressBar progressBar = rowView.findViewById(R.id.progressBar);
-        progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(rowView.getResources().getColor(R.color.colorCorporateGrey)));
+        progressBar.setProgressBackgroundTintList(ColorStateList.valueOf(rowView.getResources().getColor(R.color.sisuCorporateGrey)));
 
         titleTextView.setText(metric.getTitle());
         if(metric.getCurrentNum() < 0) {
@@ -113,6 +113,15 @@ public class ReportListAdapter extends BaseAdapter {
             if(goalNum.equals("0")) {
                 goalNum = "1";
             }
+
+            if(!goalNum.startsWith("0") && goalNum.contains(".0")) {
+                goalNum = goalNum.replace(".0", "");
+            }
+
+            if(goalNum.length() > 6) {
+                goalNum = goalNum.substring(0, 5);
+            }
+
             if(metric.getType().equals("CONTA") ||
                 metric.getType().equals("BUNDC") ||
                 metric.getType().equals("SUNDC") ||
@@ -137,7 +146,7 @@ public class ReportListAdapter extends BaseAdapter {
             }
         }
         Drawable drawable = rowView.getResources().getDrawable(metric.getThumbnailId()).mutate();
-        drawable.setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        drawable.setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
         thumbnailImageView.setImageDrawable(drawable);
 
         return rowView;

@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:nestedScrollingEnabled="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/editClientLayout"
@@ -31,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +46,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:background="@color/colorCorporateGrey"
+            android:background="@color/sisuCorporateGrey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +69,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/archiveReasonLayout"
             android:layout_width="match_parent"
             android:layout_height="53dp"
@@ -93,9 +94,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="115dp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/firstNameInputLayout"
             android:layout_width="match_parent"
             android:layout_height="53dp"
@@ -108,6 +109,7 @@
 
             <EditText
                 android:id="@+id/editFirstName"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,9 +123,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="115dp" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/lastNameInputLayout"
             android:layout_width="match_parent"
             android:layout_height="53dp"
@@ -136,6 +138,7 @@
 
             <EditText
                 android:id="@+id/editLastName"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,9 +152,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="115dp" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/transAmountInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,6 +166,7 @@
 
             <EditText
                 android:id="@+id/editTransAmount"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -171,17 +175,17 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/transaction_amount_hint"
-                android:maxLength="8"
-                android:inputType="number"
+                android:maxLength="20"
+                android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!---->
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/gciInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -194,6 +198,7 @@
 
             <EditText
                 android:id="@+id/editGci"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,12 +206,11 @@
                 android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:hint="@string/gci_hint"
-                android:inputType="number"
-                android:maxLength="8" />
+                android:inputType="numberDecimal"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/gciPercentLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -219,6 +223,7 @@
 
             <EditText
                 android:id="@+id/editGciPercent"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -226,10 +231,10 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:maxLength="4"
+                android:maxLength="8"
                 android:textAlignment="textEnd" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/calculateGciPercent"
@@ -244,7 +249,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/transAmountInputLayout" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/commissionInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -257,6 +262,7 @@
 
             <EditText
                 android:id="@+id/editPaidIncome"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -264,15 +270,14 @@
                 android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:hint="@string/commission_hint"
-                android:inputType="number"
-                android:maxLength="8"
+                android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/paidIncomePercentLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -285,6 +290,7 @@
 
             <EditText
                 android:id="@+id/editPaidIncomePercent"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -292,10 +298,9 @@
                 android:layout_marginTop="8dp"
                 android:ems="10"
                 android:inputType="numberDecimal"
-                android:maxLength="4"
                 android:textAlignment="textEnd" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/calculateIncomePercent"
@@ -306,11 +311,11 @@
             android:layout_marginTop="8dp"
             android:text="@string/calculate"
             android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@id/phoneInputLayout"
+            app:layout_constraintBottom_toTopOf="@id/emailInputLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gciPercentLayout" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -318,10 +323,11 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phoneInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
 
             <EditText
                 android:id="@+id/editEmail"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -336,9 +342,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="217dp" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phoneInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -346,10 +352,11 @@
             android:theme="@style/EditTextTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/commissionInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/emailInputLayout">
 
             <EditText
                 android:id="@+id/editPhone"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -365,7 +372,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editEmail" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/leadSourceInputLayout"
+            android:theme="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phoneInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/leadSource"
+                android:importantForAutofill="noExcludeDescendants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/lead_source_hint"
+                android:focusableInTouchMode="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editEmail" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/priorityText"
@@ -376,7 +411,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:text="Priority"
-            app:layout_constraintTop_toBottomOf="@id/emailInputLayout"/>
+            app:layout_constraintTop_toBottomOf="@id/leadSourceInputLayout"/>
 
         <Switch
             android:id="@+id/prioritySwitch"
@@ -384,7 +419,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="32dp"
-            app:layout_constraintTop_toBottomOf="@id/emailInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/leadSourceInputLayout"
             app:layout_constraintStart_toEndOf="@id/priorityText"/>
 
         <TextView
@@ -409,7 +444,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/statusLabel"/>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/notesInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -421,6 +456,7 @@
 
             <EditText
                 android:id="@+id/editNotes"
+                android:importantForAutofill="noExcludeDescendants"
                 style="@style/EditTextLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -433,7 +469,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/clientNotesButton"
@@ -449,7 +485,7 @@
             android:textAllCaps="false"
             android:text="@string/logs" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/addClientDatePickers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -457,316 +493,28 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clientNotesButton">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/appointmentDateSection"
+            <include layout="@layout/client_datepicker_layout"
+                android:id="@+id/client_datepicker_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-                <TextView
-                    android:id="@+id/appointmentDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/appointmentDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/appointmentDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/appointmentDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/appointmentDateTitle" />
-
-                <ImageView
-                    android:id="@+id/appointmentDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/appointmentDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/addAppointmentDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appointmentDateSection">
-
-                <TextView
-                    android:id="@+id/addAppointmentDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/addAppointmentDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/addAppointmentDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/addAppointmentDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/addAppointmentDateTitle" />
-
-                <ImageView
-                    android:id="@+id/addAppointmentDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/addAppointmentDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Add"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/signedDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addAppointmentDateSection">
-
-                <TextView
-                    android:id="@+id/signedDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/signedDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/signedDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/signedDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/signedDatePicker"
-                    app:layout_constraintTop_toBottomOf="@+id/signedDateTitle" />
-
-                <ImageView
-                    android:id="@+id/signedDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/signedDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/underContractSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signedDateSection">
-
-                <TextView
-                    android:id="@+id/underContractDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/underContractTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/underContractDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/underContractDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/underContractDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/underContractDateTitle" />
-
-                <ImageView
-                    android:id="@+id/underContractDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/underContractDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/settlementDateSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/underContractSection">
-
-                <TextView
-                    android:id="@+id/settlementDateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/settlementDateTitle"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintStart_toEndOf="@id/settlementDatePicker"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/settlementDateDisplay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="@string/temp_date"
-                    android:textSize="@dimen/font_normal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/settlementDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/settlementDateTitle" />
-
-                <ImageView
-                    android:id="@+id/settlementDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/appointment_icon" />
-
-                <Button
-                    android:id="@+id/settlementDateButton"
-                    style="@style/ButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/clear"
-                    android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-
-        </android.support.constraint.ConstraintLayout>
+        <ListView
+            android:id="@+id/appointmentList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addClientDatePickers" />
 
 
         <TextView
@@ -880,5 +628,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/commissionInputLayout"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

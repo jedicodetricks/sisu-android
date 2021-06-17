@@ -1,0 +1,3245 @@
+{
+  "activities": [
+    {
+      "activity_type": "MEDIT",
+      "label": "Meditate",
+      "period": 0,
+      "ytd": 2
+    },
+    {
+      "activity_type": "HOURP",
+      "label": "Hours Prospected",
+      "period": 0,
+      "ytd": 4
+    },
+    {
+      "activity_type": "OPENH",
+      "label": "Open Houses",
+      "period": 0,
+      "ytd": 6
+    },
+    {
+      "activity_type": "REAPT",
+      "label": "Recruit Appointments",
+      "period": 0,
+      "ytd": 8
+    },
+    {
+      "activity_type": "RECRT",
+      "label": "Recruits",
+      "period": 0,
+      "ytd": 10
+    },
+    {
+      "activity_type": "OFFER",
+      "label": "Offers Written",
+      "period": 0,
+      "ytd": 6
+    },
+    {
+      "activity_type": "APPTS",
+      "label": "Other Appointments",
+      "period": 0,
+      "ytd": 8
+    },
+    {
+      "activity_type": "5STAR",
+      "label": "5 Star Reviews",
+      "period": 0,
+      "ytd": 8
+    },
+    {
+      "activity_type": "HOURW",
+      "label": "Hours Worked",
+      "period": 0,
+      "ytd": 9
+    },
+    {
+      "activity_type": "CONTA",
+      "label": "Contacts",
+      "period": 85,
+      "ytd": 597
+    },
+    {
+      "activity_type": "ISACA",
+      "label": "ISA Close Assist",
+      "period": 0,
+      "ytd": 10
+    },
+    {
+      "activity_type": "SHWNG",
+      "label": "Listing Showings",
+      "period": 0,
+      "ytd": 21
+    },
+    {
+      "activity_type": "ADDDB",
+      "label": "Added to Database",
+      "period": 7,
+      "ytd": 71
+    },
+    {
+      "activity_type": "REFFC",
+      "label": "Referrals Received",
+      "period": 0,
+      "ytd": 23
+    },
+    {
+      "activity_type": "THANX",
+      "label": "Thank You Cards",
+      "period": 0,
+      "ytd": 14
+    },
+    {
+      "activity_type": "APPTT",
+      "label": "Appointments Set",
+      "period": 0,
+      "ytd": 14
+    },
+    {
+      "activity_type": "POPBY",
+      "label": "Pop Bys",
+      "period": 0,
+      "ytd": 14
+    },
+    {
+      "activity_type": "PCMAS",
+      "label": "Prepared CMAs",
+      "period": 0,
+      "ytd": 15
+    },
+    {
+      "activity_type": "REFFR",
+      "label": "Referrals Requested",
+      "period": 0,
+      "ytd": 16
+    },
+    {
+      "activity_type": "BSHNG",
+      "label": "Buyer Showings",
+      "period": 0,
+      "ytd": 17
+    },
+    {
+      "activity_type": "DOORS",
+      "label": "Doors Knocked",
+      "period": 0,
+      "ytd": 18
+    },
+    {
+      "activity_type": "DIALS",
+      "label": "Number of Dials",
+      "period": 0,
+      "ytd": 229
+    },
+    {
+      "activity_type": "RECNT",
+      "label": "Recruit Contacts",
+      "period": 0,
+      "ytd": 20
+    },
+    {
+      "activity_type": "EXERS",
+      "label": "Exercise",
+      "period": 0,
+      "ytd": 22
+    }
+  ],
+  "context": "agent",
+  "dashboard": {
+    "avg_comm_amt": 5.72090907563645,
+    "avg_comm_pct": 0,
+    "avg_commission_percent": 22.16,
+    "avg_gross_comm_amt": 25670.1818181818,
+    "avg_paid_income": 2031.5,
+    "buyer_appts": {
+      "goal": 4.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 4.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 2.8
+    },
+    "buyer_pct": 49.59,
+    "buyer_percent": 50.41,
+    "buyer_units_closed": 6.1,
+    "buyer_units_pending": 4,
+    "buyer_volume_closed": 234001.56,
+    "buyer_volume_pending": 1400000.0,
+    "buyers_avg_days": 1,
+    "buyers_closed": {
+      "goal": 1.0,
+      "goal_percent": 100.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 1.0,
+      "value": 1,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 0.7
+    },
+    "buyers_closed_uc_ratio": 0,
+    "buyers_signed": {
+      "goal": 3.0,
+      "goal_percent": 33.3,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 3.0,
+      "value": 1,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 2.1
+    },
+    "buyers_signed_added_ratio": 0,
+    "buyers_uc_signed_ratio": 0.0,
+    "buyers_under_contract": {
+      "goal": 2.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 2.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 1.4
+    },
+    "closed_volume": {
+      "goal": 625000.0,
+      "goal_percent": 0.6,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 625000.0,
+      "value": 4000.0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 436875.0
+    },
+    "contacts_added": {
+      "goal": 400.0,
+      "goal_percent": 21.2,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 400.0,
+      "value": 85,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 279.6
+    },
+    "contacts_appts_ratio": 0.0,
+    "mtd_appts": {
+      "goal": 9.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 9.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 6.29
+    },
+    "mtd_closed": {
+      "goal": 3.0,
+      "goal_percent": 33.3,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 3.0,
+      "value": 1,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 2.1
+    },
+    "mtd_uc": {
+      "goal": 5.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 5.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 3.5
+    },
+    "paid_income": {
+      "goal": 8333,
+      "goal_percent": 82.8,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 8333.0,
+      "value": 6900.0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 5824.77
+    },
+    "pending_and_closed_units": {
+      "goal": 40.0,
+      "goal_percent": 42.8,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 40.0,
+      "value": 17.1,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 27.96
+    },
+    "pending_and_closed_volume": {
+      "goal": 10000000.0,
+      "goal_percent": 27.7,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 10000000.0,
+      "value": 2774001.56,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 6990000.0
+    },
+    "pending_gci": 69000.0,
+    "pending_paid_income": 5250.23,
+    "seller_appts": {
+      "goal": 5.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 5.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 3.5
+    },
+    "seller_units_closed": 6,
+    "seller_units_pending": 1,
+    "seller_volume_closed": 1040000.0,
+    "seller_volume_pending": 100000.0,
+    "sellers_avg_days": 2,
+    "sellers_closed": {
+      "goal": 2.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 2.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 1.4
+    },
+    "sellers_closed_uc_ratio": 0,
+    "sellers_signed": {
+      "goal": 4.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 4.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 2.8
+    },
+    "sellers_signed_added_ratio": 0,
+    "sellers_uc_signed_ratio": 0,
+    "sellers_under_contract": {
+      "goal": 3.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 3.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 2.1
+    },
+    "total_volume_pending": 1500000.0,
+    "under_contract": {
+      "goal": 625000.0,
+      "goal_percent": 0.0,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 625000.0,
+      "value": 0,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 436875.0
+    },
+    "ytd_average_buyer_price": 39000.26,
+    "ytd_average_dom": 1.5,
+    "ytd_average_listing_price": 173333.333333333,
+    "ytd_closed": {
+      "goal": 40.0,
+      "goal_percent": 30.2,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 40.0,
+      "value": 12.1,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 27.96
+    },
+    "ytd_gci": 282372.0,
+    "ytd_paid_income": 24828.0,
+    "ytd_sales": {
+      "goal": 10000000.0,
+      "goal_percent": 12.7,
+      "mtd_pacer_percent": 100.0,
+      "mtd_pacer_value": 10000000.0,
+      "value": 1274001.56,
+      "ytd_pacer_percent": 69.9,
+      "ytd_pacer_value": 6990000.0
+    }
+  },
+  "end_date": "2019-08-31",
+  "goals": {
+    "data": {
+      "AVGPP": {
+        "display_order": 17,
+        "label": "Average Price Point",
+        "monthly": false,
+        "value": 0.0
+      },
+      "BAPPT": {
+        "display_order": 1,
+        "label": "Buyer Appointments",
+        "monthly": true,
+        "value": 4.0
+      },
+      "BCLSD": {
+        "display_order": 7,
+        "label": "Buyers Closed",
+        "monthly": true,
+        "value": 1.0
+      },
+      "BSGND": {
+        "display_order": 3,
+        "label": "Buyers Signed",
+        "monthly": true,
+        "value": 3.0
+      },
+      "BUNDC": {
+        "display_order": 5,
+        "label": "Buyers Under Contract",
+        "monthly": true,
+        "value": 2.0
+      },
+      "CLSDV": {
+        "display_order": 19,
+        "label": "Closed Volume",
+        "monthly": true,
+        "value": 625000.0
+      },
+      "CONTA": {
+        "display_order": 0,
+        "label": "Contacts",
+        "monthly": true,
+        "value": 412.5
+      },
+      "SAPPT": {
+        "display_order": 2,
+        "label": "Listing Appointments",
+        "monthly": true,
+        "value": 5.0
+      },
+      "SCLSD": {
+        "display_order": 8,
+        "label": "Listings Closed",
+        "monthly": true,
+        "value": 2.3
+      },
+      "SSGND": {
+        "display_order": 4,
+        "label": "Listings Signed",
+        "monthly": true,
+        "value": 4.0
+      },
+      "SUNDC": {
+        "display_order": 6,
+        "label": "Listings Under Contract",
+        "monthly": true,
+        "value": 3.0
+      },
+      "UNCTV": {
+        "display_order": 18,
+        "label": "Under Contract Volume",
+        "monthly": true,
+        "value": 625000.0
+      },
+      "UNITG": {
+        "display_order": 9,
+        "label": "Unit Goal",
+        "monthly": false,
+        "value": 40.0
+      },
+      "VOLMG": {
+        "display_order": 20,
+        "label": "Volume Goal",
+        "monthly": false,
+        "value": 10000000.0
+      }
+    },
+    "monthly_count": 11,
+    "yearly_count": 3
+  },
+  "host": "Ricks-MacBook-Pro.local",
+  "log_id": 7309760,
+  "process_ms": 432.7,
+  "server_time": "2019-09-12 08:50:31",
+  "start_date": "2019-08-01",
+  "status": "success",
+  "status_code": 0,
+  "theme": {
+    "app_background": "#1B1E20",
+    "bottombar_background": "#202020",
+    "bottombar_text": "#B2B3B3",
+    "button_background": "#404041",
+    "button_border": "#B2B3B3",
+    "button_selected": "#404041",
+    "button_text": "#B2B3B3",
+    "darker_text": "#FFFFFF",
+    "icon_idle": "#777777",
+    "icon_selected": "#777777",
+    "lighter_text": "#B2B3B3",
+    "line": "#525252",
+    "logo": "sisu-logo-lg",
+    "menu_background": "#202020",
+    "menu_icon": "#FF5000",
+    "menu_selected": "#B2B3B3",
+    "menu_selected_text": "#FF5000",
+    "menu_text": "#B2B3B3",
+    "normal_text": "#B2B3B3",
+    "progress_background": "#606060",
+    "progress_complete": "#FF5000",
+    "progress_offtrack": "#0098CE",
+    "progress_ontrack": "#F9A21A",
+    "rounded_button": "#FF5000",
+    "segment_background": "#B2B3B3",
+    "segment_line": "#FF5000",
+    "segment_selected": "#FFFFFF",
+    "spinner_background": "#202020",
+    "spinner_text": "#B2B3B3",
+    "topbar_background": "#1B1E20",
+    "topbar_text": "#B2B3B3"
+  },
+  "tile_rows": [
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 20.0,
+      "sort_order": 0,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 1,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 100.0,
+      "sort_order": 5,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 2,
+      "tiles": [
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "YTD Closed Volume",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 12.7,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$1.27M"
+        },
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "YTD Closed Units",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 30.2,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "12.1"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 100.0,
+      "sort_order": 10,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 3,
+      "tiles": [
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "YTD Closed and Pending Volume",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 27.7,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$2.77M"
+        },
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "YTD Closed and Pending Units",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 42.8,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "17.1"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 100.0,
+      "sort_order": 15,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 4,
+      "tiles": [
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "MTD U/C Volume",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 0.0,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$0"
+        },
+        {
+          "border": "all",
+          "color": "#0098CE",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "MTD Closed Volume",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "progress_bar": {
+            "completed": 0.0,
+            "progress_color": "#0098CE"
+          },
+          "rounded": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$4.00K"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 20,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 5,
+      "tiles": [
+        {
+          "progress_complete": "#FF5000",
+          "progress_offtrack": "#0098CE",
+          "progress_ontrack": "#F9A21A",
+          "type": "legend"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 220.0,
+      "sort_order": 25,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 6,
+      "tiles": [
+        {
+          "color": "#0098CE",
+          "current": 85,
+          "duration": 2.0,
+          "max": 400.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "record",
+          "tap_position": 0,
+          "text_color": "#B2B3B3",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Conversations"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 160.0,
+      "sort_order": 30,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 7,
+      "tiles": [
+        {
+          "border": "none",
+          "diamond_color": "#525252",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 24.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "left_header": "Buyers",
+          "right_header": "Listings",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratioDiamond"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 160.0,
+      "sort_order": 35,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 8,
+      "tiles": [
+        {
+          "border": "right",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 4.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 0,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "1st Time Buyer Appts Met"
+        },
+        {
+          "border": "none",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 5.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 0,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "1st Time Listing Appts Met"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 60.0,
+      "sort_order": 40,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 9,
+      "tiles": [
+        {
+          "border": "right",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        },
+        {
+          "border": "none",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 160.0,
+      "sort_order": 45,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 10,
+      "tiles": [
+        {
+          "border": "right",
+          "color": "#0098CE",
+          "current": 1,
+          "duration": 2.0,
+          "max": 3.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 1,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Buyers Signed"
+        },
+        {
+          "border": "none",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 4.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 1,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Listings Signed"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 60.0,
+      "sort_order": 50,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 11,
+      "tiles": [
+        {
+          "border": "right",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0.0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        },
+        {
+          "border": "none",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 160.0,
+      "sort_order": 55,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 12,
+      "tiles": [
+        {
+          "border": "right",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 2.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 2,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Buyers Under Contract"
+        },
+        {
+          "border": "none",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 3.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 2,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Listings Under Contract"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 60.0,
+      "sort_order": 60,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 13,
+      "tiles": [
+        {
+          "border": "right",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        },
+        {
+          "border": "none",
+          "font_header": "medium",
+          "font_header_footer": "large",
+          "font_size_header": 14.0,
+          "header": "0%",
+          "header_adjust_font": true,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "ratio"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2.0,
+      "rowheight": 160.0,
+      "sort_order": 65,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 14,
+      "tiles": [
+        {
+          "border": "right",
+          "color": "#FF5000",
+          "current": 1,
+          "duration": 2.0,
+          "max": 1.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 3,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Buyers Closed"
+        },
+        {
+          "border": "none",
+          "color": "#0098CE",
+          "current": 0,
+          "duration": 2.0,
+          "max": 2.0,
+          "pacer": 360.0,
+          "rounded": false,
+          "tap": "clients",
+          "tap_position": 3,
+          "text_color": "#FFFFFF",
+          "tile_color": "#1B1E20",
+          "type": "progress",
+          "under_title": "Listings Closed"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 70.0,
+      "sort_order": 70,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 15,
+      "tiles": [
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 24.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Year To Date",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "fullText",
+          "value": null
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 3.0,
+      "rowheight": 100.0,
+      "sort_order": 75,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 16,
+      "tiles": [
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Units Pending",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": true,
+          "tile_color": "#343434",
+          "type": "smallHeader",
+          "value": "5.00"
+        },
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Volume Pending",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": true,
+          "tile_color": "#343434",
+          "type": "smallHeader",
+          "value": "$1.50M"
+        },
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Agent Paid Income Pending",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": true,
+          "tile_color": "#343434",
+          "type": "smallHeader",
+          "value": "$5.25K"
+        },
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Agent Paid Income",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "rounded": true,
+          "tile_color": {
+            "color": "primary_color",
+            "type": "theme_color"
+          },
+          "type": "smallHeader",
+          "value": "$24.8K"
+        },
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Average Agent Paid Income",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": true,
+          "tile_color": "#343434",
+          "type": "smallHeader",
+          "value": "$2.03K"
+        },
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "left",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "AVG GCI",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": true,
+          "tile_color": "#343434",
+          "type": "smallHeader",
+          "value": "$22.2%"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 80,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 17,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "AVG Listing Price",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$173K"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 85,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 18,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "AVG Buyer Price",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$39.0K"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 90,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 19,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyer AVG DOM",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 95,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 20,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings AVG DOM",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 100,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 21,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings Sold",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 105,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 22,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings Closed Volume",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$1.04M"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 110,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 23,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyers Closed Volume",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "$234K"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 115,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 24,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyers Sold",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "rounded": false,
+          "side": true,
+          "tile_color": "#1B1E20",
+          "type": "normal",
+          "value": "6.10"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 70.0,
+      "sort_order": 120,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 25,
+      "tiles": [
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 34.0,
+          "font_size_header": 24.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Activity",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "fullText",
+          "value": null
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Meditate",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "image": "meditate",
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 2.00",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Hours Prospected ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 4.00",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Open Houses ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 6.00",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Recruit Appointments ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 8.00",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Recruits",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 10.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Offers Written ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 6.00",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Other Appointments ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 8.00",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "5 Star Reviews ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 8.00",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Hours Worked ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 9.00",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Conversations",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 597",
+          "value": 85
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "ISA Close Assist ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 10.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listing Showings ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 21.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Added to Database ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 71.0",
+          "value": 7
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Referrals Received ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 23.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Thank You Cards ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 14.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Appointments Set ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 14.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Pop Bys ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 14.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Prepared CMAs ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 15.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Referrals Requested ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 16.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyer Showings ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 17.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Doors Knocked ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 18.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Number of Dials ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 229",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 2,
+      "rowheight": 120.0,
+      "sort_order": 125,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 26,
+      "tiles": [
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Recruit Contacts ",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 20.0",
+          "value": 0
+        },
+        {
+          "border": "all",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 28.0,
+          "font_size_header": 18.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Exercise",
+          "header_adjust_font": false,
+          "header_alignment": "center",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "image": "exercise",
+          "per_row": 2,
+          "rounded": true,
+          "strip_zeros": true,
+          "tap": "record",
+          "tap_position": 0,
+          "tile_color": "#1B1E20",
+          "type": "activity",
+          "units": "YTD: 22.0",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 70.0,
+      "sort_order": 130,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 27,
+      "tiles": [
+        {
+          "border": "none",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 24.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "center",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Goals",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#FFFFFF",
+          "rounded": false,
+          "tile_color": "#1B1E20",
+          "type": "fullText",
+          "value": null
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Volume Goal (yearly) ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 10000000.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Closed Volume ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 625000.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Under Contract Volume ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 625000.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Average Price Point (yearly) ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Unit Goal (yearly) ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 40.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings Closed ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 2.3
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyers Closed ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings Under Contract ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyers Under Contract ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 2.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listings Signed ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 4.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyers Signed ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Listing Appointments ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 5.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Buyer Appointments ",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 4.0
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "inner_gap": 4.0,
+      "max_tiles": 1,
+      "rowheight": 40.0,
+      "sort_order": 135,
+      "square": false,
+      "tile_dashboard_id": 1,
+      "tile_row_id": 28,
+      "tiles": [
+        {
+          "border": "top",
+          "font_footer": "large",
+          "font_header": "medium",
+          "font_size_footer": 24.0,
+          "font_size_header": 14.0,
+          "footer_adjust_font": false,
+          "footer_alignment": "right",
+          "footer_baseline": "center",
+          "footer_text_color": "#FFFFFF",
+          "header": "Conversations",
+          "header_adjust_font": false,
+          "header_alignment": "left",
+          "header_baseline": "center",
+          "header_text_color": "#B2B3B3",
+          "image": null,
+          "per_row": 1,
+          "rounded": true,
+          "side": true,
+          "strip_zeros": true,
+          "tap": "more",
+          "tap_position": 2,
+          "tile_color": "#1B1E20",
+          "type": "smallHeader",
+          "units": null,
+          "value": 412.5
+        }
+      ]
+    },
+    {
+      "disabled": false,
+      "rowheight": 4.0,
+      "tiles": [
+        {
+          "type": "spacer"
+        }
+      ]
+    }
+  ]
+}

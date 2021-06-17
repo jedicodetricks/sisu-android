@@ -8,11 +8,13 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -26,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
@@ -36,12 +39,13 @@ import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
 import co.sisu.mobile.models.AsyncTeamColorSchemeObject;
-import co.sisu.mobile.models.JWTObject;
 import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncServerEventListener {
@@ -61,17 +65,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int authRetry = 0;
     ApiManager apiManager;
     ColorSchemeManager colorSchemeManager;
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         apiManager = new ApiManager(this);
-        colorSchemeManager = new ColorSchemeManager();
+        colorSchemeManager = new ColorSchemeManager(this);
         setContentView(R.layout.activity_main);
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.action_bar_sign_in_layout);
-//        getSupportActionBar().setElevation(0);
         loader = findViewById(R.id.signInLoader);
         initializeButtons();
         initFields();
@@ -96,13 +97,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                emailAddressEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
-                passwordEntry.setTextColor(colorSchemeManager.getDarkerTextColor());
-                forgotPassword.setTextColor(colorSchemeManager.getDarkerTextColor());
-                legal.setTextColor(colorSchemeManager.getDarkerTextColor());
+                emailAddressEntry.setTextColor(colorSchemeManager.getDarkerText());
+                passwordEntry.setTextColor(colorSchemeManager.getDarkerText());
+                forgotPassword.setTextColor(colorSchemeManager.getDarkerText());
+                legal.setTextColor(colorSchemeManager.getDarkerText());
 
-                setInputTextLayoutColor(emailSignInLayout, colorSchemeManager.getIconActive());
-                setInputTextLayoutColor(passwordSignInLayout, colorSchemeManager.getIconActive());
+                setInputTextLayoutColor(emailSignInLayout, colorSchemeManager.getIconSelected());
+                setInputTextLayoutColor(passwordSignInLayout, colorSchemeManager.getIconSelected());
 
                 signInButton.setHighlightColor(colorSchemeManager.getButtonSelected());
                 signInButton.setBackgroundResource(R.drawable.rounded_button);
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public String getDeviceDensity(Context context){
+    public String getDeviceDensity(@NonNull Context context){
         String deviceDensity = "";
         switch (context.getResources().getDisplayMetrics().densityDpi) {
             case DisplayMetrics.DENSITY_LOW:
@@ -244,12 +245,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void run() {
                 Toast toast = Toast.makeText(MainActivity.this, msg,Toast.LENGTH_SHORT);
-                View view = toast.getView();
-                TextView text = (TextView) view.findViewById(android.R.id.message);
-                text.setTextColor(Color.WHITE);
-                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.colorCorporateOrange));
-                view.setBackgroundResource(R.color.colorCorporateOrange);
-                text.setPadding(20, 8, 20, 8);
+//                View view = toast.getView();
+//                TextView text = (TextView) view.findViewById(android.R.id.message);
+//                text.setTextColor(Color.WHITE);
+//                text.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.sisuOrange));
+//                view.setBackgroundResource(R.color.sisuOrange);
+//                text.setPadding(20, 8, 20, 8);
                 toast.show();
             }
         });
@@ -258,51 +259,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("JWT")) {
-            JWTObject jwt = (JWTObject) returnObject;
-            SaveSharedPreference.setJWT(this, jwt.getJwt());
-            SaveSharedPreference.setClientTimestamp(this, jwt.getTimestamp());
-            SaveSharedPreference.setTransId(this, jwt.getTransId());
-        }
-        else if(asyncReturnType.equals("Get Color Scheme")) {
-            AsyncTeamColorSchemeObject colorJson = (AsyncTeamColorSchemeObject) returnObject;
-            colorScheme = colorJson.getTheme();
-            colorSchemeManager.setColorScheme(colorScheme, SaveSharedPreference.getLights(this));
-            setColors();
+        // TODO: Move these to the new format
+        AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
+        agent = agentObject.getAgent();
+        if (agentObject.getStatus_code().equals("-1")) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
+                    showToast("Incorrect username or password");
+                }
+            });
         }
         else {
-            AsyncAgentJsonObject agentObject = (AsyncAgentJsonObject) returnObject;
-            agent = agentObject.getAgent();
-            if (agentObject.getStatus_code().equals("-1")) {
-                this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loader.setVisibility(View.GONE);
-                        showToast("Incorrect username or password");
-                    }
-                });
-            }
-            else {
-                this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loader.setVisibility(View.GONE);
-                    }
-                });
-                SaveSharedPreference.setUserId(this, agent.getAgent_id());
-                SaveSharedPreference.setUserName(this, emailAddress);
-                try {
-                    //TODO: We need to encrypt this in some way
-                    SaveSharedPreference.setUserPassword(this, passwordText);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loader.setVisibility(View.GONE);
                 }
-
-                Intent intent = new Intent(this, ParentActivity.class);
-                intent.putExtra("Agent", agent);
-                startActivity(intent);
-                finish();
+            });
+            SaveSharedPreference.setUserId(this, agent.getAgent_id());
+            SaveSharedPreference.setUserName(this, emailAddress);
+            try {
+                //TODO: We need to encrypt this in some way
+                SaveSharedPreference.setUserPassword(this, passwordText);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            Intent intent = new Intent(this, ParentActivity.class);
+            intent.putExtra("Agent", agent);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_COLOR_SCHEME) {
+            AsyncTeamColorSchemeObject colorJson = gson.fromJson(((Response) returnObject).body().charStream(), AsyncTeamColorSchemeObject.class);
+            colorScheme = colorJson.getTheme();
+            colorSchemeManager.setColorScheme(colorScheme, this);
+            setColors();
         }
     }
 
@@ -331,6 +329,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 

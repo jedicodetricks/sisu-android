@@ -2,18 +2,23 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
+
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.FirebaseDeviceObject;
 
@@ -29,6 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     private FirebaseDeviceObject currentDevice;
 
     public MyFirebaseMessagingService() {
+        // This exists for the AndroidManifest.xml. It was mad at me.
     }
 
     public MyFirebaseMessagingService(ApiManager apiManager, AgentModel agent, Context context, FirebaseDeviceObject currentDevice) {
@@ -39,29 +45,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     public void initFirebase() {
-        Log.e("Firebase", FirebaseInstanceId.getInstance().getInstanceId().toString());
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.w("Firebase", "getInstanceId failed", task.getException());
-                    return;
-                }
+        Log.e("Firebase", FirebaseMessaging.getInstance().getToken().toString());
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("Firebase", "getInstanceId failed", task.getException());
+                        return;
+                    }
 
-                // Get new Instance ID token
-                String token = task.getResult().getToken();
+                    // Get new Instance ID token
+                    String token = task.getResult();
 
-                // Log and toast
-                apiManager.sendFirebaseToken(MyFirebaseMessagingService.this, context, agent, token);
-                Log.e("Firebase TOKEN", token);
-            }
-        });
-
+                    // Log and toast
+                    apiManager.sendFirebaseToken(MyFirebaseMessagingService.this, context, agent, token);
+                    Log.e("Firebase TOKEN", token);
+                });
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.e("Firebase", "From: " + remoteMessage.getFrom());
 
@@ -82,6 +84,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         if (remoteMessage.getNotification() != null) {
             Log.e("Firebase", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             Log.e("Firebase", "Message Notification Title: " + remoteMessage.getNotification().getTitle());
+
+            JsonParser parser = new JsonParser();
+            try {
+                JsonObject jsonBody = (JsonObject) parser.parse(remoteMessage.getNotification().getBody());
+                Log.e("Firebase", "Message Notification has_html: " + jsonBody.get("has_html"));
+            } catch(Exception e) {
+
+            }
+
             Intent intent = new Intent(this, NotificationActivity.class);
             intent.putExtra("title", remoteMessage.getNotification().getTitle());
             intent.putExtra("body", remoteMessage.getNotification().getBody());
@@ -99,25 +110,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     public void refreshToken() {
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.w("Firebase", "getInstanceId failed", task.getException());
-                    return;
-                }
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("Firebase", "getInstanceId failed", task.getException());
+                        return;
+                    }
 
-                // Get new Instance ID token
-                String token = task.getResult().getToken();
+                    // Get new Instance ID token
+                    String token = task.getResult();
 
-                // Log and toast
+                    // Log and toast
 //                if(currentDevice != null) {
                     apiManager.refreshFirebaseToken(MyFirebaseMessagingService.this, context, agent, token, currentDevice);
                     Log.e("Firebase TOKEN REFRESH", token);
 //                }
 
-            }
-        });
+                });
     }
 
 
@@ -144,7 +153,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
     }
 
     @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.SEND_FIREBASE_TOKEN) {
+            Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
+        }
+        else if(returnType == ApiReturnType.UPDATE_FIREBASE) {
+            Log.e("FIREBASE COMPLETE", String.valueOf(returnType));
+        }
+    }
+
+    @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
         Log.e("FIREBASE FAILURE", asyncReturnType);
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
+
     }
 }

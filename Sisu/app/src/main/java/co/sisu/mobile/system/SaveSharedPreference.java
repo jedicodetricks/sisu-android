@@ -30,7 +30,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_USER_NAME, userName);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getUserName(Context ctx)
@@ -42,7 +42,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(FIREBASE_DEVICE_ID, deviceId);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getFirebaseDeviceId(Context ctx)
@@ -54,7 +54,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_USER_ID, userName);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getUserId(Context ctx)
@@ -66,7 +66,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_USER_PASSWORD, userName);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getUserPassword(Context ctx)
@@ -82,7 +82,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(JWT, jwt);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getClientTimestamp(Context ctx) {
@@ -93,7 +93,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(CLIENT_TIMESTAMP, timestamp);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getTransId(Context ctx) {
@@ -104,7 +104,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(TRANS_ID, transId);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getLogo(Context ctx) {
@@ -115,7 +115,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(LOGO, uri);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getIcon(Context ctx) {
@@ -126,7 +126,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(ICON, uri);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getTeam(Context ctx) {
@@ -137,7 +137,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(TEAM_ID, teamId);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getLights(Context ctx) {
@@ -148,7 +148,7 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(LIGHTS, lights);
-        editor.commit();
+        editor.apply();
     }
 
 

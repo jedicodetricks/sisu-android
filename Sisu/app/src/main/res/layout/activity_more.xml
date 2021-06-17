@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/moreListParentLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_view_parent" android:layout_below="@id/record_list_date">
+    <RelativeLayout android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/record_list_view_parent">
         <ListView
             android:id="@+id/record_list_view"
             android:layout_width="match_parent"
@@ -11,4 +13,4 @@
             android:layout_marginBottom="8dp"
             />
     </RelativeLayout>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

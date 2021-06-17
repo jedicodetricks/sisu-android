@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import co.sisu.mobile.enums.ApiReturnType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,18 +18,17 @@ public class AsyncGet extends AsyncTask<String, String, String> {
 
     private AsyncServerEventListener callback;
     private String url;
-    private String returnString;
+    private ApiReturnType returnType;
 
-    public AsyncGet (AsyncServerEventListener cb, String url, String returnString) {
+    public AsyncGet (AsyncServerEventListener cb, String url, ApiReturnType returnType) {
         callback = cb;
         this.url = url;
-        this.returnString = returnString;
+        this.returnType = returnType;
     }
 
     @Override
     protected String doInBackground(String... strings) {
         Response response = null;
-
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
@@ -53,17 +53,17 @@ public class AsyncGet extends AsyncTask<String, String, String> {
             if(response.code() == 200) {
 //                AsyncAgentJsonObject agentObject = gson.fromJson(response.body().charStream(), AsyncAgentJsonObject.class);
 
-                callback.onEventCompleted(response, returnString);
+                callback.onEventCompleted(response, returnType);
             }
             else {
-                callback.onEventFailed(null, returnString);
+                callback.onEventFailed(null, returnType);
             }
         }
         else {
-            callback.onEventFailed(null, returnString);
+            callback.onEventFailed(null, returnType);
         }
 
-        response.body().close();
+//        response.body().close();
         return null;
     }
 }

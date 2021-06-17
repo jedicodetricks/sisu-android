@@ -6,8 +6,8 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +31,11 @@ import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
+import co.sisu.mobile.enums.ApiReturnType;
+import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.Metric;
+import okhttp3.Response;
 
 
 /**
@@ -42,27 +48,28 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private DataController dataController;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
-    private int selectedStartYear = 0;
-    private int selectedStartMonth = 0;
-    private int selectedStartDay = 0;
-    private int selectedEndYear = 0;
-    private int selectedEndMonth = 0;
-    private int selectedEndDay = 0;
-    private Calendar calendar = Calendar.getInstance();
+    private DateManager dateManager;
+//    private int selectedStartYear = 0;
+//    private int selectedStartMonth = 0;
+//    private int selectedStartDay = 0;
+//    private int selectedEndYear = 0;
+//    private int selectedEndMonth = 0;
+//    private int selectedEndDay = 0;
+//    private Calendar calendar = Calendar.getInstance();
     private ProgressBar loader;
     private Spinner spinner;
     private boolean pastTimeline;
-    private String formattedStartTime;
-    private String formattedEndTime;
+//    private String formattedStartTime;
+//    private String formattedEndTime;
 
     public ReportFragment() {
         // Required empty public constructor
     }
 
     public void teamSwap() {
-        loader.setVisibility(View.VISIBLE);
-        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
-        setColorScheme();
+//        loader.setVisibility(View.VISIBLE);
+//        apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, dataController.getCurrentSelectedTeamMarketId());
+//        setColorScheme();
     }
 
 
@@ -79,16 +86,26 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         dataController = parentActivity.getDataController();
         apiManager = parentActivity.getApiManager();
         colorSchemeManager = parentActivity.getColorSchemeManager();
+        dateManager = parentActivity.getDateManager();
         loader = parentActivity.findViewById(R.id.parentLoader);
         initializeListView();
         initializeTimelineSelector();
-        spinner.setSelection(parentActivity.getTimelineSelection());
+        spinner.setSelection(dateManager.getTimelineSelection());
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "ReportFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setColorScheme() {
         spinner.setPopupBackgroundDrawable(new ColorDrawable(colorSchemeManager.getAppBackground()));
-        spinner.getBackground().setColorFilter(colorSchemeManager.getIconActive(), PorterDuff.Mode.SRC_ATOP);
+        spinner.getBackground().setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -106,156 +123,166 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
         List<String> spinnerArray = initSpinnerArray();
         DropdownAdapter adapter = new DropdownAdapter(getContext(), R.layout.spinner_item, spinnerArray, colorSchemeManager);
 
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                getActivity(),
-//                R.layout.spinner_item,
-//                spinnerArray
-//        );
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                calendar = Calendar.getInstance();
+//                calendar = Calendar.getInstance();
                 loader.setVisibility(View.VISIBLE);
 
                 switch (position) {
                     case 0:
                         //Yesterday
-                        parentActivity.setTimeline("day");
-                        parentActivity.setTimelineSelection(0);
+                        dateManager.setToYesterday();
                         pastTimeline = true;
-                        calendar.add(Calendar.DAY_OF_MONTH, -1);
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+//                        parentActivity.setTimeline("day");
+//                        parentActivity.setTimelineSelection(0);
+//                        calendar.add(Calendar.DAY_OF_MONTH, -1);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                     case 1:
                         //Today
-                        parentActivity.setTimeline("day");
-                        parentActivity.setTimelineSelection(1);
+                        dateManager.setToToday();
                         pastTimeline = false;
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
+//                        parentActivity.setTimeline("day");
+//                        parentActivity.setTimelineSelection(1);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH);
                         break;
                     case 2:
                         //Last Week
-                        parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(2);
+                        dateManager.setToLastWeek();
                         pastTimeline = true;
-                        calendar.add(Calendar.WEEK_OF_YEAR, -1);
-                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
-                        calendar.add(Calendar.DAY_OF_WEEK, 6);
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//                        parentActivity.setTimeline("week");
+//                        parentActivity.setTimelineSelection(2);
+//                        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+//                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//
+//                        calendar.add(Calendar.DAY_OF_WEEK, 6);
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 3:
                         //This Week
-                        parentActivity.setTimeline("week");
-                        parentActivity.setTimelineSelection(3);
+                        dateManager.setToThisWeek();
                         pastTimeline = false;
-                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
 
-                        calendar.add(Calendar.DAY_OF_WEEK, 6);
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//                        parentActivity.setTimeline("week");
+//                        parentActivity.setTimelineSelection(3);
+//                        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+//
+//                        calendar.add(Calendar.DAY_OF_WEEK, 6);
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
                         break;
                     case 4:
                         //Last Month
-                        parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(4);
+                        dateManager.setToLastMonth();
                         pastTimeline = true;
-                        calendar.add(Calendar.MONTH, -1);
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = 1;
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                        parentActivity.setTimeline("month");
+//                        parentActivity.setTimelineSelection(4);
+//                        calendar.add(Calendar.MONTH, -1);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = 1;
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
                     case 5:
                         //This Month
-                        parentActivity.setTimeline("month");
-                        parentActivity.setTimelineSelection(5);
+                        dateManager.setToThisMonth();
                         pastTimeline = false;
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedStartDay = 1;
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
-                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                        parentActivity.setTimeline("month");
+//                        parentActivity.setTimelineSelection(5);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedStartDay = 1;
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = calendar.get(Calendar.MONTH) + 1;
+//                        selectedEndDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
                         break;
                     case 6:
                         //Last year
-                        parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(6);
+                        dateManager.setToLastYear();
                         pastTimeline = true;
-                        calendar.add(Calendar.YEAR, -1);
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = 1;
-                        selectedStartDay = 1;
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = 12;
-                        selectedEndDay = 31;
+//                        parentActivity.setTimeline("year");
+//                        parentActivity.setTimelineSelection(6);
+//                        calendar.add(Calendar.YEAR, -1);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = 1;
+//                        selectedStartDay = 1;
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = 12;
+//                        selectedEndDay = 31;
                         break;
                     case 7:
                         //This year
-                        parentActivity.setTimeline("year");
-                        parentActivity.setTimelineSelection(7);
+                        dateManager.setToThisYear();
                         pastTimeline = false;
-                        selectedStartYear = calendar.get(Calendar.YEAR);
-                        selectedStartMonth = 1;
-                        selectedStartDay = 1;
 
-                        selectedEndYear = calendar.get(Calendar.YEAR);
-                        selectedEndMonth = 12;
-                        selectedEndDay = 31;
+//                        parentActivity.setTimeline("year");
+//                        parentActivity.setTimelineSelection(7);
+//                        selectedStartYear = calendar.get(Calendar.YEAR);
+//                        selectedStartMonth = 1;
+//                        selectedStartDay = 1;
+//
+//                        selectedEndYear = calendar.get(Calendar.YEAR);
+//                        selectedEndMonth = 12;
+//                        selectedEndDay = 31;
                         break;
                 }
-                String formattedStartMonth = String.valueOf(selectedStartMonth);
-                String formattedEndMonth = String.valueOf(selectedEndMonth);
-                String formattedStartDay = String.valueOf(selectedStartDay);
-                String formattedEndDay = String.valueOf(selectedEndDay);
-
-                if(selectedStartDay < 10) {
-                    formattedStartDay = "0" + selectedStartDay;
-                }
-
-                if(selectedEndDay < 10) {
-                    formattedEndDay = "0" + selectedEndDay;
-                }
-
-                if(selectedStartMonth < 10) {
-                    formattedStartMonth = "0" + selectedStartMonth;
-                }
-
-                if(selectedEndMonth < 10) {
-                    formattedEndMonth = "0" + selectedEndMonth;
-                }
-
-                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
-                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
-                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), formattedStartTime, formattedEndTime, parentActivity.getSelectedTeamMarketId());
-                //will need to refresh page with fresh data based on api call here determined by timeline value selected
+//                String formattedStartMonth = String.valueOf(selectedStartMonth);
+//                String formattedEndMonth = String.valueOf(selectedEndMonth);
+//                String formattedStartDay = String.valueOf(selectedStartDay);
+//                String formattedEndDay = String.valueOf(selectedEndDay);
+//
+//                if(selectedStartDay < 10) {
+//                    formattedStartDay = "0" + selectedStartDay;
+//                }
+//
+//                if(selectedEndDay < 10) {
+//                    formattedEndDay = "0" + selectedEndDay;
+//                }
+//
+//                if(selectedStartMonth < 10) {
+//                    formattedStartMonth = "0" + selectedStartMonth;
+//                }
+//
+//                if(selectedEndMonth < 10) {
+//                    formattedEndMonth = "0" + selectedEndMonth;
+//                }
+//
+//                formattedStartTime = selectedStartYear + "-" + formattedStartMonth + "-" + formattedStartDay;
+//                formattedEndTime = selectedEndYear + "-" + formattedEndMonth + "-" + formattedEndDay;
+                apiManager.sendAsyncActivities(ReportFragment.this, dataController.getAgent().getAgent_id(), dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime(), dataController.getCurrentSelectedTeamMarketId());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -266,9 +293,9 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     private int calculateProgressOnTrack(Metric metric) {
         int positionPercent = 0; //will determine blue
-        int goalNum = metric.getGoalNum(); //monthly goal
+        double goalNum = metric.getGoalNum(); //monthly goal
         Calendar calendar = Calendar.getInstance();
-        switch (parentActivity.getTimeline()) {
+        switch (dateManager.getTimeline()) {
             case "day":
                 goalNum = metric.getDailyGoalNum();
                 break;
@@ -283,30 +310,30 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
                 break;
         }
 
-        if(parentActivity.getTimeline().equalsIgnoreCase("week")) { //week
+        if(dateManager.getTimeline().equalsIgnoreCase("week")) { //week
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             positionPercent = (int) (((double)dayOfWeek / (double)calendar.getActualMaximum(Calendar.DAY_OF_WEEK)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(dateManager.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(dateManager.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
-        } else if(parentActivity.getTimeline().equalsIgnoreCase("month")) { //month
+        } else if(dateManager.getTimeline().equalsIgnoreCase("month")) { //month
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             positionPercent = (int) (((double)dayOfMonth / (double)calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(dateManager.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(dateManager.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
-        } else if(parentActivity.getTimeline().equalsIgnoreCase("year")) { //year
+        } else if(dateManager.getTimeline().equalsIgnoreCase("year")) { //year
 //            goalNum = goalNum * 12; //annual goal
             int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
             positionPercent = (int) (((double)dayOfYear / (double)calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) * 100);
             if(metric.getCurrentNum() >= goalNum) {
                 positionPercent = 100; //hit goal, orange
-            } else if (metric.getPercentComplete(parentActivity.getTimeline()) >= positionPercent) {
-                positionPercent = metric.getPercentComplete(parentActivity.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
+            } else if (metric.getPercentComplete(dateManager.getTimeline()) >= positionPercent) {
+                positionPercent = metric.getPercentComplete(dateManager.getTimeline()) - 1; //setting color for yellow as returning percent will be higher than pacer percent
             }
         }
         return positionPercent;
@@ -345,20 +372,20 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
     private void calculateProgressColor(Metric metric, int positionPercent) {
         if(getContext() != null) {
             if(pastTimeline) {
-                if(metric.getPercentComplete(parentActivity.getTimeline()) < 100) {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorMoonBlue));
+                if(metric.getPercentComplete(dateManager.getTimeline()) < 100) {
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.sisuBlue));
                 }
                 else {
-                    metric.setColor(ContextCompat.getColor(getContext(),R.color.colorCorporateOrange));
+                    metric.setColor(ContextCompat.getColor(getContext(),R.color.sisuOrange));
                 }
             }
             else {
-                if (metric.getPercentComplete(parentActivity.getTimeline()) < positionPercent) {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorMoonBlue));
-                } else if (metric.getPercentComplete(parentActivity.getTimeline()) > 99) {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorCorporateOrange));
+                if (metric.getPercentComplete(dateManager.getTimeline()) < positionPercent) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuBlue));
+                } else if (metric.getPercentComplete(dateManager.getTimeline()) > 99) {
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuOrange));
                 } else {
-                    metric.setColor(ContextCompat.getColor(getContext(), R.color.colorYellow));
+                    metric.setColor(ContextCompat.getColor(getContext(), R.color.sisuYellow));
                 }
             }
         }
@@ -386,7 +413,7 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
             for (int i = 0; i < metricList.size(); i++) {
                 calculateProgressColor(metricList.get(i), calculateProgressOnTrack(metricList.get(i)));
             }
-            ReportListAdapter adapter = new ReportListAdapter(getContext(), prunedList, parentActivity.getTimeline(), colorSchemeManager, dataController.getFirstOtherActivity());
+            ReportListAdapter adapter = new ReportListAdapter(getContext(), prunedList, dateManager.getTimeline(), colorSchemeManager, dataController.getFirstOtherActivity());
             mListView.setAdapter(adapter);
 
         }
@@ -418,8 +445,13 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Activities")) {
-            dataController.setActivitiesObject(returnObject);
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_ACTIVITIES) {
+            AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
+            dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
             parentActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -432,6 +464,11 @@ public class ReportFragment extends Fragment implements AsyncServerEventListener
 
     @Override
     public void onEventFailed(Object o, String s) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

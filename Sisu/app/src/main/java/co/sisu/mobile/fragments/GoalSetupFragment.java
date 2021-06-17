@@ -5,8 +5,11 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -33,12 +37,17 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.NavigationManager;
+import co.sisu.mobile.enums.ApiReturnType;
+import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.models.AgentGoalsObject;
 import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncAgentJsonObject;
+import co.sisu.mobile.models.AsyncAgentJsonStringSuperUserObject;
 import co.sisu.mobile.models.AsyncGoalsJsonObject;
 import co.sisu.mobile.models.AsyncUpdateAgentGoalsJsonObject;
 import co.sisu.mobile.models.UpdateAgentGoalsObject;
+import co.sisu.mobile.utils.Utils;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +60,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     private ApiManager apiManager;
     private NavigationManager navigationManager;
     private ColorSchemeManager colorSchemeManager;
+    private Utils utils;
     private TextView activityTitle, goalsLabel, saveButton;
     private boolean dateSwap;
     private List<EditText> fieldsObject;
@@ -99,10 +109,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         agentUpdated = false;
         income = "";
         reason = "";
-        apiManager.sendAsyncAgentGoals(this, agent.getAgent_id(), parentActivity.getSelectedTeamId());
-        apiManager.sendAsyncAgent(this, agent.getAgent_id());
+        apiManager.getAgentGoals(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+        apiManager.getAgent(this, agent.getAgent_id());
         setLabels();
         setColorScheme();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "GoalSetupFragment");
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "ParentActivity");
+        FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
     private void setLabels() {
@@ -125,35 +144,38 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
     }
 
     private void setColorScheme() {
-        desiredIncome.setTextColor(colorSchemeManager.getDarkerTextColor());
-        trackingReasons.setTextColor(colorSchemeManager.getDarkerTextColor());
-        contacts.setTextColor(colorSchemeManager.getDarkerTextColor());
-        bAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
-        sAppointments.setTextColor(colorSchemeManager.getDarkerTextColor());
-        bSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
-        sSigned.setTextColor(colorSchemeManager.getDarkerTextColor());
-        bContract.setTextColor(colorSchemeManager.getDarkerTextColor());
-        sContract.setTextColor(colorSchemeManager.getDarkerTextColor());
-        bClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
-        sClosed.setTextColor(colorSchemeManager.getDarkerTextColor());
-        activityTitle.setTextColor(colorSchemeManager.getDarkerTextColor());
-        goalsLabel.setTextColor(colorSchemeManager.getDarkerTextColor());
-        closedVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
-        underContractVolumeGoal.setTextColor(colorSchemeManager.getDarkerTextColor());
+        ConstraintLayout layout = getView().findViewById(R.id.goalSetupParentLayout);
+        layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
-        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getIconActive());
-        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getIconActive());
+        desiredIncome.setTextColor(colorSchemeManager.getDarkerText());
+        trackingReasons.setTextColor(colorSchemeManager.getDarkerText());
+        contacts.setTextColor(colorSchemeManager.getDarkerText());
+        bAppointments.setTextColor(colorSchemeManager.getDarkerText());
+        sAppointments.setTextColor(colorSchemeManager.getDarkerText());
+        bSigned.setTextColor(colorSchemeManager.getDarkerText());
+        sSigned.setTextColor(colorSchemeManager.getDarkerText());
+        bContract.setTextColor(colorSchemeManager.getDarkerText());
+        sContract.setTextColor(colorSchemeManager.getDarkerText());
+        bClosed.setTextColor(colorSchemeManager.getDarkerText());
+        sClosed.setTextColor(colorSchemeManager.getDarkerText());
+        activityTitle.setTextColor(colorSchemeManager.getDarkerText());
+        goalsLabel.setTextColor(colorSchemeManager.getDarkerText());
+        closedVolumeGoal.setTextColor(colorSchemeManager.getDarkerText());
+        underContractVolumeGoal.setTextColor(colorSchemeManager.getDarkerText());
+
+        setInputTextLayoutColor(desiredIncomeLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(trackingReasonsLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(sClosedLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(bClosedLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(bAppointmentsLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(sAppointmentsLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(bSignedLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(sSignedLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(bContractLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(sContractLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(contactsLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(closedVolumeLayout, colorSchemeManager.getLighterText());
+        setInputTextLayoutColor(underContractVolumeLayout, colorSchemeManager.getLighterText());
 
         if(colorSchemeManager.getAppBackground() == Color.WHITE) {
             Rect bounds = loader.getIndeterminateDrawable().getBounds();
@@ -201,34 +223,33 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         dateSwap = true;
         currentGoalsObject = agent.getAgentGoalsObject();
 
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                    activityTitle.setText(R.string.monthlyTitle);
-                    String formattedIncome = "";
-                    if(income.equals("")) {
-                        if(agent.getDesired_income() != null) {
-                            formattedIncome = agent.getDesired_income().replace(".0", "");
-                        }
+        parentActivity.runOnUiThread(() -> {
+                activityTitle.setText(R.string.monthlyTitle);
+                String formattedIncome = "";
+                if(income.equals("")) {
+                    if(agent.getDesired_income() != null) {
+                        formattedIncome = agent.getDesired_income().replace(".0", "");
                     }
-                    else {
-                        formattedIncome = income;
-                    }
-                    String toDisplay = "";
-                    if(!formattedIncome.equals("")) {
-                        toDisplay = String.valueOf(formattedIncome);
-                    }
-                    desiredIncome.setText(String.valueOf(toDisplay));
-//                }
-
-                if(reason.equals("")) {
-                    trackingReasons.setText(agent.getVision_statement());
                 }
                 else {
-                    trackingReasons.setText(reason);
+                    formattedIncome = income;
                 }
+                String toDisplay = "";
+                if(!formattedIncome.equals("")) {
+                    toDisplay = String.valueOf(formattedIncome);
+                }
+                desiredIncome.setText(String.valueOf(toDisplay));
+//                }
 
-                for(AgentGoalsObject go : currentGoalsObject) {
+            if(reason.equals("")) {
+                trackingReasons.setText(agent.getVision_statement());
+            }
+            else {
+                trackingReasons.setText(reason);
+            }
+
+            for(AgentGoalsObject go : currentGoalsObject) {
+                if(go != null) {
                     String value = go.getValue();
 
                     switch (go.getGoal_id()) {
@@ -268,7 +289,9 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     }
                 }
                 dateSwap = false;
-            }
+
+                }
+
         });
 
     }
@@ -374,47 +397,47 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         if(!dateSwap && !s.toString().equals("")) {
             if(contacts.getText().hashCode() == s.hashCode())
             {
-                updateField("CONTA", Integer.valueOf(String.valueOf(s)));
+                updateField("CONTA", (String.valueOf(s)));
             }
             else if(bAppointments.getText().hashCode() == s.hashCode())
             {
-                updateField("BAPPT", Integer.valueOf(String.valueOf(s)));
+                updateField("BAPPT", (String.valueOf(s)));
             }
             else if(sAppointments.getText().hashCode() == s.hashCode())
             {
-                updateField("SAPPT", Integer.valueOf(String.valueOf(s)));
+                updateField("SAPPT", (String.valueOf(s)));
             }
             else if(bSigned.getText().hashCode() == s.hashCode())
             {
-                updateField("BSGND", Integer.valueOf(String.valueOf(s)));
+                updateField("BSGND", (String.valueOf(s)));
             }
             else if(sSigned.getText().hashCode() == s.hashCode())
             {
-                updateField("SSGND", Integer.valueOf(String.valueOf(s)));
+                updateField("SSGND", (String.valueOf(s)));
             }
             else if(bContract.getText().hashCode() == s.hashCode())
             {
-                updateField("BUNDC", Integer.valueOf(String.valueOf(s)));
+                updateField("BUNDC", (String.valueOf(s)));
             }
             else if(sContract.getText().hashCode() == s.hashCode())
             {
-                updateField("SUNDC", Integer.valueOf(String.valueOf(s)));
+                updateField("SUNDC", (String.valueOf(s)));
             }
             else if(bClosed.getText().hashCode() == s.hashCode())
             {
-                updateField("BCLSD", Integer.valueOf(String.valueOf(s)));
+                updateField("BCLSD", (String.valueOf(s)));
             }
             else if(sClosed.getText().hashCode() == s.hashCode())
             {
-                updateField("SCLSD", Integer.valueOf(String.valueOf(s)));
+                updateField("SCLSD", (String.valueOf(s)));
             }
             else if(closedVolumeGoal.getText().hashCode() == s.hashCode())
             {
-                updateField("CLSDV", Integer.valueOf(String.valueOf(s)));
+                updateField("CLSDV", (String.valueOf(s)));
             }
             else if(underContractVolumeGoal.getText().hashCode() == s.hashCode())
             {
-                updateField("UNCTV", Integer.valueOf(String.valueOf(s)));
+                updateField("UNCTV", (String.valueOf(s)));
             }
             else if (desiredIncome.getText().hashCode() == s.hashCode()) {
                 updateProfile("Income", s.toString());
@@ -434,7 +457,7 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
         }
     }
 
-    private void updateField(String fieldName, int value) {
+    private void updateField(String fieldName, String value) {
         AgentGoalsObject selectedGoal = null;
 
         int currentGoalsLength = currentGoalsObject.length;
@@ -445,14 +468,14 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                 break;
             }
         }
-        UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, String.valueOf(value));
+        UpdateAgentGoalsObject toUpdate = new UpdateAgentGoalsObject(fieldName, (value));
 
         if(selectedGoal == null) {
             currentGoalsObject[currentGoalsLength] = selectedGoal;
             updatedGoals.put(fieldName, toUpdate);
         }
         else {
-            selectedGoal.setValue(String.valueOf(value));
+            selectedGoal.setValue((value));
             updatedGoals.put(fieldName, toUpdate);
         }
 
@@ -469,10 +492,10 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
                     array[counter] = value;
                     counter++;
                 }
-                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), new AsyncUpdateAgentGoalsJsonObject(array));
+                apiManager.sendAsyncUpdateGoals(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), new AsyncUpdateAgentGoalsJsonObject(array));
                 if(!income.equals("") || !reason.equals("")) {
                     agentUpdating = true;
-                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), parentActivity.getCurrentTeam().getId(), income, reason);
+                    apiManager.sendAsyncUpdateAgent(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), income, reason);
                 }
                 break;
         }
@@ -480,31 +503,33 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
-        if(asyncReturnType.equals("Update Goals")) {
-            if(!agentUpdating) {
-                updatedGoals = new HashMap<>();
-                parentActivity.showToast("Goals have been updated");
-                navigationManager.clearStackReplaceFragment(MoreFragment.class);
-            }
-        }
-        else if(asyncReturnType.equals("Goals")) {
-            AsyncGoalsJsonObject goals = (AsyncGoalsJsonObject) returnObject;
+    }
+
+    @Override
+    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        if(returnType == ApiReturnType.GET_AGENT_GOALS) {
+            AsyncGoalsJsonObject goals = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncGoalsJsonObject.class);
             AgentGoalsObject[] agentGoalsObject = goals.getGoalsObjects();
-            dataController.setAgentGoals(agentGoalsObject);
+            dataController.setAgentGoals(agentGoalsObject, parentActivity.isRecruiting());
             goalsUpdated = true;
             if(agentUpdated) {
                 setupFieldsWithGoalData();
             }
         }
-        else if(asyncReturnType.equals("Update Agent")) {
-            agentUpdating = false;
-            updatedGoals = new HashMap<>();
-            parentActivity.showToast("Goals have been updated");
-            navigationManager.clearStackReplaceFragment(MoreFragment.class);
-//            navigationManager.swapToTitleBar("More");
-        }
-        else if(asyncReturnType.equals("Get Agent")) {
-            AsyncAgentJsonObject agentJsonObject = (AsyncAgentJsonObject) returnObject;
+        else if(returnType == ApiReturnType.GET_AGENT) {
+            AsyncAgentJsonObject agentJsonObject = null;
+            String r = null;
+            try {
+                r = ((Response) returnObject).body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                agentJsonObject = parentActivity.getGson().fromJson(r, AsyncAgentJsonObject.class);
+            } catch(Exception e) {
+                AsyncAgentJsonStringSuperUserObject tempAgent = parentActivity.getGson().fromJson(r, AsyncAgentJsonStringSuperUserObject.class);
+                agentJsonObject = new AsyncAgentJsonObject(tempAgent);
+            }
             AgentModel agentModel = agentJsonObject.getAgent();
             dataController.setAgentIncomeAndReason(agentModel);
             agent = dataController.getAgent();
@@ -512,6 +537,19 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
             if(goalsUpdated) {
                 setupFieldsWithGoalData();
             }
+        }
+        else if(returnType == ApiReturnType.UPDATE_GOALS) {
+            if(!agentUpdating) {
+                updatedGoals = new HashMap<>();
+                utils.showToast("Goals have been updated", parentActivity);
+                navigationManager.clearStackReplaceFragment(MoreFragment.class);
+            }
+        }
+        else if(returnType == ApiReturnType.UPDATE_AGENT) {
+            agentUpdating = false;
+            updatedGoals = new HashMap<>();
+            utils.showToast("Goals have been updated", parentActivity);
+            navigationManager.clearStackReplaceFragment(MoreFragment.class);
         }
         parentActivity.runOnUiThread(new Runnable() {
             @Override
@@ -523,6 +561,11 @@ public class GoalSetupFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onEventFailed(Object returnObject, String asyncReturnType) {
+
+    }
+
+    @Override
+    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
 
     }
 }

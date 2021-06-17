@@ -6,7 +6,7 @@
     >
 
     <TableRow>
-        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/action_bar_parent"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="50dp"
@@ -16,7 +16,7 @@
                 android:id="@+id/action_bar_home"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/colorCorporateOrange"
+                android:background="@color/sisuOrange"
                 android:elevation="1dp"
                 android:visibility="visible"
                 android:layout_marginStart="7dp"
@@ -32,10 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:background="@color/colorCorporateOrange"
+                android:background="@color/sisuOrange"
                 android:elevation="1dp"
                 android:text="Z"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/sisuWhite"
                 android:textSize="@dimen/font_larger"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/action_bar_home"
@@ -56,7 +56,7 @@
                 app:layout_constraintStart_toStartOf="@id/action_bar_home"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@id/actionBarTitle"

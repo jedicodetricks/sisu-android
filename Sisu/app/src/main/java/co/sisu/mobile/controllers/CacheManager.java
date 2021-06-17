@@ -3,6 +3,7 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.LruCache;
 
 import java.io.File;
@@ -16,13 +17,47 @@ public class CacheManager {
     private boolean mDiskCacheStarting = true;
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
     private static final String DISK_CACHE_SUBDIR = "thumbnails";
+    private LruCache<String, Bitmap> mMemoryCache;
+
+    public CacheManager() {
+        initCache();
+    }
+
+    private void initCache() {
+        // Get max available VM memory, exceeding this amount will throw an
+        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+        // int in its constructor.
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 4;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+    }
+
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) != null) {
+            Log.e("Key already exists", "Replacing " + key);
+        }
+        mMemoryCache.put(key, bitmap);
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
+    }
 
     public CacheManager(Context context) {
         File cachDir = getDiskCacheDir(context, DISK_CACHE_SUBDIR);
 //        new InitDiskCacheTask().execute(cacheDir);
     }
 
-    private LruCache<String, Bitmap> mMemoryCache;
 
 
 
