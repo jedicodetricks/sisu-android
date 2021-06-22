@@ -22,52 +22,47 @@ public class NotificationActivity extends AppCompatActivity {
         String body = getIntent().getStringExtra("body");
         TextView titleView = findViewById(R.id.notificationTitle);
         TextView bodyView = findViewById(R.id.notificationBody);
-
-
-        Pattern phonePattern = Patterns.PHONE;
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-        final String URL_REGEX = "((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-        Pattern urlPattern = Pattern.compile(URL_REGEX);
-
-        Matcher phoneMatcher = phonePattern.matcher(body);
-        Matcher emailMatcher = emailPattern.matcher(body);
-        Matcher urlMatcher = urlPattern.matcher(body);
-
-        boolean phoneVal = phoneMatcher.find();
-        boolean emailVal = emailMatcher.find();
-        boolean urlVal = urlMatcher.find();
-        String phoneNumber;
-        String email ;
-        String url ;
-
-        if(phoneVal) {
-            phoneNumber = phoneMatcher.group(0);
-            body = body.replace(phoneNumber, "<a href=\"tel:" + phoneNumber + "\">" + phoneNumber + "</a>");
-        }
-
-        if(emailVal) {
-            email = emailMatcher.group(0);
-            body = body.replace(email, "<a href=\"mailto:" + email + "\">" + email + "</a>");
-
-        }
-
-        if(urlVal) {
-            url = urlMatcher.group(0);
-            if(!url.contains("https://") && !url.contains("http://")) {
-                url = "https://" + url;
-            }
-            body = body.replace(url, "<a href=\"" + url + "\">" + url + "</a>");
-        }
-
-
         if(!title.equals("")) {
             titleView.setText(title);
         }
-        if(!body.equals("")) {
+
+        if(body != null && !body.equals("")) {
+            Pattern phonePattern = Patterns.PHONE;
+            Pattern emailPattern = Patterns.EMAIL_ADDRESS;
+            final String URL_REGEX = "((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+            Pattern urlPattern = Pattern.compile(URL_REGEX);
+
+            Matcher phoneMatcher = phonePattern.matcher(body);
+            Matcher emailMatcher = emailPattern.matcher(body);
+            Matcher urlMatcher = urlPattern.matcher(body);
+
+            boolean phoneVal = phoneMatcher.find();
+            boolean emailVal = emailMatcher.find();
+            boolean urlVal = urlMatcher.find();
+            String phoneNumber;
+            String email ;
+            String url ;
+
+            if(phoneVal) {
+                phoneNumber = phoneMatcher.group(0);
+                body = body.replace(phoneNumber, "<a href=\"tel:" + phoneNumber + "\">" + phoneNumber + "</a>");
+            }
+
+            if(emailVal) {
+                email = emailMatcher.group(0);
+                body = body.replace(email, "<a href=\"mailto:" + email + "\">" + email + "</a>");
+
+            }
+
+            if(urlVal) {
+                url = urlMatcher.group(0);
+                if(!url.contains("https://") && !url.contains("http://")) {
+                    url = "https://" + url;
+                }
+                body = body.replace(url, "<a href=\"" + url + "\">" + url + "</a>");
+            }
             bodyView.setText(Html.fromHtml(body));
             bodyView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
     }
-
 }

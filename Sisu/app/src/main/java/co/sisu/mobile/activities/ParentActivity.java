@@ -140,6 +140,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone. 6/16/21 - I think it is.
     // TODO: There is a bug when you are in the message center and press the plus button, then press back.
     // TODO: I can get rid of the MainActivity and just come straight here with a new Fragment
+    // TODO: The TeamObject is the most important object and I've got to make sure we have it before I let them navigate around
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +173,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             //TODO: Don't release with this uncommented, you fucktard.
             //MOCKING AN AGENT
 //            agent.setAgent_id("49201"); // This is a good agent for color checking
-//            agent.setAgent_id("31296");
+//            agent.setAgent_id("54185");
 //            dataController.setAgent(agent);
             //
         }
@@ -196,7 +197,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         dashboardTilesViewModel.getDashboardTiles().observe(this, dashboardTiles -> {
             tileTemplate = dashboardTiles;
             tileTemplateFinished = true;
-            navigateToScoreboard();
+            if(teamSwap) {
+                this.runOnUiThread(this::executeTeamSwap);
+            } else {
+                navigateToScoreboard();
+            }
         });
 
         clientTilesViewModel = new ViewModelProvider(this).get(ClientTilesViewModel.class);
@@ -447,7 +452,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void executeTeamSwap() {
-        if(teamParamFinished && activitySettingsParamFinished && tileTemplateFinished) {
+        if(teamParamFinished && tileTemplateFinished) {
             parentLoader.setVisibility(View.INVISIBLE);
 //            clientFinished = false;
 //            goalsFinished = false;
@@ -498,7 +503,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
         teamParamFinished = false;
-        noNavigation = false;
         activitySettingsParamFinished = false;
         teamsFinished = false;
     }

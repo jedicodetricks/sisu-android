@@ -33,7 +33,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/sisu_powered_grey"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/legal"
+        app:layout_constraintBottom_toTopOf="@id/legal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -47,7 +47,7 @@
         android:theme="@style/EditTextTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo">
+        app:layout_constraintTop_toBottomOf="@id/logo">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailInput"
@@ -63,7 +63,7 @@
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sisuPowerLogo"/>
+            app:layout_constraintTop_toBottomOf="@id/sisuPowerLogo"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +76,7 @@
         android:theme="@style/EditTextTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout">
+        app:layout_constraintTop_toBottomOf="@id/emailSignInLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordInput"
@@ -94,7 +94,7 @@
             android:imeOptions="actionDone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailSignInLayout"/>
+            app:layout_constraintTop_toBottomOf="@id/emailSignInLayout"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,7 +110,7 @@
         android:text="@string/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordSignInLayout" />
+        app:layout_constraintTop_toBottomOf="@id/passwordSignInLayout" />
 
     <TextView
         android:id="@+id/forgotPassword"
@@ -122,9 +122,9 @@
         android:textAlignment="center"
         android:onClick="onClick"
         android:clickable="true"
-        app:layout_constraintEnd_toEndOf="@+id/signInButton"
-        app:layout_constraintStart_toStartOf="@+id/signInButton"
-        app:layout_constraintTop_toBottomOf="@+id/signInButton" />
+        app:layout_constraintEnd_toEndOf="@id/signInButton"
+        app:layout_constraintStart_toStartOf="@id/signInButton"
+        app:layout_constraintTop_toBottomOf="@id/signInButton" />
 
     <TextView
         android:id="@+id/legal"

@@ -242,12 +242,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     private void getLeaderboard(int year, int month) {
         if(dataController.getCurrentSelectedTeamId() == 0) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loader.setVisibility(View.GONE);
-                }
-            });
+            parentActivity.runOnUiThread(() -> loader.setVisibility(View.GONE));
         }
         else {
             loader.setVisibility(View.VISIBLE);
