@@ -6,13 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -27,14 +20,19 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import co.sisu.mobile.R;
@@ -58,7 +56,6 @@ import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
 import co.sisu.mobile.viewModels.ClientTilesViewModel;
 import co.sisu.mobile.viewModels.GlobalDataViewModel;
-import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 2/21/18.

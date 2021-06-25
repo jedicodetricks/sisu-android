@@ -7,10 +7,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -27,6 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.Fragment;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
@@ -55,12 +56,13 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.controllers.RecordEventHandler;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
+import co.sisu.mobile.fragments.TransactionFragment;
 import co.sisu.mobile.models.ActivitySettingsObject;
 import co.sisu.mobile.models.AsyncActivitiesJsonObject;
 import co.sisu.mobile.models.DoubleMetric;
 import co.sisu.mobile.models.Metric;
-import co.sisu.mobile.oldFragments.TransactionFragment;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import okhttp3.Response;
 
 
@@ -89,6 +91,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private PopupMenu dateSelectorPopup;
     private final int smallerTitleSize = 18;
     private View view;
+    private GlobalDataViewModel globalDataViewModel;
 
     // TODO: IMPORTANT! The transaction buttons are janky as fuck!
     @Override
@@ -111,6 +114,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         dateManager = parentActivity.getDateManager();
         actionBarManager = parentActivity.getActionBarManager();
         utils = parentActivity.getUtils();
+        globalDataViewModel = parentActivity.getGlobalDataViewModel();
         actionBarManager.setToSaveBar("Record");
         calendar = Calendar.getInstance();
         apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());

@@ -17,7 +17,6 @@ import java.util.List;
 
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.enums.ApiReturnType;
-import co.sisu.mobile.fragments.main.ClientTileFragment;
 import co.sisu.mobile.models.FilterObject;
 import okhttp3.Response;
 

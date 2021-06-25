@@ -2,20 +2,14 @@ package co.sisu.mobile.controllers;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import co.sisu.mobile.activities.MainActivity;
 import co.sisu.mobile.activities.NotificationActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.enums.ApiReturnType;

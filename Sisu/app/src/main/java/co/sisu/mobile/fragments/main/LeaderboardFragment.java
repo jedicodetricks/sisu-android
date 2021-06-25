@@ -8,9 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
@@ -54,6 +55,7 @@ import co.sisu.mobile.models.TeamColorSchemeObject;
 import co.sisu.mobile.system.SaveSharedPreference;
 import co.sisu.mobile.utils.LeaderboardComparator;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import okhttp3.Response;
 
 /**
@@ -85,6 +87,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private List<LeaderboardObject> leaderBoardSections;
     private TextView dateDisplay, monthToggle, yearToggle;
     private ImageView calendarLauncher;
+    private GlobalDataViewModel globalDataViewModel;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -106,6 +109,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         actionBarManager = parentActivity.getActionBarManager();
         cacheManager = parentActivity.getCacheManager();
         utils = parentActivity.getUtils();
+        globalDataViewModel = parentActivity.getGlobalDataViewModel();
         actionBarManager.setToTitleBar("Leaderboards", false);
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);

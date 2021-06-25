@@ -3,16 +3,12 @@ package co.sisu.mobile.activities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import co.sisu.mobile.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import co.sisu.mobile.api.AsyncAuthenticator;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.enums.ApiReturnType;

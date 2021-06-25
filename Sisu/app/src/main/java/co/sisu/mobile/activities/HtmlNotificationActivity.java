@@ -1,9 +1,10 @@
 package co.sisu.mobile.activities;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Base64;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import co.sisu.mobile.R;
 

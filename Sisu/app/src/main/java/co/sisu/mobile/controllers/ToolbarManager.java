@@ -2,8 +2,9 @@ package co.sisu.mobile.controllers;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;

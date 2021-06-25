@@ -2,8 +2,6 @@ package co.sisu.mobile.adapters;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -12,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
