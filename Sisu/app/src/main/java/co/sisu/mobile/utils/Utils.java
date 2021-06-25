@@ -22,11 +22,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.activities.SplashScreenActivity;
 import co.sisu.mobile.controllers.NotificationReceiver;
+import co.sisu.mobile.models.ParameterObject;
 
 import static android.content.Context.ALARM_SERVICE;
 
@@ -99,6 +101,55 @@ public class Utils {
 
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+    }
+
+    public void createNotificationAlarmIfActive(List<ParameterObject> settingsObject, PendingIntent pendingIntent, Context context) {
+        int hour = 0;
+        int minute = 0;
+        int reminderActive = 0;
+        for (ParameterObject s : settingsObject) {
+            switch (s.getName()) {
+                case "daily_reminder_time":
+                    String[] values = s.getValue().split(":");
+                    try{
+                        hour = Integer.parseInt(values[0]);
+                        minute = Integer.parseInt(values[1]);
+                    } catch(NumberFormatException nfe) {
+                        hour = 17;
+                        minute = 0;
+                    }
+                    break;
+                case "daily_reminder":
+                    try{
+                        reminderActive = Integer.parseInt(s.getValue());
+
+                    } catch(NumberFormatException nfe) {
+                        reminderActive = 1;
+                    }
+            }
+        }
+        if(pendingIntent == null) {
+            Intent myIntent = new Intent(context, NotificationReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(context, 1412, myIntent, 0);
+        }
+        if(reminderActive == 1) {
+            Calendar calendar = Calendar.getInstance();
+            long currentTimeInMillis = calendar.getTimeInMillis();
+            int interval = 1000 * 60 * 60 * 24; // One day
+
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+
+            if(currentTimeInMillis > calendar.getTimeInMillis()) {
+                calendar.setTimeInMillis(calendar.getTimeInMillis() + interval);
+            }
+
+            AlarmManager alarmManager = (AlarmManager)context.getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+        }
+
     }
 
     public int getPercentComplete(double currentNum, double goalNum){

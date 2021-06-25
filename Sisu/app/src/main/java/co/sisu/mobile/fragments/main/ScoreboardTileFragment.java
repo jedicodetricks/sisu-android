@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -14,13 +17,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.tsongkha.spinnerdatepicker.DatePicker;
 import com.tsongkha.spinnerdatepicker.DatePickerDialog;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
@@ -46,22 +51,22 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.TileCreationHelper;
+import co.sisu.mobile.viewModels.DashboardViewModel;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import okhttp3.Response;
 
 /**
  * Created by bradygroharing on 2/21/18.
  */
 
-public class ScoreboardTileFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, DatePickerDialog.OnDateSetListener {
+public class ScoreboardTileFragment extends Fragment implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, DatePickerDialog.OnDateSetListener {
 
     private ParentActivity parentActivity;
-    private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
     private DateManager dateManager;
     private ActionBarManager actionBarManager;
     private TileCreationHelper tileCreationHelper;
-    private DataController dataController;
     private ProgressBar loader;
     private LayoutInflater inflater;
     private int numOfRows = 1;
@@ -73,22 +78,44 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
     private PopupMenu scopePopup;
 
+    private DashboardViewModel dashboardTilesViewModel;
+    private GlobalDataViewModel globalDataViewModel;
+    private View parentLayout;
+    private ViewGroup container;
+
+    // TODO: The tile tapping no longer works
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
         assert parentActivity != null;
-        this.navigationManager = parentActivity.getNavigationManager();
         this.apiManager = parentActivity.getApiManager();
         this.dateManager = parentActivity.getDateManager();
         this.actionBarManager = parentActivity.getActionBarManager();
         this.tileCreationHelper = parentActivity.getTileCreationHelper();
-        this.dataController = parentActivity.getDataController();
+        this.globalDataViewModel = parentActivity.getGlobalDataViewModel();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
-        JSONObject tileTemplate = parentActivity.getTileTemplate();
+        this.container = container;
+        initListeners();
+        parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
+        apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + globalDataViewModel.getAgentValue().getAgent_id());
+        return parentLayout;
+    }
 
-        return createFullView(container, tileTemplate);
+    public void initListeners() {
+        dashboardTilesViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+        dashboardTilesViewModel.getDashboardTiles().observe(getViewLifecycleOwner(), dashboardTiles -> {
+            parentLayout = createFullView(container, dashboardTiles);
+            finishSetup();
+        });
+
+        globalDataViewModel.getSelectedTeam().observe(getViewLifecycleOwner(), newSelectedTeam -> {
+            loader.setVisibility(View.VISIBLE);
+            apiManager.getTeamParams(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id(), newSelectedTeam.getId());
+            apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), newSelectedTeam.getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent");
+            apiManager.getLabels(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId());
+        });
     }
 
     @NonNull
@@ -97,10 +124,16 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         loader.setVisibility(View.VISIBLE);
         JSONArray tile_rows = null;
 
-        RelativeLayout parentRelativeLayout;
-        View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
-        RelativeLayout upperRelativeLayout = parentLayout.findViewById(R.id.tileDashboardDateSelector);
-        upperRelativeLayout.setId(1);
+        RelativeLayout tileRelativeLayout;
+        RelativeLayout radioGroupLayout;
+//        View parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
+            try {
+                radioGroupLayout = parentLayout.findViewById(R.id.tileDashboardDateSelector);
+                radioGroupLayout.setId(1);
+            } catch(Exception e) {
+                // This just means that it's a redraw and we don't care if it's wrong (I think)
+            }
+
         if (tileTemplate != null) {
             try {
                 colorSchemeManager = new ColorSchemeManager(tileTemplate.getJSONObject("theme"), parentActivity);
@@ -110,8 +143,9 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             }
             // Create the parent layout that all the rows will go in
             parentLayout.setBackgroundColor(colorSchemeManager.getAppBackground());
-            parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
-//            initTimelineSelector(parentLayout);
+            tileRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
+            tileRelativeLayout.removeAllViewsInLayout();
+
             initDateSelector(parentLayout);
             initPopupMenu(parentLayout);
             //
@@ -124,14 +158,14 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             if (tile_rows != null) {
                 for(int i = 1; i < tile_rows.length(); i++) {
                     try {
-                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, this, null);
+                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 300, inflater, dashboardTilesViewModel, null);
                         if(horizontalScrollView != null) {
-                            // Add one here to account for the spinner's ID.
+                            // Add one here to account for the radioGroup's ID.
                             horizontalScrollView.setId(numOfRows + 1);
                             RelativeLayout.LayoutParams horizontalParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                             horizontalParam.addRule(RelativeLayout.BELOW, numOfRows);
 
-                            parentRelativeLayout.addView(horizontalScrollView, horizontalParam);
+                            tileRelativeLayout.addView(horizontalScrollView, horizontalParam);
                             numOfRows++;
                         }
                     } catch (JSONException e) {
@@ -139,14 +173,12 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                     }
                 }
             }
-
         }
         loader.setVisibility(View.INVISIBLE);
         return parentLayout;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void finishSetup() {
         if(parentActivity.getCurrentScopeFilter() != null) {
             actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
         }
@@ -172,7 +204,8 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
                 startActivity(intent);
             }
         }
-        initScopePopupMenu(view);
+        initScopePopupMenu(parentLayout);
+        loader.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -237,7 +270,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         scopePopup = new PopupMenu(view.getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
+            ScopeBarModel selectedScope = globalDataViewModel.getScopeDataValue().get(item.getItemId());
             if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
                 // DO NOTHING
                 scopePopup.dismiss();
@@ -245,13 +278,13 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             else {
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetDashboardTiles(true);
+                apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", selectedScope.getIdValue());
             }
             return false;
         });
 
         int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
+        for(ScopeBarModel scope : globalDataViewModel.getScopeDataValue()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             scopePopup.getMenu().add(1, counter, counter, s);
@@ -312,11 +345,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         return spinnerArray;
     }
 
-    public void teamSwap() {
-        loader.setVisibility(View.VISIBLE);
-        parentActivity.resetDashboardTiles(false);
-    }
-
     @Override
     public void onClick(@NonNull View v) {
         switch (v.getId()) {
@@ -355,41 +383,6 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onEventCompleted(Object returnObject, String asyncReturnType) {
-
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
-        if(returnType == ApiReturnType.GET_TILES) {
-            try {
-                String tileString = ((Response) returnObject).body().string();
-                parentActivity.setTileTemplate(new JSONObject(tileString));
-                if(parentActivity.getCurrentScopeFilter() != null) {
-                    actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
-                }
-                else {
-                    actionBarManager.setToTitleBar("a" + parentActivity.getAgent().getAgent_id(), true);
-                }
-                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void onEventFailed(Object returnObject, String asyncReturnType) {
-
-    }
-
-    @Override
-    public void onEventFailed(Object returnObject, ApiReturnType returnType) {
-
     }
 
     @Override
@@ -435,10 +428,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + globalDataViewModel.getAgentValue().getAgent_id());
         }
 
         return false;
@@ -460,10 +453,10 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
 
         loader.setVisibility(View.VISIBLE);
         if(parentActivity.getCurrentScopeFilter() != null) {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+            apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
         }
         else {
-            apiManager.getTileSetup(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(),"a" + parentActivity.getAgent().getAgent_id());
+            apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(),"a" + globalDataViewModel.getAgentValue().getAgent_id());
         }
     }
 }

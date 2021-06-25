@@ -11,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -43,6 +45,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ClientMessagingEvent;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.ClientManageFragment;
@@ -53,6 +56,8 @@ import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.ScopeBarModel;
 import co.sisu.mobile.utils.TileCreationHelper;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.ClientTilesViewModel;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import okhttp3.Response;
 
 /**
@@ -68,6 +73,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ActionBarManager actionBarManager;
     private Utils utils;
     private TileCreationHelper tileCreationHelper;
+    private DateManager dateManager;
     private ProgressBar loader;
     private LayoutInflater inflater;
     private int numOfRows = 1;
@@ -80,11 +86,15 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     private ScrollView tileScrollView;
     private boolean updatingClients = false;
     private ImageView addButton;
-    private List<FilterObject> agentFilters = new ArrayList<>();
     private Boolean filterMenuPrepared = false;
 
+    private ClientTilesViewModel clientTilesViewModel;
+    private GlobalDataViewModel globalDataViewModel;
+    private View parentLayout;
+    private ViewGroup container;
 
     // TODO: There is a default paging library. Might be useful for this fragment
+    // TODO: I bet there is a better way to do the pagination now that we're not reloading the entire page.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -98,24 +108,62 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         addButton = parentActivity.findViewById(R.id.addView);
         actionBarManager = parentActivity.getActionBarManager();
         utils = parentActivity.getUtils();
+        dateManager = parentActivity.getDateManager();
         actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
         this.inflater = inflater;
-        JSONObject tileTemplate = parentActivity.getClientTiles();
-
-        try {
-            if(tileTemplate.has("pagination")) {
-                paginateObject = tileTemplate.getJSONObject("pagination");
+        this.container = container;
+        this.globalDataViewModel = parentActivity.getGlobalDataViewModel();
+        initListeners();
+//        JSONObject tileTemplate = parentActivity.getClientTiles();
+//
+//        try {
+//            if(tileTemplate.has("pagination")) {
+//                paginateObject = tileTemplate.getJSONObject("pagination");
+//            }
+//
+//            if(tileTemplate.has("count")) {
+//                count = tileTemplate.getString("count");
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
+        if(parentActivity.getCurrentScopeFilter() != null) {
+            if(parentActivity.getCurrentScopeFilter().getIdValue().charAt(0) == 'a') {
+                selectedContextId = parentActivity.getCurrentScopeFilter().getIdValue().substring(1);
             }
-
-            if(tileTemplate.has("count")) {
-                count = tileTemplate.getString("count");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+        else {
+            Log.e("Garbage", "Garbage");
+        }
+        parentLayout = inflater.inflate(R.layout.activity_client_tile_parentlayout, container, false);
+        apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), parentActivity.getCurrentMarketStatusFilter().getKey() != null ? parentActivity.getCurrentMarketStatusFilter().getKey() : "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+        apiManager.getAgentFilters(clientTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId());
+        return parentLayout;
+    }
 
+    public void initListeners() {
+        clientTilesViewModel = new ViewModelProvider(this).get(ClientTilesViewModel.class);
+        clientTilesViewModel.getClientTiles().observe(getViewLifecycleOwner(), newClientTiles -> {
+            try {
+                if(newClientTiles.has("pagination")) {
+                    paginateObject = newClientTiles.getJSONObject("pagination");
+                }
 
-        return createFullView(container, tileTemplate);
+                if(newClientTiles.has("count")) {
+                    count = newClientTiles.getString("count");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            createFullView(container, newClientTiles);
+            finishSetup();
+            loader.setVisibility(View.INVISIBLE);
+            updatingClients = false;
+        });
+
+        clientTilesViewModel.getClientFilters().observe(getViewLifecycleOwner(), this::initFilterPopupMenu);
     }
 
     @NonNull
@@ -125,13 +173,15 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         JSONArray tile_rows = null;
 
         RelativeLayout parentRelativeLayout;
-        View parentLayout = inflater.inflate(R.layout.activity_client_tile_parentlayout, container, false);
+
         tileScrollView = parentLayout.findViewById(R.id.tileScrollView);
 
         tileScrollView.getViewTreeObserver()
                 .addOnScrollChangedListener(() -> {
                     if (!tileScrollView.canScrollVertically(1)) {
                         // bottom of scroll view
+                        // TODO: I think a significant chunk of this logic should be done in the ViewModels
+                        // TODO: I also think this could be done in a much smarter way.
                         if(!updatingClients) {
                             updatingClients = true;
                             try {
@@ -139,21 +189,57 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                                     //GO GET THE NEXT SET OF CLIENTS
                                     int currentPage = paginateObject.getInt("page");
                                     if(parentActivity.getSelectedFilter() == null) {
-                                        parentActivity.resetClientTiles("", currentPage + 1);
+                                        loader.setVisibility(View.VISIBLE);
+                                        String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
+                                        if(parentActivity.getCurrentScopeFilter() != null) {
+                                            if(parentActivity.getCurrentScopeFilter().getIdValue().charAt(0) == 'a') {
+                                                selectedContextId = parentActivity.getCurrentScopeFilter().getIdValue().substring(1);
+                                            }
+                                            actionBarManager.setTitle(parentActivity.getCurrentScopeFilter().getName());
+                                        }
+                                        else {
+                                            Log.e("Garage", "Garbage");
+                                        }
+
+                                        if(parentActivity.getCurrentMarketStatusFilter() != null) {
+                                            if(parentActivity.getCurrentScopeFilter() != null) {
+                                                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), parentActivity.getCurrentMarketStatusFilter().getKey(), "", currentPage + 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                                            }
+                                            else {
+                                                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), selectedContextId, parentActivity.getCurrentMarketStatusFilter().getKey(), "", currentPage + 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                                            }
+                                        }
+                                        else {
+                                            if(parentActivity.getCurrentScopeFilter() != null) {
+                                                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), "", "", currentPage + 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                                            }
+                                            else {
+                                                apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), "a" + globalDataViewModel.getAgentValue().getAgent_id(), "", "", currentPage + 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                                            }
+                                        }
+
+//                                        parentActivity.resetClientTiles("", currentPage + 1);
                                     }
                                     else {
-                                        parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
+                                        loader.setVisibility(View.VISIBLE);
+                                        apiManager.getTeamClientsPresetFilter(clientTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
+//                                        parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), currentPage + 1);
                                     }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-
                     }
                 });
-        clientSearch = parentLayout.findViewById(R.id.clientTileSearch);
-        clientSearch.setId(1);
+        try {
+            clientSearch = parentLayout.findViewById(R.id.clientTileSearch);
+            clientSearch.setId(1);
+        } catch(Exception e) {
+            // This just means that it's a redraw and we don't care if it's wrong (I think)
+            clientSearch = parentLayout.findViewById(1);
+        }
+
         if (tileTemplate != null) {
             colorSchemeManager = parentActivity.getColorSchemeManager();
             paginateInfo = parentActivity.findViewById(R.id.paginateInfo);
@@ -172,6 +258,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             // Create the parent layout that all the rows will go in
             parentLayout.setBackgroundColor(colorSchemeManager.getAppBackground());
             parentRelativeLayout = parentLayout.findViewById(R.id.tileRelativeLayout);
+            parentRelativeLayout.removeAllViewsInLayout();
             //
 
             try {
@@ -182,7 +269,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             if (tile_rows != null) {
                 for(int i = 0; i < tile_rows.length(); i++) {
                     try {
-                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, this, this);
+                        HorizontalScrollView horizontalScrollView = tileCreationHelper.createRowFromJSON(tile_rows.getJSONObject(i), container, false, 250, inflater, clientTilesViewModel, this);
                         if(horizontalScrollView != null) {
                             // Add one here to account for the spinner's ID.
                             horizontalScrollView.setId(numOfRows + 1);
@@ -203,9 +290,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         return parentLayout;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        scopeSelectorText = view.findViewById(R.id.contextFilterRight);
+    public void finishSetup() {
+        scopeSelectorText = parentLayout.findViewById(R.id.contextFilterRight);
         if(parentActivity.getCurrentScopeFilter() != null) {
             scopeSelectorText.setText(parentActivity.getCurrentScopeFilter().getName());
             actionBarManager.setToFilterBar(parentActivity.getCurrentScopeFilter().getName());
@@ -217,7 +303,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
         scopeSelectorText.setTextColor(colorSchemeManager.getLighterText());
 
-        marketStatusFilterText = view.findViewById(R.id.contextFilterLeft);
+        marketStatusFilterText = parentLayout.findViewById(R.id.contextFilterLeft);
         marketStatusFilterText.setText(parentActivity.getCurrentMarketStatusFilter().getLabel());
         marketStatusFilterText.setOnClickListener(this);
         marketStatusFilterText.setBackgroundColor(colorSchemeManager.getButtonBackground());
@@ -242,8 +328,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         if(saveButtonFilterText != null) {
             saveButtonFilterText.setOnClickListener(this);
         }
-        initScopePopupMenu(view);
-        initMarketStatusPopupMenu(view);
+        initScopePopupMenu(parentLayout);
+        initMarketStatusPopupMenu(parentLayout);
         addButton.bringToFront();
     }
 
@@ -268,7 +354,40 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
             else {
                 scopePopup.dismiss();
                 parentActivity.setScopeFilter(selectedScope);
-                parentActivity.resetClientTiles("", 1);
+                loader.setVisibility(View.VISIBLE);
+                if(parentActivity.getSelectedFilter() == null) {
+                    loader.setVisibility(View.VISIBLE);
+                    String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
+                    if(parentActivity.getCurrentScopeFilter() != null) {
+                        if(parentActivity.getCurrentScopeFilter().getIdValue().charAt(0) == 'a') {
+                            selectedContextId = parentActivity.getCurrentScopeFilter().getIdValue().substring(1);
+                        }
+                        actionBarManager.setTitle(parentActivity.getCurrentScopeFilter().getName());
+                    }
+                    else {
+                        Log.e("Garage", "Garbage");
+                    }
+
+                    if(parentActivity.getCurrentMarketStatusFilter() != null) {
+                        if(parentActivity.getCurrentScopeFilter() != null) {
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), parentActivity.getCurrentMarketStatusFilter().getKey(), "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                        }
+                        else {
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), selectedContextId, parentActivity.getCurrentMarketStatusFilter().getKey(), "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                        }
+                    }
+                    else {
+                        if(parentActivity.getCurrentScopeFilter() != null) {
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                        }
+                        else {
+                            apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), "a" + globalDataViewModel.getAgentValue().getAgent_id(), "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                        }
+                    }
+
+//                                        parentActivity.resetClientTiles("", currentPage + 1);
+                }
+//                parentActivity.resetClientTiles("", 1);
                 parentActivity.setSelectedFilter(null);
             }
             return false;
@@ -278,9 +397,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
-
             scopePopup.getMenu().add(1, counter, counter, s);
-
             counter++;
         }
     }
@@ -293,32 +410,72 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
             scopePopup.dismiss();
             parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
-            parentActivity.resetClientTiles("", 1);
+            loader.setVisibility(View.VISIBLE);
+            if(parentActivity.getSelectedFilter() == null) {
+                loader.setVisibility(View.VISIBLE);
+                String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    if(parentActivity.getCurrentScopeFilter().getIdValue().charAt(0) == 'a') {
+                        selectedContextId = parentActivity.getCurrentScopeFilter().getIdValue().substring(1);
+                    }
+                    actionBarManager.setTitle(parentActivity.getCurrentScopeFilter().getName());
+                }
+                else {
+                    Log.e("Garage", "Garbage");
+                }
+
+                if(parentActivity.getCurrentMarketStatusFilter() != null) {
+                    if(parentActivity.getCurrentScopeFilter() != null) {
+                        apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), parentActivity.getCurrentMarketStatusFilter().getKey(), "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                    }
+                    else {
+                        apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), selectedContextId, parentActivity.getCurrentMarketStatusFilter().getKey(), "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                    }
+                }
+                else {
+                    if(parentActivity.getCurrentScopeFilter() != null) {
+                        apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                    }
+                    else {
+                        apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), "a" + globalDataViewModel.getAgentValue().getAgent_id(), "", "", 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                    }
+                }
+
+//                                        parentActivity.resetClientTiles("", currentPage + 1);
+            }
+//            parentActivity.resetClientTiles("", 1);
             parentActivity.setSelectedFilter(null);
             return false;
         });
 
         int counter = 0;
         for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
-            SpannableString s = new SpannableString(marketStatusModel.getLabel());
-            s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
-            marketStatusPopup.getMenu().add(1, counter, counter, s);
-            counter++;
+            if(marketStatusModel.isSelect()) {
+                SpannableString s = new SpannableString(marketStatusModel.getLabel());
+                s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
+                marketStatusPopup.getMenu().add(1, counter, counter, s);
+                counter++;
+            }
         }
     }
 
-    private void initFilterPopupMenu() {
+    private void initFilterPopupMenu(@NonNull final List<FilterObject> newClientFilters) {
         filterPopup = new PopupMenu(parentActivity, saveButtonFilterText);
 
         filterPopup.setOnMenuItemClickListener(item -> {
-            parentActivity.setSelectedFilter(agentFilters.get(item.getItemId()));
-            parentActivity.resetClientTilesPresetFilter(parentActivity.getSelectedFilter().getFilters(), 1);
+            FilterObject selectedFilter = newClientFilters.get(item.getItemId());
+            if(!selectedFilter.getFilterName().equalsIgnoreCase("No Filters Configured")) {
+                // TODO: I don't think the parentActivity needs to know about the filter now. Should double check.
+                parentActivity.setSelectedFilter(selectedFilter);
+                loader.setVisibility(View.VISIBLE);
+                apiManager.getTeamClientsPresetFilter(clientTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getSelectedFilter().getFilters(), 1);
+            }
             scopePopup.dismiss();
             return false;
         });
 
         int counter = 0;
-        for(FilterObject currentFilter : agentFilters) {
+        for(FilterObject currentFilter : newClientFilters) {
             SpannableString s = new SpannableString(currentFilter.getFilterName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             filterPopup.getMenu().add(1, counter, counter, s);
@@ -328,12 +485,8 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         filterMenuPrepared = true;
     }
 
-    public void teamSwap() {
-        parentActivity.resetDashboardTiles(false);
-    }
-
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         switch (v.getId()) {
             case R.id.contextFilterRight:
                 scopePopup.show();
@@ -342,14 +495,12 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
                 marketStatusPopup.show();
                 break;
             case R.id.saveButton:
-                agentFilters = new ArrayList<>();
-                filterMenuPrepared = false;
-                // TODO: We should probably do this is another spot.
-                apiManager.getAgentFilters(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId());
-                while(!filterMenuPrepared) {
-                    // Just wait here for the async to finish
+                if(filterMenuPrepared) {
+                    filterPopup.show();
                 }
-                filterPopup.show();
+                else {
+                    utils.showToast("Currently retrieving filters, please try again in a moment.", parentActivity);
+                }
                 break;
             default:
                 break;
@@ -363,40 +514,40 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
-        if(returnType == ApiReturnType.GET_AGENT_FILTERS) {
-            String tileString;
-            try {
-                tileString = ((Response) returnObject).body().string();
-                JSONObject responseJson = new JSONObject(tileString);
-                JSONArray filtersArray = responseJson.getJSONArray("filters");
-                //
-                for(int i = 0; i < filtersArray.length(); i++) {
-                    JSONObject filtersObject = (JSONObject) filtersArray.get(i);
-                    JSONObject filters = filtersObject.getJSONObject("filters");
-                    agentFilters.add(new FilterObject(filtersObject.getString("filter_name"), filters));
-                }
-
-                initFilterPopupMenu();
-
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(returnType == ApiReturnType.GET_TILES) {
-            try {
-                String tileString = ((Response) returnObject).body().string();
-                parentActivity.setTileTemplate(new JSONObject(tileString));
-                if(parentActivity.getCurrentScopeFilter() != null) {
-                    actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
-                }
-                else {
-                    actionBarManager.setToTitleBar("a" + parentActivity.getAgent().getAgent_id(), true);
-                }
-                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-        }
+//        if(returnType == ApiReturnType.GET_AGENT_FILTERS) {
+//            String tileString;
+//            try {
+//                tileString = ((Response) returnObject).body().string();
+//                JSONObject responseJson = new JSONObject(tileString);
+//                JSONArray filtersArray = responseJson.getJSONArray("filters");
+//                //
+//                for(int i = 0; i < filtersArray.length(); i++) {
+//                    JSONObject filtersObject = (JSONObject) filtersArray.get(i);
+//                    JSONObject filters = filtersObject.getJSONObject("filters");
+//                    agentFilters.add(new FilterObject(filtersObject.getString("filter_name"), filters));
+//                }
+//
+//                initFilterPopupMenu(newClientFilters);
+//
+//            } catch (IOException | JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        else if(returnType == ApiReturnType.GET_TILES) {
+//            try {
+//                String tileString = ((Response) returnObject).body().string();
+//                parentActivity.setTileTemplate(new JSONObject(tileString));
+//                if(parentActivity.getCurrentScopeFilter() != null) {
+//                    actionBarManager.setToTitleBar(parentActivity.getCurrentScopeFilter().getName(), true);
+//                }
+//                else {
+//                    actionBarManager.setToTitleBar("a" + parentActivity.getAgent().getAgent_id(), true);
+//                }
+//                navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
+//            } catch (IOException | JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -418,7 +569,40 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        parentActivity.resetClientTiles(query, 1);
+        loader.setVisibility(View.VISIBLE);
+        if(parentActivity.getSelectedFilter() == null) {
+            loader.setVisibility(View.VISIBLE);
+            String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
+            if(parentActivity.getCurrentScopeFilter() != null) {
+                if(parentActivity.getCurrentScopeFilter().getIdValue().charAt(0) == 'a') {
+                    selectedContextId = parentActivity.getCurrentScopeFilter().getIdValue().substring(1);
+                }
+                actionBarManager.setTitle(parentActivity.getCurrentScopeFilter().getName());
+            }
+            else {
+                Log.e("Garage", "Garbage");
+            }
+
+            if(parentActivity.getCurrentMarketStatusFilter() != null) {
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), parentActivity.getCurrentMarketStatusFilter().getKey(), query, 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                }
+                else {
+                    apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), selectedContextId, parentActivity.getCurrentMarketStatusFilter().getKey(), query, 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                }
+            }
+            else {
+                if(parentActivity.getCurrentScopeFilter() != null) {
+                    apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), parentActivity.getCurrentScopeFilter().getIdValue(), "", query, 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                }
+                else {
+                    apiManager.getTeamClients(clientTilesViewModel, selectedContextId, globalDataViewModel.getSelectedTeamValue().getId(), "a" + globalDataViewModel.getAgentValue().getAgent_id(), "", query, 1, dateManager.getFormattedStartTime(), dateManager.getFormattedEndTime());
+                }
+            }
+
+//                                        parentActivity.resetClientTiles("", currentPage + 1);
+        }
+//        parentActivity.resetClientTiles(query, 1);
         parentActivity.setSelectedFilter(null);
         return false;
     }
@@ -431,7 +615,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onPhoneClicked(String number, ClientObject client) {
         addOneToContacts();
-        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "PHONE");
+        apiManager.addNote(this, globalDataViewModel.getAgentValue().getAgent_id(), client.getClient_id(), number, "PHONE");
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:" + number));
         startActivity(intent);
@@ -440,7 +624,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onTextClicked(String number, ClientObject client) {
         addOneToContacts();
-        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), number, "TEXTM");
+        apiManager.addNote(this, globalDataViewModel.getAgentValue().getAgent_id(), client.getClient_id(), number, "TEXTM");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + number));
         startActivity(intent);
@@ -449,7 +633,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
     @Override
     public void onEmailClicked(String email, ClientObject client) {
         addOneToContacts();
-        apiManager.addNote(this, dataController.getAgent().getAgent_id(), client.getClient_id(), email, "EMAIL");
+        apiManager.addNote(this, globalDataViewModel.getAgentValue().getAgent_id(), client.getClient_id(), email, "EMAIL");
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[] {email});

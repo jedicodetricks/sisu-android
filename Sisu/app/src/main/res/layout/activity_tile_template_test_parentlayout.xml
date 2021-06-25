@@ -3,22 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
-        android:id="@+id/tileRelativeLayout"
+        android:id="@+id/parentRelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-
-        <include
-            android:id="@+id/tileDashboardDateSelector"
-            layout="@layout/date_selector_group"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/dateSelectorParent"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:layout_height="wrap_content" >
+            <include
+                android:id="@+id/tileDashboardDateSelector"
+                layout="@layout/date_selector_group"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/tileRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/dateSelectorParent">
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

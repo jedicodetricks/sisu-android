@@ -64,8 +64,8 @@ public class MainActivityTest {
     @After
     public void after() {
         // This is needed to end the test I guess?
-        @Override
-        onPause()
+//        @Override
+//        onPause()
     }
 
 

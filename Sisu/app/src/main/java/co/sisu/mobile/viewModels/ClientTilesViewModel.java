@@ -11,21 +11,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.fragments.main.ClientTileFragment;
+import co.sisu.mobile.models.FilterObject;
 import okhttp3.Response;
 
 public class ClientTilesViewModel extends ViewModel implements AsyncServerEventListener {
     private final MutableLiveData<JSONObject> clientTiles = new MutableLiveData<>();
+    private final MutableLiveData<List<FilterObject>> clientFilters = new MutableLiveData<>();
 
     public void setClientTiles(JSONObject newTiles) {
         clientTiles.setValue(newTiles);
     }
 
+    public void setClientFilters(List<FilterObject> newFilters) {
+        clientFilters.setValue(newFilters);
+    }
+
     public LiveData<JSONObject> getClientTiles() {
         return clientTiles;
+    }
+
+    public LiveData<List<FilterObject>> getClientFilters() {
+        return clientFilters;
     }
 
     @Override
@@ -46,12 +59,12 @@ public class ClientTilesViewModel extends ViewModel implements AsyncServerEventL
         if (returnType == ApiReturnType.GET_TEAM_CLIENT_TILES) {
             try {
                 JSONObject newClientTiles = new JSONObject(returnString);
-                JSONObject pagination = null;
+                JSONObject pagination;
                 try {
                     pagination = newClientTiles.getJSONObject("pagination");
                     if (pagination.getInt("page") > 1) {
                         //append tiles
-                        JSONArray currentClientTiles = newClientTiles.getJSONArray("tile_rows");
+                        JSONArray currentClientTiles = clientTiles.getValue().getJSONArray("tile_rows");
                         JSONArray clientTilesToAppend = newClientTiles.getJSONArray("tile_rows");
 
                         for (int i = 0; i < clientTilesToAppend.length(); i++) {
@@ -75,15 +88,47 @@ public class ClientTilesViewModel extends ViewModel implements AsyncServerEventL
                         newClientTiles.put("tile_rows", currentClientTiles);
                         newClientTiles.put("pagination", pagination);
                         newClientTiles.put("count", currentClientTiles.length());
-                        clientTiles.postValue(newClientTiles);
                     } else {
                         //overwrite tiles
 //                        clientTiles = newClientTiles;
-                        clientTiles.postValue(newClientTiles);
                     }
+                    clientTiles.postValue(newClientTiles);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(returnType == ApiReturnType.GET_AGENT_FILTERS) {
+            try {
+                JSONObject responseJson = new JSONObject(returnString);
+                JSONArray filtersArray = responseJson.getJSONArray("filters");
+                List<FilterObject> agentFiltersList = new ArrayList<>();
+                //
+                for(int i = 0; i < filtersArray.length(); i++) {
+                    JSONObject filtersObject = (JSONObject) filtersArray.get(i);
+                    JSONObject filters = filtersObject.getJSONObject("filters");
+                    Iterator<String> keys = filters.keys();
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        try {
+                            JSONObject value = filters.getJSONObject(key);
+                            if(value.length() > 0) {
+                                agentFiltersList.add(new FilterObject(key, value));
+                            }
+                        } catch(JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+                if(agentFiltersList.size() == 0) {
+                    agentFiltersList.add(new FilterObject("No Filters Configured", null));
+                }
+                clientFilters.postValue(agentFiltersList);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

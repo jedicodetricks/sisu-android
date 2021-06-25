@@ -49,9 +49,11 @@ import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.fragments.ClientManageFragment;
 import co.sisu.mobile.fragments.ReportFragment;
+import co.sisu.mobile.fragments.main.ClientTileFragment;
 import co.sisu.mobile.fragments.main.LeaderboardFragment;
 import co.sisu.mobile.fragments.main.MoreFragment;
 import co.sisu.mobile.fragments.main.RecordFragment;
+import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
 
@@ -395,16 +397,17 @@ public class TileCreationHelper {
             parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
-                        // TODO: IMPORTANT! This needs to navigate to the correct page
-//                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        // TODO: IMPORTANT! This needs to navigate to the correct page 6-25-21 I changed this but I'll need to test it
+                        navigationManager.stackReplaceFragment(ClientTileFragment.class);
                         break;
                     case "scoreboard":
-                        if(parentActivity.getCurrentScopeFilter() != null) {
-                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
-                        }
-                        else {
-                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
-                        }
+                        navigationManager.stackReplaceFragment(ScoreboardTileFragment.class);
+//                        if(parentActivity.getCurrentScopeFilter() != null) {
+//                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+//                        }
+//                        else {
+//                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
+//                        }
                         break;
                     case "record":
                         navigationManager.stackReplaceFragment(RecordFragment.class);
@@ -655,15 +658,16 @@ public class TileCreationHelper {
                 switch (clickDestination) {
                     case "clients":
                         // TODO: IMPORTANT! This needs to navigate to the correct page
-//                        navigationManager.stackReplaceFragment(ClientListFragment.class);
+                        navigationManager.stackReplaceFragment(ClientTileFragment.class);
                         break;
                     case "scoreboard":
-                        if(parentActivity.getCurrentScopeFilter() != null) {
-                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
-                        }
-                        else {
-                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
-                        }
+                        navigationManager.stackReplaceFragment(ScoreboardTileFragment.class);
+//                        if(parentActivity.getCurrentScopeFilter() != null) {
+//                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+//                        }
+//                        else {
+//                            apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
+//                        }
                         break;
                     case "record":
                         navigationManager.stackReplaceFragment(RecordFragment.class);

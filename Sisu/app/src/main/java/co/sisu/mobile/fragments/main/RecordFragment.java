@@ -90,7 +90,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     private final int smallerTitleSize = 18;
     private View view;
 
-
+    // TODO: IMPORTANT! The transaction buttons are janky as fuck!
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -204,6 +204,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
         parentRelativeLayout.removeAllViews();
         int numOfRows = 0;
+        // TODO: Pieces of this should move to the tileCreationHelper
         for(int i = 0; i < doubleMetricList.size(); i++) {
             View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
             view = createActivityRowView(view, doubleMetricList.get(i));
@@ -629,6 +630,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
 
     @Override
     public void onEventCompleted(Object returnObject, ApiReturnType returnType) {
+        // TODO: I don't think I need this at all anymore
         if(returnType == ApiReturnType.GET_ACTIVITIES) {
             AsyncActivitiesJsonObject activitiesObject = parentActivity.getGson().fromJson(((Response) returnObject).body().charStream(), AsyncActivitiesJsonObject.class);
             dataController.setActivitiesObject(activitiesObject, parentActivity.isRecruiting());
@@ -654,6 +656,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
             Date d = calendar.getTime();
             apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, dataController.getCurrentSelectedTeamMarketId());
         }
+        // TODO: I don't think I need this at all anymore
         else if(returnType == ApiReturnType.GET_CLIENT_LIST) {
             try {
                 String clientString = ((Response) returnObject).body().string();
