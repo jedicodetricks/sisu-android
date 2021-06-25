@@ -24,72 +24,79 @@
         app:layout_constraintTop_toTopOf="@+id/headerLayout"
         app:layout_constraintVertical_bias="0.37" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <include
+            android:id="@+id/tileDashboardDateSelector"
+            layout="@layout/date_selector_group"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"/>
 
-        <TextView
-            android:id="@+id/leaderboard_date"
-            style="@style/RecordLabelText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/record_date"
-            app:layout_constraintBottom_toBottomOf="@id/headerLayout"
-            app:layout_constraintStart_toEndOf="@id/leaderboard_calender_date_picker"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/headerLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <ImageView
-            android:id="@+id/leaderboard_calender_date_picker"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/appointment_icon" />
+<!--        <TextView-->
+<!--            android:id="@+id/leaderboard_date"-->
+<!--            style="@style/RecordLabelText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:text="@string/record_date"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/headerLayout"-->
+<!--            app:layout_constraintStart_toEndOf="@id/leaderboard_calender_date_picker"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/leaderboard_calender_date_picker"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:srcCompat="@drawable/appointment_icon" />-->
 
 
-        <TextView
-            android:id="@+id/monthToggleText"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/month"
-            app:layout_constraintEnd_toStartOf="@+id/leaderboardToggle"
-            app:layout_constraintTop_toTopOf="@+id/leaderboard_date" />
+<!--        <TextView-->
+<!--            android:id="@+id/monthToggleText"-->
+<!--            style="@style/SpinnerDropdownItemStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:text="@string/month"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/leaderboardToggle"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/leaderboard_date" />-->
 
-        <Switch
-            android:id="@+id/leaderboardToggle"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/yearToggleText"
-            app:layout_constraintTop_toTopOf="@+id/monthToggleText" />
+<!--        <Switch-->
+<!--            android:id="@+id/leaderboardToggle"-->
+<!--            style="@style/SpinnerDropdownItemStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/yearToggleText"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/monthToggleText" />-->
 
-        <TextView
-            android:id="@+id/yearToggleText"
-            style="@style/SpinnerDropdownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/year"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/leaderboardToggle" />
+<!--        <TextView-->
+<!--            android:id="@+id/yearToggleText"-->
+<!--            style="@style/SpinnerDropdownItemStyle"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:text="@string/year"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/leaderboardToggle" />-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/linearLayout"
@@ -101,7 +108,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerLayout">
+        app:layout_constraintTop_toBottomOf="@id/tileDashboardDateSelector">
 
         <ExpandableListView
             android:id="@+id/teamExpandable"

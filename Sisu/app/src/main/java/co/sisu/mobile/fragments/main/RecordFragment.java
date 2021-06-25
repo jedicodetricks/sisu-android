@@ -117,10 +117,11 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         globalDataViewModel = parentActivity.getGlobalDataViewModel();
         actionBarManager.setToSaveBar("Record");
         calendar = Calendar.getInstance();
-        apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
+        // TODO: I don't think I need this anymore
+        apiManager.getActivitySettings(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), globalDataViewModel.getSelectedTeamValue().getMarket_id());
 
 //        Date d = calendar.getTime();
-//        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, dataController.getCurrentSelectedTeamMarketId());
+//        apiManager.sendAsyncActivities(this, globalDataViewModel.getAgentValue().getAgent_id(), d, d, globalDataViewModel.getSelectedTeamValue().getMarket_id());
         loader = parentActivity.findViewById(R.id.parentLoader);
         loader.setVisibility(View.VISIBLE);
 
@@ -193,6 +194,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void initListView(@NonNull List<Metric> metricList) {
+        // TODO: Pieces of this should move to the tileCreationHelper
         List<DoubleMetric> doubleMetricList = new ArrayList<>();
         for(int i = 0; i < metricList.size(); i++) {
             if(i % 2 == 0) {
@@ -208,7 +210,6 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         RelativeLayout parentRelativeLayout = view.findViewById(R.id.record_activities_list_parent);
         parentRelativeLayout.removeAllViews();
         int numOfRows = 0;
-        // TODO: Pieces of this should move to the tileCreationHelper
         for(int i = 0; i < doubleMetricList.size(); i++) {
             View view = inflater.inflate(R.layout.adapter_double_record_table_row, parentRelativeLayout, false);
             view = createActivityRowView(view, doubleMetricList.get(i));
@@ -222,7 +223,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
     }
 
     private void setTransactionSectionVisible(View view) {
-        if(dataController.getCurrentSelectedTeamMarketId() != 0) {
+        if(globalDataViewModel.getSelectedTeamValue().getMarket_id() != 0) {
             RelativeLayout transactionSection = view.findViewById(R.id.recordTransactionSection);
             transactionSection.setVisibility(View.GONE);
         }
@@ -550,7 +551,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         cal.set(dateManager.getRecordYear(), dateManager.getRecordMonth() - 1, dateManager.getRecordDay());
 
         dateManager.setRecordDateToDate(cal);
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), dataController.getCurrentSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, globalDataViewModel.getAgentValue().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), globalDataViewModel.getSelectedTeamValue().getMarket_id());
         loader.setVisibility(View.VISIBLE);
     }
 
@@ -575,23 +576,23 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 navigationManager.stackReplaceFragment(ClientManageFragment.class);
                 break;
             case R.id.appointmentSetButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "appt_set_dt");
+                apiManager.getClientList(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getMarket_id(), "appt_set_dt");
                 parentActivity.setRecordClientListType("'Appointment Set'");
                 break;
             case R.id.appointmentMetButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "appt_dt");
+                apiManager.getClientList(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getMarket_id(), "appt_dt");
                 parentActivity.setRecordClientListType("'Appointment Met'");
                 break;
             case R.id.signedButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "signed_dt");
+                apiManager.getClientList(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getMarket_id(), "signed_dt");
                 parentActivity.setRecordClientListType("'Signed'");
                 break;
             case R.id.underContractButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "uc_dt");
+                apiManager.getClientList(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getMarket_id(), "uc_dt");
                 parentActivity.setRecordClientListType("'Under Contract'");
                 break;
             case R.id.closedButton:
-                apiManager.getClientList(this, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamMarketId(), "closed_dt");
+                apiManager.getClientList(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getMarket_id(), "closed_dt");
                 parentActivity.setRecordClientListType("'Closed'");
                 break;
             default:
@@ -646,7 +647,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 initListView(metricList);
 //                    initTableView(metricList);
             });
-//            apiManager.getActivitySettings(this, dataController.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dataController.getCurrentSelectedTeamMarketId());
+//            apiManager.getActivitySettings(this, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), globalDataViewModel.getSelectedTeamValue().getMarket_id());
         }
         else if(returnType == ApiReturnType.GET_ACTIVITY_SETTINGS) {
             // TODO: I don't think I need this here at all anymore. This can be in the activitySettingsFragment
@@ -658,7 +659,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
                 e.printStackTrace();
             }
             Date d = calendar.getTime();
-            apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), d, d, dataController.getCurrentSelectedTeamMarketId());
+            apiManager.sendAsyncActivities(this, globalDataViewModel.getAgentValue().getAgent_id(), d, d, globalDataViewModel.getSelectedTeamValue().getMarket_id());
         }
         // TODO: I don't think I need this at all anymore
         else if(returnType == ApiReturnType.GET_CLIENT_LIST) {
@@ -699,7 +700,7 @@ public class RecordFragment extends Fragment implements View.OnClickListener, Re
         rightSelector.setText(dateManager.getFormattedRecordDate());
         loader.setVisibility(View.VISIBLE);
 
-        apiManager.sendAsyncActivities(this, dataController.getAgent().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), dataController.getCurrentSelectedTeamMarketId());
+        apiManager.sendAsyncActivities(this, globalDataViewModel.getAgentValue().getAgent_id(), dateManager.getFormattedRecordDate(), dateManager.getFormattedRecordDate(), globalDataViewModel.getSelectedTeamValue().getMarket_id());
 
         return false;
     }

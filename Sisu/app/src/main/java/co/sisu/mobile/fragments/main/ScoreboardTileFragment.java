@@ -89,6 +89,7 @@ public class ScoreboardTileFragment extends Fragment implements View.OnClickList
         this.container = container;
         initListeners();
         parentLayout = inflater.inflate(R.layout.activity_tile_template_test_parentlayout, container, false);
+        // TODO: Make sure this is using all available data for it's call
         apiManager.getTileSetup(dashboardTilesViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + globalDataViewModel.getAgentValue().getAgent_id());
         return parentLayout;
     }

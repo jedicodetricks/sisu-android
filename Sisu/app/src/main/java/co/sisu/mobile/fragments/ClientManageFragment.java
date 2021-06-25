@@ -85,6 +85,7 @@ import co.sisu.mobile.models.NotesObject;
 import co.sisu.mobile.models.ParameterObject;
 import co.sisu.mobile.models.UpdateSettingsObject;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
@@ -124,6 +125,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
     private String currentStatus = "";
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0;
     public final int PICK_CONTACT = 2015;
+    private GlobalDataViewModel globalDataViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,6 +146,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
         colorSchemeManager = parentActivity.getColorSchemeManager();
         actionBarManager = parentActivity.getActionBarManager();
         utils = parentActivity.getUtils();
+        globalDataViewModel = parentActivity.getGlobalDataViewModel();
         loader = view.findViewById(R.id.clientLoader);
 
         counter = 1;
@@ -164,7 +167,7 @@ public class ClientManageFragment extends Fragment implements AdapterView.OnItem
             // This is the flow to edit a client
             currentClient = parentActivity.getSelectedClient();
             actionBarManager.setToSaveDeleteBar(currentClient.getFirst_name() + " " + currentClient.getLast_name());
-            if (parentActivity.getAgent().getLast_name().equalsIgnoreCase("Groharing")) {
+            if (globalDataViewModel.getAgentValue().getLast_name().equalsIgnoreCase("Groharing")) {
                 utils.showToast("Client ID: " + parentActivity.getSelectedClient().getClient_id(), parentActivity);
             }
             initEditClientForm();

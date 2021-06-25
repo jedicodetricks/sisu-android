@@ -83,19 +83,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Utils utils;
     private TileCreationHelper tileCreationHelper;
 
-    private boolean teamParamFinished = false;
-    private boolean activitySettingsParamFinished = false;
-    private boolean teamsFinished = false;
-    private boolean tileTemplateFinished = false;
     private boolean scopeFinished = false;
-    private boolean clientTilesFinished = false;
     private boolean marketStatusFinished = false;
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
     private AgentModel agent;
     private NotesObject selectedNote;
-    private FirebaseDeviceObject currentDevice;
     private ConstraintLayout layout;
     private ConstraintLayout paginateInfo;
     private Toolbar toolbar;
@@ -108,8 +102,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private Fragment f;
     private boolean isAdminMode = false;
 
-    private JSONObject tileTemplate;
-    private JSONObject clientTiles;
     private JSONObject recordClientsList;
     private String recordClientListType;
     // TODO: I think this should be getting set somehow. It's always true. Either that or kill it.
@@ -131,6 +123,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     // TODO: I can get rid of the MainActivity and just come straight here with a new Fragment, same with ForgotPasswordActivity
     // TODO: The TeamObject is the most important object and I've got to make sure we have it before I let them navigate around
     // TODO: Probably want to add colorscheme to the viewModel and observe changes.
+    // TODO: Hide some fragment UI elements before create so they're not loading in the wrong color at first
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,16 +206,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             }
             marketStatusFinished = true;
             navigateToScoreboard();
-//                    if(clientTilesFinished) {
-//                        if(getCurrentScopeFilter() != null) {
-//                            actionBarManager.setToFilterBar(getCurrentScopeFilter().getName());
-//                        }
-//                        else {
-//                            actionBarManager.setToFilterBar("");
-//                        }
-//                        navigationManager.clearStackReplaceFragment(ClientTileFragment.class);
-//                    }
-
         });
 
         globalDataViewModel.getAgentData().observe(this, newAgentData -> {
@@ -248,10 +231,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 else {
                     dataController.setMessageCenterVisible(false);
-                    teamParamFinished = true;
                     dataController.setSlackInfo(null);
                 }
-                teamsFinished = true;
                 scopeFinished = false;
             });
 
@@ -313,8 +294,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
             dataController.setSelectedTeamObject(team);
             FragmentManager fragmentManager = getSupportFragmentManager();
             f = fragmentManager.findFragmentById(R.id.your_placeholder);
-//            this.runOnUiThread(() -> parentLoader.setVisibility(View.VISIBLE));
-//            sendTeamSwapApiCalls(team);
             globalDataViewModel.setSelectedTeam(team);
             return false;
         });
@@ -444,15 +423,11 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 navigationManager.clearStackReplaceFragment(ScoreboardTileFragment.class);
                 scopeFinished = false;
-                tileTemplateFinished = false;
                 marketStatusFinished = false;
                 teamSwap = false;
                 noNavigation = false;
             }
         });
-        teamParamFinished = false;
-        activitySettingsParamFinished = false;
-        teamsFinished = false;
     }
 
     @Override
@@ -701,28 +676,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return isAdminMode;
     }
 
-    public AgentModel getAgent() {
-        return dataController.getAgent();
-    }
-
-    public JSONObject getTileTemplate() {
-        return tileTemplate;
-    }
-
-    public JSONObject getClientTiles() {
-        return clientTiles;
-    }
-
     public List<MarketStatusModel> getMarketStatuses() {
         return marketStatusBar;
-    }
-
-    public void setTileTemplate(JSONObject tileTemplate) {
-        this.tileTemplate = tileTemplate;
-    }
-
-    public List<ScopeBarModel> getScopeBarList() {
-        return scopeBarList;
     }
 
     public void setScopeFilter(ScopeBarModel selectedScope) {
@@ -740,7 +695,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     public void setCurrentMarketStatusFilter(MarketStatusModel currentMarketStatusFilter) {
         this.currentMarketStatusFilter = currentMarketStatusFilter;
     }
-
 
     public JSONObject getRecordClientsList() {
         return recordClientsList;

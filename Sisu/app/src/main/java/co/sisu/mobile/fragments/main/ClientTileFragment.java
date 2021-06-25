@@ -343,7 +343,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         scopePopup = new PopupMenu(view.getContext(), scopeSelectorText);
 
         scopePopup.setOnMenuItemClickListener(item -> {
-            ScopeBarModel selectedScope = parentActivity.getScopeBarList().get(item.getItemId());
+            ScopeBarModel selectedScope = globalDataViewModel.getScopeDataValue().get(item.getItemId());
             if(selectedScope.getName().equalsIgnoreCase("-- Groups --") || selectedScope.getName().equalsIgnoreCase("-- Agents --")) {
                 // DO NOTHING
                 scopePopup.dismiss();
@@ -391,7 +391,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         });
 
         int counter = 0;
-        for(ScopeBarModel scope : parentActivity.getScopeBarList()) {
+        for(ScopeBarModel scope : globalDataViewModel.getScopeDataValue()) {
             SpannableString s = new SpannableString(scope.getName());
             s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);
             scopePopup.getMenu().add(1, counter, counter, s);

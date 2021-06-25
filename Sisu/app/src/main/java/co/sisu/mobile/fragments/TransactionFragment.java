@@ -47,6 +47,7 @@ import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.utils.Utils;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 
 /**
  * Created by bradygroharing on 2/21/18.
@@ -54,7 +55,6 @@ import co.sisu.mobile.utils.Utils;
 
 public class TransactionFragment extends Fragment implements View.OnClickListener, AsyncServerEventListener, PopupMenu.OnMenuItemClickListener, SearchView.OnQueryTextListener {
     private ParentActivity parentActivity;
-    private DataController dataController;
     private NavigationManager navigationManager;
     private ApiManager apiManager;
     private ColorSchemeManager colorSchemeManager;
@@ -77,16 +77,18 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
     private PopupMenu dateSelectorPopup;
     private View currentlySelectedRow;
     private JSONObject currentlySelectedClient;
+    private GlobalDataViewModel globalDataViewModel;
 
+    // TODO: This fragment needs a lot of work
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         parentActivity = (ParentActivity) getActivity();
-        dataController = parentActivity.getDataController();
         navigationManager = parentActivity.getNavigationManager();
         apiManager = parentActivity.getApiManager();
         dateManager = new DateManager();
         utils = parentActivity.getUtils();
+        globalDataViewModel = parentActivity.getGlobalDataViewModel();
         loader = parentActivity.findViewById(R.id.parentLoader);
         this.inflater = inflater;
         JSONObject tileTemplate = parentActivity.getRecordClientsList();
@@ -94,10 +96,9 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         return createFullView(container, tileTemplate);
     }
 
-    public void teamSwap() {}
-
     @SuppressLint("ResourceType")
     private View createFullView(ViewGroup container, JSONObject tileTemplate) {
+        // TODO: Pieces of this can move into the tileCreationHelper
         loader.setVisibility(View.VISIBLE);
         JSONArray tile_rows = null;
 
@@ -415,12 +416,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         try {
             if(!currentlySelectedClient.getBoolean("is_locked")) {
                 ClientObject clientToSave = new ClientObject();
-                clientToSave.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
-                clientToSave.setTeam_id(dataController.getCurrentSelectedTeamId());
+                clientToSave.setMarket_id(String.valueOf(globalDataViewModel.getSelectedTeamValue().getMarket_id()));
+                clientToSave.setTeam_id(globalDataViewModel.getSelectedTeamValue().getId());
 
                 if(currentlySelectedClient.has("appt_set_dt")) {
                     clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());
-                    clientToSave.setAppt_set_by_agent_id(parentActivity.getAgent().getAgent_id());
+                    clientToSave.setAppt_set_by_agent_id(globalDataViewModel.getAgentValue().getAgent_id());
                 }
                 else if(currentlySelectedClient.has("appt_dt")) {
                     clientToSave.setAppt_dt(dateManager.getFormattedStartTime());
@@ -437,7 +438,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
                 try {
                     clientToSave.setClient_id(currentlySelectedClient.getString("client_id"));
-                    apiManager.sendAsyncUpdateClientsNoNulls(this, parentActivity.getAgent().getAgent_id(), clientToSave);
+                    apiManager.sendAsyncUpdateClientsNoNulls(this, globalDataViewModel.getAgentValue().getAgent_id(), clientToSave);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -448,12 +449,12 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
         } catch (JSONException e) {
             // This means that the boolean is false
             ClientObject clientToSave = new ClientObject();
-            clientToSave.setMarket_id(String.valueOf(dataController.getCurrentSelectedTeamMarketId()));
-            clientToSave.setTeam_id(dataController.getCurrentSelectedTeamId());
+            clientToSave.setMarket_id(String.valueOf(globalDataViewModel.getSelectedTeamValue().getMarket_id()));
+            clientToSave.setTeam_id(globalDataViewModel.getSelectedTeamValue().getId());
 
             if(currentlySelectedClient.has("appt_set_dt")) {
                 clientToSave.setAppt_set_dt(dateManager.getFormattedStartTime());
-                clientToSave.setAppt_set_by_agent_id(parentActivity.getAgent().getAgent_id());
+                clientToSave.setAppt_set_by_agent_id(globalDataViewModel.getAgentValue().getAgent_id());
             }
             else if(currentlySelectedClient.has("appt_dt")) {
                 clientToSave.setAppt_dt(dateManager.getFormattedStartTime());
@@ -470,7 +471,7 @@ public class TransactionFragment extends Fragment implements View.OnClickListene
 
             try {
                 clientToSave.setClient_id(currentlySelectedClient.getString("client_id"));
-                apiManager.sendAsyncUpdateClientsNoNulls(this, parentActivity.getAgent().getAgent_id(), clientToSave);
+                apiManager.sendAsyncUpdateClientsNoNulls(this, globalDataViewModel.getAgentValue().getAgent_id(), clientToSave);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

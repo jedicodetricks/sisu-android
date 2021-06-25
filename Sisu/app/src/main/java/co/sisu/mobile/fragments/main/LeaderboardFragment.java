@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
@@ -44,6 +45,7 @@ import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
 import co.sisu.mobile.controllers.DataController;
+import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.AsyncLabelsJsonObject;
 import co.sisu.mobile.models.AsyncLeaderboardJsonObject;
@@ -75,8 +77,9 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private ColorSchemeManager colorSchemeManager;
     private ActionBarManager actionBarManager;
     private CacheManager cacheManager;
+    private DateManager dateManager;
     private Utils utils;
-    private Switch leaderboardToggle;
+//    private Switch leaderboardToggle;
     private int selectedYear = 0;
     private int selectedMonth = 0;
     private int selectedDay = 0;
@@ -85,7 +88,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     private HashMap<String, LeaderboardAgentModel> agents = new HashMap<>();
     private int agentCounter = 0;
     private List<LeaderboardObject> leaderBoardSections;
-    private TextView dateDisplay, monthToggle, yearToggle;
+    private TextView dateDisplay, dateSelectorBeginDateText, dateSelectorEndDateText, dateSelectorDateText, scopeSelectorText;
     private ImageView calendarLauncher;
     private GlobalDataViewModel globalDataViewModel;
 
@@ -109,15 +112,15 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         actionBarManager = parentActivity.getActionBarManager();
         cacheManager = parentActivity.getCacheManager();
         utils = parentActivity.getUtils();
+        dateManager = new DateManager();
         globalDataViewModel = parentActivity.getGlobalDataViewModel();
         actionBarManager.setToTitleBar("Leaderboards", false);
         loader = parentActivity.findViewById(R.id.parentLoader);
         expListView = view.findViewById(R.id.teamExpandable);
         expListView.setGroupIndicator(null);
         expListView.setDividerHeight(0);
-        initToggle();
         loader.setVisibility(View.VISIBLE);
-        initFields();
+        initDateSelector(view);
         getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
         initializeCalendarHandler();
         setColorScheme();
@@ -132,10 +135,29 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         FirebaseAnalytics.getInstance(parentActivity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 
-    private void initFields() {
-        monthToggle = getView().findViewById(R.id.monthToggleText);
-        yearToggle = getView().findViewById(R.id.yearToggleText);
+    private void initDateSelector(@NonNull View view) {
+        dateSelectorDateText = view.findViewById(R.id.dateSelectorDate);
+        dateSelectorDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorDateText.setTextColor(colorSchemeManager.getLighterText());
 
+        dateSelectorBeginDateText = view.findViewById(R.id.dateSelectorBeginDate);
+        dateSelectorBeginDateText.setText(dateManager.getFormattedStartTime());
+        dateSelectorBeginDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorBeginDateText.setTextColor(colorSchemeManager.getLighterText());
+
+        dateSelectorEndDateText = view.findViewById(R.id.dateSelectorEndDate);
+        dateSelectorEndDateText.setText(dateManager.getFormattedEndTime());
+        dateSelectorEndDateText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        dateSelectorEndDateText.setTextColor(colorSchemeManager.getLighterText());
+
+        scopeSelectorText = view.findViewById(R.id.scopeSelector);
+        scopeSelectorText.setBackgroundColor(colorSchemeManager.getButtonBackground());
+        scopeSelectorText.setTextColor(colorSchemeManager.getLighterText());
+
+        dateSelectorDateText.setOnClickListener(this);
+        dateSelectorBeginDateText.setOnClickListener(this);
+        dateSelectorEndDateText.setOnClickListener(this);
+        scopeSelectorText.setOnClickListener(this);
     }
 
     private void setColorScheme() {
@@ -143,8 +165,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         layout.setBackgroundColor(colorSchemeManager.getAppBackground());
 
         dateDisplay.setTextColor(colorSchemeManager.getDarkerText());
-        monthToggle.setTextColor(colorSchemeManager.getDarkerText());
-        yearToggle.setTextColor(colorSchemeManager.getDarkerText());
 
         int[][] states = new int[][] {
                 new int[] {-android.R.attr.state_checked},
@@ -161,8 +181,8 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
                 colorSchemeManager.getSegmentSelected()
         };
 
-        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getThumbDrawable()), new ColorStateList(states, thumbColors));
-        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
+//        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getThumbDrawable()), new ColorStateList(states, thumbColors));
+//        DrawableCompat.setTintList(DrawableCompat.wrap(leaderboardToggle.getTrackDrawable()), new ColorStateList(states, trackColors));
 
         Drawable drawable = getResources().getDrawable(R.drawable.appointment_icon).mutate();
         drawable.setColorFilter(colorSchemeManager.getIconSelected(), PorterDuff.Mode.SRC_ATOP);
@@ -194,16 +214,12 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         }
     }
 
-    private void initToggle() {
-        leaderboardToggle = getView().findViewById(R.id.leaderboardToggle);
-        leaderboardToggle.setOnCheckedChangeListener(this);
-    }
 
     private void initializeCalendarHandler() {
-
+        // TODO: Move to DateManager style
 //        datePicker.date(this);
-        calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
-        dateDisplay = getView().findViewById(R.id.leaderboard_date);
+//        calendarLauncher = getView().findViewById(R.id.leaderboard_calender_date_picker);
+//        dateDisplay = getView().findViewById(R.id.leaderboard_date);
 
         selectedYear = Calendar.getInstance().get(Calendar.YEAR);
         selectedMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -216,6 +232,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     }
 
     private void updateDisplayDate(int year, int month, int day) {
+        // TODO: Move to DateManager style
         selectedYear = year;
         selectedMonth = month;
 //        selectedDay = day;
@@ -223,10 +240,10 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         Date d;
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy");
 
-        if(leaderboardToggle.isChecked()) {
-            //Year Selected
-            sdf = new SimpleDateFormat("yyyy");
-        }
+//        if(leaderboardToggle.isChecked()) {
+//            //Year Selected
+//            sdf = new SimpleDateFormat("yyyy");
+//        }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         month += 1;
         String formatDate = year + "/" + month + "/" + day;
@@ -236,7 +253,7 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             Calendar updatedTime = Calendar.getInstance();
             updatedTime.setTime(d);
 
-            TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
+//            TextView dateDisplay = getView().findViewById(R.id.leaderboard_date);
             dateDisplay.setText(sdf.format(updatedTime.getTime()));
         } catch (ParseException e) {
             utils.showToast("Error parsing selected date", parentActivity);
@@ -259,33 +276,18 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
             if(month != 0) {
                 formattedMonth = String.valueOf(month);
             }
-            if(leaderboardToggle.isChecked()) {
-                //Year selected
-                apiManager.getLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
-            }
-            else {
-                apiManager.getLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
-            }
+//            if(leaderboardToggle.isChecked()) {
+//                //Year selected
+//                apiManager.getLeaderboardYear(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear);
+//            }
+//            else {
+//                apiManager.getLeaderboardYearAndMonth(this, dataController.getAgent().getAgent_id(), formattedTeamId, formattedYear, formattedMonth);
+//            }
         }
 
     }
 
-    public void teamSwap() {
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listAdapter = null;
-                expListView.setAdapter(listAdapter);
-                getLeaderboard(selectedYear, selectedMonth + 1);
-                SaveSharedPreference.setTeam(parentActivity, dataController.getCurrentSelectedTeamId() + "");
-            }
-        });
-
-    }
-
-
     private void prepareListData() {
-
         if(leaderBoardSections != null) {
             for(int i = 0; i < leaderBoardSections.size(); i++) {
                 for(int j = 0; j < leaderBoardSections.get(i).getLeaderboardItemsObject().length; j++) {
@@ -442,23 +444,23 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.leaderboard_calender_date_picker:
-            case R.id.leaderboard_date:
-                new SpinnerDatePickerDialogBuilder()
-                        .context(getContext())
-                        .callback(this)
-                        .spinnerTheme(android.R.style.Theme_Holo_Dialog)
-                        .showTitle(false)
-                        .defaultDate(selectedYear, selectedMonth, selectedDay)
-                        .showDaySpinner(false)
-                        .minDate(1990, 0, 1)
-                        .build()
-                        .show();
-                break;
+//            case R.id.leaderboard_calender_date_picker:
+//            case R.id.leaderboard_date:
+//                new SpinnerDatePickerDialogBuilder()
+//                        .context(getContext())
+//                        .callback(this)
+//                        .spinnerTheme(android.R.style.Theme_Holo_Dialog)
+//                        .showTitle(false)
+//                        .defaultDate(selectedYear, selectedMonth, selectedDay)
+//                        .showDaySpinner(false)
+//                        .minDate(1990, 0, 1)
+//                        .build()
+//                        .show();
+//                break;
         }
     }
 
-
+    // TODO: It won't be done like this anymore
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         updateDisplayDate(selectedYear, selectedMonth, selectedDay);
@@ -467,15 +469,16 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
 
     @Override
     public void onDateSet(com.tsongkha.spinnerdatepicker.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        // TODO: Move to DateManager style
         if(year != selectedYear || monthOfYear != selectedMonth || dayOfMonth != selectedDay) {
-            if(leaderboardToggle.isChecked() && monthOfYear != selectedMonth) {
-                //TODO: Should this just toggle for them and search it? They obviously want to do that in this situation
-                utils.showToast("You're in year search mode. Swap to month search to change month selection.", parentActivity);
-            }
-            else {
-                updateDisplayDate(year, monthOfYear, dayOfMonth);
-                getLeaderboard(selectedYear, selectedMonth + 1);
-            }
+//            if(leaderboardToggle.isChecked() && monthOfYear != selectedMonth) {
+//                //TODO: Should this just toggle for them and search it? They obviously want to do that in this situation
+//                utils.showToast("You're in year search mode. Swap to month search to change month selection.", parentActivity);
+//            }
+//            else {
+//                updateDisplayDate(year, monthOfYear, dayOfMonth);
+//                getLeaderboard(selectedYear, selectedMonth + 1);
+//            }
         }
         else {
             utils.showToast("You have selected the same time period", parentActivity);

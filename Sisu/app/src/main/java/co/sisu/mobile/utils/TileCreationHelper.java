@@ -52,6 +52,7 @@ import co.sisu.mobile.fragments.main.RecordFragment;
 import co.sisu.mobile.fragments.main.ScoreboardTileFragment;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.MarketStatusModel;
+import co.sisu.mobile.viewModels.GlobalDataViewModel;
 
 import static android.view.FrameMetrics.ANIMATION_DURATION;
 
@@ -63,6 +64,7 @@ public class TileCreationHelper {
     private DateManager dateManager;
     private ColorSchemeManager colorSchemeManager;
     private DataController dataController;
+    private GlobalDataViewModel globalDataViewModel;
     private Utils utils;
 
     public TileCreationHelper(ParentActivity parentActivity) {
@@ -73,6 +75,7 @@ public class TileCreationHelper {
         this.utils = parentActivity.getUtils();
         this.colorSchemeManager = parentActivity.getColorSchemeManager();
         this.dataController = parentActivity.getDataController();
+        this.globalDataViewModel = parentActivity.getGlobalDataViewModel();
     }
 
     @Nullable
@@ -1163,12 +1166,13 @@ public class TileCreationHelper {
                 }
                 break;
             case "scoreboard":
-                if(parentActivity.getCurrentScopeFilter() != null) {
-                    apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
-                }
-                else {
-                    apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
-                }
+                navigationManager.stackReplaceFragment(ScoreboardTileFragment.class);
+//                if(parentActivity.getCurrentScopeFilter() != null) {
+//                    apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), parentActivity.getCurrentScopeFilter().getIdValue());
+//                }
+//                else {
+//                    apiManager.getTileSetup(callback, parentActivity.getAgent().getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), parentActivity.getDashboardType(), "a" + parentActivity.getAgent().getAgent_id());
+//                }
                 break;
             case "record":
                 navigationManager.stackReplaceFragment(RecordFragment.class);

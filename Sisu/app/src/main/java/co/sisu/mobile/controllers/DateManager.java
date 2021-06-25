@@ -29,6 +29,7 @@ public class DateManager {
     private String timeline = "month";
 
     public DateManager() {
+        // TODO: Give this an input that decides to set it to day, month, or year
         initTimelineDate();
         setToToday();
     }
