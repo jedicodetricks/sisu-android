@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -165,9 +166,10 @@ public class Utils {
         return (int) ((currentNum/goalNum) * 100);
     }
 
-    public void zoomImageFromThumb(View convertView, final View thumbView, Bitmap bmp, @NonNull Context context, ImageView expanded) {
+    public void zoomImageFromThumb(View convertView, @NonNull final ImageView thumbView, @NonNull Context context, ImageView expanded) {
         mShortAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
-
+        BitmapDrawable drawable = (BitmapDrawable) thumbView.getDrawable();
+        Bitmap bmp = drawable.getBitmap();
         if(imageIsExpanded) {
             unzoomImageFromThumbnail(convertView, expanded);
         }

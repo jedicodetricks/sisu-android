@@ -370,6 +370,33 @@ public class ApiManager {
         new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
     }
 
+    public void getLeaderboardScopeList(AsyncServerEventListener cb, String agentId, int selectedTeamId) {
+        // POST
+        getJWT(agentId);
+        ApiReturnType returnType = ApiReturnType.GET_LEADERBOARD_LIST;
+        String currentUrl = url + "api/v1/team/get-leaderboard-list";
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("agent_id", Integer.valueOf(agentId));
+        jsonRequest.addProperty("team_id", selectedTeamId);
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+    }
+
+    public void getLeaderboardList(AsyncServerEventListener cb, String agentId, int selectedTeamId, String startDate, String endDate, String leaderboardFilter) {
+        // POST
+        getJWT(agentId);
+        ApiReturnType returnType = ApiReturnType.GET_LEADERBOARD;
+        String currentUrl = url + "api/v1/team/get-leaderboard";
+        JsonObject jsonRequest = new JsonObject();
+        jsonRequest.addProperty("agent_id", Integer.valueOf(agentId));
+        jsonRequest.addProperty("team_id", selectedTeamId);
+        jsonRequest.addProperty("leaderboard", leaderboardFilter);
+        jsonRequest.addProperty("start_date", startDate);
+        jsonRequest.addProperty("end_date", endDate);
+        new AsyncPost(cb, currentUrl, returnType, jsonRequest.toString()).execute(jwtStr, timestamp, transactionID);
+    }
+
+
+
     public void getTileSetup(AsyncServerEventListener cb, String agentId, int teamId, Date startDate, Date endDate, String dashboardType) {
         getJWT(agentId);
         ApiReturnType returnType = ApiReturnType.GET_TILES;

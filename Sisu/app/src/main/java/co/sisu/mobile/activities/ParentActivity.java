@@ -25,6 +25,10 @@ import com.devs.vectorchildfinder.VectorDrawableCompat;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.json.JSONObject;
 
@@ -88,7 +92,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private boolean noNavigation = true;
     private boolean teamSwap = false;
     private boolean shouldDisplayPushNotification = false;
-    private AgentModel agent;
     private NotesObject selectedNote;
     private ConstraintLayout layout;
     private ConstraintLayout paginateInfo;
@@ -99,15 +102,13 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private String pushNotificationBody = "";
     private String pushNotificationIsHTML = "";
     private String pushNotificationPushId = "";
-    private Fragment f;
+//    private Fragment f;
     private boolean isAdminMode = false;
 
     private JSONObject recordClientsList;
     private String recordClientListType;
     // TODO: I think this should be getting set somehow. It's always true. Either that or kill it.
     private boolean isAgentDashboard = true;
-    private List<ScopeBarModel> scopeBarList = new ArrayList<>();
-    private List<MarketStatusModel> marketStatusBar = new ArrayList<>();
     private ScopeBarModel currentScopeFilter = null;
     private MarketStatusModel currentMarketStatusFilter = null;
     private ImageView addClientButton;
@@ -118,12 +119,15 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseAnalytics mFirebaseAnalytics;
     private GlobalDataViewModel globalDataViewModel;
 
-    // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone. 6/16/21 - I think it is.
+    // TODO: I added a breakpoint on all the scope and market status filters to see if that race condition is gone. 6/16/21 - I think it is. 6/25/21 - It definitely is now
     // TODO: There is a bug when you are in the message center and press the plus button, then press back.
     // TODO: I can get rid of the MainActivity and just come straight here with a new Fragment, same with ForgotPasswordActivity
-    // TODO: The TeamObject is the most important object and I've got to make sure we have it before I let them navigate around
-    // TODO: Probably want to add colorscheme to the viewModel and observe changes.
-    // TODO: Hide some fragment UI elements before create so they're not loading in the wrong color at first
+    // TODO: Probably want to add colorscheme to the globalViewModel and observe changes.
+    // TODO: Hide intrusive fragment UI elements before create so they're not loading in the wrong color at first
+
+    // TODO: Next steps: Fix the leaderboard, get the globalViewModel operating on all the fragments, fix the TransactionFragment.
+    // TODO: Optional Steps: Move the redundant activities into Fragments and put them here, create viewModels for the rest of the fragments
+    // TODO: Optional Steps: Create a caching system to prevent the need to go to the backend every time, create a fragment storage system to prevent onDestroy() for X amount of time
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,11 +159,18 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 shouldDisplayPushNotification = true;
             }
         }
-        agent = getIntent().getParcelableExtra("Agent");
+        AgentModel agent = getIntent().getParcelableExtra("Agent");
         dataController.setAgent(agent);
         globalDataViewModel.setAgentData(agent);
-        FirebaseCrashlytics.getInstance().setCustomKey("agent_id", agent.getAgent_id());
-        FirebaseCrashlytics.getInstance().setUserId(agent.getAgent_id());
+        FirebaseCrashlytics.getInstance().setCustomKey("agent_id", globalDataViewModel.getAgentValue().getAgent_id());
+        FirebaseCrashlytics.getInstance().setUserId(globalDataViewModel.getAgentValue().getAgent_id());
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().cacheInMemory(true).delayBeforeLoading(500).build();
+         // default
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .memoryCacheSize(2 * 1024 * 1024)
+                .memoryCacheSizePercentage(13).defaultDisplayImageOptions(defaultOptions).build();
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
 
         if (BuildConfig.DEBUG) {
             //TODO: Don't release with this uncommented, you fuck face.
@@ -186,10 +197,9 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         globalDataViewModel.getScopeData().observe(this, newScopeData -> {
-            scopeBarList = newScopeData;
             if(currentScopeFilter == null) {
                 // This would be the agent scope
-                currentScopeFilter = scopeBarList.get(0);
+                currentScopeFilter = newScopeData.get(0);
             }
             actionBarManager.setTitle(currentScopeFilter.getName());
             scopeFinished = true;
@@ -197,7 +207,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         globalDataViewModel.getMarketStatusData().observe(this, newMarketStatusData -> {
-            marketStatusBar = newMarketStatusData;
             for(MarketStatusModel marketStatusModel : newMarketStatusData) {
                 if(marketStatusModel.getKey().equalsIgnoreCase("")) {
                     // TODO: CurrentMarketStatusFilter should be in the viewModel
@@ -209,8 +218,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         globalDataViewModel.getAgentData().observe(this, newAgentData -> {
-            apiManager.getFirebaseDevices(globalDataViewModel, agent.getAgent_id());
-            apiManager.getTeams(globalDataViewModel, agent.getAgent_id());
+            apiManager.getFirebaseDevices(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id());
+            apiManager.getTeams(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id());
         });
 
         globalDataViewModel.getTeamsObject().observe(this, allTeams -> {
@@ -226,7 +235,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                     globalDataViewModel.setSelectedTeam(allTeams.get(0));
                     dataController.setMessageCenterVisible(true);
                     FirebaseCrashlytics.getInstance().setCustomKey("team_id", dataController.getCurrentSelectedTeamId());
-                    apiManager.getTeamParams(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeam().getId());
+                    apiManager.getTeamParams(ParentActivity.this, globalDataViewModel.getAgentValue().getAgent_id(), dataController.getCurrentSelectedTeam().getId());
                     SaveSharedPreference.setTeam(ParentActivity.this, dataController.getCurrentSelectedTeam().getId() + "");
                 }
                 else {
@@ -236,10 +245,10 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
                 scopeFinished = false;
             });
 
-            apiManager.getScope(globalDataViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
-            apiManager.getMarketStatus(globalDataViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
-            apiManager.getSettings(globalDataViewModel, agent.getAgent_id());
-            apiManager.getLabels(globalDataViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
+            apiManager.getScope(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id(), dataController.getCurrentSelectedTeamId());
+            apiManager.getMarketStatus(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id(), dataController.getCurrentSelectedTeamMarketId());
+            apiManager.getSettings(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id());
+            apiManager.getLabels(globalDataViewModel, globalDataViewModel.getAgentValue().getAgent_id(), dataController.getCurrentSelectedTeamId());
         });
 
         globalDataViewModel.setCurrentFirebaseDeviceIdData(SaveSharedPreference.getFirebaseDeviceId(this));
@@ -292,8 +301,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         teamSelectorPopup.setOnMenuItemClickListener(item -> {
             TeamObject team = dataController.getTeamsObject().get(item.getItemId());
             dataController.setSelectedTeamObject(team);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            f = fragmentManager.findFragmentById(R.id.your_placeholder);
             globalDataViewModel.setSelectedTeam(team);
             return false;
         });
@@ -394,7 +401,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    // TODO: This should be moved into the fragment that owns it
+    // TODO: This should be moved into the fragments that use it
     public void updateRecordedActivities() {
         List<Metric> updatedRecords = dataController.getUpdatedRecords();
         List<UpdateActivitiesModel> updateActivitiesModels = new ArrayList<>();
@@ -402,14 +409,14 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         AsyncUpdateActivitiesJsonObject activitiesJsonObject = new AsyncUpdateActivitiesJsonObject();
         String currentSelectedDate = dateManager.getFormattedRecordDate();
         for(Metric m : updatedRecords) {
-            updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedDate, m.getType(), m.getCurrentNum(), Integer.parseInt(agent.getAgent_id())));
+            updateActivitiesModels.add(new UpdateActivitiesModel(currentSelectedDate, m.getType(), m.getCurrentNum(), Integer.parseInt(globalDataViewModel.getAgentValue().getAgent_id())));
         }
         UpdateActivitiesModel[] array = new UpdateActivitiesModel[updateActivitiesModels.size()];
         updateActivitiesModels.toArray(array);
 
         activitiesJsonObject.setActivities(array);
 
-        apiManager.sendAsyncUpdateActivities(this, agent.getAgent_id(), activitiesJsonObject, dataController.getCurrentSelectedTeamMarketId());
+        apiManager.sendAsyncUpdateActivities(this, globalDataViewModel.getAgentValue().getAgent_id(), activitiesJsonObject, dataController.getCurrentSelectedTeamMarketId());
     }
 
     private void navigateToScoreboard() {
@@ -470,7 +477,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         // TODO: Gonna have to rework all of this
 //        parentLoader.setVisibility(View.VISIBLE);
 //        marketStatusFinished = true;
-//        String selectedContextId = agent.getAgent_id();
+//        String selectedContextId = globalDataViewModel.getAgentValue().getAgent_id();
 //        if(currentScopeFilter != null) {
 //            if(currentScopeFilter.getIdValue().charAt(0) == 'a') {
 //                selectedContextId = currentScopeFilter.getIdValue().substring(1);
@@ -498,41 +505,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
 //            }
 //        }
     }
-
-    public void resetClientTilesPresetFilter(JSONObject filters, int page) {
-        parentLoader.setVisibility(View.VISIBLE);
-        apiManager.getTeamClientsPresetFilter(this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), filters, page);
-    }
-
-    public void resetDashboardTiles(boolean scopeSelected) {
-        // TODO: Gonna have to rework all of this
-//        parentLoader.setVisibility(View.VISIBLE);
-//        if(currentScopeFilter != null) {
-//            actionBarManager.setTitle(currentScopeFilter.getName());
-//        }
-//        else {
-//            Log.e("Garbage", "Garbage");
-//        }
-//        tileTemplateFinished = false;
-//        if(scopeSelected) {
-//            scopeFinished = true;
-//            marketStatusFinished = true;
-//        }
-//        else {
-//            scopeFinished = false;
-//            marketStatusFinished = false;
-//            apiManager.getScope(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
-//            apiManager.getMarketStatus(ParentActivity.this, agent.getAgent_id(), dataController.getCurrentSelectedTeamId());
-//        }
-//
-//        if(currentScopeFilter != null) {
-//            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", currentScopeFilter.getIdValue());
-//        }
-//        else {
-//            apiManager.getTileSetup(dashboardTilesViewModel, agent.getAgent_id(), dataController.getCurrentSelectedTeamId(), dateManager.getSelectedStartTime(), dateManager.getSelectedEndTime(), "agent", "a" + agent.getAgent_id());
-//        }
-    }
-
 
     public void updateColorScheme(ColorSchemeManager colorSchemeManager) {
         this.colorSchemeManager = colorSchemeManager;
@@ -589,7 +561,7 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return mFirebaseAnalytics;
     }
 
-    // TODO: Almost every single one of these should be moved to the dataController
+    // TODO: Almost every single one of these should be moved to a viewModel
 
     public String getDashboardType() {
         return dashboardType;
@@ -676,10 +648,6 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         return isAdminMode;
     }
 
-    public List<MarketStatusModel> getMarketStatuses() {
-        return marketStatusBar;
-    }
-
     public void setScopeFilter(ScopeBarModel selectedScope) {
         currentScopeFilter = selectedScope;
     }
@@ -720,5 +688,8 @@ public class ParentActivity extends AppCompatActivity implements View.OnClickLis
         this.selectedFilter = selectedFilter;
     }
 
+    public ImageLoader getImageLoaderInstance() {
+        return ImageLoader.getInstance();
+    }
 }
 

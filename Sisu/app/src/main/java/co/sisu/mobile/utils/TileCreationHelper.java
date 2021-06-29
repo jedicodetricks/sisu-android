@@ -656,7 +656,7 @@ public class TileCreationHelper {
             parentLayout.setOnClickListener(view -> {
                 switch (clickDestination) {
                     case "clients":
-                        // TODO: IMPORTANT! This needs to navigate to the correct page
+                        // TODO: IMPORTANT! This needs to navigate to the correct page 6-25-21 I changed this but I'll need to test it
                         navigationManager.stackReplaceFragment(ClientTileFragment.class);
                         break;
                     case "scoreboard":

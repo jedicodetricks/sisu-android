@@ -104,6 +104,10 @@ public class GlobalDataViewModel extends ViewModel implements AsyncServerEventLi
         return marketStatusData;
     }
 
+    public List<MarketStatusModel> getMarketStatusDataValue() {
+        return marketStatusData.getValue();
+    }
+
     @Override
     public void onEventCompleted(Object returnObject, String asyncReturnType) {
 

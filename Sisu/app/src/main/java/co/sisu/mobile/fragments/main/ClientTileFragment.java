@@ -403,7 +403,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         marketStatusPopup = new PopupMenu(view.getContext(), marketStatusFilterText);
 
         marketStatusPopup.setOnMenuItemClickListener(item -> {
-            MarketStatusModel selectedMarketStatus = parentActivity.getMarketStatuses().get(item.getItemId());
+            MarketStatusModel selectedMarketStatus = globalDataViewModel.getMarketStatusDataValue().get(item.getItemId());
 
             scopePopup.dismiss();
             parentActivity.setCurrentMarketStatusFilter(selectedMarketStatus);
@@ -446,7 +446,7 @@ public class ClientTileFragment extends Fragment implements View.OnClickListener
         });
 
         int counter = 0;
-        for(MarketStatusModel marketStatusModel : parentActivity.getMarketStatuses()) {
+        for(MarketStatusModel marketStatusModel : globalDataViewModel.getMarketStatusDataValue()) {
             if(marketStatusModel.isSelect()) {
                 SpannableString s = new SpannableString(marketStatusModel.getLabel());
                 s.setSpan(new ForegroundColorSpan(colorSchemeManager.getLighterText()), 0, s.length(), 0);

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
+import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,9 +44,9 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
-        Log.e("IMAGE", leaderboardAgentModel.getProfile());
+        Log.e("IMAGE", leaderboardAgentModel.getImageUrl());
         Request request = new Request.Builder()
-                .url(url + "api/v1/image/" + leaderboardAgentModel.getProfile())
+                .url(url + "api/v1/image/" + leaderboardAgentModel.getImageUrl())
                 .get()
                 .addHeader("Authorization", strings[0])
                 .addHeader("Client-Timestamp", strings[1])
@@ -65,18 +66,18 @@ public class AsyncLeaderboardImage extends AsyncTask<String, String, String> {
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if(bitmap != null) {
                     Log.e("bmp response", bitmap.toString());
-                    leaderboardAgentModel.setBitmap(bitmap);
+                    leaderboardAgentModel.setImage(bitmap);
                 }
 
 //                profileObject.setFilename(profile);
-                callback.onEventCompleted(leaderboardAgentModel, "Leaderboard Image");
+                callback.onEventCompleted(leaderboardAgentModel, ApiReturnType.GET_LEADERBOARD_IMAGE);
             }
             else {
-                callback.onEventFailed(null, "Leaderboard Image");
+                callback.onEventFailed(null, ApiReturnType.GET_LEADERBOARD_IMAGE);
             }
         }
         else {
-            callback.onEventFailed(null, "Leaderboard Image");
+            callback.onEventFailed(null, ApiReturnType.GET_LEADERBOARD_IMAGE);
         }
 
         response.body().close();

@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.LruCache;
 
+import com.nostra13.universalimageloader.cache.memory.MemoryCache;
+
 import java.io.File;
 
 import okhttp3.internal.cache.DiskLruCache;
@@ -17,7 +19,8 @@ public class CacheManager {
     private boolean mDiskCacheStarting = true;
     private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
     private static final String DISK_CACHE_SUBDIR = "thumbnails";
-    private LruCache<String, Bitmap> mMemoryCache;
+    private MemoryCache mMemoryCache;
+    private int cacheSize;
 
     public CacheManager() {
         initCache();
@@ -30,16 +33,16 @@ public class CacheManager {
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
         // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 4;
+        cacheSize = maxMemory / 4;
 
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+//        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+//            @Override
+//            protected int sizeOf(String key, Bitmap bitmap) {
+//                // The cache size will be measured in kilobytes rather than
+//                // number of items.
+//                return bitmap.getByteCount() / 1024;
+//            }
+//        };
     }
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -82,5 +85,13 @@ public class CacheManager {
         // otherwise use internal cache dir
 
         return new File(context.getCacheDir().getPath() + File.separator + uniqueName);
+    }
+
+    public MemoryCache getLruCache() {
+        return mMemoryCache;
+    }
+
+    public int getLruCacheSize() {
+        return cacheSize;
     }
 }

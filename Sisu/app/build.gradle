@@ -35,6 +35,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.jetbrains:annotations:15.0'
     def lifecycle_version = "2.2.0"
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -58,6 +61,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.github.drawers:SpinnerDatePicker:1.0.6'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-core:19.0.0'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'

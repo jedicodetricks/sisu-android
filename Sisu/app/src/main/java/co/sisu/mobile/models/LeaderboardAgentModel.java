@@ -3,39 +3,51 @@ package co.sisu.mobile.models;
 import android.graphics.Bitmap;
 
 /**
- * Created by bradygroharing on 7/20/18.
+ * Created by Brady Groharing on 4/8/2018.
  */
 
 public class LeaderboardAgentModel {
-    private String agent_id;
-    private String label;
-    private String place;
-    private String profile;
-    private String value;
-    private Bitmap bitmap;
+    String agentId;
+    String name;
+    String itemCount;
+    String place;
+    String imageUrl;
+    Bitmap image;
 
-    public LeaderboardAgentModel(String agent_id, String label, String place, String profile, String value) {
-        this.agent_id = agent_id;
-        this.label = label;
+    public LeaderboardAgentModel(String agentId, String name, String itemCount, String place, String imageUrl) {
+        this.agentId = agentId;
+        this.name = name;
+        this.itemCount = itemCount;
         this.place = place;
-        this.profile = profile;
-        this.value = value;
+        this.imageUrl = imageUrl;
     }
 
-    public String getAgent_id() {
-        return agent_id;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setAgent_id(String agent_id) {
-        this.agent_id = agent_id;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getItemCount() {
+        String returnNumber = "0";
+        if(!itemCount.equalsIgnoreCase("null")) {
+            returnNumber = itemCount;
+        }
+        return returnNumber;
+    }
+
+    public void setItemCount(String itemCount) {
+        this.itemCount = itemCount;
     }
 
     public String getPlace() {
@@ -46,28 +58,19 @@ public class LeaderboardAgentModel {
         this.place = place;
     }
 
-    public String getProfile() {
-        return profile;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getValue() {
-        return value;
+    public Bitmap getImage() {
+        return image;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }
-
