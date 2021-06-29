@@ -3,7 +3,6 @@ package co.sisu.mobile.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,13 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import co.sisu.mobile.R;
 import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.models.LeaderboardAgentModel;
-import co.sisu.mobile.models.LeaderboardObject;
 
 /**
  * Created by Brady Groharing on 2/25/2018.

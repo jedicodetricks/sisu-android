@@ -41,7 +41,6 @@ import co.sisu.mobile.activities.ParentActivity;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ApiManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.controllers.NavigationManager;
 import co.sisu.mobile.enums.ApiReturnType;

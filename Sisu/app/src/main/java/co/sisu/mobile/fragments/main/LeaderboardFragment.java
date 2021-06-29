@@ -1,7 +1,6 @@
 package co.sisu.mobile.fragments.main;
 
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -9,12 +8,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -31,10 +28,7 @@ import com.tsongkha.spinnerdatepicker.DatePicker;
 import com.tsongkha.spinnerdatepicker.DatePickerDialog;
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,14 +38,11 @@ import co.sisu.mobile.adapters.LeaderboardListAdapter;
 import co.sisu.mobile.api.AsyncServerEventListener;
 import co.sisu.mobile.controllers.ActionBarManager;
 import co.sisu.mobile.controllers.ApiManager;
-import co.sisu.mobile.controllers.CacheManager;
 import co.sisu.mobile.controllers.ColorSchemeManager;
-import co.sisu.mobile.controllers.DataController;
 import co.sisu.mobile.controllers.DateManager;
 import co.sisu.mobile.enums.ApiReturnType;
 import co.sisu.mobile.models.LeaderboardAgentModel;
 import co.sisu.mobile.models.LeaderboardListObject;
-import co.sisu.mobile.models.LeaderboardObject;
 import co.sisu.mobile.utils.Utils;
 import co.sisu.mobile.viewModels.GlobalDataViewModel;
 import co.sisu.mobile.viewModels.LeaderboardViewModel;
@@ -103,8 +94,6 @@ public class LeaderboardFragment extends Fragment implements AsyncServerEventLis
         initDateSelectorAndPopup(view);
         initListeners(view);
         apiManager.getLeaderboardScopeList(leaderboardViewModel, globalDataViewModel.getAgentValue().getAgent_id(), globalDataViewModel.getSelectedTeamValue().getId());
-//        getLeaderboard(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
-//        initializeCalendarHandler();
 //        setColorScheme();
     }
 

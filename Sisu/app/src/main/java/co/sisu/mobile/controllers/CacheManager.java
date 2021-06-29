@@ -4,7 +4,6 @@ package co.sisu.mobile.controllers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.util.LruCache;
 
 import com.nostra13.universalimageloader.cache.memory.MemoryCache;
 

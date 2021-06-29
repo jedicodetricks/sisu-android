@@ -16,8 +16,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
@@ -58,7 +56,6 @@ import co.sisu.mobile.models.AgentModel;
 import co.sisu.mobile.models.AsyncUpdateActivitiesJsonObject;
 import co.sisu.mobile.models.ClientObject;
 import co.sisu.mobile.models.FilterObject;
-import co.sisu.mobile.models.FirebaseDeviceObject;
 import co.sisu.mobile.models.MarketStatusModel;
 import co.sisu.mobile.models.Metric;
 import co.sisu.mobile.models.NotesObject;
